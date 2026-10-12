@@ -358,7 +358,7 @@ function renderHotels() {
           </div>
 
           <!-- Card Footer with Dynamic Price & CTA -->
-          <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+          <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
             <div>
               <span class="block text-xs text-slate-500 font-medium">${
                 AppState.lang === 'en' ? 'Estimated Rate' : 'আনুমানিক ভাড়া'
@@ -366,11 +366,32 @@ function renderHotels() {
               <span class="text-lg font-extrabold text-sky-800">${priceText}</span>
               <span class="text-xs text-slate-500 font-medium">${t.perNight}</span>
             </div>
-            <button
-              onclick="openHotelInquiry('${hotel.id}')"
-              class="px-4 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold tracking-wide transition shadow-sm shrink-0">
-              ${t.inquireBtn}
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                onclick="if(typeof selectItineraryHotel==='function') selectItineraryHotel('${hotel.id}', true)"
+                class="px-3.5 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs ${
+                  typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                }">
+                ${
+                  typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
+                    ? AppState.lang === 'en'
+                      ? '✓ In My Trip'
+                      : '✓ প্ল্যানে আছে'
+                    : AppState.lang === 'en'
+                    ? '+ Pick for Trip'
+                    : '+ প্ল্যানে নিন'
+                }
+              </button>
+              <button
+                type="button"
+                onclick="openHotelInquiry('${hotel.id}')"
+                class="px-3.5 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold tracking-wide transition shadow-sm shrink-0">
+                ${t.inquireBtn}
+              </button>
+            </div>
           </div>
         </article>
       `;
@@ -470,16 +491,22 @@ function renderDestinations() {
             </div>
           </div>
 
-          ${
-            spot.sourceUrl
-              ? `<div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                  <span>Original Photo</span>
-                  <a href="${spot.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-semibold">
-                    ${spot.sourceName || 'Wikimedia Commons'} ↗
-                  </a>
-                </div>`
-              : ''
-          }
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs text-slate-400">
+            ${
+              spot.sourceUrl
+                ? `<a href="${spot.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-semibold">
+                    ✓ ${spot.sourceName || 'Wikimedia Commons'} ↗
+                  </a>`
+                : '<span></span>'
+            }
+            <button
+              type="button"
+              onclick="if(typeof addSpotFromWebsiteCard==='function') addSpotFromWebsiteCard('${spot.id}')"
+              class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-2xs"
+            >
+              ${AppState.lang === 'en' ? '+ Add to My Trip' : '+ ট্রিপ প্ল্যানে নিন'}
+            </button>
+          </div>
         </div>
       </article>
     `

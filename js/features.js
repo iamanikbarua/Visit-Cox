@@ -10,17 +10,12 @@
  *       • Transport Hubs: Kasturi Ghat, Dolphin Mor
  *   - Interactive popup cards + live category filter buttons
  *
- * Module 2: International-Standard Custom Itinerary Studio & Visual Pass Builder
- *   - Interactive multi-day planner (1–7 Days, default 5-Day Cox's Bazar plan)
- *   - Directly connected to website content:
- *       • Hotel selector (from HOTELS_DATA)
- *       • Daily Spots selector (from DESTINATIONS_DATA + HIDDEN_GEMS_DATA)
- *       • Daily Restaurant / Where to Eat selector
- *       • Daily Activities selector (including Riding by Bike on Marine Drive Road)
- *       • Daily Transport & Travel Cost selector (from TRANSPORT_DATA + Bike rental)
- *   - Generates an international-standard Visual Itinerary Dossier branded with
- *     the creative Visit Cox logo sign (`assets/images/logo-transparent.png`)
- *   - Supports 1-Click High-Res PNG Poster Download, PDF Document Download, & Print
+ * Module 2: User-Friendly 3-Step Custom Itinerary Wizard & Visual Pass Builder
+ *   - Step 1: Choose Trip Days (1–7 Days, default 5 Days) & Pick Your Hotel
+ *   - Step 2: Choose Daily Spots & Activities (including Riding by Bike on Marine Drive)
+ *   - Step 3: Choose Restaurants (Where to Eat) & Local Transport Cost
+ *   - Live Visual Itinerary Pass with creative Visit Cox logo sign
+ *   - 1-Click Download as High-Res Image (.PNG), Official PDF (.PDF), or Print
  */
 
 /* --------------------------------------------------------------------------
@@ -177,15 +172,14 @@ const MAP_LOCATIONS = [
 ];
 
 /* --------------------------------------------------------------------------
- * 2. CURATED CATALOGS FOR INTERACTIVE ITINERARY STUDIO
- *    (Restaurants, Signature Activities, Transport & Website Spots)
+ * 2. CURATED CATALOGS FOR INTERACTIVE ITINERARY WIZARD
  * -------------------------------------------------------------------------- */
 const ITIN_RESTAURANTS_CATALOG = [
   {
     id: 'rest-poushee',
     name: { en: 'Poushee Restaurant (Jhautola)', bn: 'পৌষী রেস্তোরাঁ (ঝাউতলা)' },
     specialty: {
-      en: 'Iconic local Mezbani beef, Loitta fish fry & 25+ coastal bhartas',
+      en: 'Famous local Mezbani beef, Loitta fish fry & 25+ coastal bhartas',
       bn: 'ঐতিহ্যবাহী মেজবানি গোশত, লইট্টা ফ্রাই ও ২৫+ পদের ভর্তা'
     },
     avgCostBDT: 450,
@@ -260,7 +254,7 @@ const ITIN_ACTIVITIES_CATALOG = [
       en: 'Riding by Bike on Marine Drive Road (80 km Ocean Highway)',
       bn: 'মেরিন ড্রাইভ রোডে বাইক রাইডিং (৮০ কিমি সমুদ্র-পাহাড় সড়ক)'
     },
-    badge: { en: 'Signature Experience', bn: 'সেরা অ্যাডভেঞ্চার' },
+    badge: { en: '★ Most Popular Ride', bn: '★ সবচেয়ে জনপ্রিয় রাইড' },
     costBDT: 1500,
     icon: '🏍️'
   },
@@ -340,7 +334,7 @@ const ITIN_ACTIVITIES_CATALOG = [
       en: 'Evening Burmese Market Handicrafts, Pearls & Pickle Shopping',
       bn: 'সন্ধ্যায় বার্মিজ মার্কেটে মুক্তার গহনা, আচার ও হস্তশিল্প কেনাকাটা'
     },
-    badge: { en: 'Local Culture', bn: 'কেনাকাটা' },
+    badge: { en: 'Local Shopping', bn: 'কেনাকাটা' },
     costBDT: 500,
     icon: '🛍️'
   }
@@ -409,7 +403,6 @@ const ITIN_TRANSPORT_ADDONS = [
   }
 ];
 
-// Additional Iconic Beach Spots so users can pick Laboni/Sugandha + all website destinations/gems
 const EXTRA_BEACH_SPOTS = [
   {
     id: 'spot-laboni-sugandha',
@@ -536,21 +529,54 @@ function getDefault5DayPlan() {
 const FeaturesState = {
   mapInstance: null,
   markerLayerGroup: null,
-  activeMapFilter: 'all', // 'all' | 'hotels' | 'spots' | 'hubs'
+  activeMapFilter: 'all',
 
-  // Custom Itinerary Studio State
-  tripTitle: 'Cox’s Bazar Grand Coastal & Marine Drive Expedition',
-  travelerName: 'Explorer Pass',
-  travelerCount: 2,
+  // User-Friendly 3-Step Wizard State
+  wizardStep: 1, // 1 = Days & Hotel, 2 = Daily Spots & Bike/Activities, 3 = Food & Transport Cost
+  tripTitle: 'Cox’s Bazar 5-Day Marine Drive & Island Tour',
+  travelerName: 'My Cox’s Bazar Trip',
   totalDays: 5,
   activeDayTab: 1,
   selectedHotelId: 'hotel-sea-crown',
-  daysPlan: getDefault5DayPlan(),
-  isDownloading: false
+  daysPlan: getDefault5DayPlan()
 };
 
 /* --------------------------------------------------------------------------
- * 4. LEAFLET INTERACTIVE MAP INITIALIZATION & FILTERING
+ * 4. FRIENDLY TOAST NOTIFICATION HELPER
+ * -------------------------------------------------------------------------- */
+function showUserToast(messageText, actionText, actionTargetSelector) {
+  let toast = document.getElementById('user-friendly-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'user-friendly-toast';
+    toast.className =
+      'fixed bottom-24 left-1/2 -translate-x-1/2 z-[90] bg-ocean-950 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-amber-400/60 flex items-center gap-3 text-xs sm:text-sm font-bold transition-all duration-300';
+    document.body.appendChild(toast);
+  }
+
+  toast.innerHTML = `
+    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0">✓</span>
+    <span>${messageText}</span>
+    ${
+      actionText && actionTargetSelector
+        ? `<a href="${actionTargetSelector}" onclick="document.getElementById('user-friendly-toast').style.opacity='0'" class="ml-1 px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-extrabold text-xs hover:bg-amber-300 transition whitespace-nowrap">${actionText}</a>`
+        : ''
+    }
+  `;
+  toast.style.opacity = '1';
+  toast.style.pointerEvents = 'auto';
+
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    if (toast) {
+      toast.style.opacity = '0';
+      toast.style.pointerEvents = 'none';
+    }
+  }, 4200);
+}
+
+/* --------------------------------------------------------------------------
+ * 5. LEAFLET INTERACTIVE MAP INITIALIZATION & FILTERING
  * -------------------------------------------------------------------------- */
 function createCategoryMarkerIcon(category) {
   const styles = {
@@ -633,7 +659,7 @@ function renderMapMarkersAndFilters() {
 
   const filterLabels = {
     en: [
-      { key: 'all', label: 'All Pins (7)', dot: 'bg-sky-400' },
+      { key: 'all', label: 'All Places (7)', dot: 'bg-sky-400' },
       { key: 'hotels', label: 'Hotels (2)', dot: 'bg-sky-600' },
       { key: 'spots', label: 'Tourist Spots (3)', dot: 'bg-teal-600' },
       { key: 'hubs', label: 'Transport Hubs (2)', dot: 'bg-amber-600' }
@@ -725,7 +751,7 @@ function renderMapMarkersAndFilters() {
           <h4 class="font-extrabold text-slate-900 text-sm">${loc.name[lang]}</h4>
           <p class="text-xs text-slate-600 mt-1 leading-relaxed">${loc.description[lang]}</p>
           <a href="${loc.targetSection}" class="mt-2.5 inline-flex items-center gap-1 text-xs font-bold text-sky-700 hover:underline">
-            <span>${lang === 'en' ? 'View in Guide' : 'বিস্তারিত দেখুন'}</span>
+            <span>${lang === 'en' ? 'View Details' : 'বিস্তারিত দেখুন'}</span>
             <span>→</span>
           </a>
         </div>
@@ -745,16 +771,28 @@ function renderMapMarkersAndFilters() {
 }
 
 /* --------------------------------------------------------------------------
- * 5. INTERACTIVE ITINERARY STUDIO STATE CONTROLLERS
+ * 6. USER-FRIENDLY WIZARD CONTROLLERS & QUICK-ADD FROM WEBSITE CARDS
  * -------------------------------------------------------------------------- */
 function formatSinglePrice(bdtAmount) {
   if (typeof formatPriceRange === 'function') {
     if (bdtAmount === 0) {
-      return typeof AppState !== 'undefined' && AppState.lang === 'bn' ? 'ফ্রি (০ ৳)' : 'Free';
+      return typeof AppState !== 'undefined' && AppState.lang === 'bn' ? 'ফ্রি' : 'Free';
     }
     return formatPriceRange(bdtAmount, bdtAmount);
   }
   return `${bdtAmount.toLocaleString()} BDT`;
+}
+
+function setWizardStep(stepNum) {
+  FeaturesState.wizardStep = stepNum;
+  renderItineraryStudio();
+}
+
+function editDayFromPass(dayNum) {
+  FeaturesState.activeDayTab = dayNum;
+  FeaturesState.wizardStep = 2;
+  renderItineraryStudio();
+  document.getElementById('itinerary-studio-builder')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function setItineraryTotalDays(daysCount) {
@@ -783,6 +821,12 @@ function setItineraryTotalDays(daysCount) {
     FeaturesState.activeDayTab = count;
   }
 
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  showUserToast(
+    lang === 'en' ? `Trip set to ${count} Days!` : `ভ্রমণ ${count} দিনে সেট করা হয়েছে!`,
+    lang === 'en' ? 'View Pass ↓' : 'পাস দেখুন ↓',
+    '#visual-itinerary-poster'
+  );
   renderItineraryStudio();
 }
 
@@ -791,18 +835,60 @@ function setItineraryActiveDayTab(dayNum) {
   renderItineraryStudio();
 }
 
-function selectItineraryHotel(hotelId) {
+function selectItineraryHotel(hotelId, fromWebsiteCard) {
   FeaturesState.selectedHotelId = hotelId;
   renderItineraryStudio();
+  if (typeof renderHotels === 'function') {
+    renderHotels();
+  }
+
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  const hotel = (typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : []).find(h => h.id === hotelId);
+  const hotelName = hotel ? hotel.name[lang] : '';
+
+  if (fromWebsiteCard) {
+    showUserToast(
+      lang === 'en'
+        ? `${hotelName} selected for your trip itinerary!`
+        : `${hotelName} আপনার ভ্রমণ প্ল্যানে যুক্ত হয়েছে!`,
+      lang === 'en' ? 'Open My Trip Plan →' : 'ট্রিপ প্ল্যান দেখুন →',
+      '#itinerary-section'
+    );
+  }
+}
+
+function addSpotFromWebsiteCard(spotId) {
+  const dayObj =
+    FeaturesState.daysPlan.find(d => d.dayNumber === FeaturesState.activeDayTab) || FeaturesState.daysPlan[0];
+  if (!dayObj) return;
+
+  if (!dayObj.spots.includes(spotId)) {
+    dayObj.spots.push(spotId);
+  }
+
+  renderItineraryStudio();
+  if (typeof renderDestinations === 'function') {
+    renderDestinations();
+  }
+
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  const spot = getUnifiedWebsiteSpots().find(s => s.id === spotId);
+  const spotName = spot ? spot.name[lang] : '';
+
+  showUserToast(
+    lang === 'en'
+      ? `Added "${spotName}" to Day ${dayObj.dayNumber} of your trip!`
+      : `"${spotName}" আপনার দিন ${dayObj.dayNumber}-এর প্ল্যানে যুক্ত হয়েছে!`,
+    lang === 'en' ? 'View Trip Pass →' : 'ট্রিপ পাস দেখুন →',
+    '#itinerary-section'
+  );
 }
 
 function updateTripMetaField(field, value) {
   if (field === 'tripTitle') {
     FeaturesState.tripTitle = value || 'Cox’s Bazar Coastal Expedition';
   } else if (field === 'travelerName') {
-    FeaturesState.travelerName = value || 'Explorer';
-  } else if (field === 'travelerCount') {
-    FeaturesState.travelerCount = Math.max(1, Math.min(30, parseInt(value, 10) || 2));
+    FeaturesState.travelerName = value || 'My Trip';
   }
   renderVisualItineraryPass();
 }
@@ -835,24 +921,43 @@ function toggleDaySelection(dayNum, listKey, itemId) {
 }
 
 function applyItineraryPreset(presetKey) {
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+
   if (presetKey === '5day_biker') {
     FeaturesState.totalDays = 5;
     FeaturesState.selectedHotelId = 'hotel-sea-crown';
     FeaturesState.tripTitle = '5-Day Marine Drive Bike & Island Explorer';
     FeaturesState.daysPlan = getDefault5DayPlan();
-    FeaturesState.activeDayTab = 2; // Show Day 2 Marine Drive Bike Ride tab
+    FeaturesState.activeDayTab = 2;
+    showUserToast(
+      lang === 'en'
+        ? 'Loaded 5-Day Marine Drive Bike & Island Plan!'
+        : '৫ দিনের মেরিন ড্রাইভ বাইক ও দ্বীপ প্ল্যান লোড হয়েছে!',
+      lang === 'en' ? 'See Pass ↓' : 'পাস দেখুন ↓',
+      '#visual-itinerary-poster'
+    );
   } else if (presetKey === '3day_family') {
     FeaturesState.totalDays = 3;
     FeaturesState.selectedHotelId = 'hotel-kollol';
     FeaturesState.tripTitle = '3-Day Family Beach, Coral & Island Getaway';
     FeaturesState.daysPlan = getDefault5DayPlan().slice(0, 3);
     FeaturesState.activeDayTab = 1;
+    showUserToast(
+      lang === 'en' ? 'Loaded 3-Day Family Relax Plan!' : '৩ দিনের ফ্যামিলি প্ল্যান লোড হয়েছে!',
+      lang === 'en' ? 'See Pass ↓' : 'পাস দেখুন ↓',
+      '#visual-itinerary-poster'
+    );
   } else if (presetKey === '2day_quick') {
     FeaturesState.totalDays = 2;
     FeaturesState.selectedHotelId = 'prime-park-hotel';
     FeaturesState.tripTitle = '2-Day Marine Drive Bike & Sunset Escape';
     FeaturesState.daysPlan = getDefault5DayPlan().slice(0, 2);
     FeaturesState.activeDayTab = 1;
+    showUserToast(
+      lang === 'en' ? 'Loaded 2-Day Weekend Escape Plan!' : '২ দিনের উইকএন্ড প্ল্যান লোড হয়েছে!',
+      lang === 'en' ? 'See Pass ↓' : 'পাস দেখুন ↓',
+      '#visual-itinerary-poster'
+    );
   } else if (presetKey === 'clear_custom') {
     FeaturesState.daysPlan = Array.from({ length: FeaturesState.totalDays }, (_, i) => ({
       dayNumber: i + 1,
@@ -867,6 +972,9 @@ function applyItineraryPreset(presetKey) {
       customNote: { en: '', bn: '' }
     }));
     FeaturesState.activeDayTab = 1;
+    showUserToast(
+      lang === 'en' ? 'Reset! Now tap items to build your custom plan.' : 'রিসেট সম্পন্ন! এখন আপনার পছন্দমতো সাজান।'
+    );
   }
 
   renderItineraryStudio();
@@ -876,13 +984,11 @@ function calculateItineraryBudget() {
   const activeDays = FeaturesState.daysPlan.slice(0, FeaturesState.totalDays);
   const nights = Math.max(1, FeaturesState.totalDays - 1);
 
-  // 1. Hotel Cost
   const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
   const selectedHotel = hotelsList.find(h => h.id === FeaturesState.selectedHotelId) || hotelsList[0];
   const avgHotelNightBDT = selectedHotel ? Math.round((selectedHotel.minBDT + selectedHotel.maxBDT) / 2) : 3000;
   const totalHotelBDT = avgHotelNightBDT * nights;
 
-  // 2. Daily Breakdown
   let totalTransportBDT = 0;
   let totalDiningBDT = 0;
   let totalActivitiesBDT = 0;
@@ -932,20 +1038,22 @@ function calculateItineraryBudget() {
 }
 
 /* --------------------------------------------------------------------------
- * 6. RENDER INTERACTIVE STUDIO BUILDER & INTERNATIONAL VISUAL PASS
+ * 7. RENDER SIMPLE 3-STEP WIZARD & VISUAL ITINERARY PASS
  * -------------------------------------------------------------------------- */
 function renderItineraryStudio() {
   const studioRoot = document.getElementById('itinerary-studio-builder');
   if (!studioRoot) return;
 
   const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  const step = FeaturesState.wizardStep;
+  const budget = calculateItineraryBudget();
 
   // Sync Navbar & Section Titles
   document.querySelectorAll('[data-nav="map"]').forEach(el => {
     el.textContent = lang === 'en' ? 'Interactive Map' : 'ম্যাপ';
   });
   document.querySelectorAll('[data-nav="itinerary"]').forEach(el => {
-    el.textContent = lang === 'en' ? 'Itinerary Studio' : 'ভ্রমণ প্ল্যানার';
+    el.textContent = lang === 'en' ? 'Plan My Trip' : 'ভ্রমণ প্ল্যানার';
   });
 
   const setTxt = (id, txt) => {
@@ -970,19 +1078,19 @@ function renderItineraryStudio() {
 
   setTxt(
     'itin-eyebrow',
-    lang === 'en' ? 'INTERNATIONAL CUSTOM TRIP STUDIO' : 'আন্তর্জাতিক মানের কাস্টম ভ্রমণ প্ল্যানার'
+    lang === 'en' ? 'EASY 3-STEP TRIP PLANNER & DOWNLOADER' : 'সহজ ৩-ধাপে কক্সবাজার ভ্রমণ প্ল্যানার'
   );
   setTxt(
     'itin-title',
     lang === 'en'
-      ? 'Build & Download Your Visual Cox’s Bazar Itinerary'
-      : 'নিজের মতো কক্সবাজার ভ্রমণ প্ল্যান তৈরি ও ডাউনলোড করুন'
+      ? 'Plan Your Cox’s Bazar Trip & Download Your Visual Pass'
+      : 'খুব সহজে আপনার কক্সবাজার ভ্রমণ প্ল্যান তৈরি ও ডাউনলোড করুন'
   );
   setTxt(
     'itin-subtitle',
     lang === 'en'
-      ? 'Select your hotel, daily spots, restaurants, local transport fares, and signature activities like riding a bike along Marine Drive—then download your official branded Visual Itinerary Pass.'
-      : 'হোটেল, প্রতিদিনের দর্শনীয় স্থান, রেস্তোরাঁ, যাতায়াত খরচ এবং মেরিন ড্রাইভে বাইক রাইডিং নির্বাচন করে আপনার ভিজ্যুয়াল ভ্রমণ গাইড ডাউনলোড করুন।'
+      ? 'Follow the 3 simple steps below to choose your hotel, daily spots, Marine Drive bike ride, restaurants, and local transport—then download your ready-to-use itinerary as an Image or PDF!'
+      : 'নিচের সহজ ৩টি ধাপে আপনার হোটেল, প্রতিদিনের দর্শনীয় স্থান, মেরিন ড্রাইভ বাইক রাইড ও রেস্তোরাঁ বেছে নিন এবং সাথে সাথে ছবি (.PNG) বা পিডিএফ (.PDF) ডাউনলোড করুন!'
   );
 
   const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
@@ -990,415 +1098,527 @@ function renderItineraryStudio() {
   const currentDayObj =
     FeaturesState.daysPlan.find(d => d.dayNumber === FeaturesState.activeDayTab) || FeaturesState.daysPlan[0];
 
-  // Build Hotel Selector Cards
-  const hotelCardsHTML = hotelsList
-    .map(hotel => {
-      const isSelected = hotel.id === FeaturesState.selectedHotelId;
-      const avgNight = Math.round((hotel.minBDT + hotel.maxBDT) / 2);
-      return `
-        <button
-          type="button"
-          onclick="selectItineraryHotel('${hotel.id}')"
-          class="text-left p-3.5 rounded-2xl border transition-all flex items-center gap-3.5 ${
-            isSelected
-              ? 'bg-ocean-950 text-white border-amber-400 ring-2 ring-amber-400/50 shadow-lg'
-              : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300 hover:bg-sky-50/40'
-          }"
-        >
-          <img
-            src="${hotel.image}"
-            alt="${hotel.name[lang]}"
-            class="w-16 h-16 rounded-xl object-cover shrink-0 bg-slate-200 border border-white/20"
-          />
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
-                isSelected ? 'bg-amber-400 text-slate-950' : 'bg-sky-100 text-sky-800'
-              }">
-                ${hotel.location[lang]}
-              </span>
-              ${
-                isSelected
-                  ? `<span class="text-xs font-extrabold text-amber-300">✓ ${lang === 'en' ? 'Selected' : 'নির্বাচিত'}</span>`
-                  : ''
-              }
-            </div>
-            <h4 class="font-extrabold text-sm mt-1 truncate ${isSelected ? 'text-white' : 'text-slate-900'}">
-              ${hotel.name[lang]}
-            </h4>
-            <p class="text-xs mt-0.5 font-bold ${isSelected ? 'text-teal-300' : 'text-teal-700'}">
-              ~${formatSinglePrice(avgNight)} / ${lang === 'en' ? 'night' : 'রাত'}
-            </p>
-          </div>
-        </button>
-      `;
-    })
-    .join('');
-
-  // Build Day Tabs (Day 1 .. Day N)
+  // Reusable Day Switcher Bar (Used in Step 2 & Step 3)
   const dayTabsHTML = Array.from({ length: FeaturesState.totalDays }, (_, i) => {
     const dNum = i + 1;
-    const dPlan = FeaturesState.daysPlan[i];
     const isActive = FeaturesState.activeDayTab === dNum;
-    const itemCount =
-      (dPlan?.spots?.length || 0) +
-      (dPlan?.activities?.length || 0) +
-      (dPlan?.restaurants?.length || 0) +
-      (dPlan?.transports?.length || 0);
-
     return `
       <button
         type="button"
         onclick="setItineraryActiveDayTab(${dNum})"
-        class="px-4 py-3 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+        class="px-5 py-3 rounded-2xl font-extrabold text-sm transition-all flex items-center gap-2 border ${
           isActive
-            ? 'bg-gradient-to-r from-ocean-950 to-sky-800 text-white border-ocean-950 shadow-md scale-[1.02]'
+            ? 'bg-ocean-950 text-amber-300 border-ocean-950 shadow-md scale-105'
             : 'bg-white text-slate-700 border-slate-200 hover:bg-sky-50'
         }"
       >
-        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-          isActive ? 'bg-amber-400 text-slate-950' : 'bg-slate-100 text-slate-700'
-        }">${dNum}</span>
-        <span>${lang === 'en' ? `Day ${dNum}` : `দিন ${dNum}`}</span>
-        <span class="px-1.5 py-0.5 rounded-full text-[10px] ${
-          isActive ? 'bg-white/20 text-teal-200' : 'bg-sky-100 text-sky-800'
-        }">${itemCount}</span>
+        <span>🗓️ ${lang === 'en' ? `Day ${dNum}` : `দিন ${dNum}`}</span>
       </button>
     `;
   }).join('');
 
-  // 1. Spots Selector for Current Day
-  const spotsSelectorHTML = allSpots
-    .map(spot => {
-      const active = currentDayObj.spots.includes(spot.id);
-      return `
-        <button
-          type="button"
-          onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'spots', '${spot.id}')"
-          class="p-2.5 rounded-2xl border text-left transition-all flex items-center gap-2.5 ${
-            active
-              ? 'bg-sky-900 text-white border-sky-700 shadow-sm ring-2 ring-sky-400/50'
-              : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300'
-          }"
-        >
-          <img src="${spot.image}" alt="${spot.name[lang]}" class="w-11 h-11 rounded-xl object-cover shrink-0 bg-slate-200" />
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-[10px] font-bold uppercase tracking-wider ${
-                active ? 'text-teal-300' : 'text-sky-700'
-              }">${spot.area[lang]}</span>
-              <span class="text-xs font-extrabold ${active ? 'text-amber-300' : 'text-slate-300'}">${
-                active ? '✓' : '+'
-              }</span>
-            </div>
-            <div class="font-bold text-xs truncate mt-0.5">${spot.name[lang]}</div>
-          </div>
-        </button>
-      `;
-    })
-    .join('');
-
-  // 2. Activities Selector for Current Day (Highlighting Bike Ride on Marine Drive!)
-  const activitiesSelectorHTML = ITIN_ACTIVITIES_CATALOG.map(act => {
-    const active = currentDayObj.activities.includes(act.id);
-    const isBike = act.id === 'act-marine-drive-bike';
-    return `
-      <button
-        type="button"
-        onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'activities', '${act.id}')"
-        class="p-3 rounded-2xl border text-left transition-all flex items-start gap-3 ${
-          active
-            ? 'bg-teal-900 text-white border-teal-600 shadow-sm ring-2 ring-teal-400/50'
-            : isBike
-            ? 'bg-amber-50/80 text-slate-900 border-amber-300 hover:bg-amber-100/70'
-            : 'bg-white text-slate-800 border-slate-200 hover:border-teal-300'
-        }"
-      >
-        <span class="text-xl shrink-0 mt-0.5">${act.icon}</span>
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center justify-between gap-1">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
-              active
-                ? 'bg-amber-400 text-slate-950'
-                : isBike
-                ? 'bg-amber-400 text-slate-950'
-                : 'bg-teal-50 text-teal-800'
-            }">${act.badge[lang]}</span>
-            <span class="text-xs font-extrabold ${active ? 'text-amber-300' : 'text-teal-700'}">
-              ${formatSinglePrice(act.costBDT)}
+  // STEP 1 CONTENT: DAYS & HOTEL
+  const step1HTML = `
+    <div class="space-y-8">
+      <!-- 1A: How Many Days & Quick Ready Plans -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-sky-100 text-sky-800 uppercase">
+              ${lang === 'en' ? 'Question 1' : 'প্রশ্ন ১'}
             </span>
+            <h4 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">
+              ${lang === 'en' ? 'How many days are you visiting Cox’s Bazar?' : 'আপনি কক্সবাজারে কত দিন থাকবেন?'}
+            </h4>
           </div>
-          <div class="font-bold text-xs sm:text-sm mt-1 leading-snug">${act.name[lang]}</div>
+
+          <!-- Ready-Made 1-Click Templates -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-bold text-slate-400 mr-1">${lang === 'en' ? 'Quick Auto-Fill:' : 'রেডি প্ল্যান:'}</span>
+            <button
+              type="button"
+              onclick="applyItineraryPreset('5day_biker')"
+              class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-amber-400 hover:bg-amber-300 text-slate-950 transition"
+            >
+              🏍️ ${lang === 'en' ? '5-Day Bike & Island Plan' : '৫ দিনের বাইক ও দ্বীপ প্ল্যান'}
+            </button>
+            <button
+              type="button"
+              onclick="applyItineraryPreset('3day_family')"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-sky-100 text-slate-700 transition"
+            >
+              👨‍👩‍👧 ${lang === 'en' ? '3-Day Family Plan' : '৩ দিনের ফ্যামিলি'}
+            </button>
+            <button
+              type="button"
+              onclick="applyItineraryPreset('2day_quick')"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-sky-100 text-slate-700 transition"
+            >
+              ⚡ ${lang === 'en' ? '2-Day Short Trip' : '২ দিনের শর্ট ট্রিপ'}
+            </button>
+          </div>
         </div>
-      </button>
-    `;
-  }).join('');
 
-  // 3. Restaurants Selector for Current Day
-  const restaurantsSelectorHTML = ITIN_RESTAURANTS_CATALOG.map(rest => {
-    const active = currentDayObj.restaurants.includes(rest.id);
-    return `
-      <button
-        type="button"
-        onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'restaurants', '${rest.id}')"
-        class="p-3 rounded-2xl border text-left transition-all flex items-start gap-3 ${
-          active
-            ? 'bg-amber-950 text-white border-amber-600 shadow-sm ring-2 ring-amber-400/50'
-            : 'bg-white text-slate-800 border-slate-200 hover:border-amber-300'
-        }"
-      >
-        <span class="text-xl shrink-0 mt-0.5">${rest.icon}</span>
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center justify-between gap-1">
-            <h5 class="font-extrabold text-xs sm:text-sm truncate">${rest.name[lang]}</h5>
-            <span class="text-xs font-extrabold shrink-0 ${active ? 'text-amber-300' : 'text-amber-700'}">
-              ~${formatSinglePrice(rest.avgCostBDT)}
-            </span>
+        <!-- Big Easy Day Buttons -->
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 pt-5">
+          ${[2, 3, 4, 5, 6, 7]
+            .map(
+              d => `
+              <button
+                type="button"
+                onclick="setItineraryTotalDays(${d})"
+                class="py-3.5 px-3 rounded-2xl font-extrabold text-sm border-2 transition-all flex flex-col items-center justify-center ${
+                  FeaturesState.totalDays === d
+                    ? 'bg-ocean-950 text-white border-amber-400 shadow-lg scale-[1.03]'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-sky-300 hover:bg-sky-50'
+                }"
+              >
+                <span class="text-lg sm:text-xl ${FeaturesState.totalDays === d ? 'text-amber-300' : 'text-slate-900'}">${d} ${lang === 'en' ? 'Days' : 'দিন'}</span>
+                <span class="text-[11px] font-medium ${FeaturesState.totalDays === d ? 'text-sky-200' : 'text-slate-400'}">
+                  ${d - 1} ${lang === 'en' ? 'Nights' : 'রাত'}
+                </span>
+              </button>
+            `
+            )
+            .join('')}
+        </div>
+
+        <!-- Optional Traveler Name & Trip Title -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5 pt-5 border-t border-slate-100">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">
+              ✏️ ${lang === 'en' ? 'Your Name or Group Name (Shown on Pass)' : 'আপনার নাম বা গ্রুপের নাম (পাসে দেখাবে)'}
+            </label>
+            <input
+              type="text"
+              value="${FeaturesState.travelerName.replace(/"/g, '&quot;')}"
+              oninput="updateTripMetaField('travelerName', this.value)"
+              placeholder="e.g., Anik & Friends"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
           </div>
-          <p class="text-[11px] mt-1 leading-relaxed ${active ? 'text-amber-100/90' : 'text-slate-500'}">
-            ${rest.specialty[lang]}
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">
+              🏷️ ${lang === 'en' ? 'Trip Headline' : 'ভ্রমণের শিরোনাম'}
+            </label>
+            <input
+              type="text"
+              value="${FeaturesState.tripTitle.replace(/"/g, '&quot;')}"
+              oninput="updateTripMetaField('tripTitle', this.value)"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 1B: Choose Your Hotel -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
+        <div class="mb-4">
+          <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-teal-100 text-teal-800 uppercase">
+            ${lang === 'en' ? 'Question 2' : 'প্রশ্ন ২'}
+          </span>
+          <h4 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">
+            🏨 ${lang === 'en' ? 'Which hotel would you like to stay at? (Tap one)' : 'আপনি কোন হোটেলে থাকতে চান? (যেকোনো একটিতে ক্লিক করুন)'}
+          </h4>
+          <p class="text-xs text-slate-500 mt-0.5">
+            ${lang === 'en' ? `Your ${budget.nights}-night stay cost will be calculated automatically.` : `আপনার ${budget.nights} রাতের হোটেল ভাড়া স্বয়ংক্রিয়ভাবে যোগ হবে।`}
           </p>
         </div>
-      </button>
-    `;
-  }).join('');
 
-  // 4. Transport & Daily Travel Cost Selector for Current Day
-  const transportSelectorHTML = ITIN_TRANSPORT_ADDONS.map(tr => {
-    const active = currentDayObj.transports.includes(tr.id);
-    return `
-      <button
-        type="button"
-        onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'transports', '${tr.id}')"
-        class="p-3 rounded-2xl border text-left transition-all flex items-center justify-between gap-3 ${
-          active
-            ? 'bg-ocean-950 text-white border-sky-500 shadow-sm ring-2 ring-sky-400/50'
-            : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300'
-        }"
-      >
-        <div class="flex items-center gap-2.5 min-w-0">
-          <span class="text-xl shrink-0">${tr.icon}</span>
-          <div class="min-w-0">
-            <div class="font-bold text-xs sm:text-sm truncate">${tr.name[lang]}</div>
-            <div class="text-[11px] ${active ? 'text-sky-200' : 'text-slate-500'}">${tr.duration[lang]}</div>
-          </div>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="block text-xs font-extrabold ${active ? 'text-amber-300' : 'text-sky-700'}">
-            ${formatSinglePrice(tr.costBDT)}
-          </span>
-          <span class="text-[10px] font-bold ${active ? 'text-teal-300' : 'text-slate-400'}">
-            ${active ? (lang === 'en' ? '✓ Added' : '✓ যুক্ত') : lang === 'en' ? '+ Add' : '+ যুক্ত করুন'}
-          </span>
-        </div>
-      </button>
-    `;
-  }).join('');
-
-  studioRoot.innerHTML = `
-    <!-- TOP BAR: QUICK TEMPLATES & TRIP DURATION -->
-    <div class="bg-sand-50 rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-sm mb-8">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
-        <div>
-          <span class="text-xs font-extrabold uppercase tracking-wider text-teal-700">
-            ${lang === 'en' ? 'STEP 1 • CONFIGURE YOUR TRIP OR LOAD A PRESET' : 'ধাপ ১ • আপনার ভ্রমণের দিন সংখ্যা ও টেমপ্লেট নির্বাচন করুন'}
-          </span>
-          <h3 class="text-xl font-extrabold text-slate-900 mt-0.5">
-            ${lang === 'en' ? 'Trip Duration, Travelers & Quick Templates' : 'ভ্রমণের মেয়াদ, ভ্রমণকারী ও রেডিমেড প্ল্যান'}
-          </h3>
-        </div>
-
-        <!-- Quick Preset Pills -->
-        <div class="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onclick="applyItineraryPreset('5day_biker')"
-            class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-xs transition"
-          >
-            🏍️ ${lang === 'en' ? '5-Day Marine Drive Bike & Island Plan' : '৫ দিনের মেরিন ড্রাইভ বাইক ও দ্বীপ প্ল্যান'}
-          </button>
-          <button
-            type="button"
-            onclick="applyItineraryPreset('3day_family')"
-            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 transition"
-          >
-            👨‍👩‍👧 ${lang === 'en' ? '3-Day Family Plan' : '৩ দিনের ফ্যামিলি প্ল্যান'}
-          </button>
-          <button
-            type="button"
-            onclick="applyItineraryPreset('2day_quick')"
-            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 transition"
-          >
-            ⚡ ${lang === 'en' ? '2-Day Weekend' : '২ দিনের উইকএন্ড'}
-          </button>
-          <button
-            type="button"
-            onclick="applyItineraryPreset('clear_custom')"
-            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition"
-          >
-            ↺ ${lang === 'en' ? 'Reset / Build Fresh' : 'নতুন করে সাজান'}
-          </button>
-        </div>
-      </div>
-
-      <!-- Trip Meta Inputs: Trip Title, Traveler Name, Duration (1-7 Days) -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-5 items-end">
-        <div class="md:col-span-5">
-          <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
-            ${lang === 'en' ? 'Itinerary Title' : 'ভ্রমণ প্ল্যানের নাম'}
-          </label>
-          <input
-            type="text"
-            value="${FeaturesState.tripTitle.replace(/"/g, '&quot;')}"
-            oninput="updateTripMetaField('tripTitle', this.value)"
-            class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
-          />
-        </div>
-
-        <div class="md:col-span-3">
-          <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
-            ${lang === 'en' ? 'Prepared For (Name / Group)' : 'ভ্রমণকারীর নাম / গ্রুপ'}
-          </label>
-          <input
-            type="text"
-            value="${FeaturesState.travelerName.replace(/"/g, '&quot;')}"
-            oninput="updateTripMetaField('travelerName', this.value)"
-            class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
-          />
-        </div>
-
-        <div class="md:col-span-4">
-          <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
-            ${lang === 'en' ? 'Select Number of Days (1–7 Days)' : 'ভ্রমণের দিন সংখ্যা (১–৭ দিন)'}
-          </label>
-          <div class="grid grid-cols-7 gap-1.5">
-            ${[1, 2, 3, 4, 5, 6, 7]
-              .map(
-                d => `
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          ${hotelsList
+            .map(hotel => {
+              const isSelected = hotel.id === FeaturesState.selectedHotelId;
+              const avgNight = Math.round((hotel.minBDT + hotel.maxBDT) / 2);
+              return `
                 <button
                   type="button"
-                  onclick="setItineraryTotalDays(${d})"
-                  class="py-2.5 rounded-xl text-xs font-extrabold border transition ${
-                    FeaturesState.totalDays === d
-                      ? 'bg-ocean-950 text-amber-300 border-ocean-950 shadow-sm'
-                      : 'bg-white text-slate-700 border-slate-200 hover:bg-sky-50'
+                  onclick="selectItineraryHotel('${hotel.id}', false)"
+                  class="text-left p-4 rounded-2xl border-2 transition-all flex items-center gap-3.5 ${
+                    isSelected
+                      ? 'bg-ocean-950 text-white border-amber-400 shadow-lg scale-[1.01]'
+                      : 'bg-slate-50/70 text-slate-800 border-slate-200 hover:border-sky-300 hover:bg-white'
                   }"
                 >
-                  ${d}D
+                  <img
+                    src="${hotel.image}"
+                    alt="${hotel.name[lang]}"
+                    class="w-16 h-16 rounded-xl object-cover shrink-0 bg-slate-200"
+                  />
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-1">
+                      <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
+                        isSelected ? 'bg-amber-400 text-slate-950' : 'bg-sky-100 text-sky-800'
+                      }">
+                        ${isSelected ? (lang === 'en' ? '✅ SELECTED' : '✅ নির্বাচিত') : hotel.location[lang]}
+                      </span>
+                    </div>
+                    <h5 class="font-extrabold text-sm mt-1 truncate ${isSelected ? 'text-white' : 'text-slate-900'}">
+                      ${hotel.name[lang]}
+                    </h5>
+                    <p class="text-xs mt-0.5 font-bold ${isSelected ? 'text-teal-300' : 'text-teal-700'}">
+                      ~${formatSinglePrice(avgNight)} / ${lang === 'en' ? 'night' : 'রাত'}
+                    </p>
+                  </div>
                 </button>
-              `
-              )
-              .join('')}
-          </div>
+              `;
+            })
+            .join('')}
         </div>
       </div>
 
-      <!-- STEP 2: CHOOSE YOUR HOTEL FROM WEBSITE CONTENT -->
-      <div class="mt-7 pt-6 border-t border-slate-200/80">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-sky-700">
-            🏨 ${lang === 'en' ? 'STEP 2 • DECIDE YOUR HOTEL (FROM VERIFIED WEBSITE ACCOMMODATIONS)' : 'ধাপ ২ • আপনার পছন্দের হোটেল নির্বাচন করুন'}
-          </span>
-          <span class="text-xs text-slate-500 font-semibold">
-            ${lang === 'en' ? `${ Math.max(1, FeaturesState.totalDays - 1) } Nights Stay Calculated Automatically` : `${ Math.max(1, FeaturesState.totalDays - 1) } রাতের হোটেল খরচ হিসাব করা হবে`}
-          </span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          ${hotelCardsHTML}
-        </div>
+      <!-- Next Step Footer Bar -->
+      <div class="flex items-center justify-end">
+        <button
+          type="button"
+          onclick="setWizardStep(2)"
+          class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-500 hover:to-teal-500 text-white font-extrabold text-sm sm:text-base shadow-xl transition flex items-center justify-center gap-2"
+        >
+          <span>${lang === 'en' ? 'Next Step: Pick Daily Spots & Bike Ride' : 'পরবর্তী ধাপ: প্রতিদিনের স্পট ও বাইক রাইড বেছে নিন'}</span>
+          <span>→</span>
+        </button>
       </div>
+    </div>
+  `;
 
-      <!-- STEP 3: DAY-BY-DAY PLANNER TABS -->
-      <div class="mt-7 pt-6 border-t border-slate-200/80">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-teal-700">
-            🗓️ ${lang === 'en' ? 'STEP 3 • CUSTOMIZE EACH DAY (SPOTS, MARINE DRIVE BIKE RIDE, RESTAURANTS & TRAVEL COST)' : 'ধাপ ৩ • প্রতিদিনের স্পট, বাইক রাইড, রেস্তোরাঁ ও যাতায়াত নির্বাচন করুন'}
+  // STEP 2 CONTENT: DAILY SPOTS & ACTIVITIES (MARINE DRIVE BIKE RIDE)
+  const step2HTML = `
+    <div class="space-y-6">
+      <!-- Day Selector Banner -->
+      <div class="bg-white rounded-3xl p-5 border border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-teal-700 block">
+            ${lang === 'en' ? 'SELECT WHICH DAY YOU ARE PLANNING:' : 'কোন দিনের প্ল্যান সাজাতে চান ক্লিক করুন:'}
           </span>
-          <span class="text-xs font-bold text-slate-500">
-            ${lang === 'en' ? `Editing Day ${currentDayObj.dayNumber} of ${FeaturesState.totalDays}` : `দিন ${currentDayObj.dayNumber} / ${FeaturesState.totalDays} সম্পাদনা করছেন`}
-          </span>
+          <h4 class="text-lg font-extrabold text-slate-900">
+            ${lang === 'en' ? `Currently Editing: Day ${currentDayObj.dayNumber} of ${FeaturesState.totalDays}` : `এখন সাজাচ্ছেন: দিন ${currentDayObj.dayNumber} (মোট ${FeaturesState.totalDays} দিন)`}
+          </h4>
         </div>
-
-        <!-- Day Tabs Bar -->
-        <div class="flex flex-wrap items-center gap-2 mb-6">
+        <div class="flex flex-wrap items-center gap-2">
           ${dayTabsHTML}
         </div>
+      </div>
 
-        <!-- Active Day Customization Workspace -->
-        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs space-y-6">
-          <!-- Day Title & Note Row -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
-                ${lang === 'en' ? `Day ${currentDayObj.dayNumber} Theme / Headline` : `দিন ${currentDayObj.dayNumber}-এর শিরোনাম`}
-              </label>
-              <input
-                type="text"
-                value="${currentDayObj.title[lang].replace(/"/g, '&quot;')}"
-                oninput="updateDayCustomField(${currentDayObj.dayNumber}, 'title', this.value)"
-                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              />
-            </div>
-            <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
-                ${lang === 'en' ? `Day ${currentDayObj.dayNumber} Personal Plan / Timing Note` : `দিন ${currentDayObj.dayNumber}-এর বিশেষ নোট বা সময়সূচি`}
-              </label>
-              <input
-                type="text"
-                value="${(currentDayObj.customNote[lang] || '').replace(/"/g, '&quot;')}"
-                placeholder="${lang === 'en' ? 'e.g., Ride bike on Marine Drive at 7 AM, lunch at Mermaid Cafe...' : 'যেমন: সকাল ৭টায় মেরিন ড্রাইভে বাইক রাইড...'}"
-                oninput="updateDayCustomField(${currentDayObj.dayNumber}, 'note', this.value)"
-                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              />
-            </div>
+      <!-- Spots to Visit on This Day -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90">
+        <div class="mb-4">
+          <h4 class="text-base sm:text-lg font-extrabold text-slate-900">
+            📍 ${lang === 'en' ? `Where do you want to visit on Day ${currentDayObj.dayNumber}? (Tap to select/unselect)` : `দিন ${currentDayObj.dayNumber}-এ কোন কোন স্পটে ঘুরতে যাবেন? (ক্লিক করে যুক্ত বা বাদ দিন)`}
+          </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          ${allSpots
+            .map(spot => {
+              const active = currentDayObj.spots.includes(spot.id);
+              return `
+                <button
+                  type="button"
+                  onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'spots', '${spot.id}')"
+                  class="p-3 rounded-2xl border-2 text-left transition-all flex items-center gap-3 ${
+                    active
+                      ? 'bg-sky-950 text-white border-sky-500 shadow-md'
+                      : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-white hover:border-sky-300'
+                  }"
+                >
+                  <img src="${spot.image}" alt="${spot.name[lang]}" class="w-12 h-12 rounded-xl object-cover shrink-0 bg-slate-200" />
+                  <div class="min-w-0 flex-1">
+                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                      active ? 'bg-emerald-400 text-slate-950' : 'bg-slate-200 text-slate-700'
+                    }">
+                      ${active ? (lang === 'en' ? '✅ Added' : '✅ যুক্ত') : lang === 'en' ? '➕ Tap to Add' : '➕ যুক্ত করুন'}
+                    </span>
+                    <div class="font-bold text-xs sm:text-sm truncate mt-1">${spot.name[lang]}</div>
+                  </div>
+                </button>
+              `;
+            })
+            .join('')}
+        </div>
+      </div>
+
+      <!-- Activities to Do on This Day (Marine Drive Bike Ride Highlighted!) -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90">
+        <div class="mb-4">
+          <h4 class="text-base sm:text-lg font-extrabold text-slate-900">
+            🏍️ ${lang === 'en' ? `What activities will you do on Day ${currentDayObj.dayNumber}?` : `দিন ${currentDayObj.dayNumber}-এ কী কী অ্যাক্টিভিটি করবেন?`}
+          </h4>
+          <p class="text-xs text-slate-500 mt-0.5">
+            ${lang === 'en' ? 'Tap "Riding by Bike on Marine Drive Road" or any water sport / island tour below:' : 'মেরিন ড্রাইভে বাইক রাইডিং বা যেকোনো অ্যাক্টিভিটিতে ক্লিক করুন:'}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          ${ITIN_ACTIVITIES_CATALOG.map(act => {
+            const active = currentDayObj.activities.includes(act.id);
+            const isBike = act.id === 'act-marine-drive-bike';
+            return `
+              <button
+                type="button"
+                onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'activities', '${act.id}')"
+                class="p-3.5 rounded-2xl border-2 text-left transition-all flex items-start gap-3 ${
+                  active
+                    ? 'bg-teal-950 text-white border-amber-400 shadow-md'
+                    : isBike
+                    ? 'bg-amber-50 text-slate-900 border-amber-300 hover:bg-amber-100/70'
+                    : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-white hover:border-teal-300'
+                }"
+              >
+                <span class="text-2xl shrink-0">${act.icon}</span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                      active ? 'bg-emerald-400 text-slate-950' : 'bg-white text-slate-700 border border-slate-200'
+                    }">
+                      ${active ? (lang === 'en' ? '✅ Selected' : '✅ নির্বাচিত') : lang === 'en' ? '➕ Tap to Add' : '➕ যুক্ত করুন'}
+                    </span>
+                    <span class="text-xs font-extrabold ${active ? 'text-amber-300' : 'text-teal-700'}">
+                      ${formatSinglePrice(act.costBDT)}
+                    </span>
+                  </div>
+                  <div class="font-bold text-xs sm:text-sm mt-1.5 leading-snug">${act.name[lang]}</div>
+                </div>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- Prev / Next Step Footer Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          onclick="setWizardStep(1)"
+          class="px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-sm transition"
+        >
+          ← ${lang === 'en' ? 'Back to Step 1 (Days & Hotel)' : 'পূর্ববর্তী ধাপ (দিন ও হোটেল)'}
+        </button>
+
+        <button
+          type="button"
+          onclick="setWizardStep(3)"
+          class="px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-500 hover:to-teal-500 text-white font-extrabold text-sm sm:text-base shadow-xl transition flex items-center gap-2"
+        >
+          <span>${lang === 'en' ? 'Next Step: Choose Food & Transport Cost' : 'পরবর্তী ধাপ: খাবার ও যাতায়াত খরচ'}</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  // STEP 3 CONTENT: RESTAURANTS (WHERE TO EAT) & DAILY TRANSPORT COST
+  const step3HTML = `
+    <div class="space-y-6">
+      <!-- Day Selector Banner -->
+      <div class="bg-white rounded-3xl p-5 border border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700 block">
+            ${lang === 'en' ? 'CHOOSE FOOD & TRANSPORT FOR EACH DAY:' : 'প্রতিদিনের রেস্তোরাঁ ও যাতায়াত নির্বাচন করুন:'}
+          </span>
+          <h4 class="text-lg font-extrabold text-slate-900">
+            ${lang === 'en' ? `Currently Editing: Day ${currentDayObj.dayNumber} of ${FeaturesState.totalDays}` : `এখন সাজাচ্ছেন: দিন ${currentDayObj.dayNumber} (মোট ${FeaturesState.totalDays} দিন)`}
+          </h4>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          ${dayTabsHTML}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Where to Eat (Restaurants) -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90">
+          <h4 class="text-base sm:text-lg font-extrabold text-slate-900 mb-1">
+            🍽️ ${lang === 'en' ? `Where to Eat on Day ${currentDayObj.dayNumber}?` : `দিন ${currentDayObj.dayNumber}-এ কোন রেস্তোরাঁয় খাবেন?`}
+          </h4>
+          <p class="text-xs text-slate-500 mb-4">
+            ${lang === 'en' ? 'Tap one or more restaurants for your meals today:' : 'আজকের খাবার জন্য পছন্দের রেস্তোরাঁয় ক্লিক করুন:'}
+          </p>
+          <div class="space-y-2.5">
+            ${ITIN_RESTAURANTS_CATALOG.map(rest => {
+              const active = currentDayObj.restaurants.includes(rest.id);
+              return `
+                <button
+                  type="button"
+                  onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'restaurants', '${rest.id}')"
+                  class="w-full p-3.5 rounded-2xl border-2 text-left transition-all flex items-start gap-3 ${
+                    active
+                      ? 'bg-amber-950 text-white border-amber-400 shadow-md'
+                      : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-white hover:border-amber-300'
+                  }"
+                >
+                  <span class="text-2xl shrink-0">${rest.icon}</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-extrabold text-xs sm:text-sm truncate">${rest.name[lang]}</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-extrabold shrink-0 ${
+                        active ? 'bg-emerald-400 text-slate-950' : 'bg-amber-100 text-amber-900'
+                      }">
+                        ${active ? '✅ Selected' : `~${formatSinglePrice(rest.avgCostBDT)}`}
+                      </span>
+                    </div>
+                    <p class="text-xs mt-1 ${active ? 'text-amber-100' : 'text-slate-500'}">${rest.specialty[lang]}</p>
+                  </div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Daily Transport & Travel Cost -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90">
+          <h4 class="text-base sm:text-lg font-extrabold text-slate-900 mb-1">
+            🛺 ${lang === 'en' ? `How will you travel on Day ${currentDayObj.dayNumber}?` : `দিন ${currentDayObj.dayNumber}-এ কীভাবে যাতায়াত করবেন?`}
+          </h4>
+          <p class="text-xs text-slate-500 mb-4">
+            ${lang === 'en' ? 'Select local vehicles or Marine Drive bike rental to add to your travel budget:' : 'যাতায়াত খরচ হিসাব করতে বাহন বা বাইক ভাড়া নির্বাচন করুন:'}
+          </p>
+          <div class="space-y-2.5">
+            ${ITIN_TRANSPORT_ADDONS.map(tr => {
+              const active = currentDayObj.transports.includes(tr.id);
+              return `
+                <button
+                  type="button"
+                  onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'transports', '${tr.id}')"
+                  class="w-full p-3.5 rounded-2xl border-2 text-left transition-all flex items-center justify-between gap-3 ${
+                    active
+                      ? 'bg-ocean-950 text-white border-sky-400 shadow-md'
+                      : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-white hover:border-sky-300'
+                  }"
+                >
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span class="text-2xl shrink-0">${tr.icon}</span>
+                    <div class="min-w-0">
+                      <div class="font-bold text-xs sm:text-sm truncate">${tr.name[lang]}</div>
+                      <div class="text-xs ${active ? 'text-sky-200' : 'text-slate-500'}">${tr.duration[lang]}</div>
+                    </div>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="block text-xs font-extrabold ${active ? 'text-amber-300' : 'text-sky-700'}">
+                      ${formatSinglePrice(tr.costBDT)}
+                    </span>
+                    <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                      active ? 'bg-emerald-400 text-slate-950' : 'bg-slate-200 text-slate-700'
+                    }">
+                      ${active ? (lang === 'en' ? '✅ Added' : '✅ যুক্ত') : lang === 'en' ? '➕ Add' : '➕ যুক্ত'}
+                    </span>
+                  </div>
+                </button>
+              `;
+            }).join('')}
           </div>
 
-          <!-- A. Spots to Visit on Day X -->
-          <div>
-            <h4 class="text-xs font-extrabold uppercase tracking-wider text-sky-800 mb-2.5 flex items-center gap-1.5">
-              <span>📍</span>
-              <span>${lang === 'en' ? `Select Spots to Visit on Day ${currentDayObj.dayNumber} (Click to Toggle)` : `দিন ${currentDayObj.dayNumber}-এ কোন কোন স্পটে যাবেন নির্বাচন করুন`}</span>
-            </h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-              ${spotsSelectorHTML}
-            </div>
-          </div>
-
-          <!-- B. Activities to Do on Day X (Marine Drive Bike Ride, Water Sports, etc.) -->
-          <div>
-            <h4 class="text-xs font-extrabold uppercase tracking-wider text-teal-800 mb-2.5 flex items-center gap-1.5">
-              <span>🏍️</span>
-              <span>${lang === 'en' ? `Select Activities to Do on Day ${currentDayObj.dayNumber} (Includes Marine Drive Bike Ride)` : `দিন ${currentDayObj.dayNumber}-এর অ্যাক্টিভিটি ও মেরিন ড্রাইভ বাইক রাইড নির্বাচন করুন`}</span>
-            </h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-              ${activitiesSelectorHTML}
-            </div>
-          </div>
-
-          <!-- C. Where to Eat (Restaurants) & D. Daily Travel / Transport Cost -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-            <div>
-              <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-800 mb-2.5 flex items-center gap-1.5">
-                <span>🍽️</span>
-                <span>${lang === 'en' ? `Where to Eat on Day ${currentDayObj.dayNumber} (Restaurants & Dining)` : `দিন ${currentDayObj.dayNumber}-এ কোথায় খাবেন (রেস্তোরাঁ ও খাবার)`}</span>
-              </h4>
-              <div class="space-y-2">
-                ${restaurantsSelectorHTML}
-              </div>
-            </div>
-
-            <div>
-              <h4 class="text-xs font-extrabold uppercase tracking-wider text-ocean-900 mb-2.5 flex items-center gap-1.5">
-                <span>🛺</span>
-                <span>${lang === 'en' ? `Daily Transport & Travel Cost on Day ${currentDayObj.dayNumber}` : `দিন ${currentDayObj.dayNumber}-এর যাতায়াত মাধ্যম ও ভাড়া`}</span>
-              </h4>
-              <div class="space-y-2">
-                ${transportSelectorHTML}
-              </div>
-            </div>
+          <!-- Optional Custom Note for Day -->
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">
+              📝 ${lang === 'en' ? `Personal Note for Day ${currentDayObj.dayNumber} (Optional)` : `দিন ${currentDayObj.dayNumber}-এর নিজস্ব নোট (ঐচ্ছিক)`}
+            </label>
+            <input
+              type="text"
+              value="${(currentDayObj.customNote[lang] || '').replace(/"/g, '&quot;')}"
+              oninput="updateDayCustomField(${currentDayObj.dayNumber}, 'note', this.value)"
+              placeholder="${lang === 'en' ? 'e.g., Start bike ride at 7:00 AM along Marine Drive...' : 'যেমন: সকাল ৭টায় মেরিন ড্রাইভে বাইক রাইড শুরু...'}"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
           </div>
         </div>
       </div>
+
+      <!-- Prev / Finish Footer Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          onclick="setWizardStep(2)"
+          class="px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-sm transition"
+        >
+          ← ${lang === 'en' ? 'Back to Step 2 (Spots & Bike Ride)' : 'পূর্ববর্তী ধাপ (স্পট ও বাইক রাইড)'}
+        </button>
+
+        <a
+          href="#visual-itinerary-poster"
+          class="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold text-sm sm:text-base shadow-xl transition flex items-center gap-2"
+        >
+          <span>🎉 ${lang === 'en' ? 'Done! View & Download My Visual Pass Below' : 'সম্পন্ন! নিচে আপনার ভিজ্যুয়াল পাস দেখুন ও ডাউনলোড করুন'}</span>
+          <span>↓</span>
+        </a>
+      </div>
+    </div>
+  `;
+
+  studioRoot.innerHTML = `
+    <!-- EASY 3-STEP PROGRESS BAR -->
+    <div class="bg-sand-50 rounded-3xl p-5 sm:p-8 border border-slate-200/90 shadow-sm mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-7">
+        <!-- Step 1 Tab -->
+        <button
+          type="button"
+          onclick="setWizardStep(1)"
+          class="p-4 rounded-2xl border-2 text-left transition-all flex items-center gap-3.5 ${
+            step === 1
+              ? 'bg-ocean-950 text-white border-amber-400 shadow-lg'
+              : 'bg-white text-slate-700 border-slate-200 hover:border-sky-300'
+          }"
+        >
+          <span class="w-10 h-10 rounded-xl font-extrabold text-base flex items-center justify-center shrink-0 ${
+            step === 1 ? 'bg-amber-400 text-slate-950' : 'bg-sky-100 text-sky-800'
+          }">1</span>
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider block ${
+              step === 1 ? 'text-amber-300' : 'text-sky-700'
+            }">${lang === 'en' ? 'STEP 1' : 'ধাপ ১'}</span>
+            <span class="font-extrabold text-sm sm:text-base">${
+              lang === 'en' ? 'Choose Days & Hotel' : 'দিন সংখ্যা ও হোটেল'
+            }</span>
+          </div>
+        </button>
+
+        <!-- Step 2 Tab -->
+        <button
+          type="button"
+          onclick="setWizardStep(2)"
+          class="p-4 rounded-2xl border-2 text-left transition-all flex items-center gap-3.5 ${
+            step === 2
+              ? 'bg-ocean-950 text-white border-amber-400 shadow-lg'
+              : 'bg-white text-slate-700 border-slate-200 hover:border-sky-300'
+          }"
+        >
+          <span class="w-10 h-10 rounded-xl font-extrabold text-base flex items-center justify-center shrink-0 ${
+            step === 2 ? 'bg-amber-400 text-slate-950' : 'bg-teal-100 text-teal-800'
+          }">2</span>
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider block ${
+              step === 2 ? 'text-amber-300' : 'text-teal-700'
+            }">${lang === 'en' ? 'STEP 2' : 'ধাপ ২'}</span>
+            <span class="font-extrabold text-sm sm:text-base">${
+              lang === 'en' ? 'Spots & Marine Drive Bike' : 'স্পট ও মেরিন ড্রাইভ বাইক'
+            }</span>
+          </div>
+        </button>
+
+        <!-- Step 3 Tab -->
+        <button
+          type="button"
+          onclick="setWizardStep(3)"
+          class="p-4 rounded-2xl border-2 text-left transition-all flex items-center gap-3.5 ${
+            step === 3
+              ? 'bg-ocean-950 text-white border-amber-400 shadow-lg'
+              : 'bg-white text-slate-700 border-slate-200 hover:border-sky-300'
+          }"
+        >
+          <span class="w-10 h-10 rounded-xl font-extrabold text-base flex items-center justify-center shrink-0 ${
+            step === 3 ? 'bg-amber-400 text-slate-950' : 'bg-amber-100 text-amber-800'
+          }">3</span>
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider block ${
+              step === 3 ? 'text-amber-300' : 'text-amber-700'
+            }">${lang === 'en' ? 'STEP 3' : 'ধাপ ৩'}</span>
+            <span class="font-extrabold text-sm sm:text-base">${
+              lang === 'en' ? 'Food (Restaurants) & Travel' : 'রেস্তোরাঁ ও যাতায়াত খরচ'
+            }</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Active Wizard Step Content -->
+      ${step === 1 ? step1HTML : step === 2 ? step2HTML : step3HTML}
     </div>
   `;
 
@@ -1418,23 +1638,15 @@ function renderVisualItineraryPass() {
     .map((day, idx) => {
       const dayCostObj = budget.dayCosts[idx] || { transCost: 0, restCost: 0, actCost: 0, dayTotal: 0 };
 
-      const chosenSpots = day.spots
-        .map(id => allSpots.find(s => s.id === id))
-        .filter(Boolean);
-
-      const chosenActivities = day.activities
-        .map(id => ITIN_ACTIVITIES_CATALOG.find(a => a.id === id))
-        .filter(Boolean);
-
+      const chosenSpots = day.spots.map(id => allSpots.find(s => s.id === id)).filter(Boolean);
+      const chosenActivities = day.activities.map(id => ITIN_ACTIVITIES_CATALOG.find(a => a.id === id)).filter(Boolean);
       const chosenRestaurants = day.restaurants
         .map(id => ITIN_RESTAURANTS_CATALOG.find(r => r.id === id))
         .filter(Boolean);
+      const chosenTransports = day.transports.map(id => ITIN_TRANSPORT_ADDONS.find(t => t.id === id)).filter(Boolean);
 
-      const chosenTransports = day.transports
-        .map(id => ITIN_TRANSPORT_ADDONS.find(t => t.id === id))
-        .filter(Boolean);
-
-      const hasMarineBike = day.activities.includes('act-marine-drive-bike') || day.transports.includes('trans-bike-rental');
+      const hasMarineBike =
+        day.activities.includes('act-marine-drive-bike') || day.transports.includes('trans-bike-rental');
 
       return `
         <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
@@ -1453,7 +1665,7 @@ function renderVisualItineraryPass() {
                   ${
                     hasMarineBike
                       ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-slate-950">
-                          🏍️ Marine Drive Bike Route
+                          🏍️ Marine Drive Bike Ride
                         </span>`
                       : ''
                   }
@@ -1466,17 +1678,27 @@ function renderVisualItineraryPass() {
               </div>
             </div>
 
-            <div class="bg-white/10 border border-white/15 rounded-xl px-3.5 py-1.5 text-right">
-              <span class="block text-[10px] uppercase tracking-wider text-sky-200 font-bold">
-                ${lang === 'en' ? `Day ${day.dayNumber} Est. Spend` : `দিন ${day.dayNumber} আনুমানিক খরচ`}
-              </span>
-              <span class="text-sm font-extrabold text-amber-300">
-                ${formatSinglePrice(dayCostObj.dayTotal)}
-              </span>
+            <div class="flex items-center gap-2.5">
+              <button
+                type="button"
+                onclick="editDayFromPass(${day.dayNumber})"
+                data-html2canvas-ignore="true"
+                class="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-bold text-amber-300 border border-white/20 transition"
+              >
+                ✏️ ${lang === 'en' ? `Edit Day ${day.dayNumber}` : `দিন ${day.dayNumber} পরিবর্তন`}
+              </button>
+              <div class="bg-white/10 border border-white/15 rounded-xl px-3.5 py-1.5 text-right">
+                <span class="block text-[10px] uppercase tracking-wider text-sky-200 font-bold">
+                  ${lang === 'en' ? `Day ${day.dayNumber} Cost` : `দিন ${day.dayNumber} খরচ`}
+                </span>
+                <span class="text-sm font-extrabold text-amber-300">
+                  ${formatSinglePrice(dayCostObj.dayTotal)}
+                </span>
+              </div>
             </div>
           </div>
 
-          <!-- Day Body: 4 International Standard Columns -->
+          <!-- Day Body: 4 Easy-to-Read Columns -->
           <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Column 1: Spots to Visit -->
             <div class="p-4 rounded-2xl bg-sky-50/60 border border-sky-100">
@@ -1509,7 +1731,7 @@ function renderVisualItineraryPass() {
             <div class="p-4 rounded-2xl bg-teal-50/60 border border-teal-100">
               <div class="text-[11px] font-extrabold uppercase tracking-wider text-teal-800 mb-2.5 flex items-center gap-1.5">
                 <span>🏍️</span>
-                <span>${lang === 'en' ? 'Activities & Experiences' : 'অ্যাক্টিভিটি ও অভিজ্ঞতা'}</span>
+                <span>${lang === 'en' ? 'Activities to Do' : 'অ্যাক্টিভিটি ও অভিজ্ঞতা'}</span>
               </div>
               ${
                 chosenActivities.length
@@ -1528,7 +1750,7 @@ function renderVisualItineraryPass() {
                         )
                         .join('')}
                     </div>`
-                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'Leisure beach time' : 'সৈকতে অবসর সময়'}</p>`
+                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'Relaxing on the beach' : 'সৈকতে অবসর সময়'}</p>`
               }
             </div>
 
@@ -1536,7 +1758,7 @@ function renderVisualItineraryPass() {
             <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-100">
               <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-900 mb-2.5 flex items-center gap-1.5">
                 <span>🍽️</span>
-                <span>${lang === 'en' ? 'Where to Eat (Restaurants)' : 'কোথায় খাবেন (রেস্তোরাঁ)'}</span>
+                <span>${lang === 'en' ? 'Where to Eat' : 'কোথায় খাবেন (রেস্তোরাঁ)'}</span>
               </div>
               ${
                 chosenRestaurants.length
@@ -1555,7 +1777,7 @@ function renderVisualItineraryPass() {
                         )
                         .join('')}
                     </div>`
-                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'In-hotel or local dining' : 'হোটেল বা স্থানীয় খাবার'}</p>`
+                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'Hotel or local dining' : 'হোটেল বা স্থানীয় খাবার'}</p>`
               }
             </div>
 
@@ -1563,7 +1785,7 @@ function renderVisualItineraryPass() {
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
               <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-1.5">
                 <span>🚕</span>
-                <span>${lang === 'en' ? 'Daily Travel & Cost' : 'যাতায়াত ও পরিবহন খরচ'}</span>
+                <span>${lang === 'en' ? 'Daily Travel Cost' : 'যাতায়াত ও পরিবহন খরচ'}</span>
               </div>
               ${
                 chosenTransports.length
@@ -1592,8 +1814,8 @@ function renderVisualItineraryPass() {
     .join('');
 
   container.innerHTML = `
-    <!-- ACTION TOOLBAR: DOWNLOAD PNG / DOWNLOAD PDF / PRINT -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-ocean-950 text-white p-5 rounded-3xl shadow-xl border border-white/10">
+    <!-- TOP DOWNLOAD BAR -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-ocean-950 text-white p-5 sm:p-6 rounded-3xl shadow-xl border border-white/10">
       <div class="flex items-center gap-3.5">
         <img
           src="assets/images/logo-transparent.png"
@@ -1602,10 +1824,10 @@ function renderVisualItineraryPass() {
         />
         <div>
           <span class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300 block">
-            ${lang === 'en' ? 'READY TO EXPORT • OFFICIAL VISUAL DOSSIER' : 'ডাউনলোডের জন্য প্রস্তুত • অফিশিয়াল ভিজ্যুয়াল গাইড'}
+            ${lang === 'en' ? 'YOUR VISUAL ITINERARY PASS IS READY!' : 'আপনার ভিজ্যুয়াল ভ্রমণ পাস প্রস্তুত!'}
           </span>
-          <h3 class="text-lg font-extrabold text-white">
-            ${lang === 'en' ? 'Download Your Custom Visual Itinerary Pass' : 'আপনার কাস্টম ভিজ্যুয়াল ভ্রমণ গাইড ডাউনলোড করুন'}
+          <h3 class="text-lg sm:text-xl font-extrabold text-white">
+            ${lang === 'en' ? 'Save Your Plan to Your Phone or Computer' : 'আপনার ফোন বা কম্পিউটারে ডাউনলোড করে রাখুন'}
           </h3>
         </div>
       </div>
@@ -1615,33 +1837,29 @@ function renderVisualItineraryPass() {
           type="button"
           id="btn-download-png"
           onclick="downloadVisualItineraryPNG()"
-          class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2"
+          class="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          <span>${lang === 'en' ? 'Download Image (.PNG)' : 'ইমেজ ডাউনলোড (.PNG)'}</span>
+          <span>📥</span>
+          <span>${lang === 'en' ? 'Download Image (.PNG)' : 'ছবি ডাউনলোড (.PNG)'}</span>
         </button>
 
         <button
           type="button"
           id="btn-download-pdf"
           onclick="downloadVisualItineraryPDF()"
-          class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2"
+          class="px-5 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          <span>${lang === 'en' ? 'Download Official PDF' : 'পিডিএফ ডাউনলোড (.PDF)'}</span>
+          <span>📄</span>
+          <span>${lang === 'en' ? 'Download PDF (.PDF)' : 'পিডিএফ ডাউনলোড (.PDF)'}</span>
         </button>
 
         <button
           type="button"
           onclick="printVisualItinerary()"
-          class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs sm:text-sm transition flex items-center gap-1.5"
+          class="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs sm:text-sm transition flex items-center gap-1.5"
         >
           <span>🖨️</span>
-          <span>${lang === 'en' ? 'Print Pass' : 'প্রিন্ট করুন'}</span>
+          <span>${lang === 'en' ? 'Print' : 'প্রিন্ট'}</span>
         </button>
       </div>
     </div>
@@ -1682,7 +1900,7 @@ function renderVisualItineraryPass() {
                 ${FeaturesState.tripTitle}
               </h3>
               <p class="text-sky-200 text-xs sm:text-sm mt-1.5 font-medium">
-                ${lang === 'en' ? 'Prepared For:' : 'ভ্রমণকারী:'} <strong class="text-amber-300">${FeaturesState.travelerName}</strong>
+                ${lang === 'en' ? 'Traveler:' : 'ভ্রমণকারী:'} <strong class="text-amber-300">${FeaturesState.travelerName}</strong>
                 • ${FeaturesState.totalDays} ${lang === 'en' ? 'Days' : 'দিন'} / ${budget.nights} ${lang === 'en' ? 'Nights' : 'রাত'}
                 • ${lang === 'en' ? 'Currency:' : 'মুদ্রা:'} <strong>${typeof AppState !== 'undefined' ? AppState.currency : 'BDT'}</strong>
               </p>
@@ -1692,13 +1910,13 @@ function renderVisualItineraryPass() {
           <!-- Right: Total Estimated Trip Cost Summary Box -->
           <div class="bg-white/10 backdrop-blur-md border border-amber-300/40 rounded-3xl p-5 text-left lg:text-right shrink-0">
             <span class="block text-[11px] font-extrabold uppercase tracking-widest text-amber-300">
-              ${lang === 'en' ? 'TOTAL ESTIMATED TRIP BUDGET' : 'সর্বমোট আনুমানিক ভ্রমণ বাজেট'}
+              ${lang === 'en' ? 'TOTAL ESTIMATED TRIP COST' : 'সর্বমোট আনুমানিক ভ্রমণ খরচ'}
             </span>
             <div class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
               ${formatSinglePrice(budget.grandTotalBDT)}
             </div>
             <span class="block text-[11px] text-sky-200 mt-1">
-              ${lang === 'en' ? 'Includes Hotel + Transport/Bike + Dining + Activities' : 'হোটেল + যাতায়াত/বাইক + খাবার + অ্যাক্টিভিটি সহ'}
+              ${lang === 'en' ? 'Hotel + Travel/Bike + Food + Activities' : 'হোটেল + যাতায়াত/বাইক + খাবার + অ্যাক্টিভিটি সহ'}
             </span>
           </div>
         </div>
@@ -1718,7 +1936,7 @@ function renderVisualItineraryPass() {
                 />
                 <div class="min-w-0">
                   <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 block">
-                    🏨 ${lang === 'en' ? 'SELECTED ACCOMMODATION' : 'নির্বাচিত হোটেল'} (${budget.nights} ${lang === 'en' ? 'Nights' : 'রাত'})
+                    🏨 ${lang === 'en' ? 'YOUR SELECTED HOTEL' : 'নির্বাচিত হোটেল'} (${budget.nights} ${lang === 'en' ? 'Nights' : 'রাত'})
                   </span>
                   <div class="font-extrabold text-white text-sm sm:text-base truncate">${budget.selectedHotel.name[lang]}</div>
                   <div class="text-xs text-sky-200">${budget.selectedHotel.location[lang]} • <strong>${formatSinglePrice(budget.totalHotelBDT)}</strong></div>
@@ -1789,7 +2007,7 @@ function renderVisualItineraryPass() {
 }
 
 /* --------------------------------------------------------------------------
- * 7. DOWNLOAD VISUAL ITINERARY AS HIGH-RES PNG / PDF / PRINT
+ * 8. DOWNLOAD VISUAL ITINERARY AS HIGH-RES PNG / PDF / PRINT
  * -------------------------------------------------------------------------- */
 async function downloadVisualItineraryPNG() {
   const posterEl = document.getElementById('visual-itinerary-poster');
@@ -1802,7 +2020,7 @@ async function downloadVisualItineraryPNG() {
   const origText = btn ? btn.innerHTML : '';
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = `<span>⏳ Generating High-Res PNG...</span>`;
+    btn.innerHTML = `<span>⏳ Saving Image...</span>`;
   }
 
   try {
@@ -1817,6 +2035,7 @@ async function downloadVisualItineraryPNG() {
     link.download = `Visit-Cox-Itinerary-${FeaturesState.totalDays}-Days.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+    showUserToast('Downloaded your Visual Itinerary Image (.PNG)!');
   } catch (err) {
     console.error('PNG Export Error:', err);
     window.print();
@@ -1839,7 +2058,7 @@ async function downloadVisualItineraryPDF() {
   const origText = btn ? btn.innerHTML : '';
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = `<span>⏳ Generating Official PDF...</span>`;
+    btn.innerHTML = `<span>⏳ Saving PDF...</span>`;
   }
 
   try {
@@ -1853,8 +2072,7 @@ async function downloadVisualItineraryPDF() {
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
     const { jsPDF } = window.jspdf;
 
-    // Create custom PDF sized proportionally to the visual itinerary dossier
-    const pdfWidthMm = 210; // A4 width in mm
+    const pdfWidthMm = 210;
     const pdfHeightMm = Math.round((canvas.height * pdfWidthMm) / canvas.width);
 
     const pdf = new jsPDF({
@@ -1865,6 +2083,7 @@ async function downloadVisualItineraryPDF() {
 
     pdf.addImage(imgData, 'JPEG', 0, 5, pdfWidthMm, pdfHeightMm);
     pdf.save(`Visit-Cox-Itinerary-${FeaturesState.totalDays}-Days.pdf`);
+    showUserToast('Downloaded your Official PDF Itinerary!');
   } catch (err) {
     console.error('PDF Export Error:', err);
     window.print();
@@ -1881,7 +2100,7 @@ function printVisualItinerary() {
 }
 
 /* --------------------------------------------------------------------------
- * 8. HOOK INTO GLOBAL RENDER & INITIALIZATION
+ * 9. HOOK INTO GLOBAL RENDER & INITIALIZATION
  * -------------------------------------------------------------------------- */
 function renderInteractiveFeatures() {
   renderItineraryStudio();
