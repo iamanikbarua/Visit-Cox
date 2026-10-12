@@ -204,12 +204,20 @@ function setText(id, text) {
 }
 
 /* --------------------------------------------------------------------------
- * SECTION 2: ACCOMMODATIONS RENDERER
+ * SECTION 2: ACCOMMODATIONS RENDERER (SLIDING CAROUSEL)
  * -------------------------------------------------------------------------- */
+let hotelAutoSlideTimer = null;
+let hotelSliderActiveIndex = 0;
+let hotelAutoSlideEnabled = true;
+let hotelSliderHoverPaused = false;
+let hotelScrollListenerAttached = false;
+
 function renderHotels() {
   const t = UI_TEXT[AppState.lang].hotelsSection;
   const filterContainer = document.getElementById('hotel-location-filters');
   const gridContainer = document.getElementById('hotels-grid');
+  const dotsContainer = document.getElementById('hotel-slider-dots');
+  const counterEl = document.getElementById('hotel-slider-counter');
   if (!gridContainer) return;
 
   // Build unique location filters
@@ -250,9 +258,11 @@ function renderHotels() {
     return matchesLocation && haystack.includes(q);
   });
 
+  updateHotelAutoSlideUI();
+
   if (filteredHotels.length === 0) {
     gridContainer.innerHTML = `
-      <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
+      <div class="w-full bg-white rounded-3xl p-10 text-center border border-slate-200">
         <p class="text-slate-600 font-medium">${
           AppState.lang === 'en'
             ? 'No hotels match your current search filter. Try resetting filters.'
@@ -263,11 +273,22 @@ function renderHotels() {
         </button>
       </div>
     `;
+    if (dotsContainer) dotsContainer.innerHTML = '';
+    if (counterEl) {
+      counterEl.textContent = AppState.lang === 'en' ? '0 Hotels Found' : '০টি হোটেল পাওয়া গেছে';
+    }
     return;
   }
 
+  if (counterEl) {
+    counterEl.textContent =
+      AppState.lang === 'en'
+        ? `Showing ${filteredHotels.length} Verified Hotels • Swipe or Click Arrows ← →`
+        : `${formatNumber(filteredHotels.length, 'bn')}টি ভেরিফাইড হোটেল • বামে-ডানে স্লাইড করুন ← →`;
+  }
+
   gridContainer.innerHTML = filteredHotels
-    .map(hotel => {
+    .map((hotel, idx) => {
       const priceText = formatPriceRange(hotel.minBDT, hotel.maxBDT);
       const amenitiesList = hotel.amenities[AppState.lang]
         .map(
@@ -283,7 +304,10 @@ function renderHotels() {
         .join('');
 
       return `
-        <article class="coastal-card bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <article
+          data-hotel-slide-index="${idx}"
+          class="coastal-card shrink-0 snap-start w-[88%] sm:w-[350px] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm flex flex-col justify-between"
+        >
           <div>
             <!-- Hotel Image & Floating Badges -->
             <div class="relative h-56 overflow-hidden bg-slate-200">
@@ -311,7 +335,7 @@ function renderHotels() {
               <!-- Location Pill & Admin Controls on Image Bottom -->
               <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white gap-2">
                 <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-black/45 backdrop-blur-sm px-3 py-1 rounded-full">
-                  <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
@@ -397,11 +421,149 @@ function renderHotels() {
       `;
     })
     .join('');
+
+  renderHotelSliderDots(filteredHotels.length);
+  initHotelSliderEvents();
+  startHotelAutoSlide();
+}
+
+function renderHotelSliderDots(totalSlides) {
+  const dotsContainer = document.getElementById('hotel-slider-dots');
+  if (!dotsContainer) return;
+
+  if (totalSlides <= 1) {
+    dotsContainer.innerHTML = '';
+    return;
+  }
+
+  dotsContainer.innerHTML = Array.from({ length: totalSlides })
+    .map((_, idx) => {
+      const isActive = idx === hotelSliderActiveIndex;
+      return `
+        <button
+          type="button"
+          onclick="slideToHotelIndex(${idx})"
+          aria-label="Go to hotel slide ${idx + 1}"
+          class="h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+            isActive ? 'w-8 bg-sky-700 shadow-xs' : 'w-2.5 bg-slate-300 hover:bg-sky-400'
+          }"
+        ></button>
+      `;
+    })
+    .join('');
+}
+
+function slideHotels(direction) {
+  const track = document.getElementById('hotels-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('article[data-hotel-slide-index]');
+  if (!slides.length) return;
+
+  const firstCard = slides[0];
+  const gap = 24; // gap-6 = 24px
+  const stepWidth = firstCard.offsetWidth + gap;
+  const maxScrollLeft = track.scrollWidth - track.clientWidth;
+
+  if (direction > 0) {
+    // If near the right edge, loop back to the beginning smoothly
+    if (track.scrollLeft >= maxScrollLeft - 20) {
+      track.scrollTo({ left: 0, behavior: 'smooth' });
+      hotelSliderActiveIndex = 0;
+    } else {
+      track.scrollBy({ left: stepWidth, behavior: 'smooth' });
+      hotelSliderActiveIndex = Math.min(slides.length - 1, hotelSliderActiveIndex + 1);
+    }
+  } else {
+    // If at the start, jump to the end smoothly
+    if (track.scrollLeft <= 20) {
+      track.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+      hotelSliderActiveIndex = slides.length - 1;
+    } else {
+      track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
+      hotelSliderActiveIndex = Math.max(0, hotelSliderActiveIndex - 1);
+    }
+  }
+
+  renderHotelSliderDots(slides.length);
+}
+
+function slideToHotelIndex(index) {
+  const track = document.getElementById('hotels-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('article[data-hotel-slide-index]');
+  if (!slides[index]) return;
+
+  const targetLeft = slides[index].offsetLeft - track.offsetLeft;
+  track.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  hotelSliderActiveIndex = index;
+  renderHotelSliderDots(slides.length);
+}
+
+function initHotelSliderEvents() {
+  const track = document.getElementById('hotels-grid');
+  if (!track || hotelScrollListenerAttached) return;
+  hotelScrollListenerAttached = true;
+
+  track.addEventListener(
+    'scroll',
+    () => {
+      const slides = track.querySelectorAll('article[data-hotel-slide-index]');
+      if (!slides.length) return;
+      const firstCard = slides[0];
+      const stepWidth = firstCard.offsetWidth + 24;
+      const currentIdx = Math.min(
+        slides.length - 1,
+        Math.max(0, Math.round(track.scrollLeft / stepWidth))
+      );
+      if (currentIdx !== hotelSliderActiveIndex) {
+        hotelSliderActiveIndex = currentIdx;
+        renderHotelSliderDots(slides.length);
+      }
+    },
+    { passive: true }
+  );
+}
+
+function startHotelAutoSlide() {
+  if (hotelAutoSlideTimer) {
+    clearInterval(hotelAutoSlideTimer);
+  }
+  hotelAutoSlideTimer = setInterval(() => {
+    if (!hotelAutoSlideEnabled || hotelSliderHoverPaused) return;
+    slideHotels(1);
+  }, 4200);
+}
+
+function toggleHotelAutoSlide() {
+  hotelAutoSlideEnabled = !hotelAutoSlideEnabled;
+  updateHotelAutoSlideUI();
+}
+
+function pauseHotelAutoSlide(isPaused) {
+  hotelSliderHoverPaused = Boolean(isPaused);
+}
+
+function updateHotelAutoSlideUI() {
+  const iconEl = document.getElementById('hotel-autoplay-icon');
+  const labelEl = document.getElementById('hotel-autoplay-label');
+  if (iconEl) {
+    iconEl.textContent = hotelAutoSlideEnabled ? '⏸' : '▶';
+  }
+  if (labelEl) {
+    if (AppState.lang === 'bn') {
+      labelEl.textContent = hotelAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
+    } else {
+      labelEl.textContent = hotelAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
+    }
+  }
 }
 
 function setHotelFilter(locationKey) {
   AppState.hotelFilter = locationKey;
+  hotelSliderActiveIndex = 0;
   renderHotels();
+  const track = document.getElementById('hotels-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
 function openHotelInquiry(hotelId) {
