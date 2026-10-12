@@ -221,6 +221,12 @@ function initTouristMap() {
     }).addTo(FeaturesState.mapInstance);
 
     FeaturesState.markerLayerGroup = L.layerGroup().addTo(FeaturesState.mapInstance);
+
+    setTimeout(() => {
+      if (FeaturesState.mapInstance) {
+        FeaturesState.mapInstance.invalidateSize();
+      }
+    }, 250);
   }
 
   renderMapMarkersAndFilters();
@@ -1123,12 +1129,18 @@ function renderItineraryTimeline(animateScroll) {
 function renderInteractiveFeatures() {
   renderItineraryControls();
   renderItineraryTimeline(false);
-  if (FeaturesState.mapInstance) {
-    renderMapMarkersAndFilters();
+  if (!FeaturesState.mapInstance) {
+    initTouristMap();
   }
+  renderMapMarkersAndFilters();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initTouristMap();
+    renderInteractiveFeatures();
+  });
+} else {
   initTouristMap();
   renderInteractiveFeatures();
-});
+}
