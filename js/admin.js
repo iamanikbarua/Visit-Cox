@@ -13,16 +13,16 @@
  *
  * DEFAULT ADMIN CREDENTIALS:
  *   Username: admin   (or: anikbarua)
- *   Password: CoxAdmin@2026
+ *   Password: CoxAdmin*@#2026
  */
 
 const ADMIN_AUTH_STORAGE_KEY = 'visit_cox_admin_session_v1';
-const ADMIN_CREDS_STORAGE_KEY = 'visit_cox_admin_creds_v1';
+const ADMIN_CREDS_STORAGE_KEY = 'visit_cox_admin_creds_v2';
 
 const DEFAULT_ADMIN_CREDS = {
   username: 'admin',
   altUsername: 'anikbarua',
-  password: 'CoxAdmin@2026'
+  password: 'CoxAdmin*@#2026'
 };
 
 const AdminState = {
