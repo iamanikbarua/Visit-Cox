@@ -47,6 +47,14 @@
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
+  <!-- Leaflet.js v1.9.4 CSS CDN (OpenStreetMap — No API Key Required) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
   <!-- Custom Coastal Theme Stylesheet -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -81,10 +89,12 @@
         </a>
 
         <!-- Desktop Navigation Links -->
-        <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-sky-100">
+        <nav class="hidden lg:flex items-center gap-5 text-sm font-semibold text-sky-100">
           <a href="#home" data-nav="home" class="hover:text-amber-300 transition">Home</a>
           <a href="#hotels" data-nav="hotels" class="hover:text-amber-300 transition">Hotels</a>
           <a href="#destinations" data-nav="destinations" class="hover:text-amber-300 transition">Destinations</a>
+          <a href="#map-section" data-nav="map" class="hover:text-amber-300 transition text-teal-300">Interactive Map</a>
+          <a href="#itinerary-section" data-nav="itinerary" class="hover:text-amber-300 transition text-amber-300">Itinerary</a>
           <a href="#transport" data-nav="transport" class="hover:text-amber-300 transition">Transport</a>
           <a href="#essential-info" data-nav="essentialInfo" class="hover:text-amber-300 transition">Essential Info</a>
           <a href="#faq" data-nav="faq" class="hover:text-amber-300 transition">FAQ</a>
@@ -170,6 +180,8 @@
         <a href="#home" data-nav="home" class="px-3 py-2 rounded-xl hover:bg-white/10">Home</a>
         <a href="#hotels" data-nav="hotels" class="px-3 py-2 rounded-xl hover:bg-white/10">Hotels</a>
         <a href="#destinations" data-nav="destinations" class="px-3 py-2 rounded-xl hover:bg-white/10">Destinations</a>
+        <a href="#map-section" data-nav="map" class="px-3 py-2 rounded-xl hover:bg-white/10 text-teal-300">Interactive Map</a>
+        <a href="#itinerary-section" data-nav="itinerary" class="px-3 py-2 rounded-xl hover:bg-white/10 text-amber-300">Itinerary</a>
         <a href="#transport" data-nav="transport" class="px-3 py-2 rounded-xl hover:bg-white/10">Transport</a>
         <a href="#essential-info" data-nav="essentialInfo" class="px-3 py-2 rounded-xl hover:bg-white/10">Essential Info</a>
         <a href="#faq" data-nav="faq" class="px-3 py-2 rounded-xl hover:bg-white/10">FAQ</a>
@@ -411,6 +423,200 @@
   </section>
 
   <!-- ========================================================================
+       MODULE 1: INTERACTIVE TOURIST MAP (LEAFLET.JS + OPENSTREETMAP)
+       ======================================================================== -->
+  <section id="map-section" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section Heading & Category Filter Buttons -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
+        <div>
+          <span
+            id="map-eyebrow"
+            class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-700 bg-teal-100 px-3 py-1 rounded-full mb-3"
+          >
+            INTERACTIVE OPENSTREETMAP GUIDE
+          </span>
+          <h2
+            id="map-title"
+            class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+          >
+            Explore Cox’s Bazar on the Map
+          </h2>
+          <p id="map-subtitle" class="mt-3 text-slate-600 max-w-2xl text-base">
+            Click any marker or card to view verified hotels, sightseeing spots, and transport hubs across Cox’s Bazar.
+          </p>
+        </div>
+
+        <!-- Category Filter Buttons Above the Map -->
+        <div
+          id="map-category-filters"
+          class="flex flex-wrap items-center gap-2"
+          role="group"
+          aria-label="Filter Map Categories"
+        >
+          <!-- Populated dynamically via features.js -->
+        </div>
+      </div>
+
+      <!-- Map + Interactive Pin Directory Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Leaflet Map Canvas (8 Columns on Desktop) -->
+        <div class="lg:col-span-8">
+          <div id="coxs-bazar-map" aria-label="Interactive Tourist Map of Cox's Bazar"></div>
+        </div>
+
+        <!-- Quick-Jump Pin Cards Sidebar (4 Columns on Desktop) -->
+        <div class="lg:col-span-4 bg-slate-100/80 rounded-3xl p-4 sm:p-5 border border-slate-200/80">
+          <div class="flex items-center justify-between mb-3 px-1">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+              Pinned Locations (Click to Fly)
+            </span>
+            <span class="text-[11px] font-bold text-teal-700 bg-teal-100 px-2.5 py-0.5 rounded-full">
+              21.4272° N, 91.9702° E
+            </span>
+          </div>
+          <div
+            id="map-locations-quicklist"
+            class="space-y-2.5 max-h-[430px] overflow-y-auto pr-1"
+          >
+            <!-- Populated dynamically via features.js -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       MODULE 2: CUSTOM ITINERARY BUILDER (DYNAMIC TIMELINE GENERATOR)
+       ======================================================================== -->
+  <section id="itinerary-section" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section Heading -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span
+          id="itin-eyebrow"
+          class="inline-block text-xs font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100 px-3 py-1 rounded-full mb-3"
+        >
+          SMART TRIP PLANNER
+        </span>
+        <h2
+          id="itin-title"
+          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+        >
+          Custom Cox’s Bazar Itinerary Builder
+        </h2>
+        <p id="itin-subtitle" class="mt-3 text-slate-600 text-base">
+          Select your trip length and travel style to generate a tailored day-by-day Morning, Afternoon, and Evening plan.
+        </p>
+      </div>
+
+      <!-- Interactive Itinerary Builder Input Form Card -->
+      <form
+        onsubmit="handleGenerateItinerary(event)"
+        class="bg-sand-50 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm mb-12"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+
+          <!-- 1. Trip Length Selector (2 Days, 3 Days, 5 Days) -->
+          <div class="lg:col-span-4">
+            <label
+              id="itin-length-label"
+              class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2.5"
+            >
+              1. Select Trip Length
+            </label>
+            <div class="flex items-center gap-2.5">
+              <button
+                type="button"
+                id="itin-btn-2d"
+                data-itin-days="2"
+                onclick="selectItineraryDays('2')"
+              >
+                2 Days
+              </button>
+              <button
+                type="button"
+                id="itin-btn-3d"
+                data-itin-days="3"
+                onclick="selectItineraryDays('3')"
+              >
+                3 Days
+              </button>
+              <button
+                type="button"
+                id="itin-btn-5d"
+                data-itin-days="5"
+                onclick="selectItineraryDays('5')"
+              >
+                5 Days
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Travel Style Selector (Family & Relaxing, Adventure, Budget) -->
+          <div class="lg:col-span-5">
+            <label
+              id="itin-style-label"
+              class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2.5"
+            >
+              2. Choose Travel Style
+            </label>
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
+              <button
+                type="button"
+                id="itin-btn-family"
+                data-itin-style="family"
+                onclick="selectItineraryStyle('family')"
+              >
+                Family &amp; Relaxing
+              </button>
+              <button
+                type="button"
+                id="itin-btn-adventure"
+                data-itin-style="adventure"
+                onclick="selectItineraryStyle('adventure')"
+              >
+                Adventure
+              </button>
+              <button
+                type="button"
+                id="itin-btn-budget"
+                data-itin-style="budget"
+                onclick="selectItineraryStyle('budget')"
+              >
+                Budget
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Generate My Itinerary Button -->
+          <div class="lg:col-span-3">
+            <button
+              type="submit"
+              class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-ocean-950 via-sky-700 to-teal-600 hover:from-ocean-900 hover:to-teal-500 text-white font-extrabold text-sm shadow-lg shadow-sky-950/20 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            >
+              <svg class="w-4 h-4 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              <span id="itin-generate-btn-text">Generate My Itinerary</span>
+            </button>
+          </div>
+
+        </div>
+      </form>
+
+      <!-- Dynamic Timeline Output Container (Morning / Afternoon / Evening Cards) -->
+      <div id="itinerary-output-container" aria-live="polite">
+        <!-- Populated dynamically via features.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
        4. TRANSPORTATION & PRICING TABLE (WITH FOREIGNER VEHICLE GUIDE)
        ======================================================================== -->
   <section id="transport" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
@@ -583,6 +789,8 @@
             <li><a href="#home" data-nav="home" class="hover:text-white transition">Home</a></li>
             <li><a href="#hotels" data-nav="hotels" class="hover:text-white transition">Hotels</a></li>
             <li><a href="#destinations" data-nav="destinations" class="hover:text-white transition">Destinations</a></li>
+            <li><a href="#map-section" data-nav="map" class="hover:text-white transition text-teal-300">Interactive Map</a></li>
+            <li><a href="#itinerary-section" data-nav="itinerary" class="hover:text-white transition text-amber-300">Itinerary</a></li>
             <li><a href="#transport" data-nav="transport" class="hover:text-white transition">Transport</a></li>
             <li><a href="#essential-info" data-nav="essentialInfo" class="hover:text-white transition">Essential Info</a></li>
             <li><a href="#faq" data-nav="faq" class="hover:text-white transition">FAQ</a></li>
@@ -958,9 +1166,17 @@
 
   </div>
 
+  <!-- Leaflet.js v1.9.4 JS CDN (OpenStreetMap — No API Key Required) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
   <!-- Modular JavaScript Files -->
   <script src="js/data.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/features.js"></script>
 </body>
 </html>

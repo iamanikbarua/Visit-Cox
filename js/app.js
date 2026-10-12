@@ -1040,6 +1040,9 @@ function renderAll() {
   renderEssentialInfo();
   renderFAQs();
   renderChatQuickPrompts();
+  if (typeof renderInteractiveFeatures === 'function') {
+    renderInteractiveFeatures();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
