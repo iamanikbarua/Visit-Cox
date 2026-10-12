@@ -1057,12 +1057,13 @@
           </p>
         </div>
 
-        <!-- Action Buttons: Write Blog Post + Open Dedicated Blog Page -->
+        <!-- Action Buttons: Write Blog Post (Admin Only) + Open Dedicated Blog Page -->
         <div class="flex flex-wrap items-center gap-3 shrink-0">
           <button
             type="button"
+            data-blog-admin-only
             onclick="openBlogEditorModal(null)"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
+            class="hidden inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
           >
             <span>✍️</span>
             <span id="blog-write-btn-text">Write &amp; Publish Blog Post</span>
@@ -1183,7 +1184,7 @@
             <li><a href="#itinerary-section" data-nav="itinerary" class="hover:text-white transition text-amber-300">Itinerary</a></li>
             <li><a href="#transport" data-nav="transport" class="hover:text-white transition">Transport</a></li>
             <li><a href="#essential-info" data-nav="essentialInfo" class="hover:text-white transition">Essential Info</a></li>
-            <li><a href="blog.html" class="hover:text-white transition text-emerald-300 font-bold">Travel Blog ✍️</a></li>
+            <li><a href="blog.html" class="hover:text-white transition text-emerald-300 font-bold">Travel Blog</a></li>
             <li><a href="#faq" data-nav="faq" class="hover:text-white transition">FAQ</a></li>
           </ul>
         </div>
@@ -1259,6 +1260,13 @@
       class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold transition"
     >
       + Spot
+    </button>
+    <button
+      type="button"
+      onclick="openBlogEditorModal(null)"
+      class="px-2.5 py-1.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 text-xs font-bold transition"
+    >
+      + Blog Post
     </button>
     <button
       type="button"
@@ -1575,10 +1583,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-blog"></script>
-  <script src="js/admin.js?v=20261013-blog"></script>
-  <script src="js/app.js?v=20261013-blog"></script>
-  <script src="js/features.js?v=20261013-blog"></script>
-  <script src="js/blog.js?v=20261013-blog"></script>
+  <script src="js/data.js?v=20261013-blog2"></script>
+  <script src="js/admin.js?v=20261013-blog2"></script>
+  <script src="js/app.js?v=20261013-blog2"></script>
+  <script src="js/features.js?v=20261013-blog2"></script>
+  <script src="js/blog.js?v=20261013-blog2"></script>
 </body>
 </html>

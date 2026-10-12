@@ -254,6 +254,16 @@ function getBlogLang() {
   return typeof AppState !== 'undefined' && AppState.lang ? AppState.lang : 'en';
 }
 
+function isBlogAdminAuthenticated() {
+  if (typeof AdminState !== 'undefined' && typeof AdminState.isAuthenticated === 'boolean') {
+    return AdminState.isAuthenticated;
+  }
+  return (
+    sessionStorage.getItem('visit_cox_admin_session_v1') === 'true' ||
+    localStorage.getItem('visit_cox_admin_session_v1') === 'true'
+  );
+}
+
 function getLocalizedField(fieldObj, lang) {
   if (!fieldObj) return '';
   if (typeof fieldObj === 'string') return fieldObj;
@@ -306,10 +316,16 @@ function getFilteredBlogPosts() {
 
 function renderBlogSection() {
   const lang = getBlogLang();
+  const isAdmin = isBlogAdminAuthenticated();
 
   // Sync navbar links if present
   document.querySelectorAll('[data-nav="blog"]').forEach(el => {
     el.textContent = lang === 'en' ? 'Blog' : 'ব্লগ';
+  });
+
+  // Show/hide admin-only blog creation controls for visitors vs admin
+  document.querySelectorAll('[data-blog-admin-only]').forEach(el => {
+    el.classList.toggle('hidden', !isAdmin);
   });
 
   // Render category filter pills
@@ -358,8 +374,8 @@ function renderBlogSection() {
   setTxt(
     'blog-section-subtitle',
     lang === 'en'
-      ? 'Read insider tips on Marine Drive routes, authentic seafood spots, and island hopping — or write and publish your own blog post to share information with fellow travelers!'
-      : 'কক্সবাজারের ভ্রমণ অভিজ্ঞতা, খাবার ও রুট গাইড পড়ুন অথবা নিজের ভ্রমণ কাহিনী ও ছবি পোস্ট করে সবার সাথে শেয়ার করুন!'
+      ? 'Read insider tips on Marine Drive routes, authentic seafood spots, and island hopping across Cox’s Bazar.'
+      : 'কক্সবাজারের ভ্রমণ অভিজ্ঞতা, সামুদ্রিক খাবার, মেরিন ড্রাইভ রুট ও দ্বীপ ভ্রমণের বিস্তারিত গাইড পড়ুন।'
   );
   setTxt('blog-write-btn-text', lang === 'en' ? 'Write & Publish Blog Post' : 'নতুন ব্লগ পোস্ট লিখুন');
   setTxt('blog-open-page-text', lang === 'en' ? 'Open Full Blog Page' : 'সম্পূর্ণ ব্লগ পেজ দেখুন');
@@ -379,7 +395,7 @@ function renderBlogSection() {
           ${lang === 'en' ? 'No blog posts match your filter' : 'এই ক্যাটাগরিতে কোনো ব্লগ পোস্ট পাওয়া যায়নি'}
         </h4>
         <p class="text-xs sm:text-sm text-slate-500 mt-1">
-          ${lang === 'en' ? 'Try clearing your search or publish a new blog post!' : 'সব ক্যাটাগরি দেখুন অথবা নতুন একটি ব্লগ পোস্ট লিখুন!'}
+          ${lang === 'en' ? 'Try clearing your search or selecting All Posts.' : 'সব ক্যাটাগরি দেখুন অথবা সার্চ পরিবর্তন করুন।'}
         </p>
         <div class="mt-4 flex items-center justify-center gap-3">
           <button
@@ -389,13 +405,19 @@ function renderBlogSection() {
           >
             ${lang === 'en' ? 'Show All Posts' : 'সব পোস্ট দেখুন'}
           </button>
-          <button
-            type="button"
-            onclick="openBlogEditorModal(null)"
-            class="px-4 py-2 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-extrabold transition cursor-pointer"
-          >
-            ✍️ ${lang === 'en' ? 'Write New Post' : 'নতুন পোস্ট লিখুন'}
-          </button>
+          ${
+            isAdmin
+              ? `
+            <button
+              type="button"
+              onclick="openBlogEditorModal(null)"
+              class="px-4 py-2 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-extrabold transition cursor-pointer"
+            >
+              ✍️ ${lang === 'en' ? 'Write New Post' : 'নতুন পোস্ট লিখুন'}
+            </button>
+          `
+              : ''
+          }
         </div>
       </div>
     `;
@@ -414,6 +436,29 @@ function renderBlogSection() {
             `<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold">#${t}</span>`
         )
         .join('');
+
+      const adminControlsHTML = isAdmin
+        ? `
+          <div class="absolute top-3.5 right-3.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              onclick="event.stopPropagation(); openBlogEditorModal('${post.id}')"
+              title="${lang === 'en' ? 'Edit Post (Admin)' : 'সম্পাদনা করুন'}"
+              class="px-2.5 py-1 rounded-lg bg-slate-900/85 hover:bg-sky-600 text-white text-[11px] font-bold backdrop-blur-sm transition cursor-pointer"
+            >
+              ✎ ${lang === 'en' ? 'Edit' : 'এডিট'}
+            </button>
+            <button
+              type="button"
+              onclick="event.stopPropagation(); deleteBlogPost('${post.id}')"
+              title="${lang === 'en' ? 'Delete Post (Admin)' : 'মুছে ফেলুন'}"
+              class="px-2 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[11px] font-bold backdrop-blur-sm transition cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        `
+        : '';
 
       return `
         <article
@@ -437,25 +482,7 @@ function renderBlogSection() {
                 ${catMeta.icon} ${catMeta[lang]}
               </span>
 
-              <!-- Quick Edit / Delete Controls on Card -->
-              <div class="absolute top-3.5 right-3.5 flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onclick="event.stopPropagation(); openBlogEditorModal('${post.id}')"
-                  title="${lang === 'en' ? 'Edit Post' : 'সম্পাদনা করুন'}"
-                  class="px-2.5 py-1 rounded-lg bg-slate-900/80 hover:bg-sky-600 text-white text-[11px] font-bold backdrop-blur-sm transition cursor-pointer"
-                >
-                  ✎ ${lang === 'en' ? 'Edit' : 'এডিট'}
-                </button>
-                <button
-                  type="button"
-                  onclick="event.stopPropagation(); deleteBlogPost('${post.id}')"
-                  title="${lang === 'en' ? 'Delete Post' : 'মুছে ফেলুন'}"
-                  class="px-2 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[11px] font-bold backdrop-blur-sm transition cursor-pointer"
-                >
-                  ✕
-                </button>
-              </div>
+              ${adminControlsHTML}
 
               <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-sky-100 font-semibold">
                 <span>✍️ ${post.author || 'Traveler'} • ${post.date || 'Oct 2026'}</span>
@@ -611,13 +638,19 @@ function openBlogReaderModal(postId) {
         </div>
 
         <div class="flex items-center gap-2">
-          <button
-            type="button"
-            onclick="closeBlogReaderModal(); openBlogEditorModal('${post.id}');"
-            class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-800 font-bold text-xs transition cursor-pointer"
-          >
-            ✎ ${lang === 'en' ? 'Edit Post' : 'এডিট করুন'}
-          </button>
+          ${
+            isBlogAdminAuthenticated()
+              ? `
+            <button
+              type="button"
+              onclick="closeBlogReaderModal(); openBlogEditorModal('${post.id}');"
+              class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-800 font-bold text-xs transition cursor-pointer"
+            >
+              ✎ ${lang === 'en' ? 'Edit Post' : 'এডিট করুন'}
+            </button>
+          `
+              : ''
+          }
           <button
             type="button"
             onclick="closeBlogReaderModal()"
@@ -682,6 +715,16 @@ function shareBlogPost(postId) {
  * 4. WRITE / EDIT / DELETE BLOG POST MODAL
  * -------------------------------------------------------------------------- */
 function openBlogEditorModal(postId) {
+  if (!isBlogAdminAuthenticated()) {
+    if (typeof openAdminLoginModal === 'function') {
+      showBlogToast('🔒 Please sign in as Administrator to publish or edit blog posts.');
+      openAdminLoginModal();
+    } else {
+      showBlogToast('🔒 Administrator login required to publish or edit blog posts.');
+    }
+    return;
+  }
+
   BlogState.editingPostId = postId || null;
   const modal = document.getElementById('blog-editor-modal');
   if (!modal) return;
@@ -780,11 +823,12 @@ function handleBlogImageFileUpload(event) {
 
 function handleSaveBlogPostSubmit(event) {
   if (event) event.preventDefault();
+  if (!isBlogAdminAuthenticated()) return;
   const lang = getBlogLang();
 
   const titleVal = (document.getElementById('blog-form-title')?.value || '').trim();
   const authorVal = (document.getElementById('blog-form-author')?.value || 'Anik Barua').trim();
-  const categoryVal = document.getElementById('blog-form-category')?.value || 'Adventure & Routes';
+  const categoryVal = (document.getElementById('blog-form-category')?.value || 'Adventure & Routes').trim();
   const readTimeVal = (document.getElementById('blog-form-readtime')?.value || '3 min read').trim();
   const imageVal = (document.getElementById('blog-form-image')?.value || 'assets/images/inani-beach.jpg').trim();
   const tagsRaw = (document.getElementById('blog-form-tags')?.value || '').trim();
@@ -866,6 +910,10 @@ function handleSaveBlogPostSubmit(event) {
 }
 
 function deleteBlogPost(postId) {
+  if (!isBlogAdminAuthenticated()) {
+    showBlogToast('🔒 Administrator login required to delete blog posts.');
+    return;
+  }
   const lang = getBlogLang();
   const confirmMsg =
     lang === 'en'
