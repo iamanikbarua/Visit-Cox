@@ -84,37 +84,62 @@ function updateToggleButtons() {
   const isEN = AppState.lang === 'en';
   const isBDT = AppState.currency === 'BDT';
 
-  // Desktop & Mobile Language Toggle Pills
+  // Desktop & Mobile Language Toggle Pills (with whitespace-nowrap)
   document.querySelectorAll('[data-lang-btn="en"]').forEach(el => {
     el.className = isEN
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
   });
   document.querySelectorAll('[data-lang-btn="bn"]').forEach(el => {
     el.className = !isEN
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
   });
 
-  // Desktop & Mobile Currency Toggle Pills
+  // Desktop & Mobile Currency Toggle Pills (with whitespace-nowrap)
   document.querySelectorAll('[data-curr-btn="BDT"]').forEach(el => {
     el.className = isBDT
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-teal-500 text-white shadow-sm transition-all'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-teal-500 text-white shadow-sm transition-all whitespace-nowrap'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
   });
   document.querySelectorAll('[data-curr-btn="USD"]').forEach(el => {
     el.className = !isBDT
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-teal-500 text-white shadow-sm transition-all'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-teal-500 text-white shadow-sm transition-all whitespace-nowrap'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
   });
 }
+
+let heroActiveSlideIndex = 0;
+let heroAutoSlideTimer = null;
+
+const HERO_SCENES_META = [
+  {
+    en: { pill: '🌊 Laboni & Sugandha Beach', badge: '120 KM UNBROKEN NATURAL SEA BEACH • BAY OF BENGAL' },
+    bn: { pill: '🌊 লাবণী ও সুগন্ধা সৈকত', badge: '১২০ কিমি অবিচ্ছিন্ন প্রাকৃতিক সমুদ্র সৈকত • বঙ্গোপসাগর' }
+  },
+  {
+    en: { pill: '🪨 Inani Coral Beach', badge: 'INANI BEACH • ANCIENT CORAL BOULDERS & CRYSTAL WATERS' },
+    bn: { pill: '🪨 ইনানী প্রবাল সৈকত', badge: 'ইনানী সমুদ্র সৈকত • প্রাচীন প্রবাল পাথর ও নীল জলরাশি' }
+  },
+  {
+    en: { pill: '⛰️ Himchari Hills', badge: 'HIMCHARI NATIONAL PARK • COASTAL HILLS & WATERFALLS' },
+    bn: { pill: '⛰️ হিমছড়ি পাহাড় ও ঝর্ণা', badge: 'হিমছড়ি জাতীয় উদ্যান • সবুজ পাহাড় ও প্রাকৃতিক ঝর্ণা' }
+  },
+  {
+    en: { pill: '⛵ Marine Drive Sampans', badge: '80 KM MARINE DRIVE • TRADITIONAL SAMPAN BOATS AT SUNSET' },
+    bn: { pill: '⛵ মেরিন ড্রাইভ ও সাম্পান', badge: '৮০ কিমি মেরিন ড্রাইভ • সূর্যাস্তে ঐতিহ্যবাহী সাম্পান নৌকা' }
+  },
+  {
+    en: { pill: '🏝️ Moheshkhali Island', badge: 'MOHESHKHALI ISLAND • ADINATH TEMPLE & CHANNEL SPEEDBOATS' },
+    bn: { pill: '🏝️ মহেশখালী দ্বীপ', badge: 'মহেশখালী দ্বীপ • মৈনাক পাহাড়ের আদিনাথ মন্দির ও স্পিডবোট' }
+  }
+];
 
 function renderStaticText() {
   const t = UI_TEXT[AppState.lang];
 
-  // Brand & Nav
+  // Brand & Nav (Single-line brand name; tagline removed)
   setText('brand-name', t.brandName);
-  setText('brand-tagline', t.brandTagline);
   document.querySelectorAll('[data-nav="home"]').forEach(el => (el.textContent = t.nav.home));
   document.querySelectorAll('[data-nav="hotels"]').forEach(el => (el.textContent = t.nav.hotels));
   document.querySelectorAll('[data-nav="destinations"]').forEach(el => (el.textContent = t.nav.destinations));
@@ -123,11 +148,20 @@ function renderStaticText() {
   document.querySelectorAll('[data-nav="faq"]').forEach(el => (el.textContent = t.nav.faq));
 
   // Hero Section
-  setText('hero-badge', t.hero.badge);
+  const currentHeroMeta = HERO_SCENES_META[heroActiveSlideIndex] || HERO_SCENES_META[0];
+  setText('hero-badge', currentHeroMeta[AppState.lang].badge);
   setText('hero-title', t.hero.title);
   setText('hero-subtitle', t.hero.subtitle);
   setText('hero-cta-hotels', t.hero.ctaHotels);
   setText('hero-cta-spots', t.hero.ctaSpots);
+
+  // Update Hero Scene Switcher Pill Labels
+  document.querySelectorAll('[data-hero-pill]').forEach(btn => {
+    const idx = parseInt(btn.getAttribute('data-hero-pill'), 10);
+    if (HERO_SCENES_META[idx]) {
+      btn.textContent = HERO_SCENES_META[idx][AppState.lang].pill;
+    }
+  });
 
   const searchInput = document.getElementById('hero-search-input');
   if (searchInput) searchInput.placeholder = t.hero.searchPlaceholder;
@@ -138,16 +172,20 @@ function renderStaticText() {
   setText('search-opt-transport', t.hero.searchCategoryTransport);
   setText('hero-search-btn-text', t.hero.searchBtn);
 
-  // Hero Stats
+  // Hero Stats (Interactive Glass Cards)
   const statsContainer = document.getElementById('hero-stats-grid');
   if (statsContainer) {
+    const statTargets = ['#destinations', '#map-section', '#destinations', '#essential-info'];
     statsContainer.innerHTML = t.hero.stats
       .map(
-        stat => `
-        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 text-center">
-          <div class="text-2xl md:text-3xl font-extrabold text-amber-300 tracking-tight">${stat.value}</div>
-          <div class="text-xs md:text-sm text-sky-100 mt-1 font-medium">${stat.label}</div>
-        </div>
+        (stat, idx) => `
+        <a
+          href="${statTargets[idx] || '#destinations'}"
+          class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/15 hover:border-amber-300/50 rounded-2xl p-3.5 sm:p-4 text-center transition transform hover:-translate-y-1 shadow-lg"
+        >
+          <div class="text-xl sm:text-2xl md:text-3xl font-extrabold text-amber-300 tracking-tight">${stat.value}</div>
+          <div class="text-[11px] sm:text-xs md:text-sm text-sky-100 mt-1 font-medium">${stat.label}</div>
+        </a>
       `
       )
       .join('');
@@ -1147,12 +1185,190 @@ function toggleFaqItem(faqId) {
 }
 
 /* --------------------------------------------------------------------------
- * HERO QUICK SEARCH HANDLER
+ * DYNAMIC HERO SLIDESHOW & LIVE QUICK SEARCH CONTROLLER
  * -------------------------------------------------------------------------- */
+function setHeroSlide(index, isManual) {
+  const slides = document.querySelectorAll('#hero-bg-slider .hero-slide');
+  if (!slides.length) return;
+
+  heroActiveSlideIndex = ((index % slides.length) + slides.length) % slides.length;
+
+  slides.forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === heroActiveSlideIndex);
+  });
+
+  document.querySelectorAll('[data-hero-pill]').forEach(btn => {
+    const idx = parseInt(btn.getAttribute('data-hero-pill'), 10);
+    const isActive = idx === heroActiveSlideIndex;
+    btn.className = isActive
+      ? 'px-3 py-1.5 rounded-full text-xs font-extrabold transition-all bg-amber-400 text-slate-950 shadow-md scale-105 cursor-pointer'
+      : 'px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer';
+  });
+
+  const meta = HERO_SCENES_META[heroActiveSlideIndex];
+  if (meta && meta[AppState.lang]) {
+    setText('hero-badge', meta[AppState.lang].badge);
+  }
+
+  if (isManual) {
+    startHeroAutoSlider();
+  }
+}
+
+function startHeroAutoSlider() {
+  if (heroAutoSlideTimer) {
+    clearInterval(heroAutoSlideTimer);
+  }
+  heroAutoSlideTimer = setInterval(() => {
+    setHeroSlide(heroActiveSlideIndex + 1, false);
+  }, 4800);
+}
+
+function triggerQuickHeroSearch(term, category) {
+  const input = document.getElementById('hero-search-input');
+  const categorySelect = document.getElementById('hero-search-category');
+  if (input) input.value = term;
+  if (categorySelect && category) categorySelect.value = category;
+  document.getElementById('hero-live-search-results')?.classList.add('hidden');
+  handleHeroSearch();
+}
+
+function selectLiveSearchResult(sectionId, query, category) {
+  const input = document.getElementById('hero-search-input');
+  const categorySelect = document.getElementById('hero-search-category');
+  if (input) input.value = query || '';
+  if (categorySelect) categorySelect.value = category || 'all';
+
+  AppState.searchQuery = query || '';
+  AppState.searchCategory = category || 'all';
+  AppState.hotelFilter = 'ALL';
+
+  renderHotels();
+  renderDestinations();
+  renderTransport();
+
+  document.getElementById('hero-live-search-results')?.classList.add('hidden');
+  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function handleLiveHeroSearchInput() {
+  const input = document.getElementById('hero-search-input');
+  const dropdown = document.getElementById('hero-live-search-results');
+  if (!input || !dropdown) return;
+
+  const q = input.value.trim().toLowerCase();
+  if (!q) {
+    dropdown.classList.add('hidden');
+    if (AppState.searchQuery) {
+      AppState.searchQuery = '';
+      renderHotels();
+      renderDestinations();
+      renderTransport();
+    }
+    return;
+  }
+
+  const lang = AppState.lang;
+  const matchedHotels = HOTELS_DATA.filter(
+    h =>
+      h.name.en.toLowerCase().includes(q) ||
+      h.name.bn.toLowerCase().includes(q) ||
+      h.location.en.toLowerCase().includes(q)
+  ).slice(0, 3);
+
+  const allSpots = [...DESTINATIONS_DATA, ...(typeof HIDDEN_GEMS_DATA !== 'undefined' ? HIDDEN_GEMS_DATA : [])];
+  const matchedSpots = allSpots
+    .filter(
+      s =>
+        s.name.en.toLowerCase().includes(q) ||
+        s.name.bn.toLowerCase().includes(q) ||
+        (s.vibe && s.vibe.en.toLowerCase().includes(q))
+    )
+    .slice(0, 4);
+
+  const matchedTransport = TRANSPORT_DATA.filter(
+    tr =>
+      tr.route.en.toLowerCase().includes(q) ||
+      tr.vehicleName.en.toLowerCase().includes(q) ||
+      tr.route.bn.toLowerCase().includes(q)
+  ).slice(0, 3);
+
+  const itemsHTML = [];
+
+  matchedHotels.forEach(h => {
+    const safeName = h.name.en.replace(/'/g, "\\'");
+    itemsHTML.push(`
+      <button
+        type="button"
+        onclick="selectLiveSearchResult('hotels', '${safeName}', 'hotels')"
+        class="w-full p-2.5 rounded-xl hover:bg-sky-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
+      >
+        <div class="flex items-center gap-2.5 min-w-0">
+          <img src="${h.image}" alt="${h.name[lang]}" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          <div class="min-w-0">
+            <span class="block text-[10px] font-extrabold uppercase tracking-wider text-sky-700">🏨 ${lang === 'en' ? 'Hotel' : 'হোটেল'}</span>
+            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${h.name[lang]}</span>
+          </div>
+        </div>
+        <span class="text-xs font-extrabold text-teal-700 shrink-0">${formatPriceRange(h.minBDT, h.maxBDT)}</span>
+      </button>
+    `);
+  });
+
+  matchedSpots.forEach(s => {
+    const safeName = s.name.en.replace(/'/g, "\\'");
+    itemsHTML.push(`
+      <button
+        type="button"
+        onclick="selectLiveSearchResult('destinations', '${safeName}', 'spots')"
+        class="w-full p-2.5 rounded-xl hover:bg-teal-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
+      >
+        <div class="flex items-center gap-2.5 min-w-0">
+          <img src="${s.image}" alt="${s.name[lang]}" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          <div class="min-w-0">
+            <span class="block text-[10px] font-extrabold uppercase tracking-wider text-teal-700">📍 ${lang === 'en' ? 'Sightseeing Spot' : 'দর্শনীয় স্থান'}</span>
+            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${s.name[lang]}</span>
+          </div>
+        </div>
+        <span class="text-xs font-bold text-sky-700 shrink-0">Explore →</span>
+      </button>
+    `);
+  });
+
+  matchedTransport.forEach(tr => {
+    const safeVeh = tr.vehicleName.en.replace(/'/g, "\\'");
+    itemsHTML.push(`
+      <button
+        type="button"
+        onclick="selectLiveSearchResult('transport', '${safeVeh}', 'transport')"
+        class="w-full p-2.5 rounded-xl hover:bg-amber-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
+      >
+        <div class="min-w-0">
+          <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-700">🚕 ${lang === 'en' ? 'Local Transport' : 'স্থানীয় যাতায়াত'}</span>
+          <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${tr.route[lang]} (${tr.vehicleName[lang]})</span>
+        </div>
+        <span class="text-xs font-extrabold text-slate-800 shrink-0">${formatPriceRange(tr.minBDT, tr.maxBDT)}</span>
+      </button>
+    `);
+  });
+
+  if (!itemsHTML.length) {
+    dropdown.innerHTML = `
+      <div class="p-3 text-center text-xs text-slate-500">
+        ${lang === 'en' ? `No direct matches for "${input.value}". Press Enter to search all sections.` : `"${input.value}" এর জন্য সরাসরি কিছু পাওয়া যায়নি।`}
+      </div>
+    `;
+  } else {
+    dropdown.innerHTML = `<div class="space-y-1">${itemsHTML.join('')}</div>`;
+  }
+  dropdown.classList.remove('hidden');
+}
+
 function handleHeroSearch(e) {
   if (e) e.preventDefault();
   const input = document.getElementById('hero-search-input');
   const categorySelect = document.getElementById('hero-search-category');
+  document.getElementById('hero-live-search-results')?.classList.add('hidden');
 
   AppState.searchQuery = input ? input.value : '';
   AppState.searchCategory = categorySelect ? categorySelect.value : 'all';
@@ -1188,6 +1404,7 @@ function resetSearchAndFilters() {
   const select = document.getElementById('hero-search-category');
   if (input) input.value = '';
   if (select) select.value = 'all';
+  document.getElementById('hero-live-search-results')?.classList.add('hidden');
   renderAll();
 }
 
@@ -1265,26 +1482,12 @@ function appendChatMessage(sender, htmlText) {
  * ============================================================================
  * AI BACKEND INTEGRATION HOOK
  * ============================================================================
- * Currently provides instant local responses using the verified Cox's Bazar
- * dataset. To connect your custom LLM / AI Backend API later, simply replace
- * the body of `fetchTravelAssistantReply(userText)` with a `fetch('/api/chat')` call!
  */
 async function fetchTravelAssistantReply(userText) {
   const q = userText.toLowerCase();
 
   // Simulate natural assistant thinking delay (450ms)
   await new Promise(resolve => setTimeout(resolve, 450));
-
-  /*
-   * // EXAMPLE BACKEND INTEGRATION:
-   * const res = await fetch('https://your-api.com/chat', {
-   *   method: 'POST',
-   *   headers: { 'Content-Type': 'application/json' },
-   *   body: JSON.stringify({ message: userText, lang: AppState.lang, currency: AppState.currency })
-   * });
-   * const data = await res.json();
-   * return data.reply;
-   */
 
   // Smart Contextual Matcher from our exact dataset
   if (q.includes('hotel') || q.includes('stay') || q.includes('price') || q.includes('হোটেল') || q.includes('ভাড়া') || q.includes('sea crown') || q.includes('kollol') || q.includes('nisanah') || q.includes('orchid') || q.includes('prime park')) {
@@ -1359,7 +1562,7 @@ async function handleUserChatSubmission(prefilledText) {
 }
 
 /* --------------------------------------------------------------------------
- * MOBILE MENU & STICKY NAVBAR CONTROLLER
+ * MOBILE MENU, SCROLL PROGRESS BAR & ACTIVE SECTION SCROLLSPY
  * -------------------------------------------------------------------------- */
 function toggleMobileMenu() {
   AppState.isMobileMenuOpen = !AppState.isMobileMenuOpen;
@@ -1371,14 +1574,52 @@ function toggleMobileMenu() {
 
 function initScrollListeners() {
   const navbar = document.getElementById('main-navbar');
-  window.addEventListener('scroll', () => {
-    if (!navbar) return;
-    if (window.scrollY > 30) {
-      navbar.classList.add('navbar-scrolled');
-    } else {
-      navbar.classList.remove('navbar-scrolled');
+  const progressBar = document.getElementById('scroll-progress-bar');
+  const sectionIds = [
+    'home',
+    'hotels',
+    'destinations',
+    'map-section',
+    'itinerary-section',
+    'transport',
+    'essential-info',
+    'faq'
+  ];
+
+  const handleScrollUpdate = () => {
+    if (navbar) {
+      if (window.scrollY > 30) {
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+      }
     }
-  });
+
+    // Update top scroll progress bar
+    if (progressBar) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
+      progressBar.style.width = `${pct}%`;
+    }
+
+    // Update active navbar link based on current scroll position
+    let activeSection = 'home';
+    const scrollPos = window.scrollY + 180;
+    for (const secId of sectionIds) {
+      const el = document.getElementById(secId);
+      if (el && el.offsetTop <= scrollPos) {
+        activeSection = secId;
+      }
+    }
+
+    document.querySelectorAll('[data-section-link]').forEach(link => {
+      const linkSec = link.getAttribute('data-section-link');
+      link.classList.toggle('nav-link-active', linkSec === activeSection);
+    });
+  };
+
+  window.addEventListener('scroll', handleScrollUpdate, { passive: true });
+  handleScrollUpdate();
 
   // Close mobile drawer when clicking a nav link
   document.querySelectorAll('#mobile-nav-drawer a').forEach(link => {
@@ -1409,12 +1650,25 @@ function renderAll() {
 document.addEventListener('DOMContentLoaded', () => {
   renderAll();
   initScrollListeners();
+  startHeroAutoSlider();
 
-  // Hook up Hero search form
+  // Hook up Hero search form & live search input
   const searchForm = document.getElementById('hero-search-form');
   if (searchForm) {
     searchForm.addEventListener('submit', handleHeroSearch);
   }
+  const searchInput = document.getElementById('hero-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', handleLiveHeroSearchInput);
+  }
+
+  // Hide live search dropdown when clicking outside
+  document.addEventListener('click', e => {
+    const dropdown = document.getElementById('hero-live-search-results');
+    if (dropdown && !dropdown.contains(e.target) && e.target !== searchInput) {
+      dropdown.classList.add('hidden');
+    }
+  });
 
   // Hook up Chatbot form
   const chatForm = document.getElementById('chatbot-form');

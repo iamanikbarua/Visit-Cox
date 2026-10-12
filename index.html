@@ -54,7 +54,7 @@
   />
 
   <!-- Custom Coastal Theme Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=20261012-slider" />
+  <link rel="stylesheet" href="css/styles.css?v=20261013-dynamic" />
 
   <!-- Self-Contained Map & Itinerary Styles -->
   <style>
@@ -135,170 +135,200 @@
        ======================================================================== -->
   <header
     id="main-navbar"
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-ocean-950/85 backdrop-blur-md border-b border-white/10"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-ocean-950/90 backdrop-blur-md border-b border-white/10"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
+    <!-- Dynamic Top Scroll Progress Indicator -->
+    <div class="w-full h-0.5 bg-white/5 overflow-hidden">
+      <div
+        id="scroll-progress-bar"
+        class="h-full bg-gradient-to-r from-teal-400 via-sky-400 to-amber-400 w-0 transition-all duration-150"
+      ></div>
+    </div>
 
-        <!-- Brand Logo -->
-        <a href="#home" class="flex items-center gap-3 group">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-8">
+      <div class="flex items-center justify-between gap-2 xl:gap-4 h-18 sm:h-20">
+
+        <!-- Brand Logo (Clean Single-Line — Tagline Removed) -->
+        <a href="#home" class="flex items-center gap-2.5 sm:gap-3 group shrink-0 whitespace-nowrap">
           <img
             src="assets/images/favicon.png"
             alt="Visit Cox Logo"
-            class="w-12 h-12 object-contain drop-shadow-md group-hover:scale-105 transition"
+            class="w-10 h-10 sm:w-11 sm:h-11 object-contain drop-shadow-md group-hover:scale-105 transition shrink-0"
           />
-          <div>
-            <span id="brand-name" class="block text-lg font-extrabold text-white tracking-tight leading-none">
-              Visit Cox's Bazar
-            </span>
-            <span id="brand-tagline" class="block text-[11px] font-medium text-teal-300 tracking-wider uppercase mt-1">
-              Bangladesh Coastal Guide
-            </span>
-          </div>
+          <span
+            id="brand-name"
+            class="text-base sm:text-lg xl:text-xl font-extrabold text-white tracking-tight whitespace-nowrap"
+          >
+            Visit Cox's Bazar
+          </span>
         </a>
 
-        <!-- Desktop Navigation Links -->
-        <nav class="hidden lg:flex items-center gap-5 text-sm font-semibold text-sky-100">
-          <a href="#home" data-nav="home" class="hover:text-amber-300 transition">Home</a>
-          <a href="#hotels" data-nav="hotels" class="hover:text-amber-300 transition">Hotels</a>
-          <a href="#destinations" data-nav="destinations" class="hover:text-amber-300 transition">Destinations</a>
-          <a href="#map-section" data-nav="map" class="hover:text-amber-300 transition text-teal-300">Interactive Map</a>
-          <a href="#itinerary-section" data-nav="itinerary" class="hover:text-amber-300 transition text-amber-300">Itinerary</a>
-          <a href="#transport" data-nav="transport" class="hover:text-amber-300 transition">Transport</a>
-          <a href="#essential-info" data-nav="essentialInfo" class="hover:text-amber-300 transition">Essential Info</a>
-          <a href="#faq" data-nav="faq" class="hover:text-amber-300 transition">FAQ</a>
+        <!-- Desktop Navigation Links (Floating Glass Pill Bar — Zero Wrapping) -->
+        <nav
+          aria-label="Primary Navigation"
+          class="hidden xl:flex items-center gap-1 2xl:gap-1.5 bg-white/5 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 text-xs 2xl:text-[13px] font-bold text-sky-100 shrink-0"
+        >
+          <a href="#home" data-nav="home" data-section-link="home" class="nav-link-pill nav-link-active px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Home</a>
+          <a href="#hotels" data-nav="hotels" data-section-link="hotels" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Hotels</a>
+          <a href="#destinations" data-nav="destinations" data-section-link="destinations" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Destinations</a>
+          <a href="#map-section" data-nav="map" data-section-link="map-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-teal-300 hover:text-amber-300">Route Planner</a>
+          <a href="#itinerary-section" data-nav="itinerary" data-section-link="itinerary-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-amber-300 hover:text-amber-200">Plan My Trip</a>
+          <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Transport</a>
+          <a href="#essential-info" data-nav="essentialInfo" data-section-link="essential-info" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Essential Info</a>
+          <a href="#faq" data-nav="faq" data-section-link="faq" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">FAQ</a>
         </nav>
 
-        <!-- Interactive Toggles: Dual Language (EN/বাং), Currency (BDT/USD) & Admin Access -->
-        <div class="hidden sm:flex items-center gap-2.5">
-          <!-- Dual Language Switcher -->
-          <div
-            class="flex items-center bg-white/10 p-1 rounded-full border border-white/15"
-            role="group"
-            aria-label="Language Switcher"
-          >
-            <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')">EN</button>
-            <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')">বাংলা</button>
+        <!-- Right Controls: Language, Currency, Admin & Responsive Drawer Button -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Interactive Toggles: Dual Language (EN/বাং), Currency (BDT/USD) & Admin Access -->
+          <div class="hidden sm:flex items-center gap-2 shrink-0">
+            <!-- Dual Language Switcher -->
+            <div
+              class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 shrink-0 whitespace-nowrap"
+              role="group"
+              aria-label="Language Switcher"
+            >
+              <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="whitespace-nowrap">EN</button>
+              <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="whitespace-nowrap">বাংলা</button>
+            </div>
+
+            <!-- Currency Converter Switcher -->
+            <div
+              class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 shrink-0 whitespace-nowrap"
+              role="group"
+              aria-label="Currency Converter"
+            >
+              <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="whitespace-nowrap">৳ BDT</button>
+              <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="whitespace-nowrap">$ USD</button>
+            </div>
+
+            <!-- Admin Portal Button -->
+            <button
+              type="button"
+              onclick="handleAdminButtonClick()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-300/30 transition whitespace-nowrap shrink-0"
+            >
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              <span class="admin-nav-btn-label whitespace-nowrap">Admin Login</span>
+            </button>
           </div>
 
-          <!-- Currency Converter Switcher -->
-          <div
-            class="flex items-center bg-white/10 p-1 rounded-full border border-white/15"
-            role="group"
-            aria-label="Currency Converter"
-          >
-            <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')">৳ BDT</button>
-            <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')">$ USD</button>
+          <!-- Mobile / Tablet Menu Button (Shown below xl so navbar never crowds) -->
+          <div class="flex items-center xl:hidden">
+            <button
+              type="button"
+              onclick="toggleMobileMenu()"
+              aria-label="Toggle Menu"
+              class="p-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 border border-white/15 transition"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+            </button>
           </div>
-
-          <!-- Admin Portal Button -->
-          <button
-            type="button"
-            onclick="handleAdminButtonClick()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-300/30 transition"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
-            <span class="admin-nav-btn-label">Admin Login</span>
-          </button>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <div class="flex items-center gap-2 lg:hidden">
-          <button
-            type="button"
-            onclick="toggleMobileMenu()"
-            aria-label="Toggle Menu"
-            class="p-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 transition"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
         </div>
 
       </div>
     </div>
 
-    <!-- Mobile Navigation Drawer -->
+    <!-- Mobile & Tablet Navigation Drawer -->
     <div
       id="mobile-nav-drawer"
-      class="hidden lg:hidden bg-ocean-950/98 border-b border-white/10 px-4 pt-3 pb-6 space-y-4"
+      class="hidden xl:hidden bg-ocean-950/98 backdrop-blur-xl border-b border-white/10 px-4 pt-3 pb-6 space-y-4 shadow-2xl"
     >
       <!-- Mobile Toggles Row -->
       <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 sm:hidden">
-        <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15">
-          <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')">EN</button>
-          <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')">বাংলা</button>
+        <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 whitespace-nowrap">
+          <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="whitespace-nowrap">EN</button>
+          <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="whitespace-nowrap">বাংলা</button>
         </div>
-        <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15">
-          <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')">৳ BDT</button>
-          <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')">$ USD</button>
+        <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 whitespace-nowrap">
+          <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="whitespace-nowrap">৳ BDT</button>
+          <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="whitespace-nowrap">$ USD</button>
         </div>
         <button
           type="button"
           onclick="handleAdminButtonClick()"
-          class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30"
+          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30 whitespace-nowrap"
         >
-          <span class="admin-nav-btn-label">Admin Login</span>
+          <span class="admin-nav-btn-label whitespace-nowrap">Admin Login</span>
         </button>
       </div>
 
-      <nav class="flex flex-col space-y-2 text-base font-semibold text-sky-100">
-        <a href="#home" data-nav="home" class="px-3 py-2 rounded-xl hover:bg-white/10">Home</a>
-        <a href="#hotels" data-nav="hotels" class="px-3 py-2 rounded-xl hover:bg-white/10">Hotels</a>
-        <a href="#destinations" data-nav="destinations" class="px-3 py-2 rounded-xl hover:bg-white/10">Destinations</a>
-        <a href="#map-section" data-nav="map" class="px-3 py-2 rounded-xl hover:bg-white/10 text-teal-300">Interactive Map</a>
-        <a href="#itinerary-section" data-nav="itinerary" class="px-3 py-2 rounded-xl hover:bg-white/10 text-amber-300">Itinerary</a>
-        <a href="#transport" data-nav="transport" class="px-3 py-2 rounded-xl hover:bg-white/10">Transport</a>
-        <a href="#essential-info" data-nav="essentialInfo" class="px-3 py-2 rounded-xl hover:bg-white/10">Essential Info</a>
-        <a href="#faq" data-nav="faq" class="px-3 py-2 rounded-xl hover:bg-white/10">FAQ</a>
+      <nav class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm font-bold text-sky-100">
+        <a href="#home" data-nav="home" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Home</a>
+        <a href="#hotels" data-nav="hotels" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Hotels</a>
+        <a href="#destinations" data-nav="destinations" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Destinations</a>
+        <a href="#map-section" data-nav="map" class="px-3.5 py-2.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 flex items-center justify-between">Route Planner</a>
+        <a href="#itinerary-section" data-nav="itinerary" class="px-3.5 py-2.5 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 flex items-center justify-between">Plan My Trip</a>
+        <a href="#transport" data-nav="transport" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Transport</a>
+        <a href="#essential-info" data-nav="essentialInfo" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Essential Info</a>
+        <a href="#faq" data-nav="faq" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">FAQ</a>
       </nav>
     </div>
   </header>
 
   <!-- ========================================================================
-       1. HOMEPAGE (HERO SECTION & OVERVIEW)
+       1. HOMEPAGE (DYNAMIC MULTI-SLIDE HERO SHOWCASE & LIVE SEARCH)
        ======================================================================== -->
   <section
     id="home"
-    class="relative min-h-screen flex items-center justify-center pt-28 pb-20 overflow-hidden"
+    class="relative min-h-screen flex items-center justify-center pt-28 pb-16 sm:pb-24 overflow-hidden"
   >
-    <!-- Authentic Cox's Bazar Beach Video & Original Wikimedia Commons Photography -->
-    <div class="absolute inset-0 z-0">
-      <video
-        autoplay
-        muted
-        loop
-        playsinline
-        poster="assets/images/hero-coxs-bazar.jpg"
-        class="w-full h-full object-cover scale-105"
-      >
-        <source
-          src="https://upload.wikimedia.org/wikipedia/commons/e/e0/The_traditional_fishing_boat_%28Sampan_Boats%29_moored_on_the_longest_beach%2C_Cox%27s_Bazar.webm"
-          type="video/webm"
+    <!-- Dynamic Multi-Slide Cox's Bazar Background Showcase (Ken-Burns Zoom + Crossfade) -->
+    <div id="hero-bg-slider" class="absolute inset-0 z-0 bg-ocean-950">
+      <div class="hero-slide active" data-hero-slide="0">
+        <img
+          src="assets/images/hero-coxs-bazar.jpg"
+          alt="Cox's Bazar 120 km Sea Beach & Traditional Sampan Boats"
+          class="w-full h-full object-cover"
         />
-        <source
-          src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-sea-waves-crashing-on-the-beach-41576-large.mp4"
-          type="video/mp4"
+      </div>
+      <div class="hero-slide" data-hero-slide="1">
+        <img
+          src="assets/images/inani-beach.jpg"
+          alt="Inani Coral Beach on Marine Drive"
+          class="w-full h-full object-cover"
         />
-      </video>
+      </div>
+      <div class="hero-slide" data-hero-slide="2">
+        <img
+          src="assets/images/himchari.jpg"
+          alt="Himchari National Park Coastal Hills"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <div class="hero-slide" data-hero-slide="3">
+        <img
+          src="assets/images/shamlapur-sampan.jpg"
+          alt="Shamlapur Sampan Boats at Sunset on Marine Drive"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <div class="hero-slide" data-hero-slide="4">
+        <img
+          src="assets/images/moheshkhali.jpg"
+          alt="Moheshkhali Island & Channel"
+          class="w-full h-full object-cover"
+        />
+      </div>
       <div class="absolute inset-0 hero-gradient"></div>
     </div>
 
     <!-- Hero Content Container -->
-    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <!-- Coastal Eyebrow Pill -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/20 border border-teal-300/30 backdrop-blur-md text-teal-200 text-xs font-extrabold tracking-widest uppercase mb-6 animate-float">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/25 border border-teal-300/40 backdrop-blur-md text-teal-200 text-[11px] sm:text-xs font-extrabold tracking-widest uppercase mb-5 animate-float shadow-lg">
         <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
-        <span id="hero-badge">120 KM UNBROKEN SANDY SHORELINE</span>
+        <span id="hero-badge">120 KM UNBROKEN NATURAL SEA BEACH • BAY OF BENGAL</span>
       </div>
 
       <!-- Hero Main Title -->
       <h1
         id="hero-title"
-        class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight max-w-4xl mx-auto drop-shadow-md"
+        class="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.12] max-w-4xl mx-auto drop-shadow-lg"
       >
         Experience the Longest Sea Beach in the World
       </h1>
@@ -306,18 +336,66 @@
       <!-- Hero Subtitle -->
       <p
         id="hero-subtitle"
-        class="mt-6 text-lg sm:text-xl md:text-2xl text-sky-100/95 max-w-2xl mx-auto font-normal leading-relaxed"
+        class="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-sky-100/95 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow"
       >
         Your ultimate guide to hotels, sightseeing, and local travel in Cox's Bazar.
       </p>
 
-      <!-- Call-to-Action Buttons -->
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <!-- Interactive Hero Scene Switcher Pills (Lets user dynamically preview Cox's Bazar spots) -->
+      <div
+        id="hero-scene-pills"
+        class="mt-6 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2"
+        aria-label="Cox's Bazar Scenic Highlights"
+      >
+        <button
+          type="button"
+          onclick="setHeroSlide(0, true)"
+          data-hero-pill="0"
+          class="px-3 py-1.5 rounded-full text-xs font-extrabold transition-all bg-amber-400 text-slate-950 shadow-md cursor-pointer"
+        >
+          🌊 Laboni & Sugandha Beach
+        </button>
+        <button
+          type="button"
+          onclick="setHeroSlide(1, true)"
+          data-hero-pill="1"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
+        >
+          🪨 Inani Coral Beach
+        </button>
+        <button
+          type="button"
+          onclick="setHeroSlide(2, true)"
+          data-hero-pill="2"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
+        >
+          ⛰️ Himchari Hills
+        </button>
+        <button
+          type="button"
+          onclick="setHeroSlide(3, true)"
+          data-hero-pill="3"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
+        >
+          ⛵ Marine Drive Sampans
+        </button>
+        <button
+          type="button"
+          onclick="setHeroSlide(4, true)"
+          data-hero-pill="4"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
+        >
+          🏝️ Moheshkhali Island
+        </button>
+      </div>
+
+      <!-- Call-to-Action Buttons (Responsive Grid on Mobile, Flex Row on Tablet/Desktop) -->
+      <div class="mt-7 grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-3 sm:gap-3.5 max-w-xl sm:max-w-none mx-auto">
         <a
           href="#hotels"
-          class="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-600 hover:to-teal-600 text-white font-bold text-base shadow-xl shadow-sky-950/40 transition transform hover:-translate-y-0.5"
+          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm md:text-base shadow-xl shadow-sky-950/40 transition transform hover:-translate-y-0.5 whitespace-nowrap"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
           <span id="hero-cta-hotels">Find Hotels</span>
@@ -325,9 +403,9 @@
 
         <a
           href="#destinations"
-          class="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-md font-bold text-base transition transform hover:-translate-y-0.5"
+          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-md font-bold text-xs sm:text-sm md:text-base transition transform hover:-translate-y-0.5 whitespace-nowrap"
         >
-          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
@@ -335,35 +413,44 @@
         </a>
 
         <a
+          href="#map-section"
+          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-teal-500/25 hover:bg-teal-500/40 text-teal-100 border border-teal-300/40 backdrop-blur-md font-extrabold text-xs sm:text-sm md:text-base transition transform hover:-translate-y-0.5 whitespace-nowrap"
+        >
+          <span>🛣️</span>
+          <span data-nav="map">Route Planner</span>
+        </a>
+
+        <a
           href="#itinerary-section"
-          class="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-base shadow-xl shadow-amber-950/30 transition transform hover:-translate-y-0.5"
+          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs sm:text-sm md:text-base shadow-xl shadow-amber-950/30 transition transform hover:-translate-y-0.5 whitespace-nowrap"
         >
           <span>🗓️</span>
           <span data-nav="itinerary">Plan My Trip</span>
         </a>
       </div>
 
-      <!-- Quick Interactive Search Bar -->
-      <div class="mt-10 max-w-4xl mx-auto">
+      <!-- Quick Interactive Search Bar + Instant Live Results Dropdown -->
+      <div class="mt-8 max-w-4xl mx-auto relative">
         <form
           id="hero-search-form"
-          class="bg-white/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-3xl shadow-2xl border border-white/40 flex flex-col md:flex-row items-stretch gap-2.5"
+          class="bg-white/95 backdrop-blur-xl p-2 sm:p-2.5 rounded-3xl shadow-2xl border border-white/40 flex flex-col md:flex-row items-stretch gap-2"
         >
           <!-- Search Input -->
-          <div class="flex-1 flex items-center gap-3 px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200/80">
+          <div class="flex-1 flex items-center gap-3 px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 focus-within:border-sky-500 focus-within:bg-white transition">
             <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
             <input
               id="hero-search-input"
               type="text"
+              autocomplete="off"
               placeholder="Search hotels, beaches, islands, or transport (e.g., Inani, Sea Crown, Tomtom)..."
               class="w-full bg-transparent text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none"
             />
           </div>
 
           <!-- Category Filter Select -->
-          <div class="flex items-center px-3 py-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 md:w-52">
+          <div class="flex items-center px-3 py-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 md:w-48">
             <select
               id="hero-search-category"
               aria-label="Category Filter"
@@ -379,7 +466,7 @@
           <!-- Submit Search Button -->
           <button
             type="submit"
-            class="px-7 py-3.5 rounded-2xl bg-ocean-950 hover:bg-sky-800 text-white font-bold text-sm transition flex items-center justify-center gap-2 shrink-0 shadow-md"
+            class="px-6 py-3.5 rounded-2xl bg-ocean-950 hover:bg-sky-800 text-white font-bold text-sm transition flex items-center justify-center gap-2 shrink-0 shadow-md whitespace-nowrap cursor-pointer"
           >
             <span id="hero-search-btn-text">Search Guide</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,10 +474,56 @@
             </svg>
           </button>
         </form>
+
+        <!-- Instant Live Search Suggestions Dropdown -->
+        <div
+          id="hero-live-search-results"
+          class="hidden absolute left-0 right-0 top-full mt-2 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 p-3 text-left z-40 max-h-80 overflow-y-auto"
+        ></div>
+
+        <!-- Quick Trending Search Chips -->
+        <div id="hero-quick-tags" class="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-xs">
+          <span class="text-sky-200/90 font-semibold mr-1">🔥 Quick Explore:</span>
+          <button
+            type="button"
+            onclick="triggerQuickHeroSearch('Inani', 'spots')"
+            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
+          >
+            🪨 Inani Beach
+          </button>
+          <button
+            type="button"
+            onclick="triggerQuickHeroSearch('Sea Crown', 'hotels')"
+            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
+          >
+            🏨 Hotel Sea Crown
+          </button>
+          <button
+            type="button"
+            onclick="triggerQuickHeroSearch('Moheshkhali', 'spots')"
+            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
+          >
+            🏝️ Moheshkhali Island
+          </button>
+          <button
+            type="button"
+            onclick="triggerQuickHeroSearch('Chander Gari', 'transport')"
+            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
+          >
+            🚙 Marine Drive Jeep
+          </button>
+          <button
+            type="button"
+            onclick="triggerQuickHeroSearch('Tomtom', 'transport')"
+            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
+          >
+            🛺 Tomtom Fares
+          </button>
+        </div>
       </div>
 
       <!-- Quick Overview Stats Grid -->
-      <div id="hero-stats-grid" class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+      <div id="hero-stats-grid" class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
         <!-- Populated dynamically via app.js -->
       </div>
     </div>
@@ -1334,9 +1467,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-routemap"></script>
-  <script src="js/admin.js?v=20261013-routemap"></script>
-  <script src="js/app.js?v=20261013-routemap"></script>
-  <script src="js/features.js?v=20261013-routemap"></script>
+  <script src="js/data.js?v=20261013-dynamic"></script>
+  <script src="js/admin.js?v=20261013-dynamic"></script>
+  <script src="js/app.js?v=20261013-dynamic"></script>
+  <script src="js/features.js?v=20261013-dynamic"></script>
 </body>
 </html>

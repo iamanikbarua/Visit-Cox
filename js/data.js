@@ -20,7 +20,7 @@ const CONFIG = {
 const UI_TEXT = {
   en: {
     brandName: "Visit Cox's Bazar",
-    brandTagline: "Official Coastal & Heritage Guide",
+    brandTagline: "",
     nav: {
       home: "Home",
       hotels: "Hotels",
@@ -158,7 +158,7 @@ const UI_TEXT = {
 
   bn: {
     brandName: "ভিজিট কক্সবাজার",
-    brandTagline: "প্রামাণ্য উপকূলীয় ও ঐতিহ্য ভ্রমণ গাইড",
+    brandTagline: "",
     nav: {
       home: "হোম",
       hotels: "হোটেল",
