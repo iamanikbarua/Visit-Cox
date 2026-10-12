@@ -10,20 +10,18 @@
  *       • Transport Hubs: Kasturi Ghat, Dolphin Mor
  *   - Interactive popup cards + live category filter buttons
  *
- * Module 2: Custom Itinerary Builder
- *   - Trip Length: 2 Days, 3 Days, 5 Days
- *   - Travel Style: Family & Relaxing, Adventure, Budget
- *   - Dynamic DOM updates rendering a vertical timeline with Morning,
- *     Afternoon, and Evening cards + live BDT/USD cost estimates.
+ * Module 2: International-Standard Custom Itinerary Studio & Visual Pass Builder
+ *   - Interactive multi-day planner (1–7 Days, default 5-Day Cox's Bazar plan)
+ *   - Directly connected to website content:
+ *       • Hotel selector (from HOTELS_DATA)
+ *       • Daily Spots selector (from DESTINATIONS_DATA + HIDDEN_GEMS_DATA)
+ *       • Daily Restaurant / Where to Eat selector
+ *       • Daily Activities selector (including Riding by Bike on Marine Drive Road)
+ *       • Daily Transport & Travel Cost selector (from TRANSPORT_DATA + Bike rental)
+ *   - Generates an international-standard Visual Itinerary Dossier branded with
+ *     the creative Visit Cox logo sign (`assets/images/logo-transparent.png`)
+ *   - Supports 1-Click High-Res PNG Poster Download, PDF Document Download, & Print
  */
-
-const FeaturesState = {
-  mapInstance: null,
-  markerLayerGroup: null,
-  activeMapFilter: 'all', // 'all' | 'hotels' | 'spots' | 'hubs'
-  selectedDays: '2',      // '2' | '3' | '5'
-  selectedStyle: 'family' // 'family' | 'adventure' | 'budget'
-};
 
 /* --------------------------------------------------------------------------
  * 1. MAP LOCATIONS DATASET (Categorized Coordinates & Bilingual Details)
@@ -179,20 +177,393 @@ const MAP_LOCATIONS = [
 ];
 
 /* --------------------------------------------------------------------------
- * 2. LEAFLET INTERACTIVE MAP INITIALIZATION & FILTERING
+ * 2. CURATED CATALOGS FOR INTERACTIVE ITINERARY STUDIO
+ *    (Restaurants, Signature Activities, Transport & Website Spots)
+ * -------------------------------------------------------------------------- */
+const ITIN_RESTAURANTS_CATALOG = [
+  {
+    id: 'rest-poushee',
+    name: { en: 'Poushee Restaurant (Jhautola)', bn: 'পৌষী রেস্তোরাঁ (ঝাউতলা)' },
+    specialty: {
+      en: 'Iconic local Mezbani beef, Loitta fish fry & 25+ coastal bhartas',
+      bn: 'ঐতিহ্যবাহী মেজবানি গোশত, লইট্টা ফ্রাই ও ২৫+ পদের ভর্তা'
+    },
+    avgCostBDT: 450,
+    icon: '🍛'
+  },
+  {
+    id: 'rest-jhaubon',
+    name: { en: 'Jhaubon Restaurant (Sugandha Point)', bn: 'ঝাউবন রেস্তোরাঁ (সুগন্ধা পয়েন্ট)' },
+    specialty: {
+      en: 'Fresh grilled Rupchanda, coral fish curry & Bengali seafood thali',
+      bn: 'তাজা রূপচাঁদা গ্রিল, কোরাল মাছের কারি ও বাঙালি সি-ফুড থালি'
+    },
+    avgCostBDT: 550,
+    icon: '🐟'
+  },
+  {
+    id: 'rest-mermaid',
+    name: { en: 'Mermaid Beach Cafe (Marine Drive)', bn: 'মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ)' },
+    specialty: {
+      en: 'International beachfront dining, wood-fired seafood platter & mocktails',
+      bn: 'আন্তর্জাতিক মানের সৈকত সংলগ্ন সি-ফুড প্ল্যাটার ও ক্যান্ডেললাইট ডিনার'
+    },
+    avgCostBDT: 1400,
+    icon: '🦞'
+  },
+  {
+    id: 'rest-salt-bistro',
+    name: { en: 'Salt Bistro & Ocean Cafe (Kolatoli)', bn: 'সল্ট বিস্ট্রো অ্যান্ড ওশান ক্যাফে' },
+    specialty: {
+      en: 'Artisan coffee, continental brunch, pasta & ocean-view desserts',
+      bn: 'আর্টিজান কফি, কন্টিনেন্টাল ব্রাঞ্চ ও ওশান-ভিউ ডেজার্ট'
+    },
+    avgCostBDT: 850,
+    icon: '☕'
+  },
+  {
+    id: 'rest-rooftop-grill',
+    name: { en: 'Prime Park / Sea Crown Rooftop Dining', bn: 'প্রাইম পার্ক / সী ক্রাউন রুফটপ ডাইনিং' },
+    specialty: {
+      en: 'Panoramic sunset BBQ buffet, jumbo tiger prawns & hills-and-sea view',
+      bn: 'প্যানোরামিক সানসেট বারবিকিউ, গলদা চিংড়ি ও পাহাড়-সমুদ্র ভিউ'
+    },
+    avgCostBDT: 1100,
+    icon: '🌅'
+  },
+  {
+    id: 'rest-sugandha-fry',
+    name: { en: 'Sugandha Live Beach Fish Fry Stalls', bn: 'সুগন্ধা সৈকত লাইভ ফিশ ফ্রাই মার্কেট' },
+    specialty: {
+      en: 'Evening open-air live fried crab, squid, tuna & red snapper by the waves',
+      bn: 'সৈকতের পাড়ে গরম গরম কাঁকড়া, অক্টোপাস, টুনা ও কোরাল ফ্রাই'
+    },
+    avgCostBDT: 600,
+    icon: '🦀'
+  },
+  {
+    id: 'rest-handi',
+    name: { en: 'Handi Restaurant (Kalatali Circle)', bn: 'হান্ডি রেস্তোরাঁ (কলাতলী মোড়)' },
+    specialty: {
+      en: 'Authentic Hyderabadi dum biryani, tandoori platters & local curries',
+      bn: 'হায়দ্রাবাদি দম বিরিয়ানি, তান্দুরি প্ল্যাটার ও দেশি কারি'
+    },
+    avgCostBDT: 650,
+    icon: '🍲'
+  }
+];
+
+const ITIN_ACTIVITIES_CATALOG = [
+  {
+    id: 'act-marine-drive-bike',
+    name: {
+      en: 'Riding by Bike on Marine Drive Road (80 km Ocean Highway)',
+      bn: 'মেরিন ড্রাইভ রোডে বাইক রাইডিং (৮০ কিমি সমুদ্র-পাহাড় সড়ক)'
+    },
+    badge: { en: 'Signature Experience', bn: 'সেরা অ্যাডভেঞ্চার' },
+    costBDT: 1500,
+    icon: '🏍️'
+  },
+  {
+    id: 'act-chander-gari-safari',
+    name: {
+      en: 'Open-Top Chander Gari (Jeep) Coastal Safari to Inani',
+      bn: 'খোলা ছাদের চান্দের গাড়িতে ইনানী ও মেরিন ড্রাইভ সাফারি'
+    },
+    badge: { en: 'Group Favorite', bn: 'গ্রুপ রাইড' },
+    costBDT: 1750,
+    icon: '🚙'
+  },
+  {
+    id: 'act-moheshkhali-speedboat',
+    name: {
+      en: 'Speedboat Crossing across Bakkhali Estuary to Moheshkhali',
+      bn: 'কস্তুরাঘাট থেকে স্পিডবোটে বাঁকখালী নদী ও মহেশখালী চ্যানেল পাড়ি'
+    },
+    badge: { en: 'Island Hopping', bn: 'দ্বীপ ভ্রমণ' },
+    costBDT: 200,
+    icon: '🚤'
+  },
+  {
+    id: 'act-himchari-trek',
+    name: {
+      en: 'Himchari Hilltop Climb & Coastal Waterfall Trekking',
+      bn: 'হিমছড়ি পাহাড়ের চূড়ায় ট্রেকিং ও প্রাকৃতিক ঝর্ণা দর্শন'
+    },
+    badge: { en: 'Nature & Views', bn: 'পাহাড় ও ঝর্ণা' },
+    costBDT: 120,
+    icon: '🥾'
+  },
+  {
+    id: 'act-parasailing-jetski',
+    name: {
+      en: 'Beach Parasailing, Jet Ski & ATV Quad Bike at Sugandha',
+      bn: 'সুগন্ধা ও দরিয়ানগরে প্যারাসেইলিং, জেট স্কি ও বিচ বাইক'
+    },
+    badge: { en: 'Water Sports', bn: 'ওয়াটার স্পোর্টস' },
+    costBDT: 1500,
+    icon: '🪂'
+  },
+  {
+    id: 'act-shamlapur-sunset',
+    name: {
+      en: 'Moon Boat (Sampan) & Golden Sunset Photography at Shamlapur',
+      bn: 'শামলাপুর বাহারছড়া সৈকতে ঐতিহ্যবাহী সাম্পান নৌকা ও সূর্যাস্ত ফটোগ্রাফি'
+    },
+    badge: { en: 'Photography', bn: 'ফটোগ্রাফি' },
+    costBDT: 0,
+    icon: '📸'
+  },
+  {
+    id: 'act-sonadia-camping',
+    name: {
+      en: 'Eco-Beach Walk, Red Crab Spotting & Bonfire at Sonadia Island',
+      bn: 'সোনাদিয়া দ্বীপে লাল কাঁকড়া দর্শন, ঝাউবন হাঁটা ও বিচ ক্যাম্পিং'
+    },
+    badge: { en: 'Offbeat Eco', bn: 'ইকো ক্যাম্পিং' },
+    costBDT: 900,
+    icon: '⛺'
+  },
+  {
+    id: 'act-aquarium-walk',
+    name: {
+      en: 'Underwater Glass Tunnel Walk at Radiant Fish World',
+      bn: 'রেডিয়েন্ট ফিশ ওয়ার্ল্ডের আন্ডারওয়াটার গ্লাস টানেল ভ্রমণ'
+    },
+    badge: { en: 'Family Activity', bn: 'পরিবার বান্ধব' },
+    costBDT: 300,
+    icon: '🐠'
+  },
+  {
+    id: 'act-burmese-market',
+    name: {
+      en: 'Evening Burmese Market Handicrafts, Pearls & Pickle Shopping',
+      bn: 'সন্ধ্যায় বার্মিজ মার্কেটে মুক্তার গহনা, আচার ও হস্তশিল্প কেনাকাটা'
+    },
+    badge: { en: 'Local Culture', bn: 'কেনাকাটা' },
+    costBDT: 500,
+    icon: '🛍️'
+  }
+];
+
+const ITIN_TRANSPORT_ADDONS = [
+  {
+    id: 'trans-bike-rental',
+    name: {
+      en: 'Marine Drive Bike / Scooter Rental (Full Day + Fuel)',
+      bn: 'মেরিন ড্রাইভ বাইক / স্কুটার ভাড়া (সারাদিন + জ্বালানি)'
+    },
+    costBDT: 1500,
+    duration: { en: 'Full Day Freedom', bn: 'সারাদিন' },
+    icon: '🏍️'
+  },
+  {
+    id: 'trans-tomtom-hops',
+    name: {
+      en: 'Tomtom (Easybike) — Town / Laboni / Sugandha / Kalatali Hops',
+      bn: 'টমটম (ইজিবাইক) — শহর, লাবণী, সুগন্ধা ও কলাতলী যাতায়াত'
+    },
+    costBDT: 60,
+    duration: { en: '5–10 mins per hop', bn: '৫–১০ মিনিট' },
+    icon: '🛺'
+  },
+  {
+    id: 'trans-cng-himchari',
+    name: {
+      en: 'Reserved CNG Auto-Rickshaw — Town to Himchari Marine Drive',
+      bn: 'রিজার্ভ সিএনজি — শহর থেকে হিমছড়ি মেরিন ড্রাইভ'
+    },
+    costBDT: 350,
+    duration: { en: '30 mins each way', bn: '৩০ মিনিট' },
+    icon: '🚕'
+  },
+  {
+    id: 'trans-jeep-inani',
+    name: {
+      en: 'Reserved Chander Gari (Open Jeep) — Marine Drive to Inani & Shamlapur',
+      bn: 'রিজার্ভ চান্দের গাড়ি (খোলা জিপ) — মেরিন ড্রাইভ হয়ে ইনানী ও শামলাপুর'
+    },
+    costBDT: 1800,
+    duration: { en: 'Half / Full Day', bn: 'অর্ধ / সারাদিন' },
+    icon: '🚙'
+  },
+  {
+    id: 'trans-speedboat-moheshkhali',
+    name: {
+      en: 'Speedboat Roundtrip — Kasturi Ghat to Moheshkhali Island',
+      bn: 'স্পিডবোট (যাওয়া-আসা) — কস্তুরাঘাট থেকে মহেশখালী দ্বীপ'
+    },
+    costBDT: 180,
+    duration: { en: '35 mins crossing', bn: '৩৫ মিনিট নদীপথ' },
+    icon: '🚤'
+  },
+  {
+    id: 'trans-cng-ramu',
+    name: {
+      en: 'Reserved CNG Auto-Rickshaw — Cox’s Bazar Town to Ramu Temple',
+      bn: 'রিজার্ভ সিএনজি — কক্সবাজার শহর থেকে রামু বৌদ্ধ বিহার'
+    },
+    costBDT: 450,
+    duration: { en: '40 mins', bn: '৪০ মিনিট' },
+    icon: '🛺'
+  }
+];
+
+// Additional Iconic Beach Spots so users can pick Laboni/Sugandha + all website destinations/gems
+const EXTRA_BEACH_SPOTS = [
+  {
+    id: 'spot-laboni-sugandha',
+    name: {
+      en: 'Laboni & Sugandha Main Sea Beach',
+      bn: 'লাবণী ও সুগন্ধা প্রধান সমুদ্র সৈকত'
+    },
+    area: { en: 'Main Beachfront', bn: 'প্রধান সৈকত' },
+    image: 'assets/images/hero-coxs-bazar.jpg'
+  }
+];
+
+function getUnifiedWebsiteSpots() {
+  const spots = [...EXTRA_BEACH_SPOTS];
+
+  if (typeof DESTINATIONS_DATA !== 'undefined') {
+    DESTINATIONS_DATA.forEach(d => {
+      spots.push({
+        id: d.id,
+        name: d.name,
+        area: d.distanceTag || { en: 'Cox’s Bazar', bn: 'কক্সবাজার' },
+        image: d.image || 'assets/images/inani-beach.jpg'
+      });
+    });
+  }
+
+  if (typeof HIDDEN_GEMS_DATA !== 'undefined') {
+    HIDDEN_GEMS_DATA.forEach(g => {
+      spots.push({
+        id: g.id,
+        name: g.name,
+        area: g.highlight || { en: 'Hidden Gem', bn: 'লুকানো রত্ন' },
+        image: g.image || 'assets/images/sonadia-island.jpg'
+      });
+    });
+  }
+
+  return spots;
+}
+
+/* --------------------------------------------------------------------------
+ * 3. DEFAULT 5-DAY INTERNATIONAL ITINERARY PRESET & STATE
+ * -------------------------------------------------------------------------- */
+function getDefault5DayPlan() {
+  return [
+    {
+      dayNumber: 1,
+      title: {
+        en: 'Beachfront Arrival, Sugandha Sunset & Radiant Fish World',
+        bn: 'সৈকতে আগমন, সুগন্ধা সূর্যাস্ত ও রেডিয়েন্ট ফিশ ওয়ার্ল্ড'
+      },
+      spots: ['spot-laboni-sugandha', 'spot-radiant-fish-world'],
+      activities: ['act-aquarium-walk', 'act-burmese-market'],
+      restaurants: ['rest-poushee', 'rest-sugandha-fry'],
+      transports: ['trans-tomtom-hops'],
+      customNote: {
+        en: 'Check in at hotel, enjoy Mezbani lunch at Poushee, watch sunset at Sugandha Point & explore evening live fish fry stalls.',
+        bn: 'হোটেলে চেক-ইন, পৌষী রেস্তোরাঁয় মেজবানি লাঞ্চ, সুগন্ধা সৈকতে সূর্যাস্ত ও সন্ধ্যায় লাইভ ফিশ ফ্রাই উপভোগ।'
+      }
+    },
+    {
+      dayNumber: 2,
+      title: {
+        en: 'Riding by Bike on Marine Drive Road to Himchari & Inani Coral Beach',
+        bn: 'মেরিন ড্রাইভ রোডে বাইক রাইডিং — হিমছড়ি ঝর্ণা ও ইনানী প্রবাল সৈকত'
+      },
+      spots: ['spot-himchari', 'spot-inani-beach', 'gem-shamlapur'],
+      activities: ['act-marine-drive-bike', 'act-himchari-trek', 'act-shamlapur-sunset'],
+      restaurants: ['rest-mermaid', 'rest-salt-bistro'],
+      transports: ['trans-bike-rental'],
+      customNote: {
+        en: 'Start early morning bike ride along the 80 km Marine Drive coastal road! Stop at Himchari cliffs, Inani coral boulders & Shamlapur sunset point.',
+        bn: 'সকালে মেরিন ড্রাইভ ধরে বাইক রাইড! হিমছড়ি পাহাড়, ইনানী প্রবাল পাথর এবং শামলাপুর গর্জনে সূর্যাস্ত দর্শন।'
+      }
+    },
+    {
+      dayNumber: 3,
+      title: {
+        en: 'Moheshkhali Island Speedboat Expedition & Adinath Hill Temple',
+        bn: 'স্পিডবোটে মহেশখালী দ্বীপ ও মৈনাক পাহাড়ের আদিনাথ মন্দির অভিযান'
+      },
+      spots: ['spot-moheshkhali', 'gem-najirartek'],
+      activities: ['act-moheshkhali-speedboat', 'act-parasailing-jetski'],
+      restaurants: ['rest-jhaubon', 'rest-rooftop-grill'],
+      transports: ['trans-speedboat-moheshkhali', 'trans-tomtom-hops'],
+      customNote: {
+        en: 'Board a 35-min speedboat from Kasturi Ghat to Moheshkhali Island. Visit Adinath Temple, Buddhist pagodas, and return for rooftop sunset BBQ.',
+        bn: 'কস্তুরাঘাট থেকে ৩৫ মিনিটের স্পিডবোটে মহেশখালী দ্বীপ ভ্রমণ ও রাতে রুফটপ বারবিকিউ ডিনার।'
+      }
+    },
+    {
+      dayNumber: 4,
+      title: {
+        en: 'Sonadia Island Eco-Adventure & Kolatoli Canopy Trekking',
+        bn: 'সোনাদিয়া দ্বীপ ইকো-অ্যাডভেঞ্চার ও কলাতলী ইকো পার্ক ট্রেকিং'
+      },
+      spots: ['gem-sonadia', 'gem-kolatoli-eco'],
+      activities: ['act-sonadia-camping', 'act-chander-gari-safari'],
+      restaurants: ['rest-handi', 'rest-mermaid'],
+      transports: ['trans-jeep-inani'],
+      customNote: {
+        en: 'Explore untouched pine forests and red crabs on Sonadia Island, followed by an afternoon Chander Gari coastal ride.',
+        bn: 'সোনাদিয়া দ্বীপের নির্জন ঝাউবন ও লাল কাঁকড়া দর্শন এবং বিকেলে চান্দের গাড়িতে ভ্রমণ।'
+      }
+    },
+    {
+      dayNumber: 5,
+      title: {
+        en: 'Ramu 100 Feet Golden Buddha Heritage & Souvenir Departure',
+        bn: 'রামু ১০০ ফুট সিংহশয্যা বুদ্ধ বিহার দর্শন ও কেনাকাটা শেষে প্রস্থান'
+      },
+      spots: ['spot-ramu-buddha', 'spot-laboni-sugandha'],
+      activities: ['act-burmese-market'],
+      restaurants: ['rest-poushee', 'rest-salt-bistro'],
+      transports: ['trans-cng-ramu', 'trans-tomtom-hops'],
+      customNote: {
+        en: 'Morning trip to the 100 Feet Reclining Buddha in Ramu, final beach walk, pack Burmese pickles & dried fish souvenirs.',
+        bn: 'সকালে রামুর ১০০ ফুট বুদ্ধ মূর্তি দর্শন, শেষ বিকেলের সমুদ্র স্নান ও বার্মিজ আচার নিয়ে ফিরতি যাত্রা।'
+      }
+    }
+  ];
+}
+
+const FeaturesState = {
+  mapInstance: null,
+  markerLayerGroup: null,
+  activeMapFilter: 'all', // 'all' | 'hotels' | 'spots' | 'hubs'
+
+  // Custom Itinerary Studio State
+  tripTitle: 'Cox’s Bazar Grand Coastal & Marine Drive Expedition',
+  travelerName: 'Explorer Pass',
+  travelerCount: 2,
+  totalDays: 5,
+  activeDayTab: 1,
+  selectedHotelId: 'hotel-sea-crown',
+  daysPlan: getDefault5DayPlan(),
+  isDownloading: false
+};
+
+/* --------------------------------------------------------------------------
+ * 4. LEAFLET INTERACTIVE MAP INITIALIZATION & FILTERING
  * -------------------------------------------------------------------------- */
 function createCategoryMarkerIcon(category) {
   const styles = {
     hotels: {
-      bg: '#0284c7', // Ocean Blue
+      bg: '#0284c7',
       svg: `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`
     },
     spots: {
-      bg: '#0d9488', // Tropical Teal-Green
+      bg: '#0d9488',
       svg: `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`
     },
     hubs: {
-      bg: '#d97706', // Warm Amber
+      bg: '#d97706',
       svg: `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>`
     }
   }[category] || { bg: '#0284c7', svg: '' };
@@ -248,7 +619,6 @@ function focusMapLocation(locationId) {
 
   FeaturesState.mapInstance.flyTo([loc.lat, loc.lng], 14, { duration: 0.9 });
 
-  // Open matching marker popup
   FeaturesState.markerLayerGroup.eachLayer(layer => {
     if (layer._customLocationId === locationId) {
       layer.openPopup();
@@ -301,7 +671,6 @@ function renderMapMarkersAndFilters() {
     loc => FeaturesState.activeMapFilter === 'all' || loc.category === FeaturesState.activeMapFilter
   );
 
-  // Update Quick-Jump Sidebar Cards
   if (legendList) {
     legendList.innerHTML = visibleLocations
       .map(loc => {
@@ -333,7 +702,6 @@ function renderMapMarkersAndFilters() {
       .join('');
   }
 
-  // Update Leaflet Markers
   if (!FeaturesState.markerLayerGroup || !FeaturesState.mapInstance) return;
   FeaturesState.markerLayerGroup.clearLayers();
 
@@ -377,629 +745,213 @@ function renderMapMarkersAndFilters() {
 }
 
 /* --------------------------------------------------------------------------
- * 3. CUSTOM ITINERARY BUILDER DATASET (All Combinations: 2, 3, 5 Days)
+ * 5. INTERACTIVE ITINERARY STUDIO STATE CONTROLLERS
  * -------------------------------------------------------------------------- */
-const ITINERARY_DATABASE = {
-  // ======================= 2 DAYS ITINERARIES =======================
-  '2_family': {
-    title: {
-      en: '2-Day Family & Relaxing Coastal Getaway',
-      bn: '২ দিনের পারিবারিক ও আরামদায়ক সমুদ্র ভ্রমণ'
-    },
-    summary: {
-      en: 'Day 1: Laboni & Sugandha Beach • Day 2: Inani Beach via Chander Gari',
-      bn: '১ম দিন: লাবণী ও সুগন্ধা সৈকত • ২য় দিন: চান্দের গাণিতে ইনানী সমুদ্র সৈকত'
-    },
-    estBudgetBDT: [4500, 8000],
-    days: [
-      {
-        dayNumber: 1,
-        headline: {
-          en: 'Day 1: Laboni Beach, Sugandha Promenade & Radiant Fish World',
-          bn: '১ম দিন: লাবণী সৈকত, সুগন্ধা পয়েন্ট ও রেডিয়েন্ট ফিশ ওয়ার্ল্ড'
-        },
-        morning: {
-          en: 'Check in at Hotel Sea Crown (Sugandha) or Hotel Kollol (Laboni). Enjoy a gentle family walk and safe morning dip at Laboni Beach under Sea Safe green flags.',
-          bn: 'হোটেল সী ক্রাউন বা হোটেল কল্লোলে চেক-ইন। সকালে লাবণী সৈকতের শান্ত পানিতে পরিবারের সাথে নিরাপদ সমুদ্র স্নান।'
-        },
-        afternoon: {
-          en: 'Fresh rupchanda & coral fish lunch at Laboni Point, followed by a 10-minute Tomtom ride (15-20 BDT) to Radiant Fish World aquarium in Jhautola.',
-          bn: 'দুপুরে সামুদ্রিক রূপচাঁদা ও কোরাল মাছের লাঞ্চ এবং টমটমে (১৫-২০ টাকা) ঝাউতলার রেডিয়েন্ট ফিশ ওয়ার্ল্ড অ্যাকোয়ারিয়াম পরিদর্শন।'
-        },
-        evening: {
-          en: 'Watch the golden sunset from Sugandha Beach beachfront chairs and browse Burmese Market handicrafts & pickles.',
-          bn: 'সুগন্ধা সৈকতে বসে সূর্যাস্ত উপভোগ এবং বার্মিজ মার্কেটে আচার ও হস্তশিল্প কেনাকাটা।'
-        }
-      },
-      {
-        dayNumber: 2,
-        headline: {
-          en: 'Day 2: Inani Beach via Chander Gari Along Marine Drive',
-          bn: '২য় দিন: চান্দের গাণিতে মেরিন ড্রাইভ হয়ে ইনানী সমুদ্র সৈকত'
-        },
-        morning: {
-          en: 'Hire a reserved Chander Gari open-top jeep from Dolphin Mor (1,500–2,000 BDT for the group) and cruise 32 km south along the scenic Marine Drive to Inani Beach.',
-          bn: 'ডলফিন মোড় থেকে গ্রুপের জন্য রিজার্ভ চান্দের গাড়ি (১,৫০০-২,০০০ টাকা) নিয়ে মেরিন ড্রাইভ ধরে ৩২ কিমি দক্ষিণে ইনানী সৈকতে যাত্রা।'
-        },
-        afternoon: {
-          en: 'Explore Inani’s clear coral-boulder tidal pools and stop at Himchari National Park viewpoint on the return drive for hillside photos.',
-          bn: 'ইনানীর প্রবাল পাথর ও স্বচ্ছ পানিতে সময় কাটানো এবং ফেরার পথে হিমছড়ি ভিউপয়েন্টে বিরতি।'
-        },
-        evening: {
-          en: 'Farewell rooftop seafood barbecue dinner at Prime Park Hotel or beachfront dining before departure.',
-          bn: 'সন্ধ্যায় রুফটপ রেস্টুরেন্টে সি-ফুড বারবিকিউ ডিনার এবং ভ্রমণের সমাপ্তি।'
-        }
-      }
-    ]
-  },
-
-  '2_adventure': {
-    title: {
-      en: '2-Day High-Energy Coastal & Island Adventure',
-      bn: '২ দিনের পাহাড় ও দ্বীপ অ্যাডভেঞ্চার প্ল্যান'
-    },
-    summary: {
-      en: 'Day 1: Himchari Cliffs & Inani Coral Shore • Day 2: Moheshkhali Speedboat & Ramu',
-      bn: '১ম দিন: হিমছড়ি ট্রেকিং ও ইনানী • ২য় দিন: মহেশখালী স্পিডবোট ও রামু'
-    },
-    estBudgetBDT: [3500, 6500],
-    days: [
-      {
-        dayNumber: 1,
-        headline: {
-          en: 'Day 1: Himchari Ridge Trek, Parasailing & Shamlapur Sunset',
-          bn: '১ম দিন: হিমছড়ি পাহাড় চূড়া, প্যারাসেইলিং ও শামলাপুর সূর্যাস্ত'
-        },
-        morning: {
-          en: 'Take a reserved CNG (300–400 BDT) to Himchari National Park. Climb the 200+ hill steps to the Broken Hill ridge overlooking the Bay of Bengal.',
-          bn: 'সিএনজি রিজার্ভ (৩০০-৪০০ টাকা) নিয়ে হিমছড়ি জাতীয় উদ্যানে পাহাড় ট্র্যাকিং ও ঝর্ণা দর্শন।'
-        },
-        afternoon: {
-          en: 'Continue down Marine Drive to Darianagar for coastal parasailing and explore the coral rocks of Inani Beach.',
-          bn: 'দরিয়ানগরে প্যারাসেইলিং এবং ইনানী সৈকতের প্রবাল পাথরের তীরে অভিযান।'
-        },
-        evening: {
-          en: 'Catch the fiery sunset beside traditional wooden Sampan fishing boats at Shamlapur before returning before dark.',
-          bn: 'সূর্যাস্তের আগে শামলাপুর সৈকতে ঐতিহ্যবাহী সাম্পান নৌকার সাথে গোধূলি উপভোগ।'
-        }
-      },
-      {
-        dayNumber: 2,
-        headline: {
-          en: 'Day 2: Moheshkhali Speedboat Crossing & 100-Ft Buddha at Ramu',
-          bn: '২য় দিন: স্পিডবোটে মহেশখালী দ্বীপ ও রামুর ১০০ ফুট বুদ্ধ মূর্তি'
-        },
-        morning: {
-          en: 'Board a high-speed motorboat from Kasturi Ghat (80–100 BDT/person, 35 mins) across the channel to Moheshkhali Island and hike up Mainak Hill to Adinath Temple.',
-          bn: 'কস্তুরাঘাট থেকে স্পিডবোটে (৮০-১০০ টাকা, ৩৫ মিনিট) মহেশখালী দ্বীপে যাত্রা এবং মৈনাক পাহাড়ের আদিনাথ মন্দির দর্শন।'
-        },
-        afternoon: {
-          en: 'Return to town and hire a CNG (400–500 BDT) 16 km east to Ramu to see the colossal 100-Foot Reclining Gautama Buddha statue.',
-          bn: 'দুপুরে শহরে ফিরে সিএনজিতে (৪০০-৫০০ টাকা) ১৬ কিমি পূর্বে রামুর ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি পরিদর্শন।'
-        },
-        evening: {
-          en: 'Evening stroll at Kolatoli & Najirartek estuary before catching the night coach or train.',
-          bn: 'সন্ধ্যায় কলাতলী সৈকতে ভ্রমণ শেষে ফিরতি যাত্রা।'
-        }
-      }
-    ]
-  },
-
-  '2_budget': {
-    title: {
-      en: '2-Day Smart Backpacker & Budget Explorer Plan',
-      bn: '২ দিনের সাশ্রয়ী বাজেট ভ্রমণ প্ল্যান'
-    },
-    summary: {
-      en: 'Day 1: Shared Tomtoms, Laboni & Kolatoli • Day 2: Moheshkhali Island & Marine Drive',
-      bn: '১ম দিন: শেয়ারড টমটমে লাবণী ও কলাতলী • ২য় দিন: মহেশখালী ও মেরিন ড্রাইভ'
-    },
-    estBudgetBDT: [2200, 3800],
-    days: [
-      {
-        dayNumber: 1,
-        headline: {
-          en: 'Day 1: Kolatoli Eco Cottages, Shared Tomtom Hop & Beach Sunset',
-          bn: '১ম দিন: কলাতলী ইকো কটেজ, শেয়ারড টমটম ও সৈকতে সূর্যাস্ত'
-        },
-        morning: {
-          en: 'Check in at budget-friendly Nisanah Resort (1,500 BDT/night). Hop on a shared Tomtom (10 BDT) from Kalatali to Sugandha & Laboni Beach.',
-          bn: 'সাশ্রয়ী নিসানাহ রিসোর্টে চেক-ইন (১,৫০০ টাকা)। মাত্র ১০ টাকা শেয়ারড টমটমে সুগন্ধা ও লাবণী সৈকত ভ্রমণ।'
-        },
-        afternoon: {
-          en: 'Enjoy affordable local Bengali *panta-bhat* & fried loitta fish lunch at Jhautola, then trek the free Kolatoli Eco Park hill trail.',
-          bn: 'ঝাউতলায় সাশ্রয়ী মূল্যে সামুদ্রিক মাছের ভর্তা-ভাত এবং বিকেলে কলাতলী ইকো পার্কে হাঁটাহাঁটি।'
-        },
-        evening: {
-          en: 'Relax on Sugandha Beach with roasted corn and coconut water while watching the evening tide.',
-          bn: 'সন্ধ্যায় সুগন্ধা সৈকতে ডাবের পানি ও সমুদ্রের গর্জন উপভোগ।'
-        }
-      },
-      {
-        dayNumber: 2,
-        headline: {
-          en: 'Day 2: Public Speedboat to Moheshkhali & Shared Chander Gari to Inani',
-          bn: '২য় দিন: মহেশখালী দ্বীপ ও শেয়ারড চান্দের গাণিতে ইনানী'
-        },
-        morning: {
-          en: 'Take a 15 BDT Tomtom to Kasturi Ghat and board the 80–100 BDT public speedboat to Moheshkhali Island (Adinath Temple & salt fields).',
-          bn: 'কস্তুরাঘাট থেকে জনপ্রতি ৮০-১০০ টাকায় স্পিডবোটে মহেশখালী দ্বীপ ও লবণের মাঠ ভ্রমণ।'
-        },
-        afternoon: {
-          en: 'Share a group Chander Gari from Dolphin Mor down Marine Drive to Himchari & Inani Beach.',
-          bn: 'ডলফিন মোড় থেকে শেয়ারড চান্দের গাণিতে মেরিন ড্রাইভ হয়ে হিমছড়ি ও ইনানী সৈকত দর্শন।'
-        },
-        evening: {
-          en: 'Buy chemical-free dried fish at Najirartek Shutki Hub before heading home.',
-          bn: 'নাজিরারটেক শুঁটকি মহাল থেকে খাঁটি শুঁটকি সংগ্রহ ও ফিরতি যাত্রা।'
-        }
-      }
-    ]
-  },
-
-  // ======================= 3 DAYS ITINERARIES =======================
-  '3_adventure': {
-    title: {
-      en: '3-Day Ultimate Coastal, Island & Camping Adventure',
-      bn: '৩ দিনের হিমছড়ি ট্রেকিং, মহেশখালী ও সোনাদিয়া ক্যাম্পিং অ্যাডভেঞ্চার'
-    },
-    summary: {
-      en: 'Day 1: Himchari hike • Day 2: Moheshkhali Island • Day 3: Sonadia Island camping',
-      bn: '১ম দিন: হিমছড়ি হাইকিং • ২য় দিন: মহেশখালী দ্বীপ • ৩য় দিন: সোনাদিয়া দ্বীপে ক্যাম্পিং'
-    },
-    estBudgetBDT: [5500, 9500],
-    days: [
-      {
-        dayNumber: 1,
-        headline: {
-          en: 'Day 1: Himchari National Park Hike & Inani Coral Boulders',
-          bn: '১ম দিন: হিমছড়ি জাতীয় উদ্যানে পাহাড় হাইকিং ও ইনানী সৈকত'
-        },
-        morning: {
-          en: 'Depart early via reserved CNG (300–400 BDT) to Himchari National Park. Hike the evergreen forest ridge trail and explore the Himchari waterfalls.',
-          bn: 'সকালে রিজার্ভ সিএনজিতে (৩০০-৪০০ টাকা) হিমছড়ি জাতীয় উদ্যানে যাত্রা এবং পাহাড়ি ট্রেইল ও ঝর্ণায় হাইকিং।'
-        },
-        afternoon: {
-          en: 'Continue south on Marine Drive to Kolatoli Eco Park canopy trail and boulder-hop along Inani Coral Beach.',
-          bn: 'মেরিন ড্রাইভ ধরে কলাতলী ইকো পার্ক ট্রেকিং এবং বিকেলে ইনানী প্রবাল সৈকতে ভ্রমণ।'
-        },
-        evening: {
-          en: 'Watch the golden sunset over crescent Sampan boats at Shamlapur Sunset Point, returning to town before dusk.',
-          bn: 'শামলাপুর সানসেট পয়েন্টে সাম্পান নৌকার পটভূমিতে সূর্যাস্ত দেখে সন্ধ্যার আগে শহরে ফেরা।'
-        }
-      },
-      {
-        dayNumber: 2,
-        headline: {
-          en: 'Day 2: Moheshkhali Island Speedboat Expedition & Ramu Monasteries',
-          bn: '২য় দিন: স্পিডবোটে মহেশখালী দ্বীপ অভিযান ও রামু বৌদ্ধ বিহার'
-        },
-        morning: {
-          en: 'Take a 35-minute speedboat from Kasturi Ghat (80–100 BDT/passenger) to Moheshkhali Island. Climb Mainak Hill to Adinath Temple and tour mangrove mudflats.',
-          bn: 'কস্তুরাঘাট থেকে ৩৫ মিনিটের স্পিডবোটে (৮০-১০০ টাকা) মহেশখালী দ্বীপ যাত্রা, মৈনাক পাহাড়ে আদিনাথ মন্দির ও প্যারাবন পরিদর্শন।'
-        },
-        afternoon: {
-          en: 'Explore Moheshkhali salt pans and Rakhine Buddhist pagodas, then take a reserved CNG (400–500 BDT) to the 100-Foot Reclining Buddha in Ramu.',
-          bn: 'মহেশখালীর লবণের মাঠ দেখে শহরে ফিরে সিএনজিতে (৪০০-৫০০ টাকা) রামুর ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি দর্শন।'
-        },
-        evening: {
-          en: 'Prep tents, dry rations, and gear at Kolatoli for Day 3 island camping.',
-          bn: 'পরদিনের সোনাদিয়া ক্যাম্পিংয়ের প্রস্তুতি এবং সৈকতে নৈশভোজ।'
-        }
-      },
-      {
-        dayNumber: 3,
-        headline: {
-          en: 'Day 3: Sonadia Island Beach Camping & Estuary Exploration',
-          bn: '৩য় দিন: সোনাদিয়া দ্বীপে বিচ ক্যাম্পিং ও নির্জন প্রকৃতি দর্শন'
-        },
-        morning: {
-          en: 'Cross the Maheshkhali channel by boat to untouched Sonadia Island (9 sq. km ecological barrier island). Walk along red ghost crab shores and casuarina dunes.',
-          bn: 'নৌযোগে নির্জন সোনাদিয়া দ্বীপে যাত্রা। ঝাউবন, লাল কাঁকড়ার সৈকত এবং সামুদ্রিক কাছিমের সংরক্ষিত তীর ঘুরে দেখা।'
-        },
-        afternoon: {
-          en: 'Pitch beach camp under the casuarina trees, swim in unspoiled waters, and visit Najirartek Dried Fish Hub on the return estuary crossing.',
-          bn: 'ঝাউবনের পাশে বিচ ক্যাম্পিং, স্বচ্ছ পানিতে গোসল এবং ফেরার পথে নাজিরারটেক শুঁটকি মহাল পরিদর্শন।'
-        },
-        evening: {
-          en: 'Starry-sky campfire experience by the bay (with local guide coordination) or evening return to Cox’s Bazar town.',
-          bn: 'তারায় ভরা আকাশের নিচে ক্যাম্পফায়ার অভিজ্ঞতা অথবা সন্ধ্যায় কক্সবাজার শহরে প্রত্যাবর্তন।'
-        }
-      }
-    ]
-  },
-
-  '3_family': {
-    title: {
-      en: '3-Day Complete Family Comfort & Sightseeing Holiday',
-      bn: '৩ দিনের সম্পূর্ণ পারিবারিক অবকাশ ও দর্শনীয় স্থান ভ্রমণ'
-    },
-    summary: {
-      en: 'Day 1: Laboni & Aquarium • Day 2: Marine Drive, Himchari & Inani • Day 3: Moheshkhali & Ramu',
-      bn: '১ম দিন: লাবণী ও অ্যাকোয়ারিয়াম • ২য় দিন: মেরিন ড্রাইভ ও ইনানী • ৩য় দিন: মহেশখালী ও রামু'
-    },
-    estBudgetBDT: [7500, 13500],
-    days: [
-      {
-        dayNumber: 1,
-        headline: {
-          en: 'Day 1: Beachfront Check-in, Radiant Fish World & Laboni Sunset',
-          bn: '১ম দিন: সৈকত সংলগ্ন হোটেলে চেক-ইন, অ্যাকোয়ারিয়াম ও লাবণী সূর্যাস্ত'
-        },
-        morning: {
-          en: 'Arrive and check in at Hotel Sea Crown or Hotel Kollol. Enjoy complimentary breakfast and relax by the beach or hotel swimming pool.',
-          bn: 'হোটেল সী ক্রাউন বা কল্লোলে চেক-ইন। সকালের নাস্তা শেষে সুইমিং পুল বা সুগন্ধা সৈকতে বিশ্রাম।'
-        },
-        afternoon: {
-          en: 'Take the family to Radiant Fish World in Jhautola to walk through the underwater shark & ray glass tunnel.',
-          bn: 'পরিবারসহ ঝাউতলার রেডিয়েন্ট ফিশ ওয়ার্ল্ডের আন্ডারওয়াটার গ্লাস টানেল পরিদর্শন।'
-        },
-        evening: {
-          en: 'Sunset beach walk at Laboni Point followed by fresh seafood dinner at Kasundi Restaurant.',
-          bn: 'লাবণী পয়েন্টে সূর্যাস্ত উপভোগ এবং কাসুন্দি রেস্তোরাঁয় সি-ফুড ডিনার।'
-        }
-      },
-      {
-        dayNumber: 2,
-        headline: {
-          en: 'Day 2: Scenic Marine Drive Cruise to Himchari & Inani Beach',
-          bn: '২য় দিন: চান্দের গাণিতে মেরিন ড্রাইভ, হিমছড়ি ও ইনানী সৈকত'
-        },
-        morning: {
-          en: 'Reserve a family Chander Gari jeep (1,500–2,000 BDT) and drive 18 km south to Himchari National Park waterfalls.',
-          bn: 'পরিবারের জন্য চান্দের গাড়ি রিজার্ভ (১,৫০০-২,০০০ টাকা) করে হিমছড়ি ঝর্ণা ও পাহাড় দর্শন।'
-        },
-        afternoon: {
-          en: 'Continue to Inani Beach (32 km mark) for calm family wading among the coral stones and coconut water refreshments.',
-          bn: 'ইনানী সৈকতের প্রবাল পাথর ঘেরা শান্ত তীরে সময় কাটানো ও ডাবের পানি পান।'
-        },
-        evening: {
-          en: 'Return before sunset for rooftop hill-view dining at Prime Park Hotel.',
-          bn: 'সূর্যাস্তের আগে শহরে ফিরে প্রাইম পার্ক হোটেলের রুফটপ রেস্টুরেন্টে ডিনার।'
-        }
-      },
-      {
-        dayNumber: 3,
-        headline: {
-          en: 'Day 3: 100-Feet Buddha in Ramu & Burmese Market Souvenirs',
-          bn: '৩য় দিন: রামুর ১০০ ফুট বুদ্ধ মূর্তি ও বার্মিজ মার্কেটে কেনাকাটা'
-        },
-        morning: {
-          en: 'Hire a reserved CNG (400–500 BDT, 40 mins) to Ramu to visit the tranquil Bhuban Shanti 100-Foot Reclining Buddha and monasteries.',
-          bn: 'রিজার্ভ সিএনজিতে (৪০০-৫০০ টাকা) রামুর ভুবন শান্তি ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি ও বৌদ্ধ বিহার ভ্রমণ।'
-        },
-        afternoon: {
-          en: 'Optional speedboat excursion to Moheshkhali Island from Kasturi Ghat or relax at Kolatoli Beach.',
-          bn: 'কস্তুরাঘাট থেকে মহেশখালী দ্বীপ ভ্রমণ অথবা কলাতলী সৈকতে বিশ্রাম।'
-        },
-        evening: {
-          en: 'Shop for Rakhine handwoven textiles, Burmese pickles, and shell crafts before departure.',
-          bn: 'বার্মিজ মার্কেটে রাখাইন তাঁতের কাপড় ও আচার কেনাকাটা শেষে প্রস্থান।'
-        }
-      }
-    ]
-  },
-
-  '3_budget': {
-    title: {
-      en: '3-Day Best-Value Budget Coastal & Heritage Loop',
-      bn: '৩ দিনের সাশ্রয়ী বাজেট কক্সবাজার ও ঐতিহ্য ভ্রমণ'
-    },
-    summary: {
-      en: 'Day 1: Town Beaches & Eco Park • Day 2: Shared Marine Drive • Day 3: Moheshkhali & Ramu',
-      bn: '১ম দিন: সৈকত ও ইকো পার্ক • ২য় দিন: মেরিন ড্রাইভ • ৩য় দিন: মহেশখালী ও রামু'
-    },
-    estBudgetBDT: [3500, 5800],
-    days: [
-      {
-        dayNumber: 1,
-        headline: {
-          en: 'Day 1: Sugandha, Laboni & Kolatoli Eco Park via 10-BDT Tomtoms',
-          bn: '১ম দিন: ১০ টাকার টমটমে সুগন্ধা, লাবণী ও কলাতলী ইকো পার্ক'
-        },
-        morning: {
-          en: 'Check in at Nisanah Resort (1,500 BDT) or White Orchid. Use 10–15 BDT shared Tomtoms to hop between Kalatali, Sugandha, and Laboni beaches.',
-          bn: 'নিসানাহ রিসোর্টে চেক-ইন। ১০-১৫ টাকা শেয়ারড টমটমে কলাতলী, সুগন্ধা ও লাবণী সৈকত ভ্রমণ।'
-        },
-        afternoon: {
-          en: 'Trek the scenic hillside paths of Kolatoli Eco Park and visit Najirartek Dried Fish Hub.',
-          bn: 'বিকেলে কলাতলী ইকো পার্কে ট্রেকিং এবং নাজিরারটেক শুঁটকি পল্লী পরিদর্শন।'
-        },
-        evening: {
-          en: 'Street-side grilled fish &crab fry at Sugandha Point.',
-          bn: 'সন্ধ্যায় সুগন্ধা পয়েন্টে তাজা ফিশ ফ্রাই উপভোগ।'
-        }
-      },
-      {
-        dayNumber: 2,
-        headline: {
-          en: 'Day 2: Group Chander Gari to Himchari, Inani & Shamlapur',
-          bn: '২য় দিন: গ্রুপ চান্দের গাণিতে হিমছড়ি, ইনানী ও শামলাপুর'
-        },
-        morning: {
-          en: 'Split a Chander Gari jeep (1,500 BDT divided among 10 passengers = ~150 BDT each) from Dolphin Mor down Marine Drive.',
-          bn: 'ডলফিন মোড় থেকে ১০ জন মিলে শেয়ারে চান্দের গাড়ি (জনপ্রতি ~১৫০ টাকা) নিয়ে মেরিন ড্রাইভ যাত্রা।'
-        },
-        afternoon: {
-          en: 'Stop at Himchari National Park and spend the afternoon on the free public coral shores of Inani Beach.',
-          bn: 'হিমছড়ি ঝর্ণা এবং ইনানী প্রবাল সৈকতে দুপুর ও বিকেল কাটানো।'
-        },
-        evening: {
-          en: 'Catch sunset at Shamlapur Sampan beach and return to Kalatali.',
-          bn: 'শামলাপুরে সাম্পান ঘাটে সূর্যাস্ত দেখে কলাতলীতে ফেরা।'
-        }
-      },
-      {
-        dayNumber: 3,
-        headline: {
-          en: 'Day 3: 80-BDT Moheshkhali Speedboat & Ramu Heritage',
-          bn: '৩য় দিন: ৮০ টাকায় মহেশখালী স্পিডবোট ও রামু ভ্রমণ'
-        },
-        morning: {
-          en: 'Ride the 80–100 BDT passenger speedboat from Kasturi Ghat to Moheshkhali Island and walk the jetty bridge to Adinath Temple.',
-          bn: 'কস্তুরাঘাট থেকে ৮০-১০০ টাকায় স্পিডবোটে মহেশখালী দ্বীপ ও আদিনাথ মন্দির দর্শন।'
-        },
-        afternoon: {
-          en: 'Take a local bus or shared CNG east to Ramu to see the 100-Foot Reclining Buddha free of charge.',
-          bn: 'বিকেলে রামুর ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি পরিদর্শন।'
-        },
-        evening: {
-          en: 'Evening departure from Cox’s Bazar Iconic Railway Station or bus terminal.',
-          bn: 'সন্ধ্যায় কক্সবাজার আইকনিক রেলস্টেশন বা বাস টার্মিনাল থেকে প্রস্থান।'
-        }
-      }
-    ]
-  },
-
-  // ======================= 5 DAYS ITINERARIES =======================
-  '5_family': {
-    title: {
-      en: '5-Day Grand Coastal & Island Family Vacation',
-      bn: '৫ দিনের গ্র্যান্ড পারিবারিক কক্সবাজার ও দ্বীপ ভ্রমণ'
-    },
-    summary: {
-      en: 'Covers Laboni, Aquarium, Himchari, Inani, Moheshkhali, Ramu & Shamlapur at a relaxed family pace',
-      bn: 'পরিবারের সবাইকে নিয়ে ধীরস্থিরভাবে সৈকত, অ্যাকোয়ারিয়াম, হিমছড়ি, ইনানী, মহেশখালী ও রামু ভ্রমণ'
-    },
-    estBudgetBDT: [14000, 25000],
-    days: [
-      {
-        dayNumber: 1,
-        headline: { en: 'Day 1: Arrival, Sugandha Beachfront & Sunset Promenade', bn: '১ম দিন: আগমন, সুগন্ধা সৈকত ও সূর্যাস্ত উপভোগ' },
-        morning: { en: 'Check in at Hotel Sea Crown or Hotel Kollol. Unwind after travel with ocean-view breakfast.', bn: 'হোটেল সী ক্রাউন বা কল্লোলে চেক-ইন এবং সমুদ্রের দৃশ্যসহ সকালের নাস্তা।' },
-        afternoon: { en: 'Relax by the hotel pool and enjoy a traditional Bangladeshi seafood lunch.', bn: 'হোটেলের সুইমিং পুলে বিশ্রাম এবং দুপুরে সামুদ্রিক মাছের লাঞ্চ।' },
-        evening: { en: 'Leisurely family stroll along Laboni & Sugandha beaches at sunset.', bn: 'সন্ধ্যায় লাবণী ও সুগন্ধা সৈকতে পরিবারের সাথে ভ্রমণ।' }
-      },
-      {
-        dayNumber: 2,
-        headline: { en: 'Day 2: Marine Drive Excursion to Himchari & Inani Coral Beach', bn: '২য় দিন: মেরিন ড্রাইভ ধরে হিমছড়ি ও ইনানী সৈকত অভিযান' },
-        morning: { en: 'Hire a reserved Chander Gari (1,500–2,000 BDT) along Marine Drive to Himchari National Park.', bn: 'রিজার্ভ চান্দের গাণিতে মেরিন ড্রাইভ হয়ে হিমছড়ি জাতীয় উদ্যান ভ্রমণ।' },
-        afternoon: { en: 'Spend the afternoon at Inani Beach exploring calm coral-stone tidal pools.', bn: 'ইনানী সৈকতের প্রবাল পাথর ও শান্ত পানিতে দুপুর কাটানো।' },
-        evening: { en: 'Stop at Shamlapur Sunset Point before returning to town for dinner.', bn: 'শামলাপুর সানসেট পয়েন্টে গোধূলি দেখে শহরে ফেরা।' }
-      },
-      {
-        dayNumber: 3,
-        headline: { en: 'Day 3: Moheshkhali Island Speedboat & Adinath Temple', bn: '৩য় দিন: স্পিডবোটে মহেশখালী দ্বীপ ও আদিনাথ মন্দির' },
-        morning: { en: 'Take a 35-min speedboat from Kasturi Ghat (80–100 BDT/person) to Moheshkhali Island.', bn: 'কস্তুরাঘাট থেকে স্পিডবোটে (৮০-১০০ টাকা) মহেশখালী দ্বীপে যাত্রা।' },
-        afternoon: { en: 'Visit Adinath Temple on Mainak Hill, Rakhine Buddhist pagodas, and coastal salt pans.', bn: 'মৈনাক পাহাড়ে আদিনাথ মন্দির, বৌদ্ধ প্যাগোডা ও লবণের মাঠ পরিদর্শন।' },
-        evening: { en: 'Visit Radiant Fish World aquarium in Jhautola town center.', bn: 'সন্ধ্যায় ঝাউতলার রেডিয়েন্ট ফিশ ওয়ার্ল্ড অ্যাকোয়ারিয়াম ভ্রমণ।' }
-      },
-      {
-        dayNumber: 4,
-        headline: { en: 'Day 4: 100-Feet Buddha in Ramu & Kolatoli Eco Park', bn: '৪র্থ দিন: রামুর ১০০ ফুট বুদ্ধ মূর্তি ও কলাতলী ইকো পার্ক' },
-        morning: { en: 'Reserved CNG trip (400–500 BDT) 16 km east to Ramu’s 100-Foot Reclining Buddha & historic monasteries.', bn: 'রিজার্ভ সিএনজিতে (৪০০-৫০০ টাকা) রামুর ১০০ ফুট বুদ্ধ মূর্তি ও প্রাচীন বিহার দর্শন।' },
-        afternoon: { en: 'Gentle nature walk at Kolatoli Eco Park and rooftop lunch at Prime Park Hotel.', bn: 'কলাতলী ইকো পার্কে প্রকৃতি দর্শন এবং প্রাইম পার্ক হোটেলে রুফটপ লাঞ্চ।' },
-        evening: { en: 'Souvenir shopping at Burmese Market & Rakhine stalls.', bn: 'বার্মিজ মার্কেটে কেনাকাটা।' }
-      },
-      {
-        dayNumber: 5,
-        headline: { en: 'Day 5: Najirartek Dried Fish Hub & Farewell Beach Morning', bn: '৫ম দিন: নাজিরারটেক শুঁটকি মহাল ও বিদায় বেলা' },
-        morning: { en: 'Morning visit to Najirartek Dried Fish Hub to buy authentic chemical-free dried fish.', bn: 'সকালে নাজিরারটেক শুঁটকি মহাল থেকে খাঁটি শুঁটকি কেনাকাটা।' },
-        afternoon: { en: 'Final dip at Laboni Beach and check-out preparation.', bn: 'লাবণী সৈকতে শেষ মুহূর্তের ভ্রমণ ও হোটেল চেক-আউট।' },
-        evening: { en: 'Smooth transfer via Tomtom/CNG to Airport, Iconic Railway Station, or Dolphin Mor.', bn: 'বিমানবন্দর, রেলস্টেশন বা ডলফিন মোড় থেকে প্রস্থান।' }
-      }
-    ]
-  },
-
-  '5_adventure': {
-    title: {
-      en: '5-Day Ultimate Explorer: Hills, Islands, Camping & Marine Drive',
-      bn: '৫ দিনের আল্টিমেট অ্যাডভেঞ্চার: পাহাড়, দ্বীপ, ক্যাম্পিং ও মেরিন ড্রাইভ'
-    },
-    summary: {
-      en: 'Full 80-km Marine Drive, Himchari ridges, Inani, Moheshkhali, Ramu & overnight Sonadia Island camp',
-      bn: 'হিমছড়ি ট্রেকিং, ইনানী, মহেশখালী, রামু এবং সোনাদিয়া দ্বীপে ক্যাম্পিংয়ের পূর্ণাঙ্গ অভিযান'
-    },
-    estBudgetBDT: [9500, 16500],
-    days: [
-      {
-        dayNumber: 1,
-        headline: { en: 'Day 1: Kolatoli Eco Park Trekking & Darianagar Parasailing', bn: '১ম দিন: কলাতলী ইকো পার্ক ট্রেকিং ও প্যারাসেইলিং' },
-        morning: { en: 'Base camp check-in at Kalatali Road. Trek the coastal hill ridges of Kolatoli Eco Park.', bn: 'কলাতলী রোডে চেক-ইন এবং কলাতলী ইকো পার্কের পাহাড়ি ট্রেইলে ট্রেকিং।' },
-        afternoon: { en: 'Soar above the Bay of Bengal with parasailing at Darianagar beach.', bn: 'দরিয়ানগর সৈকতে প্যারাসেইলিং ও সমুদ্র অভিযান।' },
-        evening: { en: 'Night beach walk from Sugandha to Laboni Point.', bn: 'সুগন্ধা থেকে লাবণী পয়েন্ট পর্যন্ত সান্ধ্যকালীন সৈকত পদযাত্রা।' }
-      },
-      {
-        dayNumber: 2,
-        headline: { en: 'Day 2: Full Marine Drive Jeep Safari: Himchari, Inani & Shamlapur', bn: '২য় দিন: মেরিন ড্রাইভ জিপ সাফারি: হিমছড়ি, ইনানী ও শামলাপুর' },
-        morning: { en: 'Open-top Chander Gari expedition to Himchari National Park waterfalls and cliff ridges.', bn: 'চান্দের গাণিতে হিমছড়ি জাতীয় উদ্যানের পাহাড় ও ঝর্ণায় অভিযান।' },
-        afternoon: { en: 'Explore Inani Coral Beach boulders and continue down Marine Drive to Shamlapur.', bn: 'ইনানী প্রবাল সৈকত ও মেরিন ড্রাইভ ধরে শামলাপুর যাত্রা।' },
-        evening: { en: 'Photograph the iconic wooden Sampan fishing boats at Shamlapur Sunset Point.', bn: 'শামলাপুরে ঐতিহ্যবাহী সাম্পান নৌকার সাথে সূর্যাস্তের আলোকচিত্র গ্রহণ।' }
-      },
-      {
-        dayNumber: 3,
-        headline: { en: 'Day 3: Moheshkhali Island Speedboat & Mainak Hill Hike', bn: '৩য় দিন: স্পিডবোটে মহেশখালী দ্বীপ ও মৈনাক পাহাড় হাইকিং' },
-        morning: { en: 'Speedboat from Kasturi Ghat (80–100 BDT) across the Bakkhali channel to Moheshkhali Island.', bn: 'কস্তুরাঘাট থেকে স্পিডবোটে বাঁকখালী চ্যানেল পেরিয়ে মহেশখালী দ্বীপে যাত্রা।' },
-        afternoon: { en: 'Hike Mainak Hill to Adinath Temple and cycle/walk past salt pans & betel leaf farms.', bn: 'মৈনাক পাহাড়ের আদিনাথ মন্দির এবং লবণের মাঠ ও পান বরজ পরিদর্শন।' },
-        evening: { en: 'Explore Radiant Fish World shark tunnel in Jhautola.', bn: 'সন্ধ্যায় ঝাউতলার রেডিয়েন্ট ফিশ ওয়ার্ল্ড পরিদর্শন।' }
-      },
-      {
-        dayNumber: 4,
-        headline: { en: 'Day 4: Sonadia Island Wilderness & Beach Camping', bn: '৪র্থ দিন: সোনাদিয়া দ্বীপে বন্যপ্রাণী দর্শন ও বিচ ক্যাম্পিং' },
-        morning: { en: 'Boat expedition to isolated Sonadia Island. Trek through coastal mangroves and sand dunes.', bn: 'নৌযোগে নির্জন সোনাদিয়া দ্বীপে যাত্রা এবং প্যারাবন ও বালিয়াড়ি ট্র্যাকিং।' },
-        afternoon: { en: 'Spot red ghost crabs and migratory shorebirds along the untouched crescent beach.', bn: 'লাল কাঁকড়া ও অতিথি পাখিদের বিচরণ ক্ষেত্র পরিদর্শন।' },
-        evening: { en: 'Beachside tent camping under the stars with freshly grilled marine catch.', bn: 'রাতের তারার নিচে বিচ ক্যাম্পিং ও বারবিকিউ।' }
-      },
-      {
-        dayNumber: 5,
-        headline: { en: 'Day 5: Najirartek Estuary & 100-Feet Reclining Buddha at Ramu', bn: '৫ম দিন: নাজিরারটেক মোহনা ও রামুর ১০০ ফুট বুদ্ধ মূর্তি' },
-        morning: { en: 'Return via the Bakkhali estuary stopping at the 200-acre Najirartek Dried Fish Hub.', bn: 'ফেরার পথে ২০০ একরের নাজিরারটেক শুঁটকি মহাল পরিদর্শন।' },
-        afternoon: { en: 'CNG ride (400–500 BDT) 16 km east to Ramu’s 100-Foot Reclining Gautama Buddha statue.', bn: 'সিএনজিতে রামুর ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি ও বৌদ্ধ বিহার ভ্রমণ।' },
-        evening: { en: 'Final sunset at Laboni Point and evening departure.', bn: 'লাবণী পয়েন্টে শেষ সূর্যাস্ত দেখে প্রস্থান।' }
-      }
-    ]
-  },
-
-  '5_budget': {
-    title: {
-      en: '5-Day Backpacker’s Complete Cox’s Bazar on a Shoestring',
-      bn: '৫ দিনের সাশ্রয়ী ব্যাকপ্যাকার্স সম্পূর্ণ কক্সবাজার প্ল্যান'
-    },
-    summary: {
-      en: 'All 9+ major beaches, islands, temples & hidden gems using shared local Tomtoms & boats',
-      bn: 'শেয়ারড টমটম, লোকাল বোট ও কটেজে থেকে স্বল্প খরচে পুরো কক্সবাজার ভ্রমণ'
-    },
-    estBudgetBDT: [6000, 9500],
-    days: [
-      {
-        dayNumber: 1,
-        headline: { en: 'Day 1: Cottage Check-in & 10-BDT Beach Hopping', bn: '১ম দিন: ইকো কটেজে চেক-ইন ও ১০ টাকার টমটমে সৈকত ভ্রমণ' },
-        morning: { en: 'Check in at Nisanah Resort (1,500 BDT/night) near Kolatoli Eco Park.', bn: 'কলাতলী ইকো পার্কের কাছে নিসানাহ রিসোর্টে সাশ্রয়ী চেক-ইন।' },
-        afternoon: { en: 'Use 10–15 BDT shared Tomtoms to explore Kalatali, Sugandha, and Laboni beaches.', bn: '১০-১৫ টাকার শেয়ারড টমটমে কলাতলী, সুগন্ধা ও লাবণী সৈকত ভ্রমণ।' },
-        evening: { en: 'Sunset watching and budget local seafood dinner at Jhautola.', bn: 'সৈকতে সূর্যাস্ত ও ঝাউতলায় সাশ্রয়ী সামুদ্রিক খাবারের ডিনার।' }
-      },
-      {
-        dayNumber: 2,
-        headline: { en: 'Day 2: Kolatoli Eco Park Trek & Himchari Cliffs', bn: '২য় দিন: কলাতলী ইকো পার্ক ট্রেকিং ও হিমছড়ি পাহাড়' },
-        morning: { en: 'Morning hike through the free forest trails of Kolatoli Eco Park.', bn: 'সকালে কলাতলী ইকো পার্কের পাহাড়ি ট্রেইলে হাঁটাহাঁটি।' },
-        afternoon: { en: 'Shared local ride along Marine Drive to Himchari National Park & Waterfall.', bn: 'মেরিন ড্রাইভ ধরে হিমছড়ি জাতীয় উদ্যান ও ঝর্ণা পরিদর্শন।' },
-        evening: { en: 'Evening tea and Burmese Market window shopping in town.', bn: 'সন্ধ্যায় বার্মিজ মার্কেট ঘুরে দেখা।' }
-      },
-      {
-        dayNumber: 3,
-        headline: { en: 'Day 3: Inani Coral Beach & Shamlapur Sampan Sunset', bn: '৩য় দিন: ইনানী প্রবাল সৈকত ও শামলাপুর সাম্পান ঘাট' },
-        morning: { en: 'Board a shared group Chander Gari from Dolphin Mor to Inani Beach.', bn: 'ডলফিন মোড় থেকে শেয়ারড চান্দের গাণিতে ইনানী সৈকতে যাত্রা।' },
-        afternoon: { en: 'Walk the 18-km coral-stone coastline of Inani and relax under casuarina trees.', bn: 'ইনানীর প্রবাল পাথরের তীরে ও ঝাউবনে দুপুর কাটানো।' },
-        evening: { en: 'Visit Shamlapur Sunset Point to see traditional wooden Sampan boats before dusk.', bn: 'শামলাপুরে ঐতিহ্যবাহী সাম্পান নৌকা ও সূর্যাস্ত দর্শন।' }
-      },
-      {
-        dayNumber: 4,
-        headline: { en: 'Day 4: Moheshkhali Island & Sonadia Estuary', bn: '৪র্থ দিন: মহেশখালী দ্বীপ ও সোনাদিয়া মোহনা' },
-        morning: { en: 'Take the 80–100 BDT passenger speedboat from Kasturi Ghat to Moheshkhali Island.', bn: 'কস্তুরাঘাট থেকে ৮০-১০০ টাকায় স্পিডবোটে মহেশখালী দ্বীপ যাত্রা।' },
-        afternoon: { en: 'Walk the jetty bridge, climb Mainak Hill to Adinath Temple, and see local salt pans.', bn: 'মহেশখালী জেটি ব্রিজ, আদিনাথ মন্দির ও লবণের মাঠ পরিদর্শন।' },
-        evening: { en: 'Return to Kasturi Ghat and visit Najirartek Dried Fish Hub at the river mouth.', bn: 'বিকেলে নাজিরারটেক শুঁটকি মহাল পরিদর্শন।' }
-      },
-      {
-        dayNumber: 5,
-        headline: { en: 'Day 5: 100-Feet Buddha in Ramu & Departure', bn: '৫ম দিন: রামুর ১০০ ফুট বুদ্ধ মূর্তি ও প্রস্থান' },
-        morning: { en: 'Shared CNG/local bus 16 km east to Ramu’s 100-Foot Reclining Buddha & wooden Khyangs.', bn: 'রামুর ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি ও প্রাচীন কাঠের বৌদ্ধ বিহার দর্শন।' },
-        afternoon: { en: 'Pick up dried fish and local snacks in town.', bn: 'শহর থেকে শুঁটকি ও আচার সংগ্রহ।' },
-        evening: { en: 'Depart via Cox’s Bazar Iconic Railway Station or Dolphin Mor bus stand.', bn: 'কক্সবাজার রেলস্টেশন বা বাস টার্মিনাল থেকে ফিরতি যাত্রা।' }
-      }
-    ]
+function formatSinglePrice(bdtAmount) {
+  if (typeof formatPriceRange === 'function') {
+    if (bdtAmount === 0) {
+      return typeof AppState !== 'undefined' && AppState.lang === 'bn' ? 'ফ্রি (০ ৳)' : 'Free';
+    }
+    return formatPriceRange(bdtAmount, bdtAmount);
   }
-};
-
-/* --------------------------------------------------------------------------
- * 4. ITINERARY BUILDER UI & RENDERING LOGIC
- * -------------------------------------------------------------------------- */
-function selectItineraryDays(days) {
-  FeaturesState.selectedDays = String(days);
-  renderItineraryControls();
+  return `${bdtAmount.toLocaleString()} BDT`;
 }
 
-function selectItineraryStyle(style) {
-  FeaturesState.selectedStyle = style;
-  renderItineraryControls();
+function setItineraryTotalDays(daysCount) {
+  const count = Math.max(1, Math.min(7, parseInt(daysCount, 10) || 5));
+  FeaturesState.totalDays = count;
+
+  const defaults = getDefault5DayPlan();
+  while (FeaturesState.daysPlan.length < count) {
+    const nextDayNum = FeaturesState.daysPlan.length + 1;
+    const template = defaults[(nextDayNum - 1) % defaults.length];
+    FeaturesState.daysPlan.push({
+      dayNumber: nextDayNum,
+      title: {
+        en: `Day ${nextDayNum}: Coastal Discovery & Marine Drive Leisure`,
+        bn: `দিন ${nextDayNum}: সমুদ্র সৈকত ও মেরিন ড্রাইভ ভ্রমণ`
+      },
+      spots: [...template.spots],
+      activities: [...template.activities],
+      restaurants: [...template.restaurants],
+      transports: [...template.transports],
+      customNote: { ...template.customNote }
+    });
+  }
+
+  if (FeaturesState.activeDayTab > count) {
+    FeaturesState.activeDayTab = count;
+  }
+
+  renderItineraryStudio();
 }
 
-function handleGenerateItinerary(e) {
-  if (e) e.preventDefault();
-  renderItineraryTimeline(true);
+function setItineraryActiveDayTab(dayNum) {
+  FeaturesState.activeDayTab = dayNum;
+  renderItineraryStudio();
 }
 
-function renderItineraryControls() {
+function selectItineraryHotel(hotelId) {
+  FeaturesState.selectedHotelId = hotelId;
+  renderItineraryStudio();
+}
+
+function updateTripMetaField(field, value) {
+  if (field === 'tripTitle') {
+    FeaturesState.tripTitle = value || 'Cox’s Bazar Coastal Expedition';
+  } else if (field === 'travelerName') {
+    FeaturesState.travelerName = value || 'Explorer';
+  } else if (field === 'travelerCount') {
+    FeaturesState.travelerCount = Math.max(1, Math.min(30, parseInt(value, 10) || 2));
+  }
+  renderVisualItineraryPass();
+}
+
+function updateDayCustomField(dayNum, field, value) {
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj) return;
   const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
 
-  // Update Trip Length Buttons
-  document.querySelectorAll('[data-itin-days]').forEach(btn => {
-    const val = btn.getAttribute('data-itin-days');
-    const isActive = FeaturesState.selectedDays === val;
-    btn.className = `flex-1 py-3 px-4 rounded-2xl text-sm font-bold border transition-all ${
-      isActive
-        ? 'bg-sky-700 text-white border-sky-700 shadow-md shadow-sky-900/15'
-        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-sky-50'
-    }`;
+  if (field === 'title') {
+    dayObj.title[lang] = value;
+  } else if (field === 'note') {
+    dayObj.customNote[lang] = value;
+  }
+  renderVisualItineraryPass();
+}
+
+function toggleDaySelection(dayNum, listKey, itemId) {
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj || !Array.isArray(dayObj[listKey])) return;
+
+  const idx = dayObj[listKey].indexOf(itemId);
+  if (idx >= 0) {
+    dayObj[listKey].splice(idx, 1);
+  } else {
+    dayObj[listKey].push(itemId);
+  }
+
+  renderItineraryStudio();
+}
+
+function applyItineraryPreset(presetKey) {
+  if (presetKey === '5day_biker') {
+    FeaturesState.totalDays = 5;
+    FeaturesState.selectedHotelId = 'hotel-sea-crown';
+    FeaturesState.tripTitle = '5-Day Marine Drive Bike & Island Explorer';
+    FeaturesState.daysPlan = getDefault5DayPlan();
+    FeaturesState.activeDayTab = 2; // Show Day 2 Marine Drive Bike Ride tab
+  } else if (presetKey === '3day_family') {
+    FeaturesState.totalDays = 3;
+    FeaturesState.selectedHotelId = 'hotel-kollol';
+    FeaturesState.tripTitle = '3-Day Family Beach, Coral & Island Getaway';
+    FeaturesState.daysPlan = getDefault5DayPlan().slice(0, 3);
+    FeaturesState.activeDayTab = 1;
+  } else if (presetKey === '2day_quick') {
+    FeaturesState.totalDays = 2;
+    FeaturesState.selectedHotelId = 'prime-park-hotel';
+    FeaturesState.tripTitle = '2-Day Marine Drive Bike & Sunset Escape';
+    FeaturesState.daysPlan = getDefault5DayPlan().slice(0, 2);
+    FeaturesState.activeDayTab = 1;
+  } else if (presetKey === 'clear_custom') {
+    FeaturesState.daysPlan = Array.from({ length: FeaturesState.totalDays }, (_, i) => ({
+      dayNumber: i + 1,
+      title: {
+        en: `Day ${i + 1}: My Custom Cox’s Bazar Plan`,
+        bn: `দিন ${i + 1}: আমার কাস্টম কক্সবাজার প্ল্যান`
+      },
+      spots: ['spot-laboni-sugandha'],
+      activities: i === 0 ? ['act-marine-drive-bike'] : [],
+      restaurants: ['rest-poushee'],
+      transports: ['trans-tomtom-hops'],
+      customNote: { en: '', bn: '' }
+    }));
+    FeaturesState.activeDayTab = 1;
+  }
+
+  renderItineraryStudio();
+}
+
+function calculateItineraryBudget() {
+  const activeDays = FeaturesState.daysPlan.slice(0, FeaturesState.totalDays);
+  const nights = Math.max(1, FeaturesState.totalDays - 1);
+
+  // 1. Hotel Cost
+  const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
+  const selectedHotel = hotelsList.find(h => h.id === FeaturesState.selectedHotelId) || hotelsList[0];
+  const avgHotelNightBDT = selectedHotel ? Math.round((selectedHotel.minBDT + selectedHotel.maxBDT) / 2) : 3000;
+  const totalHotelBDT = avgHotelNightBDT * nights;
+
+  // 2. Daily Breakdown
+  let totalTransportBDT = 0;
+  let totalDiningBDT = 0;
+  let totalActivitiesBDT = 0;
+
+  const dayCosts = activeDays.map(d => {
+    const transCost = d.transports.reduce((sum, id) => {
+      const item = ITIN_TRANSPORT_ADDONS.find(t => t.id === id);
+      return sum + (item ? item.costBDT : 0);
+    }, 0);
+
+    const restCost = d.restaurants.reduce((sum, id) => {
+      const item = ITIN_RESTAURANTS_CATALOG.find(r => r.id === id);
+      return sum + (item ? item.avgCostBDT : 0);
+    }, 0);
+
+    const actCost = d.activities.reduce((sum, id) => {
+      const item = ITIN_ACTIVITIES_CATALOG.find(a => a.id === id);
+      return sum + (item ? item.costBDT : 0);
+    }, 0);
+
+    totalTransportBDT += transCost;
+    totalDiningBDT += restCost;
+    totalActivitiesBDT += actCost;
+
+    return {
+      dayNumber: d.dayNumber,
+      transCost,
+      restCost,
+      actCost,
+      dayTotal: transCost + restCost + actCost
+    };
   });
 
-  // Update Travel Style Buttons
-  document.querySelectorAll('[data-itin-style]').forEach(btn => {
-    const val = btn.getAttribute('data-itin-style');
-    const isActive = FeaturesState.selectedStyle === val;
-    btn.className = `flex-1 py-3 px-4 rounded-2xl text-sm font-bold border transition-all ${
-      isActive
-        ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-900/15'
-        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-teal-50'
-    }`;
-  });
+  const grandTotalBDT = totalHotelBDT + totalTransportBDT + totalDiningBDT + totalActivitiesBDT;
 
-  // Translate static labels if needed
-  const labels = {
-    en: {
-      eyebrow: 'SMART TRIP PLANNER',
-      title: 'Custom Cox’s Bazar Itinerary Builder',
-      subtitle: 'Select your trip length and travel style to generate a tailored day-by-day Morning, Afternoon, and Evening plan.',
-      lengthLabel: '1. Select Trip Length',
-      styleLabel: '2. Choose Travel Style',
-      days2: '2 Days',
-      days3: '3 Days',
-      days5: '5 Days',
-      styleFamily: 'Family & Relaxing',
-      styleAdventure: 'Adventure',
-      styleBudget: 'Budget',
-      generateBtn: 'Generate My Itinerary'
-    },
-    bn: {
-      eyebrow: 'স্মার্ট ট্রিপ প্ল্যানার',
-      title: 'কাস্টম কক্সবাজার ভ্রমণ প্ল্যানার (Itinerary Builder)',
-      subtitle: 'আপনার ভ্রমণের দিন সংখ্যা এবং ধরন নির্বাচন করে সকাল, দুপুর ও সন্ধ্যার পূর্ণাঙ্গ ভ্রমণ রুটিন তৈরি করুন।',
-      lengthLabel: '১. ভ্রমণের মেয়াদ নির্বাচন করুন',
-      styleLabel: '২. ভ্রমণের ধরন বেছে নিন',
-      days2: '২ দিন',
-      days3: '৩ দিন',
-      days5: '৫ দিন',
-      styleFamily: 'পরিবার ও আরামদায়ক',
-      styleAdventure: 'অ্যাডভেঞ্চার',
-      styleBudget: 'সাশ্রয়ী বাজেট',
-      generateBtn: 'আমার ভ্রমণ প্ল্যান তৈরি করুন'
-    }
-  }[lang];
+  return {
+    selectedHotel,
+    nights,
+    avgHotelNightBDT,
+    totalHotelBDT,
+    totalTransportBDT,
+    totalDiningBDT,
+    totalActivitiesBDT,
+    grandTotalBDT,
+    dayCosts
+  };
+}
+
+/* --------------------------------------------------------------------------
+ * 6. RENDER INTERACTIVE STUDIO BUILDER & INTERNATIONAL VISUAL PASS
+ * -------------------------------------------------------------------------- */
+function renderItineraryStudio() {
+  const studioRoot = document.getElementById('itinerary-studio-builder');
+  if (!studioRoot) return;
+
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+
+  // Sync Navbar & Section Titles
+  document.querySelectorAll('[data-nav="map"]').forEach(el => {
+    el.textContent = lang === 'en' ? 'Interactive Map' : 'ম্যাপ';
+  });
+  document.querySelectorAll('[data-nav="itinerary"]').forEach(el => {
+    el.textContent = lang === 'en' ? 'Itinerary Studio' : 'ভ্রমণ প্ল্যানার';
+  });
 
   const setTxt = (id, txt) => {
     const el = document.getElementById(id);
     if (el) el.textContent = txt;
   };
-
-  setTxt('itin-eyebrow', labels.eyebrow);
-  setTxt('itin-title', labels.title);
-  setTxt('itin-subtitle', labels.subtitle);
-  setTxt('itin-length-label', labels.lengthLabel);
-  setTxt('itin-style-label', labels.styleLabel);
-  setTxt('itin-btn-2d', labels.days2);
-  setTxt('itin-btn-3d', labels.days3);
-  setTxt('itin-btn-5d', labels.days5);
-  setTxt('itin-btn-family', labels.styleFamily);
-  setTxt('itin-btn-adventure', labels.styleAdventure);
-  setTxt('itin-btn-budget', labels.styleBudget);
-  setTxt('itin-generate-btn-text', labels.generateBtn);
-
-  // Also translate Map section header & Navbar links
-  document.querySelectorAll('[data-nav="map"]').forEach(el => {
-    el.textContent = lang === 'en' ? 'Interactive Map' : 'ম্যাপ';
-  });
-  document.querySelectorAll('[data-nav="itinerary"]').forEach(el => {
-    el.textContent = lang === 'en' ? 'Itinerary' : 'ভ্রমণ প্ল্যান';
-  });
 
   setTxt(
     'map-eyebrow',
@@ -1015,120 +967,924 @@ function renderItineraryControls() {
       ? 'Click any marker or card to view verified hotels, sightseeing spots, and transport hubs across Cox’s Bazar.'
       : 'যেকোনো পিন বা কার্ডে ক্লিক করে হোটেল, দর্শনীয় স্থান এবং যাতায়াত ঘাটের অবস্থান ও তথ্য দেখুন।'
   );
+
+  setTxt(
+    'itin-eyebrow',
+    lang === 'en' ? 'INTERNATIONAL CUSTOM TRIP STUDIO' : 'আন্তর্জাতিক মানের কাস্টম ভ্রমণ প্ল্যানার'
+  );
+  setTxt(
+    'itin-title',
+    lang === 'en'
+      ? 'Build & Download Your Visual Cox’s Bazar Itinerary'
+      : 'নিজের মতো কক্সবাজার ভ্রমণ প্ল্যান তৈরি ও ডাউনলোড করুন'
+  );
+  setTxt(
+    'itin-subtitle',
+    lang === 'en'
+      ? 'Select your hotel, daily spots, restaurants, local transport fares, and signature activities like riding a bike along Marine Drive—then download your official branded Visual Itinerary Pass.'
+      : 'হোটেল, প্রতিদিনের দর্শনীয় স্থান, রেস্তোরাঁ, যাতায়াত খরচ এবং মেরিন ড্রাইভে বাইক রাইডিং নির্বাচন করে আপনার ভিজ্যুয়াল ভ্রমণ গাইড ডাউনলোড করুন।'
+  );
+
+  const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
+  const allSpots = getUnifiedWebsiteSpots();
+  const currentDayObj =
+    FeaturesState.daysPlan.find(d => d.dayNumber === FeaturesState.activeDayTab) || FeaturesState.daysPlan[0];
+
+  // Build Hotel Selector Cards
+  const hotelCardsHTML = hotelsList
+    .map(hotel => {
+      const isSelected = hotel.id === FeaturesState.selectedHotelId;
+      const avgNight = Math.round((hotel.minBDT + hotel.maxBDT) / 2);
+      return `
+        <button
+          type="button"
+          onclick="selectItineraryHotel('${hotel.id}')"
+          class="text-left p-3.5 rounded-2xl border transition-all flex items-center gap-3.5 ${
+            isSelected
+              ? 'bg-ocean-950 text-white border-amber-400 ring-2 ring-amber-400/50 shadow-lg'
+              : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300 hover:bg-sky-50/40'
+          }"
+        >
+          <img
+            src="${hotel.image}"
+            alt="${hotel.name[lang]}"
+            class="w-16 h-16 rounded-xl object-cover shrink-0 bg-slate-200 border border-white/20"
+          />
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
+                isSelected ? 'bg-amber-400 text-slate-950' : 'bg-sky-100 text-sky-800'
+              }">
+                ${hotel.location[lang]}
+              </span>
+              ${
+                isSelected
+                  ? `<span class="text-xs font-extrabold text-amber-300">✓ ${lang === 'en' ? 'Selected' : 'নির্বাচিত'}</span>`
+                  : ''
+              }
+            </div>
+            <h4 class="font-extrabold text-sm mt-1 truncate ${isSelected ? 'text-white' : 'text-slate-900'}">
+              ${hotel.name[lang]}
+            </h4>
+            <p class="text-xs mt-0.5 font-bold ${isSelected ? 'text-teal-300' : 'text-teal-700'}">
+              ~${formatSinglePrice(avgNight)} / ${lang === 'en' ? 'night' : 'রাত'}
+            </p>
+          </div>
+        </button>
+      `;
+    })
+    .join('');
+
+  // Build Day Tabs (Day 1 .. Day N)
+  const dayTabsHTML = Array.from({ length: FeaturesState.totalDays }, (_, i) => {
+    const dNum = i + 1;
+    const dPlan = FeaturesState.daysPlan[i];
+    const isActive = FeaturesState.activeDayTab === dNum;
+    const itemCount =
+      (dPlan?.spots?.length || 0) +
+      (dPlan?.activities?.length || 0) +
+      (dPlan?.restaurants?.length || 0) +
+      (dPlan?.transports?.length || 0);
+
+    return `
+      <button
+        type="button"
+        onclick="setItineraryActiveDayTab(${dNum})"
+        class="px-4 py-3 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+          isActive
+            ? 'bg-gradient-to-r from-ocean-950 to-sky-800 text-white border-ocean-950 shadow-md scale-[1.02]'
+            : 'bg-white text-slate-700 border-slate-200 hover:bg-sky-50'
+        }"
+      >
+        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+          isActive ? 'bg-amber-400 text-slate-950' : 'bg-slate-100 text-slate-700'
+        }">${dNum}</span>
+        <span>${lang === 'en' ? `Day ${dNum}` : `দিন ${dNum}`}</span>
+        <span class="px-1.5 py-0.5 rounded-full text-[10px] ${
+          isActive ? 'bg-white/20 text-teal-200' : 'bg-sky-100 text-sky-800'
+        }">${itemCount}</span>
+      </button>
+    `;
+  }).join('');
+
+  // 1. Spots Selector for Current Day
+  const spotsSelectorHTML = allSpots
+    .map(spot => {
+      const active = currentDayObj.spots.includes(spot.id);
+      return `
+        <button
+          type="button"
+          onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'spots', '${spot.id}')"
+          class="p-2.5 rounded-2xl border text-left transition-all flex items-center gap-2.5 ${
+            active
+              ? 'bg-sky-900 text-white border-sky-700 shadow-sm ring-2 ring-sky-400/50'
+              : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300'
+          }"
+        >
+          <img src="${spot.image}" alt="${spot.name[lang]}" class="w-11 h-11 rounded-xl object-cover shrink-0 bg-slate-200" />
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider ${
+                active ? 'text-teal-300' : 'text-sky-700'
+              }">${spot.area[lang]}</span>
+              <span class="text-xs font-extrabold ${active ? 'text-amber-300' : 'text-slate-300'}">${
+                active ? '✓' : '+'
+              }</span>
+            </div>
+            <div class="font-bold text-xs truncate mt-0.5">${spot.name[lang]}</div>
+          </div>
+        </button>
+      `;
+    })
+    .join('');
+
+  // 2. Activities Selector for Current Day (Highlighting Bike Ride on Marine Drive!)
+  const activitiesSelectorHTML = ITIN_ACTIVITIES_CATALOG.map(act => {
+    const active = currentDayObj.activities.includes(act.id);
+    const isBike = act.id === 'act-marine-drive-bike';
+    return `
+      <button
+        type="button"
+        onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'activities', '${act.id}')"
+        class="p-3 rounded-2xl border text-left transition-all flex items-start gap-3 ${
+          active
+            ? 'bg-teal-900 text-white border-teal-600 shadow-sm ring-2 ring-teal-400/50'
+            : isBike
+            ? 'bg-amber-50/80 text-slate-900 border-amber-300 hover:bg-amber-100/70'
+            : 'bg-white text-slate-800 border-slate-200 hover:border-teal-300'
+        }"
+      >
+        <span class="text-xl shrink-0 mt-0.5">${act.icon}</span>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
+              active
+                ? 'bg-amber-400 text-slate-950'
+                : isBike
+                ? 'bg-amber-400 text-slate-950'
+                : 'bg-teal-50 text-teal-800'
+            }">${act.badge[lang]}</span>
+            <span class="text-xs font-extrabold ${active ? 'text-amber-300' : 'text-teal-700'}">
+              ${formatSinglePrice(act.costBDT)}
+            </span>
+          </div>
+          <div class="font-bold text-xs sm:text-sm mt-1 leading-snug">${act.name[lang]}</div>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  // 3. Restaurants Selector for Current Day
+  const restaurantsSelectorHTML = ITIN_RESTAURANTS_CATALOG.map(rest => {
+    const active = currentDayObj.restaurants.includes(rest.id);
+    return `
+      <button
+        type="button"
+        onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'restaurants', '${rest.id}')"
+        class="p-3 rounded-2xl border text-left transition-all flex items-start gap-3 ${
+          active
+            ? 'bg-amber-950 text-white border-amber-600 shadow-sm ring-2 ring-amber-400/50'
+            : 'bg-white text-slate-800 border-slate-200 hover:border-amber-300'
+        }"
+      >
+        <span class="text-xl shrink-0 mt-0.5">${rest.icon}</span>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between gap-1">
+            <h5 class="font-extrabold text-xs sm:text-sm truncate">${rest.name[lang]}</h5>
+            <span class="text-xs font-extrabold shrink-0 ${active ? 'text-amber-300' : 'text-amber-700'}">
+              ~${formatSinglePrice(rest.avgCostBDT)}
+            </span>
+          </div>
+          <p class="text-[11px] mt-1 leading-relaxed ${active ? 'text-amber-100/90' : 'text-slate-500'}">
+            ${rest.specialty[lang]}
+          </p>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  // 4. Transport & Daily Travel Cost Selector for Current Day
+  const transportSelectorHTML = ITIN_TRANSPORT_ADDONS.map(tr => {
+    const active = currentDayObj.transports.includes(tr.id);
+    return `
+      <button
+        type="button"
+        onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'transports', '${tr.id}')"
+        class="p-3 rounded-2xl border text-left transition-all flex items-center justify-between gap-3 ${
+          active
+            ? 'bg-ocean-950 text-white border-sky-500 shadow-sm ring-2 ring-sky-400/50'
+            : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300'
+        }"
+      >
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="text-xl shrink-0">${tr.icon}</span>
+          <div class="min-w-0">
+            <div class="font-bold text-xs sm:text-sm truncate">${tr.name[lang]}</div>
+            <div class="text-[11px] ${active ? 'text-sky-200' : 'text-slate-500'}">${tr.duration[lang]}</div>
+          </div>
+        </div>
+        <div class="text-right shrink-0">
+          <span class="block text-xs font-extrabold ${active ? 'text-amber-300' : 'text-sky-700'}">
+            ${formatSinglePrice(tr.costBDT)}
+          </span>
+          <span class="text-[10px] font-bold ${active ? 'text-teal-300' : 'text-slate-400'}">
+            ${active ? (lang === 'en' ? '✓ Added' : '✓ যুক্ত') : lang === 'en' ? '+ Add' : '+ যুক্ত করুন'}
+          </span>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  studioRoot.innerHTML = `
+    <!-- TOP BAR: QUICK TEMPLATES & TRIP DURATION -->
+    <div class="bg-sand-50 rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-sm mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-teal-700">
+            ${lang === 'en' ? 'STEP 1 • CONFIGURE YOUR TRIP OR LOAD A PRESET' : 'ধাপ ১ • আপনার ভ্রমণের দিন সংখ্যা ও টেমপ্লেট নির্বাচন করুন'}
+          </span>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-0.5">
+            ${lang === 'en' ? 'Trip Duration, Travelers & Quick Templates' : 'ভ্রমণের মেয়াদ, ভ্রমণকারী ও রেডিমেড প্ল্যান'}
+          </h3>
+        </div>
+
+        <!-- Quick Preset Pills -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onclick="applyItineraryPreset('5day_biker')"
+            class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-xs transition"
+          >
+            🏍️ ${lang === 'en' ? '5-Day Marine Drive Bike & Island Plan' : '৫ দিনের মেরিন ড্রাইভ বাইক ও দ্বীপ প্ল্যান'}
+          </button>
+          <button
+            type="button"
+            onclick="applyItineraryPreset('3day_family')"
+            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 transition"
+          >
+            👨‍👩‍👧 ${lang === 'en' ? '3-Day Family Plan' : '৩ দিনের ফ্যামিলি প্ল্যান'}
+          </button>
+          <button
+            type="button"
+            onclick="applyItineraryPreset('2day_quick')"
+            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 transition"
+          >
+            ⚡ ${lang === 'en' ? '2-Day Weekend' : '২ দিনের উইকএন্ড'}
+          </button>
+          <button
+            type="button"
+            onclick="applyItineraryPreset('clear_custom')"
+            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition"
+          >
+            ↺ ${lang === 'en' ? 'Reset / Build Fresh' : 'নতুন করে সাজান'}
+          </button>
+        </div>
+      </div>
+
+      <!-- Trip Meta Inputs: Trip Title, Traveler Name, Duration (1-7 Days) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-5 items-end">
+        <div class="md:col-span-5">
+          <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
+            ${lang === 'en' ? 'Itinerary Title' : 'ভ্রমণ প্ল্যানের নাম'}
+          </label>
+          <input
+            type="text"
+            value="${FeaturesState.tripTitle.replace(/"/g, '&quot;')}"
+            oninput="updateTripMetaField('tripTitle', this.value)"
+            class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+
+        <div class="md:col-span-3">
+          <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
+            ${lang === 'en' ? 'Prepared For (Name / Group)' : 'ভ্রমণকারীর নাম / গ্রুপ'}
+          </label>
+          <input
+            type="text"
+            value="${FeaturesState.travelerName.replace(/"/g, '&quot;')}"
+            oninput="updateTripMetaField('travelerName', this.value)"
+            class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+
+        <div class="md:col-span-4">
+          <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
+            ${lang === 'en' ? 'Select Number of Days (1–7 Days)' : 'ভ্রমণের দিন সংখ্যা (১–৭ দিন)'}
+          </label>
+          <div class="grid grid-cols-7 gap-1.5">
+            ${[1, 2, 3, 4, 5, 6, 7]
+              .map(
+                d => `
+                <button
+                  type="button"
+                  onclick="setItineraryTotalDays(${d})"
+                  class="py-2.5 rounded-xl text-xs font-extrabold border transition ${
+                    FeaturesState.totalDays === d
+                      ? 'bg-ocean-950 text-amber-300 border-ocean-950 shadow-sm'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-sky-50'
+                  }"
+                >
+                  ${d}D
+                </button>
+              `
+              )
+              .join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: CHOOSE YOUR HOTEL FROM WEBSITE CONTENT -->
+      <div class="mt-7 pt-6 border-t border-slate-200/80">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-sky-700">
+            🏨 ${lang === 'en' ? 'STEP 2 • DECIDE YOUR HOTEL (FROM VERIFIED WEBSITE ACCOMMODATIONS)' : 'ধাপ ২ • আপনার পছন্দের হোটেল নির্বাচন করুন'}
+          </span>
+          <span class="text-xs text-slate-500 font-semibold">
+            ${lang === 'en' ? `${ Math.max(1, FeaturesState.totalDays - 1) } Nights Stay Calculated Automatically` : `${ Math.max(1, FeaturesState.totalDays - 1) } রাতের হোটেল খরচ হিসাব করা হবে`}
+          </span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          ${hotelCardsHTML}
+        </div>
+      </div>
+
+      <!-- STEP 3: DAY-BY-DAY PLANNER TABS -->
+      <div class="mt-7 pt-6 border-t border-slate-200/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-teal-700">
+            🗓️ ${lang === 'en' ? 'STEP 3 • CUSTOMIZE EACH DAY (SPOTS, MARINE DRIVE BIKE RIDE, RESTAURANTS & TRAVEL COST)' : 'ধাপ ৩ • প্রতিদিনের স্পট, বাইক রাইড, রেস্তোরাঁ ও যাতায়াত নির্বাচন করুন'}
+          </span>
+          <span class="text-xs font-bold text-slate-500">
+            ${lang === 'en' ? `Editing Day ${currentDayObj.dayNumber} of ${FeaturesState.totalDays}` : `দিন ${currentDayObj.dayNumber} / ${FeaturesState.totalDays} সম্পাদনা করছেন`}
+          </span>
+        </div>
+
+        <!-- Day Tabs Bar -->
+        <div class="flex flex-wrap items-center gap-2 mb-6">
+          ${dayTabsHTML}
+        </div>
+
+        <!-- Active Day Customization Workspace -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs space-y-6">
+          <!-- Day Title & Note Row -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+                ${lang === 'en' ? `Day ${currentDayObj.dayNumber} Theme / Headline` : `দিন ${currentDayObj.dayNumber}-এর শিরোনাম`}
+              </label>
+              <input
+                type="text"
+                value="${currentDayObj.title[lang].replace(/"/g, '&quot;')}"
+                oninput="updateDayCustomField(${currentDayObj.dayNumber}, 'title', this.value)"
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+                ${lang === 'en' ? `Day ${currentDayObj.dayNumber} Personal Plan / Timing Note` : `দিন ${currentDayObj.dayNumber}-এর বিশেষ নোট বা সময়সূচি`}
+              </label>
+              <input
+                type="text"
+                value="${(currentDayObj.customNote[lang] || '').replace(/"/g, '&quot;')}"
+                placeholder="${lang === 'en' ? 'e.g., Ride bike on Marine Drive at 7 AM, lunch at Mermaid Cafe...' : 'যেমন: সকাল ৭টায় মেরিন ড্রাইভে বাইক রাইড...'}"
+                oninput="updateDayCustomField(${currentDayObj.dayNumber}, 'note', this.value)"
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              />
+            </div>
+          </div>
+
+          <!-- A. Spots to Visit on Day X -->
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-sky-800 mb-2.5 flex items-center gap-1.5">
+              <span>📍</span>
+              <span>${lang === 'en' ? `Select Spots to Visit on Day ${currentDayObj.dayNumber} (Click to Toggle)` : `দিন ${currentDayObj.dayNumber}-এ কোন কোন স্পটে যাবেন নির্বাচন করুন`}</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+              ${spotsSelectorHTML}
+            </div>
+          </div>
+
+          <!-- B. Activities to Do on Day X (Marine Drive Bike Ride, Water Sports, etc.) -->
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-teal-800 mb-2.5 flex items-center gap-1.5">
+              <span>🏍️</span>
+              <span>${lang === 'en' ? `Select Activities to Do on Day ${currentDayObj.dayNumber} (Includes Marine Drive Bike Ride)` : `দিন ${currentDayObj.dayNumber}-এর অ্যাক্টিভিটি ও মেরিন ড্রাইভ বাইক রাইড নির্বাচন করুন`}</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              ${activitiesSelectorHTML}
+            </div>
+          </div>
+
+          <!-- C. Where to Eat (Restaurants) & D. Daily Travel / Transport Cost -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+            <div>
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-800 mb-2.5 flex items-center gap-1.5">
+                <span>🍽️</span>
+                <span>${lang === 'en' ? `Where to Eat on Day ${currentDayObj.dayNumber} (Restaurants & Dining)` : `দিন ${currentDayObj.dayNumber}-এ কোথায় খাবেন (রেস্তোরাঁ ও খাবার)`}</span>
+              </h4>
+              <div class="space-y-2">
+                ${restaurantsSelectorHTML}
+              </div>
+            </div>
+
+            <div>
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-ocean-900 mb-2.5 flex items-center gap-1.5">
+                <span>🛺</span>
+                <span>${lang === 'en' ? `Daily Transport & Travel Cost on Day ${currentDayObj.dayNumber}` : `দিন ${currentDayObj.dayNumber}-এর যাতায়াত মাধ্যম ও ভাড়া`}</span>
+              </h4>
+              <div class="space-y-2">
+                ${transportSelectorHTML}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  renderVisualItineraryPass();
 }
 
-function renderItineraryTimeline(animateScroll) {
+function renderVisualItineraryPass() {
   const container = document.getElementById('itinerary-output-container');
   if (!container) return;
 
   const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
-  const key = `${FeaturesState.selectedDays}_${FeaturesState.selectedStyle}`;
-  const plan = ITINERARY_DATABASE[key] || ITINERARY_DATABASE['2_family'];
+  const budget = calculateItineraryBudget();
+  const allSpots = getUnifiedWebsiteSpots();
+  const activeDays = FeaturesState.daysPlan.slice(0, FeaturesState.totalDays);
 
-  const budgetStr =
-    typeof formatPriceRange === 'function'
-      ? formatPriceRange(plan.estBudgetBDT[0], plan.estBudgetBDT[1])
-      : `${plan.estBudgetBDT[0]} - ${plan.estBudgetBDT[1]} BDT`;
+  const daysCardsHTML = activeDays
+    .map((day, idx) => {
+      const dayCostObj = budget.dayCosts[idx] || { transCost: 0, restCost: 0, actCost: 0, dayTotal: 0 };
 
-  const slotLabels = {
-    en: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening', budget: 'Est. Per-Person Budget' },
-    bn: { morning: 'সকাল (Morning)', afternoon: 'দুপুর ও বিকেল (Afternoon)', evening: 'সন্ধ্যা ও রাত (Evening)', budget: 'আনুমানিক জনপ্রতি খরচ' }
-  }[lang];
+      const chosenSpots = day.spots
+        .map(id => allSpots.find(s => s.id === id))
+        .filter(Boolean);
 
-  const daysHTML = plan.days
-    .map(
-      (d, idx) => `
-      <div
-        class="itinerary-day-card relative pl-8 sm:pl-12 pb-10 last:pb-0"
-        style="animation-delay: ${idx * 90}ms;"
-      >
-        <!-- Vertical Timeline Line -->
-        <div class="absolute left-3.5 sm:left-5 top-3 bottom-0 w-0.5 bg-gradient-to-b from-sky-500 via-teal-500 to-slate-200 last:hidden"></div>
+      const chosenActivities = day.activities
+        .map(id => ITIN_ACTIVITIES_CATALOG.find(a => a.id === id))
+        .filter(Boolean);
 
-        <!-- Day Badge Node -->
-        <div class="absolute left-0 sm:left-1.5 top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-ocean-950 text-amber-300 font-extrabold text-xs sm:text-sm flex items-center justify-center shadow-md ring-4 ring-sand-50">
-          ${d.dayNumber}
-        </div>
+      const chosenRestaurants = day.restaurants
+        .map(id => ITIN_RESTAURANTS_CATALOG.find(r => r.id === id))
+        .filter(Boolean);
 
-        <!-- Day Card -->
-        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-md transition">
-          <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
-            <h4 class="text-lg sm:text-xl font-extrabold text-slate-900">
-              ${d.headline[lang]}
-            </h4>
-            <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
-              ${lang === 'en' ? `Day ${d.dayNumber} of ${plan.days.length}` : `দিন ${d.dayNumber} / ${plan.days.length}`}
-            </span>
-          </div>
+      const chosenTransports = day.transports
+        .map(id => ITIN_TRANSPORT_ADDONS.find(t => t.id === id))
+        .filter(Boolean);
 
-          <!-- Morning / Afternoon / Evening 3-Column Timeline Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Morning -->
-            <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/70">
-              <div class="flex items-center gap-2 text-amber-800 font-extrabold text-xs uppercase tracking-wider mb-2">
-                <span>☀</span>
-                <span>${slotLabels.morning}</span>
+      const hasMarineBike = day.activities.includes('act-marine-drive-bike') || day.transports.includes('trans-bike-rental');
+
+      return `
+        <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+          <!-- Day Header Bar -->
+          <div class="bg-gradient-to-r from-ocean-950 via-ocean-900 to-sky-900 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 font-extrabold text-sm flex flex-col items-center justify-center leading-none shadow-md">
+                <span class="text-[9px] uppercase tracking-wider">DAY</span>
+                <span class="text-base">0${day.dayNumber}</span>
               </div>
-              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">${d.morning[lang]}</p>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h4 class="font-display text-lg sm:text-xl font-extrabold text-white">
+                    ${day.title[lang]}
+                  </h4>
+                  ${
+                    hasMarineBike
+                      ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-slate-950">
+                          🏍️ Marine Drive Bike Route
+                        </span>`
+                      : ''
+                  }
+                </div>
+                ${
+                  day.customNote[lang]
+                    ? `<p class="text-xs text-sky-200/90 mt-0.5 italic">“${day.customNote[lang]}”</p>`
+                    : ''
+                }
+              </div>
             </div>
 
-            <!-- Afternoon -->
-            <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-200/70">
-              <div class="flex items-center gap-2 text-sky-800 font-extrabold text-xs uppercase tracking-wider mb-2">
-                <span>🌊</span>
-                <span>${slotLabels.afternoon}</span>
-              </div>
-              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">${d.afternoon[lang]}</p>
-            </div>
-
-            <!-- Evening -->
-            <div class="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200/70">
-              <div class="flex items-center gap-2 text-indigo-900 font-extrabold text-xs uppercase tracking-wider mb-2">
-                <span>🌙</span>
-                <span>${slotLabels.evening}</span>
-              </div>
-              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">${d.evening[lang]}</p>
+            <div class="bg-white/10 border border-white/15 rounded-xl px-3.5 py-1.5 text-right">
+              <span class="block text-[10px] uppercase tracking-wider text-sky-200 font-bold">
+                ${lang === 'en' ? `Day ${day.dayNumber} Est. Spend` : `দিন ${day.dayNumber} আনুমানিক খরচ`}
+              </span>
+              <span class="text-sm font-extrabold text-amber-300">
+                ${formatSinglePrice(dayCostObj.dayTotal)}
+              </span>
             </div>
           </div>
+
+          <!-- Day Body: 4 International Standard Columns -->
+          <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Column 1: Spots to Visit -->
+            <div class="p-4 rounded-2xl bg-sky-50/60 border border-sky-100">
+              <div class="text-[11px] font-extrabold uppercase tracking-wider text-sky-800 mb-2.5 flex items-center gap-1.5">
+                <span>📍</span>
+                <span>${lang === 'en' ? 'Spots to Visit' : 'দর্শনীয় স্থান'}</span>
+              </div>
+              ${
+                chosenSpots.length
+                  ? `<div class="space-y-2">
+                      ${chosenSpots
+                        .map(
+                          s => `
+                          <div class="flex items-center gap-2.5 bg-white p-2 rounded-xl border border-sky-100 shadow-2xs">
+                            <img src="${s.image}" alt="${s.name[lang]}" class="w-9 h-9 rounded-lg object-cover shrink-0 bg-slate-200" />
+                            <div class="min-w-0">
+                              <div class="font-bold text-slate-900 text-xs truncate">${s.name[lang]}</div>
+                              <div class="text-[10px] text-sky-700 font-semibold">${s.area[lang]}</div>
+                            </div>
+                          </div>
+                        `
+                        )
+                        .join('')}
+                    </div>`
+                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'No spots selected' : 'কোনো স্পট নির্বাচন করা হয়নি'}</p>`
+              }
+            </div>
+
+            <!-- Column 2: Activities to Do -->
+            <div class="p-4 rounded-2xl bg-teal-50/60 border border-teal-100">
+              <div class="text-[11px] font-extrabold uppercase tracking-wider text-teal-800 mb-2.5 flex items-center gap-1.5">
+                <span>🏍️</span>
+                <span>${lang === 'en' ? 'Activities & Experiences' : 'অ্যাক্টিভিটি ও অভিজ্ঞতা'}</span>
+              </div>
+              ${
+                chosenActivities.length
+                  ? `<div class="space-y-2">
+                      ${chosenActivities
+                        .map(
+                          a => `
+                          <div class="bg-white p-2.5 rounded-xl border border-teal-100 shadow-2xs">
+                            <div class="flex items-center justify-between gap-1">
+                              <span class="text-xs font-extrabold text-slate-900">${a.icon} ${a.badge[lang]}</span>
+                              <span class="text-[11px] font-extrabold text-teal-700">${formatSinglePrice(a.costBDT)}</span>
+                            </div>
+                            <div class="text-xs text-slate-700 font-medium mt-1 leading-snug">${a.name[lang]}</div>
+                          </div>
+                        `
+                        )
+                        .join('')}
+                    </div>`
+                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'Leisure beach time' : 'সৈকতে অবসর সময়'}</p>`
+              }
+            </div>
+
+            <!-- Column 3: Where to Eat (Restaurants) -->
+            <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-100">
+              <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-900 mb-2.5 flex items-center gap-1.5">
+                <span>🍽️</span>
+                <span>${lang === 'en' ? 'Where to Eat (Restaurants)' : 'কোথায় খাবেন (রেস্তোরাঁ)'}</span>
+              </div>
+              ${
+                chosenRestaurants.length
+                  ? `<div class="space-y-2">
+                      ${chosenRestaurants
+                        .map(
+                          r => `
+                          <div class="bg-white p-2.5 rounded-xl border border-amber-100 shadow-2xs">
+                            <div class="flex items-center justify-between gap-1">
+                              <span class="text-xs font-extrabold text-slate-900 truncate">${r.icon} ${r.name[lang]}</span>
+                              <span class="text-[11px] font-extrabold text-amber-700 shrink-0">${formatSinglePrice(r.avgCostBDT)}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">${r.specialty[lang]}</div>
+                          </div>
+                        `
+                        )
+                        .join('')}
+                    </div>`
+                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'In-hotel or local dining' : 'হোটেল বা স্থানীয় খাবার'}</p>`
+              }
+            </div>
+
+            <!-- Column 4: Local Transport & Travel Cost -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-1.5">
+                <span>🚕</span>
+                <span>${lang === 'en' ? 'Daily Travel & Cost' : 'যাতায়াত ও পরিবহন খরচ'}</span>
+              </div>
+              ${
+                chosenTransports.length
+                  ? `<div class="space-y-2">
+                      ${chosenTransports
+                        .map(
+                          t => `
+                          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80 shadow-2xs">
+                            <div class="flex items-center justify-between gap-1">
+                              <span class="text-xs font-bold text-slate-900">${t.icon} ${t.duration[lang]}</span>
+                              <span class="text-[11px] font-extrabold text-sky-700">${formatSinglePrice(t.costBDT)}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-600 mt-0.5 leading-snug">${t.name[lang]}</div>
+                          </div>
+                        `
+                        )
+                        .join('')}
+                    </div>`
+                  : `<p class="text-xs text-slate-400 italic">${lang === 'en' ? 'Walking / beach stroll' : 'পায়ে হাঁটা ভ্রমণ'}</p>`
+              }
+            </div>
+          </div>
         </div>
-      </div>
-    `
-    )
+      `;
+    })
     .join('');
 
   container.innerHTML = `
-    <!-- Plan Summary Banner -->
-    <div class="mb-8 rounded-3xl bg-gradient-to-r from-ocean-950 via-sky-900 to-teal-900 p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-widest bg-teal-400/20 text-teal-200 border border-teal-300/30 mb-2">
-          ✓ ${lang === 'en' ? 'TAILORED ITINERARY READY' : 'আপনার কাস্টম ভ্রমণ রুটিন প্রস্তুত'}
-        </span>
-        <h3 class="font-display text-2xl sm:text-3xl font-extrabold text-white">${plan.title[lang]}</h3>
-        <p class="text-sky-200 text-sm mt-1.5 font-medium">${plan.summary[lang]}</p>
+    <!-- ACTION TOOLBAR: DOWNLOAD PNG / DOWNLOAD PDF / PRINT -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-ocean-950 text-white p-5 rounded-3xl shadow-xl border border-white/10">
+      <div class="flex items-center gap-3.5">
+        <img
+          src="assets/images/logo-transparent.png"
+          alt="Visit Cox Logo"
+          class="w-12 h-12 object-contain bg-white/10 p-1.5 rounded-2xl border border-white/15"
+        />
+        <div>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300 block">
+            ${lang === 'en' ? 'READY TO EXPORT • OFFICIAL VISUAL DOSSIER' : 'ডাউনলোডের জন্য প্রস্তুত • অফিশিয়াল ভিজ্যুয়াল গাইড'}
+          </span>
+          <h3 class="text-lg font-extrabold text-white">
+            ${lang === 'en' ? 'Download Your Custom Visual Itinerary Pass' : 'আপনার কাস্টম ভিজ্যুয়াল ভ্রমণ গাইড ডাউনলোড করুন'}
+          </h3>
+        </div>
       </div>
-      <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl px-5 py-4 text-left md:text-right shrink-0">
-        <span class="block text-xs text-sky-200 uppercase font-bold tracking-wider">${slotLabels.budget}</span>
-        <span class="text-xl sm:text-2xl font-extrabold text-amber-300 mt-0.5 block">${budgetStr}</span>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button
+          type="button"
+          id="btn-download-png"
+          onclick="downloadVisualItineraryPNG()"
+          class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          <span>${lang === 'en' ? 'Download Image (.PNG)' : 'ইমেজ ডাউনলোড (.PNG)'}</span>
+        </button>
+
+        <button
+          type="button"
+          id="btn-download-pdf"
+          onclick="downloadVisualItineraryPDF()"
+          class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span>${lang === 'en' ? 'Download Official PDF' : 'পিডিএফ ডাউনলোড (.PDF)'}</span>
+        </button>
+
+        <button
+          type="button"
+          onclick="printVisualItinerary()"
+          class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs sm:text-sm transition flex items-center gap-1.5"
+        >
+          <span>🖨️</span>
+          <span>${lang === 'en' ? 'Print Pass' : 'প্রিন্ট করুন'}</span>
+        </button>
       </div>
     </div>
 
-    <!-- Vertical Day-by-Day Timeline -->
-    <div class="mt-4">
-      ${daysHTML}
+    <!-- ====================================================================
+         INTERNATIONAL-STANDARD VISUAL ITINERARY POSTER (CAPTURED ON DOWNLOAD)
+         ==================================================================== -->
+    <div
+      id="visual-itinerary-poster"
+      class="bg-sand-50 rounded-[2rem] border-2 border-slate-200/90 shadow-2xl overflow-hidden"
+    >
+      <!-- 1. CREATIVE BRANDED HEADER WITH VISIT COX LOGO SIGN -->
+      <div class="relative bg-gradient-to-br from-ocean-950 via-ocean-900 to-teal-900 p-7 sm:p-10 text-white overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-teal-400/10 blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-white/15">
+          <!-- Left: Creative Visit Cox Emblem Sign & Title -->
+          <div class="flex items-start sm:items-center gap-5">
+            <div class="relative shrink-0">
+              <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white/95 p-2.5 shadow-2xl border-2 border-amber-300 flex items-center justify-center">
+                <img
+                  src="assets/images/logo-transparent.png"
+                  alt="Visit Cox Official Emblem"
+                  crossorigin="anonymous"
+                  class="w-full h-full object-contain"
+                />
+              </div>
+              <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[9px] font-extrabold uppercase tracking-widest whitespace-nowrap shadow">
+                ✓ VERIFIED PASS
+              </span>
+            </div>
+
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/20 border border-teal-300/30 text-teal-200 text-[11px] font-extrabold uppercase tracking-widest mb-2">
+                <span>VISIT COX’S BAZAR • BANGLADESH COASTAL GUIDE</span>
+              </div>
+              <h3 class="font-display text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                ${FeaturesState.tripTitle}
+              </h3>
+              <p class="text-sky-200 text-xs sm:text-sm mt-1.5 font-medium">
+                ${lang === 'en' ? 'Prepared For:' : 'ভ্রমণকারী:'} <strong class="text-amber-300">${FeaturesState.travelerName}</strong>
+                • ${FeaturesState.totalDays} ${lang === 'en' ? 'Days' : 'দিন'} / ${budget.nights} ${lang === 'en' ? 'Nights' : 'রাত'}
+                • ${lang === 'en' ? 'Currency:' : 'মুদ্রা:'} <strong>${typeof AppState !== 'undefined' ? AppState.currency : 'BDT'}</strong>
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: Total Estimated Trip Cost Summary Box -->
+          <div class="bg-white/10 backdrop-blur-md border border-amber-300/40 rounded-3xl p-5 text-left lg:text-right shrink-0">
+            <span class="block text-[11px] font-extrabold uppercase tracking-widest text-amber-300">
+              ${lang === 'en' ? 'TOTAL ESTIMATED TRIP BUDGET' : 'সর্বমোট আনুমানিক ভ্রমণ বাজেট'}
+            </span>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+              ${formatSinglePrice(budget.grandTotalBDT)}
+            </div>
+            <span class="block text-[11px] text-sky-200 mt-1">
+              ${lang === 'en' ? 'Includes Hotel + Transport/Bike + Dining + Activities' : 'হোটেল + যাতায়াত/বাইক + খাবার + অ্যাক্টিভিটি সহ'}
+            </span>
+          </div>
+        </div>
+
+        <!-- 2. EXECUTIVE SUMMARY BAR: SELECTED HOTEL & COST BREAKDOWN -->
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 pt-6 items-center">
+          <!-- Selected Hotel Card -->
+          <div class="lg:col-span-5 bg-white/10 border border-white/15 rounded-2xl p-3.5 flex items-center gap-3.5">
+            ${
+              budget.selectedHotel
+                ? `
+                <img
+                  src="${budget.selectedHotel.image}"
+                  alt="${budget.selectedHotel.name[lang]}"
+                  crossorigin="anonymous"
+                  class="w-16 h-16 rounded-xl object-cover shrink-0 bg-slate-800 border border-white/20"
+                />
+                <div class="min-w-0">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 block">
+                    🏨 ${lang === 'en' ? 'SELECTED ACCOMMODATION' : 'নির্বাচিত হোটেল'} (${budget.nights} ${lang === 'en' ? 'Nights' : 'রাত'})
+                  </span>
+                  <div class="font-extrabold text-white text-sm sm:text-base truncate">${budget.selectedHotel.name[lang]}</div>
+                  <div class="text-xs text-sky-200">${budget.selectedHotel.location[lang]} • <strong>${formatSinglePrice(budget.totalHotelBDT)}</strong></div>
+                </div>
+              `
+                : ''
+            }
+          </div>
+
+          <!-- 4 Cost Breakdown Mini Cards -->
+          <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div class="bg-white/10 border border-white/10 rounded-2xl p-3">
+              <span class="text-[10px] font-bold uppercase text-sky-200 block">🏨 ${lang === 'en' ? 'Hotel Stay' : 'হোটেল খরচ'}</span>
+              <span class="text-xs sm:text-sm font-extrabold text-white mt-0.5 block">${formatSinglePrice(budget.totalHotelBDT)}</span>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-2xl p-3">
+              <span class="text-[10px] font-bold uppercase text-sky-200 block">🏍️ ${lang === 'en' ? 'Travel & Bike' : 'যাতায়াত ও বাইক'}</span>
+              <span class="text-xs sm:text-sm font-extrabold text-teal-300 mt-0.5 block">${formatSinglePrice(budget.totalTransportBDT)}</span>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-2xl p-3">
+              <span class="text-[10px] font-bold uppercase text-sky-200 block">🍽️ ${lang === 'en' ? 'Restaurants' : 'রেস্তোরাঁ ও খাবার'}</span>
+              <span class="text-xs sm:text-sm font-extrabold text-amber-300 mt-0.5 block">${formatSinglePrice(budget.totalDiningBDT)}</span>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-2xl p-3">
+              <span class="text-[10px] font-bold uppercase text-sky-200 block">🪂 ${lang === 'en' ? 'Activities' : 'অ্যাক্টিভিটি'}</span>
+              <span class="text-xs sm:text-sm font-extrabold text-white mt-0.5 block">${formatSinglePrice(budget.totalActivitiesBDT)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. DAY-BY-DAY VISUAL ITINERARY CARDS -->
+      <div class="p-6 sm:p-8 space-y-5">
+        ${daysCardsHTML}
+      </div>
+
+      <!-- 4. CREATIVE OFFICIAL LOGO SIGN & VERIFICATION FOOTER -->
+      <div class="bg-white border-t border-slate-200/90 px-6 sm:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <img
+            src="assets/images/logo-transparent.png"
+            alt="Visit Cox Seal"
+            crossorigin="anonymous"
+            class="w-12 h-12 object-contain"
+          />
+          <div>
+            <div class="text-xs font-extrabold uppercase tracking-wider text-ocean-950">
+              VISIT COX’S BAZAR • OFFICIAL TRAVEL ITINERARY PASS
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5">
+              Tourist Police Hotline: +880 1320-158995 • National Emergency: 999 • World’s Longest Natural Sea Beach (120 km)
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 border border-amber-300 bg-amber-50/70 px-4 py-2 rounded-2xl">
+          <div class="text-right">
+            <span class="block text-[10px] font-extrabold uppercase tracking-widest text-amber-900">AUTHENTICATED BY</span>
+            <span class="block text-xs font-extrabold text-ocean-950">Visit Cox’s Bazar Portal</span>
+          </div>
+          <span class="w-8 h-8 rounded-xl bg-ocean-950 text-amber-300 font-extrabold text-xs flex items-center justify-center">
+            ✓
+          </span>
+        </div>
+      </div>
     </div>
   `;
-
-  if (animateScroll) {
-    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
 }
 
 /* --------------------------------------------------------------------------
- * 5. HOOK INTO GLOBAL RENDER & INITIALIZATION
+ * 7. DOWNLOAD VISUAL ITINERARY AS HIGH-RES PNG / PDF / PRINT
+ * -------------------------------------------------------------------------- */
+async function downloadVisualItineraryPNG() {
+  const posterEl = document.getElementById('visual-itinerary-poster');
+  const btn = document.getElementById('btn-download-png');
+  if (!posterEl || typeof html2canvas === 'undefined') {
+    window.print();
+    return;
+  }
+
+  const origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳ Generating High-Res PNG...</span>`;
+  }
+
+  try {
+    const canvas = await html2canvas(posterEl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#fdfbf7',
+      logging: false
+    });
+
+    const link = document.createElement('a');
+    link.download = `Visit-Cox-Itinerary-${FeaturesState.totalDays}-Days.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error('PNG Export Error:', err);
+    window.print();
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    }
+  }
+}
+
+async function downloadVisualItineraryPDF() {
+  const posterEl = document.getElementById('visual-itinerary-poster');
+  const btn = document.getElementById('btn-download-pdf');
+  if (!posterEl || typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+    window.print();
+    return;
+  }
+
+  const origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳ Generating Official PDF...</span>`;
+  }
+
+  try {
+    const canvas = await html2canvas(posterEl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#fdfbf7',
+      logging: false
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    const { jsPDF } = window.jspdf;
+
+    // Create custom PDF sized proportionally to the visual itinerary dossier
+    const pdfWidthMm = 210; // A4 width in mm
+    const pdfHeightMm = Math.round((canvas.height * pdfWidthMm) / canvas.width);
+
+    const pdf = new jsPDF({
+      orientation: pdfHeightMm > pdfWidthMm ? 'portrait' : 'landscape',
+      unit: 'mm',
+      format: [pdfWidthMm, Math.max(297, pdfHeightMm + 10)]
+    });
+
+    pdf.addImage(imgData, 'JPEG', 0, 5, pdfWidthMm, pdfHeightMm);
+    pdf.save(`Visit-Cox-Itinerary-${FeaturesState.totalDays}-Days.pdf`);
+  } catch (err) {
+    console.error('PDF Export Error:', err);
+    window.print();
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    }
+  }
+}
+
+function printVisualItinerary() {
+  window.print();
+}
+
+/* --------------------------------------------------------------------------
+ * 8. HOOK INTO GLOBAL RENDER & INITIALIZATION
  * -------------------------------------------------------------------------- */
 function renderInteractiveFeatures() {
-  renderItineraryControls();
-  renderItineraryTimeline(false);
+  renderItineraryStudio();
   if (!FeaturesState.mapInstance) {
     initTouristMap();
   }

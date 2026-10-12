@@ -106,6 +106,25 @@
     .itinerary-day-card {
       animation: itineraryFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #visual-itinerary-poster,
+      #visual-itinerary-poster * {
+        visibility: visible;
+      }
+      #visual-itinerary-poster {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
   </style>
 </head>
 
@@ -544,10 +563,10 @@
   </section>
 
   <!-- ========================================================================
-       MODULE 2: CUSTOM ITINERARY BUILDER (DYNAMIC TIMELINE GENERATOR)
+       MODULE 2: INTERNATIONAL CUSTOM ITINERARY STUDIO & VISUAL PASS BUILDER
        ======================================================================== -->
   <section id="itinerary-section" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section Heading -->
       <div class="text-center max-w-3xl mx-auto mb-12">
@@ -555,115 +574,25 @@
           id="itin-eyebrow"
           class="inline-block text-xs font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100 px-3 py-1 rounded-full mb-3"
         >
-          SMART TRIP PLANNER
+          INTERNATIONAL CUSTOM TRIP STUDIO
         </span>
         <h2
           id="itin-title"
           class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
         >
-          Custom Cox’s Bazar Itinerary Builder
+          Build &amp; Download Your Visual Cox’s Bazar Itinerary
         </h2>
         <p id="itin-subtitle" class="mt-3 text-slate-600 text-base">
-          Select your trip length and travel style to generate a tailored day-by-day Morning, Afternoon, and Evening plan.
+          Select your hotel, daily spots, restaurants, local transport fares, and signature activities like riding a bike along Marine Drive—then download your official branded Visual Itinerary Pass.
         </p>
       </div>
 
-      <!-- Interactive Itinerary Builder Input Form Card -->
-      <form
-        onsubmit="handleGenerateItinerary(event)"
-        class="bg-sand-50 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm mb-12"
-      >
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+      <!-- Interactive Studio Builder (Step 1: Duration/Templates, Step 2: Hotel, Step 3: Day-by-Day Planner) -->
+      <div id="itinerary-studio-builder">
+        <!-- Populated dynamically via features.js -->
+      </div>
 
-          <!-- 1. Trip Length Selector (2 Days, 3 Days, 5 Days) -->
-          <div class="lg:col-span-4">
-            <label
-              id="itin-length-label"
-              class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2.5"
-            >
-              1. Select Trip Length
-            </label>
-            <div class="flex items-center gap-2.5">
-              <button
-                type="button"
-                id="itin-btn-2d"
-                data-itin-days="2"
-                onclick="selectItineraryDays('2')"
-              >
-                2 Days
-              </button>
-              <button
-                type="button"
-                id="itin-btn-3d"
-                data-itin-days="3"
-                onclick="selectItineraryDays('3')"
-              >
-                3 Days
-              </button>
-              <button
-                type="button"
-                id="itin-btn-5d"
-                data-itin-days="5"
-                onclick="selectItineraryDays('5')"
-              >
-                5 Days
-              </button>
-            </div>
-          </div>
-
-          <!-- 2. Travel Style Selector (Family & Relaxing, Adventure, Budget) -->
-          <div class="lg:col-span-5">
-            <label
-              id="itin-style-label"
-              class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2.5"
-            >
-              2. Choose Travel Style
-            </label>
-            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-              <button
-                type="button"
-                id="itin-btn-family"
-                data-itin-style="family"
-                onclick="selectItineraryStyle('family')"
-              >
-                Family &amp; Relaxing
-              </button>
-              <button
-                type="button"
-                id="itin-btn-adventure"
-                data-itin-style="adventure"
-                onclick="selectItineraryStyle('adventure')"
-              >
-                Adventure
-              </button>
-              <button
-                type="button"
-                id="itin-btn-budget"
-                data-itin-style="budget"
-                onclick="selectItineraryStyle('budget')"
-              >
-                Budget
-              </button>
-            </div>
-          </div>
-
-          <!-- 3. Generate My Itinerary Button -->
-          <div class="lg:col-span-3">
-            <button
-              type="submit"
-              class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-ocean-950 via-sky-700 to-teal-600 hover:from-ocean-900 hover:to-teal-500 text-white font-extrabold text-sm shadow-lg shadow-sky-950/20 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-            >
-              <svg class="w-4 h-4 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-              <span id="itin-generate-btn-text">Generate My Itinerary</span>
-            </button>
-          </div>
-
-        </div>
-      </form>
-
-      <!-- Dynamic Timeline Output Container (Morning / Afternoon / Evening Cards) -->
+      <!-- International-Standard Visual Itinerary Poster & Download Toolbar -->
       <div id="itinerary-output-container" aria-live="polite">
         <!-- Populated dynamically via features.js -->
       </div>
@@ -1223,6 +1152,10 @@
 
   <!-- Leaflet.js v1.9.4 JS CDN (OpenStreetMap — No API Key Required) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+  <!-- Visual Itinerary Export Libraries (html2canvas + jsPDF for PNG & PDF Downloads) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
   <script src="js/data.js"></script>
