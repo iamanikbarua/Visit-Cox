@@ -456,7 +456,7 @@ function getDefault5DayPlan() {
         bn: 'সৈকতে আগমন, সুগন্ধা সূর্যাস্ত ও রেডিয়েন্ট ফিশ ওয়ার্ল্ড'
       },
       isCustomTitle: false,
-      spots: ['spot-laboni-sugandha', 'spot-radiant-fish-world'],
+      spots: ['spot-laboni-sugandha', 'radiant-fish-world'],
       activities: ['act-aquarium-walk', 'act-burmese-market'],
       restaurants: ['rest-poushee', 'rest-sugandha-fry'],
       transports: ['trans-tomtom-hops'],
@@ -472,7 +472,7 @@ function getDefault5DayPlan() {
         bn: 'মেরিন ড্রাইভ রোডে বাইক রাইডিং — হিমছড়ি ঝর্ণা ও ইনানী প্রবাল সৈকত'
       },
       isCustomTitle: false,
-      spots: ['spot-himchari', 'spot-inani-beach', 'gem-shamlapur'],
+      spots: ['himchari-national-park', 'inani-beach', 'shamlapur-sunset-point'],
       activities: ['act-marine-drive-bike', 'act-himchari-trek', 'act-shamlapur-sunset'],
       restaurants: ['rest-mermaid', 'rest-salt-bistro'],
       transports: ['trans-bike-rental'],
@@ -488,7 +488,7 @@ function getDefault5DayPlan() {
         bn: 'স্পিডবোটে মহেশখালী দ্বীপ ও মৈনাক পাহাড়ের আদিনাথ মন্দির অভিযান'
       },
       isCustomTitle: false,
-      spots: ['spot-moheshkhali', 'gem-najirartek'],
+      spots: ['moheshkhali-island', 'najirartek-dried-fish-hub'],
       activities: ['act-moheshkhali-speedboat', 'act-parasailing-jetski'],
       restaurants: ['rest-jhaubon', 'rest-rooftop-grill'],
       transports: ['trans-speedboat-moheshkhali', 'trans-tomtom-hops'],
@@ -504,7 +504,7 @@ function getDefault5DayPlan() {
         bn: 'সোনাদিয়া দ্বীপ ইকো-অ্যাডভেঞ্চার ও কলাতলী ইকো পার্ক ট্রেকিং'
       },
       isCustomTitle: false,
-      spots: ['gem-sonadia', 'gem-kolatoli-eco'],
+      spots: ['sonadia-island', 'kolatoli-eco-park'],
       activities: ['act-sonadia-camping', 'act-chander-gari-safari'],
       restaurants: ['rest-handi', 'rest-mermaid'],
       transports: ['trans-jeep-inani'],
@@ -520,7 +520,7 @@ function getDefault5DayPlan() {
         bn: 'রামু ১০০ ফুট সিংহশয্যা বুদ্ধ বিহার দর্শন ও কেনাকাটা শেষে প্রস্থান'
       },
       isCustomTitle: false,
-      spots: ['spot-ramu-buddha', 'spot-laboni-sugandha'],
+      spots: ['100-feet-buddha-ramu', 'spot-laboni-sugandha'],
       activities: ['act-burmese-market'],
       restaurants: ['rest-poushee', 'rest-salt-bistro'],
       transports: ['trans-cng-ramu', 'trans-tomtom-hops'],
@@ -573,7 +573,7 @@ function getSmartDayHeadline(day, lang) {
 const FeaturesState = {
   mapInstance: null,
   markerLayerGroup: null,
-  activeMapFilter: 'all',
+  activeMapFilter: 'day-1',
 
   // User-Friendly 3-Step Wizard State
   wizardStep: 1,
@@ -620,30 +620,306 @@ function showUserToast(messageText, actionText, actionTargetSelector) {
 }
 
 /* --------------------------------------------------------------------------
- * 5. LEAFLET INTERACTIVE MAP INITIALIZATION & FILTERING
+ * 5. INTERACTIVE DAY-WISE COX'S BAZAR ROUTE PLANNER & GENERATOR
  * -------------------------------------------------------------------------- */
-function createCategoryMarkerIcon(category) {
-  const styles = {
-    hotels: {
-      bg: '#0284c7',
-      svg: `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`
-    },
-    spots: {
-      bg: '#0d9488',
-      svg: `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`
-    },
-    hubs: {
-      bg: '#d97706',
-      svg: `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>`
-    }
-  }[category] || { bg: '#0284c7', svg: '' };
+const HOTEL_ROUTE_COORDS = {
+  'hotel-sea-crown': {
+    lat: 21.4159,
+    lng: 91.9818,
+    zone: { en: 'Sugandha Beach (Marine Drive Start)', bn: 'সুগন্ধা বিচ (মেরিন ড্রাইভ শুরু)' }
+  },
+  'prime-park-hotel': {
+    lat: 21.4184,
+    lng: 91.9796,
+    zone: { en: 'Kalatali Hotel Motel Zone', bn: 'কলাতলী হোটেল মোটেল জোন' }
+  },
+  'hotel-kollol': {
+    lat: 21.4258,
+    lng: 91.9718,
+    zone: { en: 'Laboni Beach Point', bn: 'লাবণী বিচ পয়েন্ট' }
+  },
+  'nisanah-resort': {
+    lat: 21.4025,
+    lng: 91.9912,
+    zone: { en: 'South Kolatoli Eco Fringe', bn: 'দক্ষিণ কলাতলী ইকো জোন' }
+  },
+  'white-orchid': {
+    lat: 21.4176,
+    lng: 91.9812,
+    zone: { en: 'Kalatali Main Road', bn: 'কলাতলী মেইন রোড' }
+  }
+};
 
+const KASTURI_GHAT_JETTY = {
+  lat: 21.4526,
+  lng: 91.9685,
+  name: { en: 'Kasturi Ghat Speedboat Jetty', bn: 'কস্তুরাঘাট স্পিডবোট জেটি' }
+};
+
+const SPOT_ROUTE_METADATA = {
+  'spot-laboni-sugandha': {
+    lat: 21.4235,
+    lng: 91.9742,
+    corridor: 'beach_town',
+    corridorLabel: { en: 'Main Beachfront', bn: 'প্রধান সৈকত' },
+    orderWeight: 10
+  },
+  'radiant-fish-world': {
+    lat: 21.4302,
+    lng: 91.9735,
+    corridor: 'beach_town',
+    corridorLabel: { en: 'Jhautola Town Center', bn: 'ঝাউতলা শহর কেন্দ্র' },
+    orderWeight: 15
+  },
+  'kolatoli-eco-park': {
+    lat: 21.3965,
+    lng: 91.9960,
+    corridor: 'marine_drive',
+    corridorLabel: { en: 'South Kolatoli • 4 km', bn: 'দক্ষিণ কলাতলী • ৪ কিমি' },
+    orderWeight: 25
+  },
+  'himchari-national-park': {
+    lat: 21.3556,
+    lng: 92.0247,
+    corridor: 'marine_drive',
+    corridorLabel: { en: 'Marine Drive • 18 km South', bn: 'মেরিন ড্রাইভ • ১৮ কিমি দক্ষিণে' },
+    orderWeight: 35
+  },
+  'inani-beach': {
+    lat: 21.2291,
+    lng: 92.0475,
+    corridor: 'marine_drive',
+    corridorLabel: { en: 'Marine Drive • 32 km South', bn: 'মেরিন ড্রাইভ • ৩২ কিমি দক্ষিণে' },
+    orderWeight: 50
+  },
+  'shamlapur-sunset-point': {
+    lat: 21.0825,
+    lng: 92.1380,
+    corridor: 'marine_drive',
+    corridorLabel: { en: 'Marine Drive • 52 km South', bn: 'মেরিন ড্রাইভ • ৫২ কিমি দক্ষিণে' },
+    orderWeight: 65
+  },
+  'najirartek-dried-fish-hub': {
+    lat: 21.4640,
+    lng: 91.9445,
+    corridor: 'island_estuary',
+    corridorLabel: { en: 'Bakkhali Estuary • 7 km North', bn: 'বাঁকখালী মোহনা • ৭ কিমি উত্তরে' },
+    orderWeight: 72
+  },
+  'moheshkhali-island': {
+    lat: 21.5333,
+    lng: 91.9500,
+    corridor: 'island_estuary',
+    corridorLabel: { en: 'Island via Kasturi Ghat Boat', bn: 'স্পিডবোটে মহেশখালী দ্বীপ' },
+    requiresBoat: true,
+    orderWeight: 82
+  },
+  'sonadia-island': {
+    lat: 21.4880,
+    lng: 91.8950,
+    corridor: 'island_estuary',
+    corridorLabel: { en: 'Eco Island via Boat', bn: 'বোটে সোনাদিয়া ইকো দ্বীপ' },
+    requiresBoat: true,
+    orderWeight: 88
+  },
+  '100-feet-buddha-ramu': {
+    lat: 21.4325,
+    lng: 92.1008,
+    corridor: 'ramu_east',
+    corridorLabel: { en: 'Ramu Highway • 16 km East', bn: 'রামু মহাসড়ক • ১৬ কিমি পূর্বে' },
+    orderWeight: 95
+  }
+};
+
+const SPOT_ID_ALIASES = {
+  'spot-radiant-fish-world': 'radiant-fish-world',
+  'spot-himchari': 'himchari-national-park',
+  'spot-inani-beach': 'inani-beach',
+  'gem-shamlapur': 'shamlapur-sunset-point',
+  'spot-moheshkhali': 'moheshkhali-island',
+  'gem-najirartek': 'najirartek-dried-fish-hub',
+  'gem-sonadia': 'sonadia-island',
+  'gem-kolatoli-eco': 'kolatoli-eco-park',
+  'spot-ramu-buddha': '100-feet-buddha-ramu'
+};
+
+function normalizeSpotId(id) {
+  return SPOT_ID_ALIASES[id] || id;
+}
+
+const DAY_ROUTE_COLORS = [
+  '#0284c7', // Day 1: Ocean Blue
+  '#0d9488', // Day 2: Tropical Teal
+  '#d97706', // Day 3: Amber Gold
+  '#e11d48', // Day 4: Coral Rose
+  '#7c3aed', // Day 5: Royal Violet
+  '#059669', // Day 6: Emerald
+  '#2563eb'  // Day 7: Cobalt
+];
+
+function computeRoadDistanceKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const straightKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.max(0.8, +(straightKm * 1.28).toFixed(1));
+}
+
+function getLegRecommendation(fromMeta, toSpotId, distKm, lang) {
+  const toNorm = normalizeSpotId(toSpotId);
+  const toMeta = SPOT_ROUTE_METADATA[toNorm] || {};
+
+  if (toMeta.requiresBoat || (fromMeta && fromMeta.requiresBoat)) {
+    return {
+      minutes: 35,
+      vehicle:
+        lang === 'en'
+          ? '🛺 Tomtom to Kasturi Ghat + 🚤 Speedboat'
+          : '🛺 কস্তুরাঘাটে টমটম + 🚤 স্পিডবোট পারাপার',
+      fareBDT: '100 - 150 BDT',
+      isBoat: true
+    };
+  }
+
+  if (toMeta.corridor === 'marine_drive') {
+    const mins = Math.max(10, Math.round((distKm / 36) * 60));
+    return {
+      minutes: mins,
+      vehicle:
+        lang === 'en'
+          ? '🏍️ Marine Drive Bike / 🚙 Chander Gari / 🚕 CNG'
+          : '🏍️ মেরিন ড্রাইভ বাইক / 🚙 চান্দের গাড়ি / 🚕 সিএনজি',
+      fareBDT: distKm > 18 ? '350 - 1,800 BDT' : '250 - 500 BDT',
+      isBoat: false
+    };
+  }
+
+  if (toMeta.corridor === 'ramu_east') {
+    const mins = Math.max(20, Math.round((distKm / 32) * 60));
+    return {
+      minutes: mins,
+      vehicle:
+        lang === 'en'
+          ? '🚕 Reserved CNG Auto-Rickshaw (Highway)'
+          : '🚕 রিজার্ভ সিএনজি অটোরিকশা (রামু মহাসড়ক)',
+      fareBDT: '400 - 500 BDT',
+      isBoat: false
+    };
+  }
+
+  const mins = Math.max(6, Math.round((distKm / 22) * 60));
+  return {
+    minutes: mins,
+    vehicle:
+      lang === 'en'
+        ? '🛺 Shared Tomtom (Easybike) / 🚕 Local CNG'
+        : '🛺 শেয়ারড টমটম (ইজিবাইক) / 🚕 লোকাল সিএনজি',
+    fareBDT: '15 - 60 BDT',
+    isBoat: false
+  };
+}
+
+function buildDayRouteData(dayObj, lang) {
+  const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
+  const selectedHotel =
+    hotelsList.find(h => h.id === FeaturesState.selectedHotelId) ||
+    hotelsList[0] || {
+      id: 'hotel-sea-crown',
+      name: { en: 'Hotel Sea Crown', bn: 'হোটেল সী ক্রাউন' }
+    };
+
+  const hotelCoords = HOTEL_ROUTE_COORDS[selectedHotel.id] || HOTEL_ROUTE_COORDS['hotel-sea-crown'];
+  const allSpots = getUnifiedWebsiteSpots();
+
+  const normalizedSpots = (dayObj ? dayObj.spots : []).map(normalizeSpotId);
+  const stops = [];
+  let prevLat = hotelCoords.lat;
+  let prevLng = hotelCoords.lng;
+  let prevMeta = { requiresBoat: false };
+  let totalKm = 0;
+  let totalMinutes = 0;
+
+  const polylinePoints = [[hotelCoords.lat, hotelCoords.lng]];
+
+  normalizedSpots.forEach((spotId, idx) => {
+    const spotInfo = allSpots.find(s => normalizeSpotId(s.id) === spotId);
+    const meta = SPOT_ROUTE_METADATA[spotId];
+    if (!spotInfo || !meta) return;
+
+    const legKm = computeRoadDistanceKm(prevLat, prevLng, meta.lat, meta.lng);
+    const rec = getLegRecommendation(prevMeta, spotId, legKm, lang);
+
+    if (meta.requiresBoat && !prevMeta.requiresBoat) {
+      polylinePoints.push([KASTURI_GHAT_JETTY.lat, KASTURI_GHAT_JETTY.lng]);
+    } else if (!meta.requiresBoat && prevMeta.requiresBoat) {
+      polylinePoints.push([KASTURI_GHAT_JETTY.lat, KASTURI_GHAT_JETTY.lng]);
+    }
+
+    polylinePoints.push([meta.lat, meta.lng]);
+
+    totalKm += legKm;
+    totalMinutes += rec.minutes;
+
+    stops.push({
+      stopNumber: idx + 1,
+      spotId,
+      name: spotInfo.name[lang],
+      image: spotInfo.image,
+      corridorLabel: meta.corridorLabel[lang],
+      lat: meta.lat,
+      lng: meta.lng,
+      requiresBoat: Boolean(meta.requiresBoat),
+      legKm: +legKm.toFixed(1),
+      legMinutes: rec.minutes,
+      vehicle: rec.vehicle,
+      fareBDT: rec.fareBDT
+    });
+
+    prevLat = meta.lat;
+    prevLng = meta.lng;
+    prevMeta = meta;
+  });
+
+  return {
+    hotel: {
+      id: selectedHotel.id,
+      name: selectedHotel.name[lang],
+      image: selectedHotel.image || 'assets/images/hotel-sea-crown.jpg',
+      zone: hotelCoords.zone[lang],
+      lat: hotelCoords.lat,
+      lng: hotelCoords.lng
+    },
+    stops,
+    polylinePoints,
+    totalKm: +totalKm.toFixed(1),
+    totalMinutes
+  };
+}
+
+function createNumberedRoutePin(badgeText, bgColor, isHotel) {
+  const size = isHotel ? 42 : 36;
+  const border = isHotel ? '3px solid #fbbf24' : '3px solid #ffffff';
   return L.divIcon({
     className: 'custom-leaflet-div-icon',
-    html: `<div class="custom-map-pin" style="background-color: ${styles.bg};">${styles.svg}</div>`,
-    iconSize: [38, 38],
-    iconAnchor: [19, 19],
-    popupAnchor: [0, -20]
+    html: `
+      <div
+        class="custom-map-pin font-extrabold text-white flex items-center justify-center shadow-xl"
+        style="width:${size}px;height:${size}px;background:${bgColor};border:${border};font-size:${
+      isHotel ? '15px' : '13px'
+    };"
+      >
+        ${badgeText}
+      </div>
+    `,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2]
   });
 }
 
@@ -673,145 +949,705 @@ function initTouristMap() {
   renderMapMarkersAndFilters();
 }
 
-function setMapFilter(category) {
-  FeaturesState.activeMapFilter = category;
+function setMapFilter(filterKey) {
+  FeaturesState.activeMapFilter = filterKey;
+  if (filterKey.startsWith('day-')) {
+    const dayNum = parseInt(filterKey.replace('day-', ''), 10);
+    if (dayNum >= 1 && dayNum <= FeaturesState.totalDays) {
+      FeaturesState.activeDayTab = dayNum;
+    }
+  }
+  renderItineraryStudio();
   renderMapMarkersAndFilters();
 }
 
-function focusMapLocation(locationId) {
-  const loc = MAP_LOCATIONS.find(l => l.id === locationId);
-  if (!loc || !FeaturesState.mapInstance) return;
+function toggleMapRouteSpot(dayNum, spotId) {
+  const normId = normalizeSpotId(spotId);
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj) return;
 
-  if (FeaturesState.activeMapFilter !== 'all' && FeaturesState.activeMapFilter !== loc.category) {
-    FeaturesState.activeMapFilter = 'all';
-    renderMapMarkersAndFilters();
+  dayObj.spots = dayObj.spots.map(normalizeSpotId);
+  const existingIdx = dayObj.spots.indexOf(normId);
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  const allSpots = getUnifiedWebsiteSpots();
+  const spotObj = allSpots.find(s => normalizeSpotId(s.id) === normId);
+  const spotLabel = spotObj ? spotObj.name[lang] : normId;
+
+  if (existingIdx >= 0) {
+    dayObj.spots.splice(existingIdx, 1);
+    showUserToast(
+      lang === 'en'
+        ? `Removed "${spotLabel}" from Day ${dayNum} route.`
+        : `দিন ${dayNum}-এর রুট থেকে "${spotLabel}" সরানো হয়েছে।`
+    );
+  } else {
+    dayObj.spots.push(normId);
+    showUserToast(
+      lang === 'en'
+        ? `Added "${spotLabel}" as Stop #${dayObj.spots.length} on Day ${dayNum}!`
+        : `"${spotLabel}" দিন ${dayNum}-এর স্টপ #${dayObj.spots.length} হিসেবে যুক্ত হয়েছে!`
+    );
   }
 
-  FeaturesState.mapInstance.flyTo([loc.lat, loc.lng], 14, { duration: 0.9 });
+  FeaturesState.activeMapFilter = `day-${dayNum}`;
+  FeaturesState.activeDayTab = dayNum;
+  renderItineraryStudio();
+  renderMapMarkersAndFilters();
+}
+
+function moveMapRouteSpot(dayNum, spotIndex, direction) {
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj) return;
+  dayObj.spots = dayObj.spots.map(normalizeSpotId);
+
+  const targetIndex = spotIndex + direction;
+  if (targetIndex < 0 || targetIndex >= dayObj.spots.length) return;
+
+  const temp = dayObj.spots[spotIndex];
+  dayObj.spots[spotIndex] = dayObj.spots[targetIndex];
+  dayObj.spots[targetIndex] = temp;
+
+  renderItineraryStudio();
+  renderMapMarkersAndFilters();
+}
+
+function optimizeDayRouteOrder(dayNum) {
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj || dayObj.spots.length < 2) return;
+
+  dayObj.spots = dayObj.spots
+    .map(normalizeSpotId)
+    .sort((a, b) => {
+      const wA = SPOT_ROUTE_METADATA[a] ? SPOT_ROUTE_METADATA[a].orderWeight : 50;
+      const wB = SPOT_ROUTE_METADATA[b] ? SPOT_ROUTE_METADATA[b].orderWeight : 50;
+      return wA - wB;
+    });
+
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  showUserToast(
+    lang === 'en'
+      ? `Optimized Day ${dayNum} route order for minimum travel time!`
+      : `কম সময়ে ভ্রমণের জন্য দিন ${dayNum}-এর রুট অটো-অপ্টিমাইজ করা হয়েছে!`
+  );
+
+  renderItineraryStudio();
+  renderMapMarkersAndFilters();
+}
+
+function clearDayRouteSpots(dayNum) {
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj) return;
+  dayObj.spots = [];
+
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  showUserToast(
+    lang === 'en'
+      ? `Cleared Day ${dayNum} route. Tap locations above to build your route!`
+      : `দিন ${dayNum}-এর রুট খালি করা হয়েছে। নতুন লোকেশন সিলেক্ট করুন!`
+  );
+
+  renderItineraryStudio();
+  renderMapMarkersAndFilters();
+}
+
+function focusMapLocation(spotOrHotelId) {
+  if (!FeaturesState.mapInstance || !FeaturesState.markerLayerGroup) return;
+  const normId = normalizeSpotId(spotOrHotelId);
+
+  let targetLat = null;
+  let targetLng = null;
+
+  if (HOTEL_ROUTE_COORDS[normId]) {
+    targetLat = HOTEL_ROUTE_COORDS[normId].lat;
+    targetLng = HOTEL_ROUTE_COORDS[normId].lng;
+  } else if (SPOT_ROUTE_METADATA[normId]) {
+    targetLat = SPOT_ROUTE_METADATA[normId].lat;
+    targetLng = SPOT_ROUTE_METADATA[normId].lng;
+  }
+
+  if (targetLat !== null && targetLng !== null) {
+    FeaturesState.mapInstance.flyTo([targetLat, targetLng], 13, { duration: 0.85 });
+  }
 
   FeaturesState.markerLayerGroup.eachLayer(layer => {
-    if (layer._customLocationId === locationId) {
+    if (layer._customLocationId === normId) {
       layer.openPopup();
     }
   });
 }
 
+function formatDurationMinutes(totalMins, lang) {
+  if (totalMins <= 0) return lang === 'en' ? '0 mins' : '০ মিনিট';
+  const hrs = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  if (hrs > 0 && mins > 0) {
+    return lang === 'en' ? `${hrs}h ${mins}m` : `${hrs} ঘণ্টা ${mins} মিনিট`;
+  }
+  if (hrs > 0) {
+    return lang === 'en' ? `${hrs} hr` : `${hrs} ঘণ্টা`;
+  }
+  return lang === 'en' ? `${mins} mins` : `${mins} মিনিট`;
+}
+
 function renderMapMarkersAndFilters() {
   const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
   const filterBar = document.getElementById('map-category-filters');
-  const legendList = document.getElementById('map-locations-quicklist');
+  const selectorPanel = document.getElementById('map-day-spot-selector');
+  const routeTimelineEl = document.getElementById('map-locations-quicklist');
 
-  const filterLabels = {
-    en: [
-      { key: 'all', label: 'All Places (7)', dot: 'bg-sky-400' },
-      { key: 'hotels', label: 'Hotels (2)', dot: 'bg-sky-600' },
-      { key: 'spots', label: 'Tourist Spots (3)', dot: 'bg-teal-600' },
-      { key: 'hubs', label: 'Transport Hubs (2)', dot: 'bg-amber-600' }
-    ],
-    bn: [
-      { key: 'all', label: 'সব লোকেশন (৭)', dot: 'bg-sky-400' },
-      { key: 'hotels', label: 'হোটেল (২)', dot: 'bg-sky-600' },
-      { key: 'spots', label: 'দর্শনীয় স্থান (৩)', dot: 'bg-teal-600' },
-      { key: 'hubs', label: 'যাতায়াত ঘাট ও মোড় (২)', dot: 'bg-amber-600' }
-    ]
-  }[lang];
-
-  if (filterBar) {
-    filterBar.innerHTML = filterLabels
-      .map(f => {
-        const active = FeaturesState.activeMapFilter === f.key;
-        return `
-          <button
-            type="button"
-            onclick="setMapFilter('${f.key}')"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${
-              active
-                ? 'bg-ocean-950 text-white shadow-md scale-105'
-                : 'bg-white text-slate-700 hover:bg-sky-50 border border-slate-200'
-            }">
-            <span class="w-2.5 h-2.5 rounded-full ${f.dot}"></span>
-            <span>${f.label}</span>
-          </button>
-        `;
-      })
-      .join('');
+  if (
+    !FeaturesState.activeMapFilter ||
+    (!FeaturesState.activeMapFilter.startsWith('day-') && FeaturesState.activeMapFilter !== 'all-days')
+  ) {
+    FeaturesState.activeMapFilter = `day-${FeaturesState.activeDayTab || 1}`;
+  }
+  if (FeaturesState.activeMapFilter.startsWith('day-')) {
+    const parsedDay = parseInt(FeaturesState.activeMapFilter.replace('day-', ''), 10);
+    if (parsedDay > FeaturesState.totalDays) {
+      FeaturesState.activeMapFilter = `day-${FeaturesState.totalDays}`;
+    }
   }
 
-  const visibleLocations = MAP_LOCATIONS.filter(
-    loc => FeaturesState.activeMapFilter === 'all' || loc.category === FeaturesState.activeMapFilter
-  );
+  const isAllDaysMode = FeaturesState.activeMapFilter === 'all-days';
+  const activeDayNum = isAllDaysMode
+    ? FeaturesState.activeDayTab || 1
+    : parseInt(FeaturesState.activeMapFilter.replace('day-', ''), 10) || 1;
 
-  if (legendList) {
-    legendList.innerHTML = visibleLocations
-      .map(loc => {
-        const badgeColor =
-          loc.category === 'hotels'
-            ? 'bg-sky-100 text-sky-800'
-            : loc.category === 'spots'
-            ? 'bg-teal-100 text-teal-800'
-            : 'bg-amber-100 text-amber-800';
+  const activeDayObj =
+    FeaturesState.daysPlan.find(d => d.dayNumber === activeDayNum) || FeaturesState.daysPlan[0];
+  if (activeDayObj) {
+    activeDayObj.spots = activeDayObj.spots.map(normalizeSpotId);
+  }
+
+  // 1. RENDER TOP DAY TABS & ROUTE ACTIONS
+  if (filterBar) {
+    const dayButtonsHTML = Array.from({ length: FeaturesState.totalDays }, (_, idx) => {
+      const dNum = idx + 1;
+      const dObj = FeaturesState.daysPlan.find(d => d.dayNumber === dNum);
+      const stopCount = dObj ? dObj.spots.length : 0;
+      const isSelected = !isAllDaysMode && activeDayNum === dNum;
+      const dotColor = DAY_ROUTE_COLORS[idx % DAY_ROUTE_COLORS.length];
+
+      return `
+        <button
+          type="button"
+          onclick="setMapFilter('day-${dNum}')"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+            isSelected
+              ? 'bg-ocean-950 text-white shadow-md scale-105 border-2 border-amber-400'
+              : 'bg-white text-slate-700 hover:bg-sky-50 border border-slate-200'
+          }"
+        >
+          <span class="w-2.5 h-2.5 rounded-full" style="background:${dotColor};"></span>
+          <span>${lang === 'en' ? `Day ${dNum}` : `দিন ${dNum}`}</span>
+          <span class="px-1.5 py-0.5 rounded-full text-[10px] ${
+            isSelected ? 'bg-amber-400 text-slate-950' : 'bg-slate-100 text-slate-600'
+          }">
+            ${stopCount} ${lang === 'en' ? 'Stops' : 'স্পট'}
+          </span>
+        </button>
+      `;
+    }).join('');
+
+    filterBar.innerHTML = `
+      ${dayButtonsHTML}
+      <button
+        type="button"
+        onclick="setMapFilter('all-days')"
+        class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+          isAllDaysMode
+            ? 'bg-teal-600 text-white shadow-md scale-105'
+            : 'bg-white text-teal-800 hover:bg-teal-50 border border-teal-200'
+        }"
+      >
+        <span>🗺️</span>
+        <span>${lang === 'en' ? 'All Days Overview' : 'সব দিনের রুট'}</span>
+      </button>
+    `;
+  }
+
+  // 2. RENDER INTERACTIVE LOCATION PICKER FOR ACTIVE DAY
+  const allSpots = getUnifiedWebsiteSpots();
+  const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
+  const activeDayColor = DAY_ROUTE_COLORS[(activeDayNum - 1) % DAY_ROUTE_COLORS.length];
+
+  if (selectorPanel) {
+    const hotelOptionsHTML = hotelsList
+      .map(
+        h => `
+        <option value="${h.id}" ${FeaturesState.selectedHotelId === h.id ? 'selected' : ''}>
+          🏨 ${h.name[lang]} (${h.locationKey})
+        </option>
+      `
+      )
+      .join('');
+
+    const spotCardsHTML = allSpots
+      .map(spot => {
+        const normId = normalizeSpotId(spot.id);
+        const stopIndex = activeDayObj ? activeDayObj.spots.indexOf(normId) : -1;
+        const isPicked = stopIndex >= 0;
+        const meta = SPOT_ROUTE_METADATA[normId];
+        const corridorText = meta ? meta.corridorLabel[lang] : '';
 
         return `
           <button
             type="button"
-            onclick="focusMapLocation('${loc.id}')"
-            class="w-full text-left p-3.5 rounded-2xl bg-white hover:bg-sky-50/80 border border-slate-200/90 hover:border-sky-300 transition flex items-start gap-3 shadow-2xs group">
-            <img src="${loc.image}" alt="${loc.name[lang]}" class="w-14 h-14 rounded-xl object-cover shrink-0 bg-slate-200" />
+            onclick="toggleMapRouteSpot(${activeDayNum}, '${normId}')"
+            class="text-left p-2.5 rounded-2xl border-2 transition-all flex items-center gap-2.5 cursor-pointer group ${
+              isPicked
+                ? 'bg-teal-50/90 border-teal-600 shadow-xs'
+                : 'bg-slate-50/70 hover:bg-sky-50/60 border-slate-200/80 hover:border-sky-300'
+            }"
+          >
+            <div class="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
+              <img src="${spot.image}" alt="${spot.name[lang]}" class="w-full h-full object-cover" />
+              ${
+                isPicked
+                  ? `<span class="absolute inset-0 bg-teal-900/65 text-white font-extrabold text-xs flex items-center justify-center">
+                      #${stopIndex + 1}
+                    </span>`
+                  : ''
+              }
+            </div>
             <div class="min-w-0 flex-1">
-              <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${badgeColor}">
-                ${loc.categoryLabel[lang]}
-              </span>
-              <h4 class="font-bold text-slate-900 text-sm mt-1 group-hover:text-sky-700 transition leading-snug">
-                ${loc.name[lang]}
-              </h4>
-              <p class="text-xs text-slate-500 line-clamp-2 mt-0.5">${loc.description[lang]}</p>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider ${
+                  isPicked ? 'text-teal-700' : 'text-slate-400'
+                }">
+                  ${
+                    isPicked
+                      ? lang === 'en'
+                        ? `✓ Stop #${stopIndex + 1}`
+                        : `✓ স্টপ #${stopIndex + 1}`
+                      : corridorText
+                  }
+                </span>
+              </div>
+              <p class="font-bold text-xs text-slate-900 leading-snug line-clamp-1 group-hover:text-sky-700">
+                ${spot.name[lang]}
+              </p>
             </div>
           </button>
         `;
       })
       .join('');
+
+    selectorPanel.innerHTML = `
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-slate-100">
+        <div class="flex flex-wrap items-center gap-2">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold text-white"
+            style="background:${activeDayColor};"
+          >
+            🗓️ ${lang === 'en' ? `Planning Day ${activeDayNum} Route` : `দিন ${activeDayNum}-এর রুট প্ল্যান`}
+          </span>
+          <span class="text-xs sm:text-sm font-bold text-slate-700">
+            ${
+              lang === 'en'
+                ? 'Tap locations below in the order you want to visit (or click Auto-Optimize):'
+                : 'যেসব স্থান ঘুরতে চান সেগুলোতে ক্লিক করুন (অথবা অটো-অপ্টিমাইজ বাটনে চাপুন):'
+            }
+          </span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Base Hotel Start Point Selector -->
+          <div class="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+            <span class="text-[11px] font-extrabold text-slate-500 uppercase">
+              ${lang === 'en' ? 'Start Base:' : 'শুরু (হোটেল):'}
+            </span>
+            <select
+              aria-label="Select Starting Hotel"
+              onchange="selectItineraryHotel(this.value, false)"
+              class="bg-transparent text-xs font-extrabold text-ocean-950 focus:outline-none cursor-pointer"
+            >
+              ${hotelOptionsHTML}
+            </select>
+          </div>
+
+          <button
+            type="button"
+            onclick="optimizeDayRouteOrder(${activeDayNum})"
+            class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-amber-400 hover:bg-amber-300 text-slate-950 transition cursor-pointer shadow-2xs"
+          >
+            ⚡ ${lang === 'en' ? 'Auto-Optimize Route' : 'অটো-অপ্টিমাইজ রুট'}
+          </button>
+
+          <button
+            type="button"
+            onclick="clearDayRouteSpots(${activeDayNum})"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition cursor-pointer"
+          >
+            ↺ ${lang === 'en' ? 'Clear Day' : 'রিসেট'}
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        ${spotCardsHTML}
+      </div>
+    `;
   }
 
+  // 3. DRAW ROUTE LINES & NUMBERED PINS ON LEAFLET MAP + RENDER GENERATED TIMELINE
   if (!FeaturesState.markerLayerGroup || !FeaturesState.mapInstance) return;
   FeaturesState.markerLayerGroup.clearLayers();
 
   const bounds = [];
-  visibleLocations.forEach(loc => {
-    const marker = L.marker([loc.lat, loc.lng], {
-      icon: createCategoryMarkerIcon(loc.category)
-    });
-    marker._customLocationId = loc.id;
+  const activeRoute = buildDayRouteData(activeDayObj, lang);
 
-    const popupHTML = `
-      <div class="font-sans">
-        <div class="relative h-28 bg-slate-200">
-          <img src="${loc.image}" alt="${loc.name[lang]}" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-          <span class="absolute bottom-2 left-3 px-2 py-0.5 rounded bg-teal-500 text-white text-[10px] font-bold uppercase">
-            ${loc.categoryLabel[lang]}
-          </span>
-        </div>
-        <div class="p-3.5">
-          <h4 class="font-extrabold text-slate-900 text-sm">${loc.name[lang]}</h4>
-          <p class="text-xs text-slate-600 mt-1 leading-relaxed">${loc.description[lang]}</p>
-          <a href="${loc.targetSection}" class="mt-2.5 inline-flex items-center gap-1 text-xs font-bold text-sky-700 hover:underline">
-            <span>${lang === 'en' ? 'View Details' : 'বিস্তারিত দেখুন'}</span>
-            <span>→</span>
-          </a>
-        </div>
-      </div>
-    `;
-
-    marker.bindPopup(popupHTML);
-    FeaturesState.markerLayerGroup.addLayer(marker);
-    bounds.push([loc.lat, loc.lng]);
+  // Always add Starting Base Hotel Marker
+  const hotelMarker = L.marker([activeRoute.hotel.lat, activeRoute.hotel.lng], {
+    icon: createNumberedRoutePin('🏨', '#072138', true),
+    zIndexOffset: 1000
   });
+  hotelMarker._customLocationId = activeRoute.hotel.id;
+  hotelMarker.bindPopup(`
+    <div class="font-sans">
+      <div class="relative h-24 bg-slate-200">
+        <img src="${activeRoute.hotel.image}" alt="${activeRoute.hotel.name}" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent"></div>
+        <span class="absolute bottom-2 left-3 px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[10px] font-extrabold uppercase">
+          ${lang === 'en' ? 'START / BASE HOTEL' : 'যাত্রা শুরু / বেস হোটেল'}
+        </span>
+      </div>
+      <div class="p-3">
+        <h4 class="font-extrabold text-slate-900 text-sm">${activeRoute.hotel.name}</h4>
+        <p class="text-xs text-slate-600 mt-0.5">${activeRoute.hotel.zone}</p>
+      </div>
+    </div>
+  `);
+  FeaturesState.markerLayerGroup.addLayer(hotelMarker);
+  bounds.push([activeRoute.hotel.lat, activeRoute.hotel.lng]);
+
+  if (isAllDaysMode) {
+    const activeDaysList = FeaturesState.daysPlan.slice(0, FeaturesState.totalDays);
+    activeDaysList.forEach((dObj, dIdx) => {
+      const dRoute = buildDayRouteData(dObj, lang);
+      const color = DAY_ROUTE_COLORS[dIdx % DAY_ROUTE_COLORS.length];
+
+      if (dRoute.polylinePoints.length > 1) {
+        L.polyline(dRoute.polylinePoints, {
+          color,
+          weight: 4,
+          opacity: 0.85,
+          dashArray: '8, 6'
+        }).addTo(FeaturesState.markerLayerGroup);
+      }
+
+      dRoute.stops.forEach(st => {
+        const m = L.marker([st.lat, st.lng], {
+          icon: createNumberedRoutePin(`D${dObj.dayNumber}`, color, false)
+        });
+        m._customLocationId = st.spotId;
+        m.bindPopup(`
+          <div class="font-sans p-3">
+            <span class="inline-block px-2 py-0.5 rounded text-white text-[10px] font-extrabold uppercase" style="background:${color};">
+              ${lang === 'en' ? `Day ${dObj.dayNumber} • Stop #${st.stopNumber}` : `দিন ${dObj.dayNumber} • স্টপ #${st.stopNumber}`}
+            </span>
+            <h4 class="font-extrabold text-slate-900 text-sm mt-1">${st.name}</h4>
+            <p class="text-xs text-slate-600 mt-1">${st.legKm} km • ~${st.legMinutes} mins (${st.vehicle})</p>
+          </div>
+        `);
+        FeaturesState.markerLayerGroup.addLayer(m);
+        bounds.push([st.lat, st.lng]);
+      });
+    });
+  } else {
+    if (activeRoute.polylinePoints.length > 1) {
+      L.polyline(activeRoute.polylinePoints, {
+        color: activeDayColor,
+        weight: 10,
+        opacity: 0.22,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(FeaturesState.markerLayerGroup);
+
+      L.polyline(activeRoute.polylinePoints, {
+        color: activeDayColor,
+        weight: 4,
+        opacity: 0.95,
+        dashArray: '10, 8',
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(FeaturesState.markerLayerGroup);
+    }
+
+    const hasIslandStop = activeRoute.stops.some(s => s.requiresBoat);
+    if (hasIslandStop) {
+      const jettyMarker = L.marker([KASTURI_GHAT_JETTY.lat, KASTURI_GHAT_JETTY.lng], {
+        icon: createNumberedRoutePin('🚤', '#d97706', false)
+      });
+      jettyMarker.bindPopup(`
+        <div class="font-sans p-3">
+          <span class="px-2 py-0.5 rounded bg-amber-500 text-white text-[10px] font-bold uppercase">
+            ${lang === 'en' ? 'Boat Transfer Jetty' : 'স্পিডবোট পারাপার ঘাট'}
+          </span>
+          <h4 class="font-extrabold text-slate-900 text-sm mt-1">${KASTURI_GHAT_JETTY.name[lang]}</h4>
+          <p class="text-xs text-slate-600 mt-1">
+            ${
+              lang === 'en'
+                ? 'Board 35-min speedboat or wooden trawler here for Moheshkhali / Sonadia Island.'
+                : 'এখান থেকে স্পিডবোট বা ট্রলারে মহেশখালী ও সোনাদিয়া দ্বীপে পারাপার করা হয়।'
+            }
+          </p>
+        </div>
+      `);
+      FeaturesState.markerLayerGroup.addLayer(jettyMarker);
+      bounds.push([KASTURI_GHAT_JETTY.lat, KASTURI_GHAT_JETTY.lng]);
+    }
+
+    activeRoute.stops.forEach(st => {
+      const stopMarker = L.marker([st.lat, st.lng], {
+        icon: createNumberedRoutePin(`${st.stopNumber}`, activeDayColor, false)
+      });
+      stopMarker._customLocationId = st.spotId;
+
+      stopMarker.bindPopup(`
+        <div class="font-sans">
+          <div class="relative h-28 bg-slate-200">
+            <img src="${st.image}" alt="${st.name}" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent"></div>
+            <span class="absolute bottom-2 left-3 px-2 py-0.5 rounded text-white text-[10px] font-extrabold uppercase" style="background:${activeDayColor};">
+              ${lang === 'en' ? `Day ${activeDayNum} • Stop #${st.stopNumber}` : `দিন ${activeDayNum} • স্টপ #${st.stopNumber}`}
+            </span>
+          </div>
+          <div class="p-3.5">
+            <h4 class="font-extrabold text-slate-900 text-sm">${st.name}</h4>
+            <p class="text-xs font-semibold text-teal-700 mt-1">
+              🚗 ${st.legKm} km • ~${st.legMinutes} mins
+            </p>
+            <p class="text-[11px] text-slate-600 mt-0.5">${st.vehicle}</p>
+          </div>
+        </div>
+      `);
+
+      FeaturesState.markerLayerGroup.addLayer(stopMarker);
+      bounds.push([st.lat, st.lng]);
+    });
+  }
 
   if (bounds.length > 1) {
     FeaturesState.mapInstance.fitBounds(bounds, { padding: [45, 45], maxZoom: 13 });
   } else if (bounds.length === 1) {
-    FeaturesState.mapInstance.setView(bounds[0], 14);
+    FeaturesState.mapInstance.setView(bounds[0], 13);
   }
+
+  // 4. RENDER RIGHT SIDEBAR: GENERATED ROUTE PLAN TIMELINE
+  if (!routeTimelineEl) return;
+
+  if (isAllDaysMode) {
+    const activeDaysList = FeaturesState.daysPlan.slice(0, FeaturesState.totalDays);
+    const allDaysCards = activeDaysList
+      .map((dObj, idx) => {
+        const dRoute = buildDayRouteData(dObj, lang);
+        const color = DAY_ROUTE_COLORS[idx % DAY_ROUTE_COLORS.length];
+        const chainText =
+          dRoute.stops.length > 0
+            ? `${dRoute.hotel.name} → ` + dRoute.stops.map(s => s.name).join(' → ')
+            : lang === 'en'
+            ? 'No locations selected yet'
+            : 'এখনো কোনো লোকেশন সিলেক্ট করা হয়নি';
+
+        return `
+          <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 hover:border-sky-300 transition">
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-extrabold text-white" style="background:${color};">
+                ${lang === 'en' ? `Day ${dObj.dayNumber}` : `দিন ${dObj.dayNumber}`}
+              </span>
+              <span class="text-xs font-extrabold text-slate-700">
+                ${dRoute.totalKm} km • ~${formatDurationMinutes(dRoute.totalMinutes, lang)}
+              </span>
+            </div>
+            <p class="text-xs font-semibold text-slate-800 leading-relaxed">${chainText}</p>
+            <button
+              type="button"
+              onclick="setMapFilter('day-${dObj.dayNumber}')"
+              class="mt-2 text-[11px] font-extrabold text-sky-700 hover:underline cursor-pointer"
+            >
+              ${lang === 'en' ? `Customize Day ${dObj.dayNumber} Route →` : `দিন ${dObj.dayNumber}-এর রুট সাজান →`}
+            </button>
+          </div>
+        `;
+      })
+      .join('');
+
+    routeTimelineEl.innerHTML = `
+      <div class="bg-ocean-950 text-white rounded-2xl p-4">
+        <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-300">
+          ${lang === 'en' ? 'COMPLETE MULTI-DAY ROUTE OVERVIEW' : 'সম্পূর্ণ ভ্রমণ রুট ওভারভিউ'}
+        </span>
+        <h4 class="text-base font-extrabold mt-0.5">
+          ${lang === 'en' ? `${FeaturesState.totalDays}-Day Cox’s Bazar Route Plan` : `${FeaturesState.totalDays} দিনের কক্সবাজার রুট প্ল্যান`}
+        </h4>
+      </div>
+      <div class="space-y-2.5">${allDaysCards}</div>
+    `;
+    return;
+  }
+
+  const stopsTimelineHTML =
+    activeRoute.stops.length === 0
+      ? `
+        <div class="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center">
+          <p class="text-sm font-bold text-slate-700">
+            ${
+              lang === 'en'
+                ? `No stops selected for Day ${activeDayNum} yet.`
+                : `দিন ${activeDayNum}-এর জন্য এখনো কোনো স্পট সিলেক্ট করা হয়নি।`
+            }
+          </p>
+          <p class="text-xs text-slate-500 mt-1">
+            ${
+              lang === 'en'
+                ? 'Tap any Cox’s Bazar location card above the map to generate your route!'
+                : 'রুট তৈরি করতে ম্যাপের উপরের যেকোনো দর্শনীয় স্থানে ক্লিক করুন!'
+            }
+          </p>
+        </div>
+      `
+      : activeRoute.stops
+          .map(
+            (st, idx) => `
+          <!-- Leg Connector Pill -->
+          <div class="pl-5 py-1 flex items-center gap-2 text-[11px] font-bold text-teal-800">
+            <div class="w-0.5 h-6 bg-teal-400 rounded-full"></div>
+            <div class="bg-teal-50 border border-teal-200/80 px-2.5 py-1 rounded-xl flex flex-wrap items-center gap-1.5">
+              <span>↓ <strong>${st.legKm} km</strong></span>
+              <span>•</span>
+              <span>~${st.legMinutes} ${lang === 'en' ? 'mins' : 'মিনিট'}</span>
+              <span>•</span>
+              <span class="text-slate-700">${st.vehicle}</span>
+            </div>
+          </div>
+
+          <!-- Stop Card -->
+          <div class="p-3 rounded-2xl bg-slate-50 hover:bg-sky-50/60 border border-slate-200/90 transition flex items-center justify-between gap-2.5">
+            <div
+              onclick="focusMapLocation('${st.spotId}')"
+              class="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer"
+            >
+              <span
+                class="w-7 h-7 rounded-full text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs"
+                style="background:${activeDayColor};"
+              >
+                ${st.stopNumber}
+              </span>
+              <img src="${st.image}" alt="${st.name}" class="w-11 h-11 rounded-xl object-cover shrink-0 bg-slate-200" />
+              <div class="min-w-0 flex-1">
+                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                  ${st.corridorLabel}
+                </span>
+                <h5 class="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug">
+                  ${st.name}
+                </h5>
+              </div>
+            </div>
+
+            <!-- Reorder & Remove Controls -->
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onclick="moveMapRouteSpot(${activeDayNum}, ${idx}, -1)"
+                ${idx === 0 ? 'disabled' : ''}
+                title="${lang === 'en' ? 'Move Up' : 'উপরে নিন'}"
+                class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-sky-50 text-xs font-extrabold disabled:opacity-30 cursor-pointer"
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                onclick="moveMapRouteSpot(${activeDayNum}, ${idx}, 1)"
+                ${idx === activeRoute.stops.length - 1 ? 'disabled' : ''}
+                title="${lang === 'en' ? 'Move Down' : 'নিচে নিন'}"
+                class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-sky-50 text-xs font-extrabold disabled:opacity-30 cursor-pointer"
+              >
+                ↓
+              </button>
+              <button
+                type="button"
+                onclick="toggleMapRouteSpot(${activeDayNum}, '${st.spotId}')"
+                title="${lang === 'en' ? 'Remove Stop' : 'সরিয়ে ফেলুন'}"
+                class="w-7 h-7 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 text-xs font-extrabold cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        `
+          )
+          .join('');
+
+  routeTimelineEl.innerHTML = `
+    <!-- Route Summary Header Card -->
+    <div class="bg-gradient-to-r from-ocean-950 via-ocean-900 to-teal-900 text-white rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-slate-950">
+          ${lang === 'en' ? `DAY ${activeDayNum} ROUTE PLAN` : `দিন ${activeDayNum}-এর রুট প্ল্যান`}
+        </span>
+        <span class="text-xs font-bold text-teal-200">
+          ${activeRoute.stops.length} ${lang === 'en' ? 'Stops Selected' : 'টি স্পট'}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-white/15">
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80">
+            ${lang === 'en' ? 'Total Route Distance' : 'মোট দূরত্ব'}
+          </span>
+          <span class="text-lg font-extrabold text-amber-300">${activeRoute.totalKm} km</span>
+        </div>
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80">
+            ${lang === 'en' ? 'Est. Transit Time' : 'আনুমানিক যাতায়াত সময়'}
+          </span>
+          <span class="text-lg font-extrabold text-teal-300">
+            ~${formatDurationMinutes(activeRoute.totalMinutes, lang)}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Starting Base Hotel Card -->
+    <div
+      onclick="focusMapLocation('${activeRoute.hotel.id}')"
+      class="p-3 rounded-2xl bg-amber-50/80 border border-amber-300/80 flex items-center gap-3 cursor-pointer hover:bg-amber-50 transition"
+    >
+      <span class="w-8 h-8 rounded-full bg-ocean-950 text-amber-300 font-extrabold text-sm flex items-center justify-center shrink-0 border-2 border-amber-400">
+        🏨
+      </span>
+      <div class="min-w-0 flex-1">
+        <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-800">
+          ${lang === 'en' ? 'START POINT • BASE HOTEL' : 'যাত্রা শুরু • বেস হোটেল'}
+        </span>
+        <h5 class="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug">
+          ${activeRoute.hotel.name}
+        </h5>
+        <p class="text-[11px] text-slate-500">${activeRoute.hotel.zone}</p>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Stops & Legs -->
+    <div class="space-y-1">
+      ${stopsTimelineHTML}
+    </div>
+
+    <!-- Sync Callout Button to Visual Itinerary Pass -->
+    <div class="pt-2">
+      <a
+        href="#visual-itinerary-poster"
+        class="w-full py-2.5 px-4 rounded-xl bg-ocean-950 hover:bg-sky-800 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition shadow-xs"
+      >
+        <span>✓ ${
+          lang === 'en'
+            ? `Synced with Day ${activeDayNum} Pass — View & Download Pass`
+            : `দিন ${activeDayNum} পাসে যুক্ত হয়েছে — ভিজ্যুয়াল পাস দেখুন`
+        }</span>
+        <span>↓</span>
+      </a>
+    </div>
+  `;
 }
 
 /* --------------------------------------------------------------------------
@@ -834,8 +1670,10 @@ function setWizardStep(stepNum) {
 
 function editDayFromPass(dayNum) {
   FeaturesState.activeDayTab = dayNum;
+  FeaturesState.activeMapFilter = `day-${dayNum}`;
   FeaturesState.wizardStep = 2;
   renderItineraryStudio();
+  renderMapMarkersAndFilters();
   document.getElementById('itinerary-studio-builder')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -843,7 +1681,6 @@ function setItineraryTotalDays(daysCount) {
   const count = Math.max(1, Math.min(7, parseInt(daysCount, 10) || 5));
   FeaturesState.totalDays = count;
 
-  // Keep Trip Headline day-count in sync automatically if it starts with "X-Day"
   FeaturesState.tripTitle = FeaturesState.tripTitle.replace(/^\d+-Day\b/i, `${count}-Day`);
 
   const defaults = getDefault5DayPlan();
@@ -876,16 +1713,20 @@ function setItineraryTotalDays(daysCount) {
     '#visual-itinerary-poster'
   );
   renderItineraryStudio();
+  renderMapMarkersAndFilters();
 }
 
 function setItineraryActiveDayTab(dayNum) {
   FeaturesState.activeDayTab = dayNum;
+  FeaturesState.activeMapFilter = `day-${dayNum}`;
   renderItineraryStudio();
+  renderMapMarkersAndFilters();
 }
 
 function selectItineraryHotel(hotelId, fromWebsiteCard) {
   FeaturesState.selectedHotelId = hotelId;
   renderItineraryStudio();
+  renderMapMarkersAndFilters();
   if (typeof renderHotels === 'function') {
     renderHotels();
   }
@@ -897,38 +1738,41 @@ function selectItineraryHotel(hotelId, fromWebsiteCard) {
   if (fromWebsiteCard) {
     showUserToast(
       lang === 'en'
-        ? `${hotelName} selected for your trip itinerary!`
-        : `${hotelName} আপনার ভ্রমণ প্ল্যানে যুক্ত হয়েছে!`,
-      lang === 'en' ? 'Open My Trip Plan →' : 'ট্রিপ প্ল্যান দেখুন →',
-      '#itinerary-section'
+        ? `${hotelName} selected as your starting hotel!`
+        : `${hotelName} আপনার বেস হোটেল হিসেবে যুক্ত হয়েছে!`,
+      lang === 'en' ? 'View Route Map →' : 'রুট ম্যাপ দেখুন →',
+      '#map-section'
     );
   }
 }
 
 function addSpotFromWebsiteCard(spotId) {
+  const normId = normalizeSpotId(spotId);
   const dayObj =
     FeaturesState.daysPlan.find(d => d.dayNumber === FeaturesState.activeDayTab) || FeaturesState.daysPlan[0];
   if (!dayObj) return;
 
-  if (!dayObj.spots.includes(spotId)) {
-    dayObj.spots.push(spotId);
+  dayObj.spots = dayObj.spots.map(normalizeSpotId);
+  if (!dayObj.spots.includes(normId)) {
+    dayObj.spots.push(normId);
   }
 
   renderItineraryStudio();
+  renderMapMarkersAndFilters();
   if (typeof renderDestinations === 'function') {
     renderDestinations();
   }
 
   const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
-  const spot = getUnifiedWebsiteSpots().find(s => s.id === spotId);
+  const spot = getUnifiedWebsiteSpots().find(s => normalizeSpotId(s.id) === normId);
   const spotName = spot ? spot.name[lang] : '';
 
   showUserToast(
     lang === 'en'
-      ? `Added "${spotName}" to Day ${dayObj.dayNumber} of your trip!`
-      : `"${spotName}" আপনার দিন ${dayObj.dayNumber}-এর প্ল্যানে যুক্ত হয়েছে!`,
-    lang === 'en' ? 'View Trip Pass →' : 'ট্রিপ পাস দেখুন →',
-    '#itinerary-section'
+      ? `Added "${spotName}" to Day ${dayObj.dayNumber} route & itinerary!`
+      : `"${spotName}" দিন ${dayObj.dayNumber}-এর রুট ও প্ল্যানে যুক্ত হয়েছে!`,
+    lang === 'en' ? 'View Route Map →' : 'রুট ম্যাপ দেখুন →',
+    '#map-section'
   );
 }
 
@@ -959,14 +1803,22 @@ function toggleDaySelection(dayNum, listKey, itemId) {
   const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
   if (!dayObj || !Array.isArray(dayObj[listKey])) return;
 
-  const idx = dayObj[listKey].indexOf(itemId);
+  const targetId = listKey === 'spots' ? normalizeSpotId(itemId) : itemId;
+  if (listKey === 'spots') {
+    dayObj.spots = dayObj.spots.map(normalizeSpotId);
+  }
+
+  const idx = dayObj[listKey].indexOf(targetId);
   if (idx >= 0) {
     dayObj[listKey].splice(idx, 1);
   } else {
-    dayObj[listKey].push(itemId);
+    dayObj[listKey].push(targetId);
   }
 
   renderItineraryStudio();
+  if (listKey === 'spots') {
+    renderMapMarkersAndFilters();
+  }
 }
 
 function applyItineraryPreset(presetKey) {
@@ -978,6 +1830,7 @@ function applyItineraryPreset(presetKey) {
     FeaturesState.tripTitle = '5-Day Marine Drive Bike & Island Explorer';
     FeaturesState.daysPlan = getDefault5DayPlan();
     FeaturesState.activeDayTab = 2;
+    FeaturesState.activeMapFilter = 'day-2';
     showUserToast(
       lang === 'en'
         ? 'Loaded 5-Day Marine Drive Bike & Island Plan!'
@@ -991,6 +1844,7 @@ function applyItineraryPreset(presetKey) {
     FeaturesState.tripTitle = '3-Day Family Beach, Coral & Island Getaway';
     FeaturesState.daysPlan = getDefault5DayPlan().slice(0, 3);
     FeaturesState.activeDayTab = 1;
+    FeaturesState.activeMapFilter = 'day-1';
     showUserToast(
       lang === 'en' ? 'Loaded 3-Day Family Relax Plan!' : '৩ দিনের ফ্যামিলি প্ল্যান লোড হয়েছে!',
       lang === 'en' ? 'See Pass ↓' : 'পাস দেখুন ↓',
@@ -1002,6 +1856,7 @@ function applyItineraryPreset(presetKey) {
     FeaturesState.tripTitle = '2-Day Marine Drive Bike & Sunset Escape';
     FeaturesState.daysPlan = getDefault5DayPlan().slice(0, 2);
     FeaturesState.activeDayTab = 1;
+    FeaturesState.activeMapFilter = 'day-1';
     showUserToast(
       lang === 'en' ? 'Loaded 2-Day Weekend Escape Plan!' : '২ দিনের উইকএন্ড প্ল্যান লোড হয়েছে!',
       lang === 'en' ? 'See Pass ↓' : 'পাস দেখুন ↓',
@@ -1023,12 +1878,14 @@ function applyItineraryPreset(presetKey) {
       customNote: { en: '', bn: '' }
     }));
     FeaturesState.activeDayTab = 1;
+    FeaturesState.activeMapFilter = 'day-1';
     showUserToast(
       lang === 'en' ? 'Reset! Now tap items to build your custom plan.' : 'রিসেট সম্পন্ন! এখন আপনার পছন্দমতো সাজান।'
     );
   }
 
   renderItineraryStudio();
+  renderMapMarkersAndFilters();
 }
 
 function calculateItineraryBudget() {
@@ -1101,7 +1958,7 @@ function renderItineraryStudio() {
 
   // Sync Navbar & Section Titles
   document.querySelectorAll('[data-nav="map"]').forEach(el => {
-    el.textContent = lang === 'en' ? 'Interactive Map' : 'ম্যাপ';
+    el.textContent = lang === 'en' ? 'Route Planner' : 'রুট প্ল্যানার';
   });
   document.querySelectorAll('[data-nav="itinerary"]').forEach(el => {
     el.textContent = lang === 'en' ? 'Plan My Trip' : 'ভ্রমণ প্ল্যানার';
@@ -1114,17 +1971,19 @@ function renderItineraryStudio() {
 
   setTxt(
     'map-eyebrow',
-    lang === 'en' ? 'INTERACTIVE OPENSTREETMAP GUIDE' : 'ইন্টারঅ্যাক্টিভ ট্যুরিস্ট ম্যাপ (OpenStreetMap)'
+    lang === 'en' ? 'SMART DAY-WISE ROUTE GENERATOR' : 'দিনভিত্তিক স্মার্ট রুট প্ল্যানার (OpenStreetMap)'
   );
   setTxt(
     'map-title',
-    lang === 'en' ? 'Explore Cox’s Bazar on the Map' : 'ম্যাপে কক্সবাজারের হোটেল, সৈকত ও ঘাট দেখুন'
+    lang === 'en'
+      ? 'Select Daily Locations & Generate Your Cox’s Bazar Route Plan'
+      : 'দিন অনুযায়ী দর্শনীয় স্থান সিলেক্ট করে কক্সবাজার ভ্রমণের রুট প্ল্যান তৈরি করুন'
   );
   setTxt(
     'map-subtitle',
     lang === 'en'
-      ? 'Click any marker or card to view verified hotels, sightseeing spots, and transport hubs across Cox’s Bazar.'
-      : 'যেকোনো পিন বা কার্ডে ক্লিক করে হোটেল, দর্শনীয় স্থান এবং যাতায়াত ঘাটের অবস্থান ও তথ্য দেখুন।'
+      ? 'Pick a day, tap the places you want to visit, and the system automatically generates an optimized step-by-step travel route inside Cox’s Bazar with distances, travel times, and local vehicles.'
+      : 'যেকোনো দিন সিলেক্ট করে যেসব স্থান ঘুরতে চান সেগুলোতে ক্লিক করুন—সিস্টেম স্বয়ংক্রিয়ভাবে আপনার হোটেল থেকে প্রতিটি স্পটের দূরত্ব, সময় ও যানবাহনসহ সম্পূর্ণ রুট ম্যাপ তৈরি করবে।'
   );
 
   setTxt(
@@ -1365,11 +2224,12 @@ function renderItineraryStudio() {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           ${allSpots
             .map(spot => {
-              const active = currentDayObj.spots.includes(spot.id);
+              const normId = normalizeSpotId(spot.id);
+              const active = currentDayObj.spots.map(normalizeSpotId).includes(normId);
               return `
                 <button
                   type="button"
-                  onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'spots', '${spot.id}')"
+                  onclick="toggleDaySelection(${currentDayObj.dayNumber}, 'spots', '${normId}')"
                   class="p-3 rounded-2xl border-2 text-left transition-all flex items-center gap-3 ${
                     active
                       ? 'bg-sky-950 text-white border-sky-500 shadow-md'
@@ -1711,7 +2571,9 @@ function renderVisualItineraryPass() {
     .map((day, idx) => {
       const dayCostObj = budget.dayCosts[idx] || { transCost: 0, restCost: 0, actCost: 0, dayTotal: 0 };
 
-      const chosenSpots = day.spots.map(id => allSpots.find(s => s.id === id)).filter(Boolean);
+      const chosenSpots = day.spots
+        .map(id => allSpots.find(s => normalizeSpotId(s.id) === normalizeSpotId(id)))
+        .filter(Boolean);
       const chosenActivities = day.activities.map(id => ITIN_ACTIVITIES_CATALOG.find(a => a.id === id)).filter(Boolean);
       const chosenRestaurants = day.restaurants
         .map(id => ITIN_RESTAURANTS_CATALOG.find(r => r.id === id))
@@ -1722,6 +2584,11 @@ function renderVisualItineraryPass() {
         day.activities.includes('act-marine-drive-bike') || day.transports.includes('trans-bike-rental');
 
       const smartHeadline = getSmartDayHeadline(day, lang);
+      const dayRoute = buildDayRouteData(day, lang);
+      const routeChainText =
+        dayRoute.stops.length > 0
+          ? `🏨 ${dayRoute.hotel.name} → ` + dayRoute.stops.map(s => `${s.stopNumber}. ${s.name}`).join(' → ')
+          : '';
 
       return `
         <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
@@ -1778,6 +2645,25 @@ function renderVisualItineraryPass() {
             </div>
           </div>
 
+          ${
+            routeChainText
+              ? `
+              <!-- Generated Day Route Plan Strip -->
+              <div class="bg-sky-50/90 border-b border-sky-200/80 px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="text-xs font-bold text-slate-800 leading-relaxed">
+                  <span class="inline-block px-2 py-0.5 rounded bg-sky-700 text-white text-[10px] font-extrabold uppercase tracking-wider mr-1.5">
+                    🛣️ ${lang === 'en' ? `DAY ${day.dayNumber} ROUTE PLAN` : `দিন ${day.dayNumber} রুট প্ল্যান`}
+                  </span>
+                  <span>${routeChainText}</span>
+                </div>
+                <div class="text-xs font-extrabold text-teal-800 shrink-0">
+                  📏 ${dayRoute.totalKm} km • ⏱ ~${formatDurationMinutes(dayRoute.totalMinutes, lang)}
+                </div>
+              </div>
+            `
+              : ''
+          }
+
           <!-- Day Body: 4 Clean Columns (No Text Truncation / Full Wrapping) -->
           <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Column 1: Spots to Visit -->
@@ -1791,8 +2677,9 @@ function renderVisualItineraryPass() {
                   ? `<div class="space-y-2.5">
                       ${chosenSpots
                         .map(
-                          s => `
+                          (s, sIdx) => `
                           <div class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-sky-100 shadow-2xs">
+                            <span class="w-5 h-5 rounded-full bg-sky-700 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0 mt-1">${sIdx + 1}</span>
                             <img src="${s.image}" alt="${s.name[lang]}" crossorigin="anonymous" class="w-11 h-11 rounded-lg object-cover shrink-0 bg-slate-200 mt-0.5" />
                             <div class="min-w-0 flex-1">
                               <div class="font-extrabold text-slate-900 text-xs leading-snug pb-0.5">${s.name[lang]}</div>
