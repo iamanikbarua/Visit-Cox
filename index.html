@@ -85,8 +85,8 @@
           <a href="#faq" data-nav="faq" class="hover:text-amber-300 transition">FAQ</a>
         </nav>
 
-        <!-- Interactive Toggles: Dual Language (EN/বাং) & Currency (BDT/USD) -->
-        <div class="hidden sm:flex items-center gap-3">
+        <!-- Interactive Toggles: Dual Language (EN/বাং), Currency (BDT/USD) & Admin Access -->
+        <div class="hidden sm:flex items-center gap-2.5">
           <!-- Dual Language Switcher -->
           <div
             class="flex items-center bg-white/10 p-1 rounded-full border border-white/15"
@@ -106,6 +106,18 @@
             <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')">৳ BDT</button>
             <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')">$ USD</button>
           </div>
+
+          <!-- Admin Portal Button -->
+          <button
+            type="button"
+            onclick="handleAdminButtonClick()"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-300/30 transition"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            <span class="admin-nav-btn-label">Admin Login</span>
+          </button>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -131,7 +143,7 @@
       class="hidden lg:hidden bg-ocean-950/98 border-b border-white/10 px-4 pt-3 pb-6 space-y-4"
     >
       <!-- Mobile Toggles Row -->
-      <div class="flex items-center justify-between gap-2 pb-3 border-b border-white/10 sm:hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 sm:hidden">
         <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15">
           <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')">EN</button>
           <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')">বাংলা</button>
@@ -140,6 +152,13 @@
           <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')">৳ BDT</button>
           <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')">$ USD</button>
         </div>
+        <button
+          type="button"
+          onclick="handleAdminButtonClick()"
+          class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30"
+        >
+          <span class="admin-nav-btn-label">Admin Login</span>
+        </button>
       </div>
 
       <nav class="flex flex-col space-y-2 text-base font-semibold text-sky-100">
@@ -579,6 +598,13 @@
             >
               Toggle Currency (BDT / USD)
             </button>
+            <button
+              type="button"
+              onclick="handleAdminButtonClick()"
+              class="px-4 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-xs font-bold text-amber-300 border border-amber-300/30 transition"
+            >
+              ⚙ <span class="admin-nav-btn-label">Admin Login</span>
+            </button>
           </div>
         </div>
 
@@ -591,6 +617,217 @@
       </div>
     </div>
   </footer>
+
+  <!-- ========================================================================
+       FLOATING ADMIN MODE TOOLBAR (Shown when Administrator is Logged In)
+       ======================================================================== -->
+  <div
+    id="admin-floating-toolbar"
+    class="hidden fixed bottom-5 left-5 z-50 bg-slate-950/95 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-2xl border border-amber-400/40 items-center gap-3 flex-wrap"
+  >
+    <div class="flex items-center gap-2 pr-2 border-r border-white/15">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="text-xs font-extrabold tracking-wide text-amber-300 uppercase">Admin Mode</span>
+    </div>
+    <button
+      type="button"
+      onclick="openAdminDashboard()"
+      class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold transition"
+    >
+      Open CMS Dashboard
+    </button>
+    <button
+      type="button"
+      onclick="openItemEditor('hotels', null)"
+      class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold transition"
+    >
+      + Hotel
+    </button>
+    <button
+      type="button"
+      onclick="openItemEditor('destinations', null)"
+      class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold transition"
+    >
+      + Spot
+    </button>
+    <button
+      type="button"
+      onclick="logoutAdmin()"
+      class="px-2.5 py-1.5 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-xs font-bold transition"
+    >
+      Logout
+    </button>
+  </div>
+
+  <!-- ========================================================================
+       ADMIN LOGIN MODAL
+       ======================================================================== -->
+  <div
+    id="admin-login-modal"
+    class="hidden fixed inset-0 z-[70] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border border-slate-200 relative">
+      <button
+        type="button"
+        onclick="closeAdminLoginModal()"
+        aria-label="Close Modal"
+        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600"
+      >
+        ✕
+      </button>
+
+      <div class="w-12 h-12 rounded-2xl bg-ocean-950 text-amber-300 flex items-center justify-center mb-4 shadow-md">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+
+      <h3 class="text-2xl font-extrabold text-slate-900">Administrator Login</h3>
+      <p class="text-xs text-slate-500 mt-1">
+        Sign in with your administrative credentials to add, edit, update, or delete website content.
+      </p>
+
+      <div
+        id="admin-login-error"
+        class="hidden mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold"
+      ></div>
+
+      <form onsubmit="handleAdminLoginSubmit(event)" class="mt-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+            Username
+          </label>
+          <input
+            id="admin-login-username"
+            type="text"
+            required
+            placeholder="Enter admin username"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+            Password
+          </label>
+          <input
+            id="admin-login-password"
+            type="password"
+            required
+            placeholder="Enter admin password"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+
+        <div class="flex items-center justify-between text-xs">
+          <label class="inline-flex items-center gap-2 text-slate-600 cursor-pointer">
+            <input id="admin-login-remember" type="checkbox" checked class="rounded text-sky-600" />
+            <span>Keep me signed in on this browser</span>
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-ocean-950 via-sky-800 to-teal-700 hover:opacity-95 text-white font-bold text-sm shadow-lg transition"
+        >
+          Sign In to Admin CMS
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       ADMIN CMS DASHBOARD MODAL (Manage All Sections)
+       ======================================================================== -->
+  <div
+    id="admin-dashboard-modal"
+    class="hidden fixed inset-0 z-[75] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-3 sm:p-6"
+  >
+    <div class="bg-slate-50 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <!-- Header -->
+      <div class="bg-ocean-950 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+          <div>
+            <h3 class="text-lg font-extrabold leading-none">Visit Cox's Bazar — Admin Content Manager (CMS)</h3>
+            <p class="text-xs text-sky-200/80 mt-1">Create, edit, update, or delete hotels, sightseeing spots, transport fares, and FAQs.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="logoutAdmin()"
+            class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold transition"
+          >
+            Logout
+          </button>
+          <button
+            type="button"
+            onclick="closeAdminDashboard()"
+            class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div
+        id="admin-dashboard-tabs"
+        class="px-6 py-3 bg-white border-b border-slate-200 flex items-center gap-2 overflow-x-auto"
+      >
+        <!-- Populated dynamically via admin.js -->
+      </div>
+
+      <!-- Dashboard Body -->
+      <div id="admin-dashboard-body" class="p-6 overflow-y-auto flex-1">
+        <!-- Populated dynamically via admin.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       ADMIN ITEM ADD / EDIT MODAL
+       ======================================================================== -->
+  <div
+    id="admin-editor-modal"
+    class="hidden fixed inset-0 z-[80] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 id="admin-editor-title" class="text-lg font-extrabold">Edit Item</h3>
+        <button
+          type="button"
+          onclick="closeEditorModal()"
+          class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveItemSubmit(event)" class="p-6 overflow-y-auto flex-1 space-y-5">
+        <div id="admin-editor-fields">
+          <!-- Populated dynamically via admin.js -->
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onclick="closeEditorModal()"
+            class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 text-white text-xs font-bold shadow-md transition"
+          >
+            ✓ Save & Publish Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ========================================================================
        6B. FLOATING CHATBOT WIDGET ("Cox's Bazar Travel Assistant")
@@ -712,6 +949,7 @@
 
   <!-- Modular JavaScript Files -->
   <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

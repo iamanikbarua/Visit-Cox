@@ -308,8 +308,8 @@ function renderHotels() {
                 <span>${hotel.rating}</span>
               </div>
 
-              <!-- Location Pill on Image Bottom -->
-              <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+              <!-- Location Pill & Admin Controls on Image Bottom -->
+              <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white gap-2">
                 <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-black/45 backdrop-blur-sm px-3 py-1 rounded-full">
                   <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -317,6 +317,7 @@ function renderHotels() {
                   </svg>
                   ${hotel.location[AppState.lang]}
                 </span>
+                ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hotels', hotel.id) : ''}
               </div>
             </div>
 
@@ -411,6 +412,9 @@ function renderDestinations() {
           <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold bg-amber-400 text-slate-950 shadow">
             ${spot.tag[AppState.lang]}
           </span>
+          <div class="absolute top-4 right-4">
+            ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('destinations', spot.id) : ''}
+          </div>
           <h3 class="absolute bottom-4 left-5 right-5 text-xl font-bold text-white drop-shadow-sm">
             ${spot.name[AppState.lang]}
           </h3>
@@ -457,19 +461,24 @@ function renderDestinations() {
       fish: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>`
     };
     return `
-      <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 hover:bg-white/15 transition-all">
-        <div class="flex items-center justify-between mb-4">
-          <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30">
-            #${idx + 1} • ${gem.highlight[AppState.lang]}
-          </span>
-          <div class="w-10 h-10 rounded-xl bg-teal-400/20 text-teal-300 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              ${icons[gem.icon] || icons.sunset}
-            </svg>
+      <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 hover:bg-white/15 transition-all flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30">
+              #${idx + 1} • ${gem.highlight[AppState.lang]}
+            </span>
+            <div class="w-10 h-10 rounded-xl bg-teal-400/20 text-teal-300 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                ${icons[gem.icon] || icons.sunset}
+              </svg>
+            </div>
           </div>
+          <h4 class="text-lg font-bold text-white">${gem.name[AppState.lang]}</h4>
+          <p class="text-sky-100/90 text-sm mt-2 leading-relaxed">${gem.description[AppState.lang]}</p>
         </div>
-        <h4 class="text-lg font-bold text-white">${gem.name[AppState.lang]}</h4>
-        <p class="text-sky-100/90 text-sm mt-2 leading-relaxed">${gem.description[AppState.lang]}</p>
+        <div class="mt-4">
+          ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hiddenGems', gem.id) : ''}
+        </div>
       </div>
     `;
   }).join('');
@@ -521,9 +530,12 @@ function renderTransport() {
         <tr class="hover:bg-sky-50/70 transition-colors">
           <!-- Route -->
           <td class="px-5 py-4 font-semibold text-slate-900 text-sm">
-            <div class="flex items-center gap-2.5">
-              <span class="w-2 h-2 rounded-full bg-sky-600 shrink-0"></span>
-              <span>${item.route[AppState.lang]}</span>
+            <div class="flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-sky-600 shrink-0"></span>
+                <span>${item.route[AppState.lang]}</span>
+              </div>
+              ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('transport', item.id) : ''}
             </div>
           </td>
 
@@ -709,13 +721,16 @@ function renderFAQs() {
           aria-expanded="${isOpen}"
           class="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50/80 transition">
           <span class="font-bold text-slate-900 text-base md:text-lg">${item.question[AppState.lang]}</span>
-          <span class="faq-icon w-8 h-8 rounded-full ${
-            isOpen ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-600'
-          } flex items-center justify-center shrink-0 transition-transform duration-300">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </span>
+          <div class="flex items-center gap-3 shrink-0">
+            ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('faqs', item.id) : ''}
+            <span class="faq-icon w-8 h-8 rounded-full ${
+              isOpen ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-600'
+            } flex items-center justify-center shrink-0 transition-transform duration-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </span>
+          </div>
         </button>
         <div class="faq-answer px-6">
           <div class="pb-5 pt-1 text-slate-600 text-sm md:text-base leading-relaxed border-t border-slate-100">

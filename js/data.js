@@ -296,7 +296,7 @@ const UI_TEXT = {
 /* --------------------------------------------------------------------------
  * 2. ACCOMMODATIONS DATA (Exact 5 Hotels from Specification)
  * -------------------------------------------------------------------------- */
-const HOTELS_DATA = [
+let HOTELS_DATA = [
   {
     id: "hotel-sea-crown",
     name: {
@@ -442,7 +442,7 @@ const HOTELS_DATA = [
 /* --------------------------------------------------------------------------
  * 3. DESTINATIONS & SIGHTSEEING DATA (Exact 5 Main Spots + 4 Hidden Gems)
  * -------------------------------------------------------------------------- */
-const DESTINATIONS_DATA = [
+let DESTINATIONS_DATA = [
   {
     id: "himchari-national-park",
     name: {
@@ -545,7 +545,7 @@ const DESTINATIONS_DATA = [
   }
 ];
 
-const HIDDEN_GEMS_DATA = [
+let HIDDEN_GEMS_DATA = [
   {
     id: "sonadia-island",
     name: {
@@ -658,7 +658,7 @@ const VEHICLE_GLOSSARY = {
   }
 };
 
-const TRANSPORT_DATA = [
+let TRANSPORT_DATA = [
   {
     id: "town-to-laboni-sugandha",
     route: {
@@ -796,7 +796,7 @@ const TRANSPORT_DATA = [
 /* --------------------------------------------------------------------------
  * 5. FAQ / Q&A DATA (Exact 5 Sample Q&As from Specification)
  * -------------------------------------------------------------------------- */
-const FAQ_DATA = [
+let FAQ_DATA = [
   {
     id: "faq-1",
     question: {
@@ -853,3 +853,55 @@ const FAQ_DATA = [
     }
   }
 ];
+
+/* --------------------------------------------------------------------------
+ * 6. FACTORY SNAPSHOT & LOCALSTORAGE CMS HYDRATION
+ * -------------------------------------------------------------------------- */
+const FACTORY_DEFAULTS = JSON.parse(
+  JSON.stringify({
+    exchangeRateUSD: CONFIG.exchangeRateUSD,
+    hotels: HOTELS_DATA,
+    destinations: DESTINATIONS_DATA,
+    hiddenGems: HIDDEN_GEMS_DATA,
+    transport: TRANSPORT_DATA,
+    faqs: FAQ_DATA
+  })
+);
+
+const CMS_STORAGE_KEY = 'visit_cox_cms_data_v1';
+
+function loadCMSDataFromStorage() {
+  try {
+    const raw = localStorage.getItem(CMS_STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed.exchangeRateUSD) CONFIG.exchangeRateUSD = Number(parsed.exchangeRateUSD);
+    if (Array.isArray(parsed.hotels)) HOTELS_DATA = parsed.hotels;
+    if (Array.isArray(parsed.destinations)) DESTINATIONS_DATA = parsed.destinations;
+    if (Array.isArray(parsed.hiddenGems)) HIDDEN_GEMS_DATA = parsed.hiddenGems;
+    if (Array.isArray(parsed.transport)) TRANSPORT_DATA = parsed.transport;
+    if (Array.isArray(parsed.faqs)) FAQ_DATA = parsed.faqs;
+  } catch (err) {
+    console.warn('Could not load saved CMS data from localStorage:', err);
+  }
+}
+
+function saveCMSDataToStorage() {
+  try {
+    const payload = {
+      exchangeRateUSD: CONFIG.exchangeRateUSD,
+      hotels: HOTELS_DATA,
+      destinations: DESTINATIONS_DATA,
+      hiddenGems: HIDDEN_GEMS_DATA,
+      transport: TRANSPORT_DATA,
+      faqs: FAQ_DATA,
+      updatedAt: new Date().toISOString()
+    };
+    localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(payload));
+  } catch (err) {
+    console.error('Failed to save CMS data:', err);
+  }
+}
+
+loadCMSDataFromStorage();
+
