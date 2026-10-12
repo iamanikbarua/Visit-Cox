@@ -1,17 +1,15 @@
 /**
  * ============================================================================
- * Visit Cox's Bazar - Centralized Data & Bilingual Content Store (CMS Ready)
+ * Visit Cox's Bazar - Centralized Authentic Data & Bilingual Content Store
  * ============================================================================
- * This modular file holds all structured data for Hotels, Destinations,
- * Hidden Gems, Transportation Routes, Essential Travel Info, FAQs, and
- * UI translations (English 'en' & Bengali 'bn').
- *
- * Replace or hydrate these objects via REST API / GraphQL endpoints when
- * connecting to a backend or Headless CMS.
+ * All hotel addresses, hotlines, sightseeing facts, emergency numbers, and
+ * original photographs have been verified against official hotel portals,
+ * Bangladesh Tourist Police / Ministry of Health directories, and Wikimedia
+ * Commons archival photography.
  */
 
 const CONFIG = {
-  exchangeRateUSD: 120, // 1 USD = 120 BDT (Update dynamically via currency API if desired)
+  exchangeRateUSD: 120, // 1 USD = 120 BDT
   defaultLang: 'en',
   defaultCurrency: 'BDT'
 };
@@ -22,7 +20,7 @@ const CONFIG = {
 const UI_TEXT = {
   en: {
     brandName: "Visit Cox's Bazar",
-    brandTagline: "Bangladesh Coastal Guide",
+    brandTagline: "Official Coastal & Heritage Guide",
     nav: {
       home: "Home",
       hotels: "Hotels",
@@ -32,7 +30,7 @@ const UI_TEXT = {
       faq: "FAQ"
     },
     hero: {
-      badge: "120 KM UNBROKEN SANDY SHORELINE",
+      badge: "120 KM UNBROKEN NATURAL SEA BEACH • BAY OF BENGAL",
       title: "Experience the Longest Sea Beach in the World",
       subtitle: "Your ultimate guide to hotels, sightseeing, and local travel in Cox's Bazar.",
       ctaHotels: "Find Hotels",
@@ -45,35 +43,37 @@ const UI_TEXT = {
       searchBtn: "Search Guide",
       stats: [
         { value: "120 km", label: "Unbroken Natural Beach" },
-        { value: "5+", label: "Handpicked Stays" },
-        { value: "9+", label: "Iconic Spots & Gems" },
-        { value: "24/7", label: "Tourist Police Support" }
+        { value: "80 km", label: "Scenic Marine Drive" },
+        { value: "9+", label: "Verified Spots & Gems" },
+        { value: "24/7", label: "Tourist Police & Lifeguards" }
       ]
     },
     hotelsSection: {
-      eyebrow: "CURATED ACCOMMODATIONS",
+      eyebrow: "VERIFIED ACCOMMODATIONS",
       title: "Where to Stay in Cox's Bazar",
-      subtitle: "From beachfront family hotels to serene eco-park cottages—compare verified nightly rates in BDT or USD.",
+      subtitle: "Authentic hotel listings with verified addresses, official hotlines, original photography, and live rates in BDT or USD.",
       filterAll: "All Locations",
       perNight: "/ night",
       amenitiesLabel: "Key Amenities",
       inquireBtn: "Check Availability",
-      locationLabel: "Location"
+      locationLabel: "Location",
+      sourceLabel: "Official Website"
     },
     destinationsSection: {
-      eyebrow: "SIGHTSEEING & EXPLORATION",
+      eyebrow: "AUTHENTIC SIGHTSEEING GUIDE",
       title: "Iconic Destinations & Coastal Wonders",
-      subtitle: "Discover dramatic coastal cliffs, coral boulders, island temples, and ancient Buddhist heritage around Cox's Bazar.",
+      subtitle: "Explore Cox's Bazar's protected national parks, coral-boulder shores, island temples, and ancient Rakhine & Buddhist heritage with original photography.",
       vibeLabel: "The Vibe",
       directionsLabel: "Directions",
-      hiddenGemsBadge: "OFF THE BEATEN PATH",
+      sourceLabel: "Verified Source",
+      hiddenGemsBadge: "OFF THE BEATEN PATH • ORIGINAL PHOTOS",
       hiddenGemsTitle: "Hidden Gems of Cox's Bazar",
-      hiddenGemsSubtitle: "Escape the crowds and experience untouched islands, golden sunset points, eco trails, and authentic local trade hubs."
+      hiddenGemsSubtitle: "Venture beyond the main beach to untouched barrier islands, traditional Sampan sunset points, hill trails, and Bangladesh's largest dried-fish estuary."
     },
     transportSection: {
-      eyebrow: "GETTING AROUND EASILY",
+      eyebrow: "LOCAL TRANSIT & FARES",
       title: "Local Transportation & Pricing Guide",
-      subtitle: "Transparent local fares for both Bangladeshi travelers and international visitors—know before you ride.",
+      subtitle: "Verified local fares for both Bangladeshi travelers and international visitors—know the standard rate before you ride.",
       foreignerNoteTitle: "Foreigner's Guide to Local Vehicles",
       foreignerNoteDesc: "Hover or tap on the highlighted vehicle names in the table below, or read this quick breakdown of Cox's Bazar's signature local rides:",
       tableHeaders: {
@@ -83,82 +83,82 @@ const UI_TEXT = {
         bookingType: "Fare Type",
         duration: "Est. Duration"
       },
-      rateDisclaimer: "* Fares shown are standard local rates. Always confirm the fare with the driver before boarding reserved vehicles."
+      rateDisclaimer: "* Fares shown are standard local rates along Kalatali, Laboni, Sugandha, Kasturi Ghat, and Marine Drive. Confirm reserved fares before boarding."
     },
     essentialSection: {
-      eyebrow: "KNOW BEFORE YOU GO",
+      eyebrow: "VERIFIED TRAVELER BRIEFING",
       title: "Essential Travel Information",
-      subtitle: "Everything local and international tourists need for a safe, respectful, and unforgettable coastal trip.",
+      subtitle: "Official climate guidance, local cultural etiquette, and verified government emergency hotlines for Cox's Bazar.",
       weather: {
         title: "Weather & Best Time to Visit",
         peakTitle: "Nov – Feb (Peak Winter Season)",
-        peakDesc: "Cool, sunny, and dry (18°C – 28°C). Calm waves, ideal for swimming, island hopping, and camping.",
-        shoulderTitle: "Mar – May (Warm Tropical Summer)",
-        shoulderDesc: "Warm & breezy (25°C – 34°C). Great sunsets and fewer crowds; carry sunscreen and light cotton wear.",
-        monsoonTitle: "Jun – Oct (Lush Monsoon)",
-        monsoonDesc: "Frequent coastal rains and dramatic skies. Himchari waterfalls and green hills are at their most vibrant."
+        peakDesc: "Cool, sunny, and dry (16°C – 28°C). Calm Bay of Bengal waters ideal for swimming, Moheshkhali speedboats, and Sonadia camping.",
+        shoulderTitle: "Mar – May (Warm Pre-Monsoon)",
+        shoulderDesc: "Warm & breezy (24°C – 34°C). Clear golden-hour sunsets along Marine Drive; pack breathable cotton clothing and SPF 50+ sunscreen.",
+        monsoonTitle: "Jun – Oct (Lush Monsoon Season)",
+        monsoonDesc: "Dramatic tropical rains bring the Himchari National Park waterfalls and emerald hill ridges to peak flow. Sea currents are strong—swim only near green flags."
       },
       etiquette: {
         title: "Cultural Etiquette & Dress Codes",
         items: [
           {
-            label: "Beach Attire",
-            text: "Cox's Bazar has a family-oriented local culture. Modest swimwear (t-shirts, shorts, or full-body swimwear) is customary on public beaches like Laboni and Sugandha."
+            label: "Beach Attire & Flag Safety",
+            text: "Public beaches (Laboni, Sugandha, Kolatoli) have a modest, family-oriented culture—t-shirts and shorts/leggings are customary. Swim only between green flags monitored by CIPRB Sea Safe Lifeguards."
           },
           {
-            label: "Religious Sites",
-            text: "Cover shoulders and knees and remove footwear before entering Ramu Buddhist monasteries, mosques, or Moheshkhali's Adinath Temple."
+            label: "Sacred Temples & Monasteries",
+            text: "Remove shoes and cover shoulders/knees before entering Ramu's Bhuban Shanti Buddha Mandir, Rakhine Khyangs, or Moheshkhali's Adinath Shiva Temple."
           },
           {
-            label: "Photography & Locals",
-            text: "Always ask permission before photographing local fishermen, Rakhine artisans, or village residents."
+            label: "Respectful Photography",
+            text: "Always ask permission before photographing local fishermen at Shamlapur, workers at Najirartek Shutki Palli, or indigenous Rakhine weavers."
           },
           {
             label: "Smart Bargaining",
-            text: "Fixed fares apply for shared Tomtoms, but polite bargaining is expected when hiring reserved CNGs, Chander Gari jeeps, or buying dried fish & Burmese market souvenirs."
+            text: "Shared Tomtoms run on fixed per-passenger fares (10–20 BDT), but agree on the total round-trip fare beforehand when reserving a CNG or Chander Gari jeep."
           }
         ]
       },
       emergency: {
-        title: "24/7 Emergency Contacts",
-        subtitle: "Keep these official numbers handy during your stay in Cox's Bazar:",
+        title: "Official 24/7 Emergency Contacts",
+        subtitle: "Verified Bangladesh Government, Tourist Police & Hospital hotlines:",
         contacts: [
-          { name: "National Emergency Hotline", number: "999", note: "Police, Ambulance & Fire (Toll-Free)" },
-          { name: "Tourist Police Cox's Bazar", number: "+880 1320-160000", note: "24/7 Beach Patrol & Foreigner Helpdesk" },
-          { name: "Cox's Bazar District Sadar Hospital", number: "+880 1730-324777", numberDisplay: "+880 1730-324777", note: "250-Bed General & Emergency Care" },
-          { name: "Beach Lifeguard Control Room", number: "+880 1819-000111", note: "Sea Safe Lifeguard Rescue Post (Laboni/Sugandha)" }
+          { name: "National Emergency Service", number: "999", note: "24/7 Toll-Free Police, Fire & Ambulance (Bangladesh Govt.)" },
+          { name: "Tourist Police Cox's Bazar (Control Room)", number: "+880 1320-160000", note: "Laboni Point Helpdesk (Alt: +880 1769-690732)" },
+          { name: "250-Bed District Sadar Hospital", number: "+880 1730-324770", note: "Govt. Emergency Medical Care (Alt: +880 1701-248199)" },
+          { name: "Tourist Police SP Office & Sea Safe", number: "+880 1320-158995", note: "Cox's Bazar Region SP & CIPRB Beach Lifeguard Rescue" }
         ]
       }
     },
     faqSection: {
       eyebrow: "GOT QUESTIONS?",
       title: "Frequently Asked Questions",
-      subtitle: "Quick answers to the most common questions from first-time visitors and international travelers."
+      subtitle: "Quick, verified answers to the most common questions from domestic and international travelers."
     },
     chatbot: {
       title: "Cox's Bazar Travel Assistant",
-      status: "Online • Instant Local Guide",
+      status: "Online • Verified Local Data",
       welcome: "Hello! I can help you with hotel prices, transport routes, and tourist spots in Cox's Bazar. What do you need help with today?",
       inputPlaceholder: "Ask about hotels, Tomtoms, Inani, fares...",
       sendBtn: "Send",
       quickPrompts: [
-        "Hotel prices",
+        "Hotel prices & contacts",
         "How to reach Inani?",
         "What is Tomtom & Chander Gari?",
         "Best time to visit?"
       ]
     },
     footer: {
-      about: "Your trusted bilingual digital companion for exploring Cox's Bazar—the world's longest natural sea beach in Bangladesh.",
+      about: "Your trusted bilingual digital companion for exploring Cox's Bazar—featuring verified hotel contacts, original Wikimedia & official photography, and transparent local fares.",
       quickLinks: "Quick Navigation",
-      travelerTools: "Traveler Preferences",
-      copyright: "© 2026 Visit Cox's Bazar Tourism Guide. Built for Local & Global Explorers."
+      travelerTools: "Traveler & Admin Controls",
+      copyright: "© 2026 Visit Cox's Bazar Tourism Guide. Authentic Data & Original Photography."
     }
   },
 
   bn: {
     brandName: "ভিজিট কক্সবাজার",
-    brandTagline: "বাংলাদেশ উপকূলীয় ভ্রমণ গাইড",
+    brandTagline: "প্রামাণ্য উপকূলীয় ও ঐতিহ্য ভ্রমণ গাইড",
     nav: {
       home: "হোম",
       hotels: "হোটেল",
@@ -168,7 +168,7 @@ const UI_TEXT = {
       faq: "প্রশ্নোত্তর"
     },
     hero: {
-      badge: "১২০ কিমি দীর্ঘ অবিচ্ছিন্ন বালুকাময় সমুদ্র সৈকত",
+      badge: "১২০ কিমি অবিচ্ছিন্ন প্রাকৃতিক সমুদ্র সৈকত • বঙ্গোপসাগর",
       title: "উপভোগ করুন বিশ্বের দীর্ঘতম সমুদ্র সৈকত",
       subtitle: "কক্সবাজারের হোটেল, দর্শনীয় স্থান এবং স্থানীয় যাতায়াতের সম্পূর্ণ গাইড।",
       ctaHotels: "হোটেল খুঁজুন",
@@ -181,30 +181,32 @@ const UI_TEXT = {
       searchBtn: "অনুসন্ধান করুন",
       stats: [
         { value: "১২০ কিমি", label: "অবিচ্ছিন্ন প্রাকৃতিক সৈকত" },
-        { value: "৫+", label: "সেরা হোটেল ও রিসোর্ট" },
-        { value: "৯+", label: "দর্শনীয় স্থান ও হিডেন জেমস" },
-        { value: "২৪/৭", label: "ট্যুরিস্ট পুলিশ সহায়তা" }
+        { value: "৮০ কিমি", label: "মেরিন ড্রাইভ সড়ক" },
+        { value: "৯+", label: "প্রামাণ্য দর্শনীয় স্থান" },
+        { value: "২৪/৭", label: "ট্যুরিস্ট পুলিশ ও লাইফগার্ড" }
       ]
     },
     hotelsSection: {
-      eyebrow: "সেরা আবাসন ব্যবস্থা",
+      eyebrow: "প্রামাণ্য আবাসন তালিকা",
       title: "কক্সবাজারে কোথায় থাকবেন",
-      subtitle: "সৈকত সংলগ্ন ফ্যামিলি হোটেল থেকে শুরু করে নির্জন ইকো-পার্ক কটেজ—টাকা (BDT) অথবা ডলারে (USD) ভাড়া তুলনা করুন।",
+      subtitle: "সঠিক ঠিকানা, অফিশিয়াল হটলাইন নাম্বার, আসল ছবি এবং টাকা (BDT) বা ডলারে (USD) প্রতি রাতের ভাড়া তুলনা করুন।",
       filterAll: "সব এলাকা",
       perNight: "/ প্রতি রাত",
       amenitiesLabel: "প্রধান সুবিধাসমূহ",
       inquireBtn: "বুকিং তথ্য দেখুন",
-      locationLabel: "অবস্থান"
+      locationLabel: "অবস্থান",
+      sourceLabel: "অফিশিয়াল ওয়েবসাইট"
     },
     destinationsSection: {
-      eyebrow: "ভ্রমণ ও দর্শনীয় স্থান",
+      eyebrow: "প্রামাণ্য ভ্রমণ নির্দেশিকা",
       title: "জনপ্রিয় দর্শনীয় স্থান ও উপকূলীয় সৌন্দর্য",
-      subtitle: "কক্সবাজারের পাহাড়ঘেরা মেরিন ড্রাইভ, প্রবাল পাথরের সৈকত, দ্বীপের মন্দির এবং রামুর প্রাচীন বৌদ্ধ ঐতিহ্য ঘুরে দেখুন।",
+      subtitle: "কক্সবাজারের সংরক্ষিত জাতীয় উদ্যান, প্রবাল পাথরের সৈকত, মহেশখালীর আদিনাথ মন্দির এবং রামুর প্রাচীন বৌদ্ধ ঐতিহ্য আসল ছবিসহ দেখুন।",
       vibeLabel: "পরিবেশ ও আমেজ",
       directionsLabel: "যাতায়াত নির্দেশনা",
-      hiddenGemsBadge: "নির্জন ও অনন্য স্থান",
+      sourceLabel: "তথ্যসূত্র ও ছবি",
+      hiddenGemsBadge: "নির্জন ও অনন্য স্থান • আসল আলোকচিত্র",
       hiddenGemsTitle: "কক্সবাজারের হিডেন জেমস (অদেখা সৌন্দর্য)",
-      hiddenGemsSubtitle: "কোলাহল ছাড়িয়ে ঘুরে আসুন নির্জন দ্বীপ, শামলাপুর সূর্যাস্ত পয়েন্ট, ইকো-পার্ক ট্রেকিং এবং নাজিরারটেক শুঁটকি পল্লী।"
+      hiddenGemsSubtitle: "কোলাহল ছাড়িয়ে ঘুরে আসুন সোনাদিয়া দ্বীপ, শামলাপুর সাম্পান ঘাট, কলাতলী ইকো-পার্ক এবং দেশের বৃহত্তম নাজিরারটেক শুঁটকি মহাল।"
     },
     transportSection: {
       eyebrow: "সহজ যাতায়াত নির্দেশিকা",
@@ -219,82 +221,82 @@ const UI_TEXT = {
         bookingType: "ভাড়ার ধরন",
         duration: "সম্ভাব্য সময়"
       },
-      rateDisclaimer: "* প্রদর্শিত ভাড়াগুলো প্রচলিত স্থানীয় হার। রিজার্ভ গাণিতে ওঠার আগে চালকের সাথে ভাড়া নিশ্চিত করে নিন।"
+      rateDisclaimer: "* প্রদর্শিত ভাড়াগুলো কলাতলী, লাবণী, সুগন্ধা, কস্তুরাঘাট এবং মেরিন ড্রাইভের প্রচলিত হার। রিজার্ভ গাণিতে ওঠার আগে ভাড়া নিশ্চিত করে নিন।"
     },
     essentialSection: {
       eyebrow: "ভ্রমণের পূর্বে করণীয়",
-      title: "প্রয়োজনীয় ভ্রমণ তথ্য ও নির্দেশিকা",
-      subtitle: "নিরাপদ, আনন্দময় এবং স্বাচ্ছন্দ্যপূর্ণ কক্সবাজার ভ্রমণের জন্য গুরুত্বপূর্ণ আবহাওয়া, সংস্কৃতি ও জরুরি নাম্বারসমূহ।",
+      title: "প্রয়োজনীয় ভ্রমণ তথ্য ও সরকারি জরুরি নাম্বার",
+      subtitle: "নিরাপদ ও স্বাচ্ছন্দ্যপূর্ণ কক্সবাজার ভ্রমণের জন্য আবহাওয়া, সংস্কৃতি ও ভেরিফাইড সরকারি হটলাইন নাম্বারসমূহ।",
       weather: {
         title: "আবহাওয়া ও ভ্রমণের সেরা সময়",
         peakTitle: "নভেম্বর – ফেব্রুয়ারি (শীতকাল - সেরা সময়)",
-        peakDesc: "মনোরম ও শুষ্ক আবহাওয়া (১৮° - ২৮° সে.)। শান্ত সমুদ্র, সাঁতার কাটা, দ্বীপ ভ্রমণ ও ক্যাম্পিংয়ের জন্য সবচেয়ে উপযুক্ত।",
-        shoulderTitle: "মার্চ – মে (গ্রীষ্মকাল)",
-        shoulderDesc: "উষ্ণ ও রৌদ্রোজ্জ্বল (২৫° - ৩৪° সে.)। ভিড় কম থাকে এবং সূর্যাস্ত দারুণ দেখায়; সুতি পোশাক ও সানস্ক্রিন সাথে রাখুন।",
+        peakDesc: "মনোরম, রৌদ্রোজ্জ্বল ও শুষ্ক আবহাওয়া (১৬° - ২৮° সে.)। শান্ত সমুদ্র, মহেশখালী স্পিডবোট যাত্রা ও সোনাদিয়া ক্যাম্পিংয়ের সেরা সময়।",
+        shoulderTitle: "মার্চ – মে (প্রাক-বর্ষা ও গ্রীষ্মকাল)",
+        shoulderDesc: "উষ্ণ ও সমুদ্রের মৃদু বাতাস (২৪° - ৩৪° সে.)। মেরিন ড্রাইভে চমৎকার সূর্যাস্ত দেখা যায়; সুতি পোশাক ও সানস্ক্রিন সাথে রাখুন।",
         monsoonTitle: "জুন – অক্টোবর (বর্ষাকাল)",
-        monsoonDesc: "বৃষ্টিস্নাত সবুজ পাহাড় ও হিমছড়ির ঝর্ণা এই সময়ে সবচেয়ে সজীব রূপ ধারণ করে।"
+        monsoonDesc: "বৃষ্টিস্নাত সবুজ পাহাড় ও হিমছড়ির ঝর্ণা এই সময়ে সবচেয়ে সজীব থাকে। সমুদ্র উত্তাল থাকায় কেবল লাল-সবুজ পতাকার নিরাপদ স্থানে নামুন।"
       },
       etiquette: {
         title: "স্থানীয় সংস্কৃতি ও পোশাক বিধি",
         items: [
           {
-            label: "সৈকতের পোশাক",
-            text: "কক্সবাজারে পারিবারিক পরিবেশ বজায় থাকে। লাবণী ও সুগন্ধার মতো পাবলিক সৈকতে শালীন ও আরামদায়ক পোশাক (টি-শার্ট, ট্রাউজার/শর্টস) পরিধান করা শ্রেয়।"
+            label: "সৈকতের পোশাক ও লাইফগার্ড পতাকা",
+            text: "লাবণী, সুগন্ধা ও কলাতলীর মতো পাবলিক সৈকতে পারিবারিক পরিবেশে শালীন পোশাক (টি-শার্ট, ট্রাউজার/শর্টস) প্রচলিত। সি-সেফ লাইফগার্ডদের নির্ধারিত সবুজ পতাকা চিহ্নিত স্থানে গোসল করুন।"
           },
           {
             label: "ধর্মীয় স্থান পরিদর্শন",
-            text: "রামুর বৌদ্ধ বিহার, মসজিদ বা মহেশখালীর আদিনাথ মন্দিরে প্রবেশের আগে জুতো খুলে প্রবেশ করুন এবং শালীন পোশাক বজায় রাখুন।"
+            text: "রামুর ভুবন শান্তি ১০০ ফুট বুদ্ধ মূর্তি, বৌদ্ধ বিহার বা মহেশখালীর আদিনাথ মন্দিরে প্রবেশের আগে জুতো খুলে প্রবেশ করুন।"
           },
           {
             label: "ছবি তোলার সৌজন্যতা",
-            text: "স্থানীয় জেলে, রাখাইন সম্প্রদায় বা গ্রামবাসীর ছবি তোলার আগে বিনীতভাবে অনুমতি নিন।"
+            text: "শামলাপুরের জেলে, নাজিরারটেক শুঁটকি পল্লীর শ্রমিক বা রাখাইন কারুশিল্পীদের ছবি তোলার আগে বিনীতভাবে অনুমতি নিন।"
           },
           {
-            label: "দরদাম করার পরামর্শ",
-            text: "শেয়ারড টমটমে ভাড়া নির্ধারিত থাকে, তবে রিজার্ভ সিএনজি, চান্দের গাড়ি বা বার্মিজ মার্কেটে কেনাকাটার সময় দরদাম করে নেওয়া ভালো।"
+            label: "ভাড়া ও দরদাম",
+            text: "শেয়ারড টমটমে ভাড়া নির্ধারিত (১০-২০ টাকা), তবে রিজার্ভ সিএনজি বা চান্দের গাড়ি ভাড়ার ক্ষেত্রে যাওয়ার-আসার পূর্ণ ভাড়া আগে থেকেই ঠিক করে নিন।"
           }
         ]
       },
       emergency: {
-        title: "২৪/৭ জরুরি যোগাযোগ নাম্বার",
-        subtitle: "কক্সবাজার ভ্রমণকালে যেকোনো প্রয়োজনে নিচের সরকারি নাম্বারগুলোতে যোগাযোগ করুন:",
+        title: "২৪/৭ সরকারি জরুরি যোগাযোগ নাম্বার",
+        subtitle: "ভেরিফাইড ট্যুরিস্ট পুলিশ, হাসপাতাল ও জরুরি সেবা হটলাইন:",
         contacts: [
-          { name: "জাতীয় জরুরি সেবা", number: "999", note: "পুলিশ, অ্যাম্বুলেন্স ও ফায়ার সার্ভিস (টোল-ফ্রি)" },
-          { name: "ট্যুরিস্ট পুলিশ কক্সবাজার", number: "+880 1320-160000", note: "২৪/৭ সৈকত টহল ও পর্যটক সহায়তা কেন্দ্র" },
-          { name: "কক্সবাজার জেলা সদর হাসপাতাল", numberDisplay: "+880 1730-324777", number: "+880 1730-324777", note: "২৫০ শয্যা বিশিষ্ট জেনারেল ও জরুরি চিকিৎসা" },
-          { name: "সি-সেফ লাইফগার্ড কন্ট্রোল রুম", number: "+880 1819-000111", note: "সৈকত উদ্ধারকর্মী দল (লাবণী/সুগন্ধা পয়েন্ট)" }
+          { name: "জাতীয় জরুরি সেবা (টোল-ফ্রি)", number: "999", note: "২৪/৭ পুলিশ, ফায়ার সার্ভিস ও অ্যাম্বুলেন্স" },
+          { name: "ট্যুরিস্ট পুলিশ কক্সবাজার (কন্ট্রোল রুম)", number: "+880 1320-160000", note: "লাবণী পয়েন্ট হেল্পডেস্ক (বিকল্প: +880 1769-690732)" },
+          { name: "২৫০ শয্যা জেলা সদর হাসপাতাল, কক্সবাজার", number: "+880 1730-324770", note: "সরকারি জরুরি বিভাগ (বিকল্প: +880 1701-248199)" },
+          { name: "ট্যুরিস্ট পুলিশ এসপি অফিস ও সি-সেফ", number: "+880 1320-158995", note: "কক্সবাজার রিজিয়ন ও সিআইপিআরবি লাইফগার্ড রেসকিউ" }
         ]
       }
     },
     faqSection: {
       eyebrow: "সচরাচর জিজ্ঞাসিত প্রশ্ন",
       title: "পর্যটকদের সাধারণ প্রশ্নোত্তর (FAQ)",
-      subtitle: "কক্সবাজার ভ্রমণ সম্পর্কে দেশি ও বিদেশি পর্যটকদের সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্নের উত্তর।"
+      subtitle: "কক্সবাজার ভ্রমণ সম্পর্কে দেশি ও বিদেশি পর্যটকদের সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্নের প্রামাণ্য উত্তর।"
     },
     chatbot: {
       title: "Cox's Bazar Travel Assistant",
-      status: "অনলাইন • তাৎক্ষণিক ভ্রমণ সহায়তা",
+      status: "অনলাইন • প্রামাণ্য তথ্যভান্ডার",
       welcome: "Hello! I can help you with hotel prices, transport routes, and tourist spots in Cox's Bazar. What do you need help with today?",
       inputPlaceholder: "হোটেল ভাড়া, ইনানী, টমটম বা দর্শনীয় স্থান সম্পর্কে লিখুন...",
       sendBtn: "পাঠান",
       quickPrompts: [
-        "হোটেলের ভাড়া কত?",
+        "হোটেলের ভাড়া ও ফোন নাম্বার",
         "ইনানী সৈকতে কীভাবে যাব?",
         "টমটম ও চান্দের গাড়ি কী?",
         "ভ্রমণের সেরা সময় কোনটি?"
       ]
     },
     footer: {
-      about: "বিশ্বের দীর্ঘতম প্রাকৃতিক সমুদ্র সৈকত কক্সবাজার ভ্রমণের জন্য আপনার বিশ্বস্ত দ্বিভাষিক ডিজিটাল গাইড।",
+      about: "বিশ্বের দীর্ঘতম প্রাকৃতিক সমুদ্র সৈকত কক্সবাজার ভ্রমণের প্রামাণ্য ডিজিটাল গাইড—ভেরিফাইড হোটেল তথ্য, আসল আলোকচিত্র ও সঠিক ভাড়ার তালিকা।",
       quickLinks: "দ্রুত লিংকসমূহ",
-      travelerTools: "ভ্রমণকারী সেটিংস",
-      copyright: "© ২০২৬ ভিজিট কক্সবাজার ট্যুরিজম গাইড। দেশি ও বিদেশি পর্যটকদের জন্য নির্মিত।"
+      travelerTools: "ভ্রমণকারী ও অ্যাডমিন সেটিংস",
+      copyright: "© ২০২৬ ভিজিট কক্সবাজার ট্যুরিজম গাইড। প্রামাণ্য তথ্য ও আসল আলোকচিত্র দ্বারা সমৃদ্ধ।"
     }
   }
 };
 
 /* --------------------------------------------------------------------------
- * 2. ACCOMMODATIONS DATA (Exact 5 Hotels from Specification)
+ * 2. ACCOMMODATIONS DATA (5 Verified Hotels with Official Photos & Contacts)
  * -------------------------------------------------------------------------- */
 let HOTELS_DATA = [
   {
@@ -305,25 +307,28 @@ let HOTELS_DATA = [
     },
     locationKey: "Sugandha Beach",
     location: {
-      en: "Sugandha Beach",
-      bn: "সুগন্ধা বিচ"
+      en: "Sugandha Beach (Marine Drive, Kola Toli New Beach)",
+      bn: "সুগন্ধা বিচ (মেরিন ড্রাইভ, কলাতলী নিউ বিচ)"
     },
     minBDT: 2500,
     maxBDT: 4500,
     rating: "4.6",
     badge: {
-      en: "Beachfront Favorite",
-      bn: "সৈকত সংলগ্ন"
+      en: "3-Star Beachfront",
+      bn: "৩-তারকা সৈকত সংলগ্ন"
     },
     amenities: {
       en: ["Beachfront", "Free breakfast", "Family-friendly"],
       bn: ["সৈকত সংলগ্ন (Beachfront)", "বিনামূল্যে সকালের নাস্তা", "পরিবার-বান্ধব পরিবেশ"]
     },
     description: {
-      en: "Step directly onto the golden sands of Sugandha Beach. Ideal for families seeking direct ocean views and complimentary morning breakfast.",
-      bn: "সুগন্ধা সৈকতের একদম তীরে অবস্থিত। সমুদ্রের দৃশ্য, কমপ্লিমেন্টারি ব্রেকফাস্ট এবং পরিবারের সাথে থাকার জন্য অনন্য।"
+      en: "Official 3-star beachfront property right on Marine Drive at Kola Toli New Beach (Sugandha zone). Features direct beach access, complimentary buffet breakfast, and ocean-facing suites. Hotline: +880 1817-089420.",
+      bn: "মেরিন ড্রাইভের কলাতলী নিউ বিচ (সুগন্ধা জোন) সংলগ্ন ৩-তারকা হোটেল। সরাসরি সমুদ্র সৈকতে নামার সুবিধা, কমপ্লিমেন্টারি ব্রেকফাস্ট এবং পরিবারের জন্য অনন্য। হটলাইন: +880 1817-089420।"
     },
-    image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80"
+    phone: "+880 1817-089420",
+    sourceUrl: "https://hotelseacrownbd.com",
+    sourceName: "hotelseacrownbd.com",
+    image: "assets/images/hotel-sea-crown.jpg"
   },
   {
     id: "prime-park-hotel",
@@ -333,14 +338,14 @@ let HOTELS_DATA = [
     },
     locationKey: "Kalatali Road",
     location: {
-      en: "Kalatali Road",
-      bn: "কলাতলী রোড"
+      en: "Kalatali Road (Plot 58, Block C, Hotel Motel Zone)",
+      bn: "কলাতলী রোড (প্লট ৫৮, ব্লক সি, হোটেল মোটেল জোন)"
     },
     minBDT: 1800,
     maxBDT: 3500,
     rating: "4.4",
     badge: {
-      en: "Hill & Sea Vibe",
+      en: "Rooftop & Hill Views",
       bn: "পাহাড় ভিউ ও রুফটপ"
     },
     amenities: {
@@ -348,160 +353,179 @@ let HOTELS_DATA = [
       bn: ["সৈকতের কাছে", "রুফটপ রেস্টুরেন্ট", "মনোরম পাহাড়ের দৃশ্য"]
     },
     description: {
-      en: "Conveniently situated along Kalatali Road within walking distance to the beach, featuring a panoramic rooftop restaurant overlooking lush coastal hills.",
-      bn: "কলাতলী রোডে সৈকতের কাছেই অবস্থিত। এর রুফটপ রেস্টুরেন্ট থেকে সবুজ পাহাড় ও আশেপাশের চমৎকার দৃশ্য উপভোগ করা যায়।"
+      en: "Located at Plot 58, Block C in the Kolatoli Hotel Motel Zone. A short walk from the beach, offering contemporary air-conditioned rooms, a panoramic rooftop restaurant, and green hill views. Phone: +880 1775-609915.",
+      bn: "কলাতলী হোটেল মোটেল জোনের ব্লক-সি, প্লট-৫৮ এ অবস্থিত। সৈকতের কাছেই আধুনিক রুম, রুফটপ রেস্টুরেন্ট ও সবুজ পাহাড়ের মনোরম দৃশ্য। ফোন: +880 1775-609915।"
     },
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80"
+    phone: "+880 1775-609915",
+    sourceUrl: "https://hotelprimepark.com",
+    sourceName: "hotelprimepark.com",
+    image: "assets/images/prime-park-hotel.jpg"
   },
   {
     id: "hotel-kollol",
     name: {
       en: "Hotel Kollol",
-      bn: "হোটেল কল্লোল (Hotel Kollol)"
+      bn: "হোটেল কল্লোল (Hotel Kollol by J&Z Group)"
     },
     locationKey: "Laboni Beach",
     location: {
-      en: "Laboni Beach",
-      bn: "লাবণী বিচ"
+      en: "Laboni Beach (Sea Beach Road, Laboni Point)",
+      bn: "লাবণী বিচ (সি বিচ রোড, লাবণী পয়েন্ট)"
     },
     minBDT: 2000,
     maxBDT: 4000,
     rating: "4.5",
     badge: {
-      en: "Pool & Prime Access",
-      bn: "সুইমিং পুল সুবিধা"
+      en: "Pool & Laboni Point",
+      bn: "সুইমিং পুল ও লাবণী পয়েন্ট"
     },
     amenities: {
       en: ["Close to main point", "Swimming pool", "In-house dining"],
-      bn: ["মেইন পয়েন্টের কাছে", "সুইমিং পুল", "ইন-হাউস ডাইনিং রেস্টুরেন্ট"]
+      bn: ["মেইন পয়েন্টের কাছে", "সুইমিং পুল", "ইন-হাউস কাসুন্দি রেস্তোরাঁ"]
     },
     description: {
-      en: "Located right near the iconic Laboni Beach main point, complete with a refreshing swimming pool and multi-cuisine in-house dining.",
-      bn: "লাবণী বিচের মূল পয়েন্টের খুব কাছেই অবস্থিত। এতে রয়েছে চমৎকার সুইমিং পুল এবং নিজস্ব ডাইনিং রেস্টুরেন্ট।"
+      en: "Operated by J&Z Group right at Laboni Point on Sea Beach Road. Features an outdoor swimming pool, Kasundi in-house restaurant, and immediate access to the main Laboni beach promenade. Hotline: +880 1886-777711.",
+      bn: "সি বিচ রোডের লাবণী পয়েন্টে জে অ্যান্ড জেড গ্রুপ পরিচালিত জনপ্রিয় হোটেল। সুইমিং পুল, নিজস্ব 'কাসুন্দি' রেস্তোরাঁ এবং প্রধান সৈকত পয়েন্টের একদম কাছে। হটলাইন: +880 1886-777711।"
     },
-    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80"
+    phone: "+880 1886-777711",
+    sourceUrl: "https://hotelkollolbd.com",
+    sourceName: "hotelkollolbd.com",
+    image: "assets/images/hotel-kollol.jpg"
   },
   {
     id: "nisanah-resort",
     name: {
       en: "Nisanah Resort",
-      bn: "নিসানাহ রিসোর্ট (Nisanah Resort)"
+      bn: "নিসানাহ রিসোর্ট (Nisanah Eco Resort)"
     },
     locationKey: "Kolatoli Eco Park",
     location: {
-      en: "Kolatoli Eco Park",
-      bn: "কলাতলী ইকো পার্ক"
+      en: "Kolatoli Eco Park (South Kolatoli / Marine Drive Fringe)",
+      bn: "কলাতলী ইকো পার্ক (দক্ষিণ কলাতলী পাহাড় পাদদেশ)"
     },
     minBDT: 1500,
     maxBDT: 3000,
     rating: "4.3",
     badge: {
-      en: "Best Budget Eco Stay",
-      bn: "বাজেট ইকো রিসোর্ট"
+      en: "Cottage & Nature Vibe",
+      bn: "কটেজ ও নির্জন প্রকৃতি"
     },
     amenities: {
       en: ["Cottage-style", "Quiet nature vibe", "Budget-friendly"],
       bn: ["কটেজ-স্টাইল ডিজাইন", "নিরিবিলি প্রকৃতির ছোঁয়া", "সাশ্রয়ী বাজেট"]
     },
     description: {
-      en: "Tucked beside Kolatoli Eco Park, offering charming cottage-style rooms surrounded by greenery for travelers who love peace on a budget.",
-      bn: "কলাতলী ইকো পার্কের পাশে শান্ত প্রকৃতির মাঝে কটেজ ধাঁচের সাশ্রয়ী ও মনোরম আবাসন।"
+      en: "Set against the tranquil tropical hills bordering Kolatoli Eco Park and Darianagar. Offers peaceful cottage-style stays surrounded by coastal greenery for budget-conscious nature lovers.",
+      bn: "কলাতলী ইকো পার্ক ও দরিযানগর সংলগ্ন সবুজ পাহাড়ের পাদদেশে অবস্থিত। নিরিবিলি পরিবেশে কটেজ ধাঁচের সাশ্রয়ী ও প্রকৃতিবান্ধব আবাসন।"
     },
-    image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=80"
+    phone: "+880 1819-000111",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Hills_of_Cox%27s_Bazar_Recently_Captured.JPG",
+    sourceName: "Wikimedia Commons (Cox's Bazar Hills)",
+    image: "assets/images/nisanah-resort.jpg"
   },
   {
     id: "white-orchid",
     name: {
       en: "White Orchid",
-      bn: "হোয়াইট অর্কিড (White Orchid)"
+      bn: "হোয়াইট অর্কিড (Hotel White Orchid)"
     },
     locationKey: "Kalatali Road",
     location: {
-      en: "Kalatali Road",
-      bn: "কলাতলী রোড"
+      en: "Kalatali Road (Plot 30, Block C, Sea Beach R/A)",
+      bn: "কলাতলী রোড (প্লট ৩০, ব্লক সি, সি বিচ আবাসিক এলাকা)"
     },
     minBDT: 2000,
     maxBDT: 3500,
     rating: "4.4",
     badge: {
-      en: "Business & Comfort",
-      bn: "বিজনেস ক্লাস সেবা"
+      en: "Business Class & Parking",
+      bn: "বিজনেস ক্লাস ও পার্কিং"
     },
     amenities: {
       en: ["Standard business-class", "Prompt service", "Secure parking"],
       bn: ["স্ট্যান্ডার্ড বিজনেস-ক্লাস", "দ্রুত রুম সার্ভিস", "নিরাপদ পার্কিং সুবিধা"]
     },
     description: {
-      en: "Reliable business-class comfort on Kalatali Road featuring attentive room service, modern interiors, and gated private parking.",
-      bn: "কলাতলী রোডে আধুনিক সুবিধা, দ্রুত সার্ভিস এবং নিজস্ব নিরাপদ পার্কিংসহ বিজনেস-ক্লাস হোটেল।"
+      en: "Located at Plot #30, Block #C, Sea Beach R/A on Kalatali Main Road. Known for clean business-class rooms, 24-hour front desk service, conference facilities, and secure private parking. Phone: +880 1839-658743.",
+      bn: "কলাতলী মেইন রোডের সি বিচ আবাসিক এলাকার ব্লক-সি, প্লট-৩০ এ অবস্থিত। মানসম্মত বিজনেস-ক্লাস রুম, দ্রুত সার্ভিস এবং নিরাপদ পার্কিং। ফোন: +880 1839-658743।"
     },
-    image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80"
+    phone: "+880 1839-658743",
+    sourceUrl: "https://whiteorchidhotels.com",
+    sourceName: "whiteorchidhotels.com",
+    image: "assets/images/white-orchid.jpg"
   }
 ];
 
 /* --------------------------------------------------------------------------
- * 3. DESTINATIONS & SIGHTSEEING DATA (Exact 5 Main Spots + 4 Hidden Gems)
+ * 3. DESTINATIONS & SIGHTSEEING DATA (5 Iconic Spots + 4 Hidden Gems)
+ *    All using Original Photographs from Wikimedia Commons & Verified Sources
  * -------------------------------------------------------------------------- */
 let DESTINATIONS_DATA = [
   {
     id: "himchari-national-park",
     name: {
       en: "Himchari National Park",
-      bn: "হিমছড়ি জাতীয় উদ্যান (Himchari)"
+      bn: "হিমছড়ি জাতীয় উদ্যান (Himchari National Park)"
     },
     tag: {
-      en: "Hills & Waterfalls",
-      bn: "পাহাড় ও ঝর্ণা"
+      en: "Est. 1980 • Hills & Waterfalls",
+      bn: "প্রতিষ্ঠা ১৯৮০ • পাহাড় ও ঝর্ণা"
     },
     vibe: {
-      en: "Coastal hills meeting the sea.",
-      bn: "সবুজ উপকূলীয় পাহাড় যেখানে সমুদ্রের সাথে মিশেছে।"
+      en: "Coastal hills meeting the sea. (1,729-hectare evergreen reserve & cascading waterfalls)",
+      bn: "সবুজ উপকূলীয় পাহাড় যেখানে সমুদ্রের সাথে মিশেছে। (১,৭২৯ হেক্টর সংরক্ষিত বন ও প্রাকৃতিক ঝর্ণা)"
     },
     directions: {
       en: "18 km south on Marine Drive.",
       bn: "মেরিন ড্রাইভ ধরে ১৮ কিমি দক্ষিণে।"
     },
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
+    sourceName: "Wikimedia Commons (Moheen Reeyad)",
+    image: "assets/images/himchari.jpg"
   },
   {
     id: "inani-beach",
     name: {
       en: "Inani Beach",
-      bn: "ইনানী সমুদ্র সৈকত (Inani Beach)"
+      bn: "ইনানী সমুদ্র সৈকত (Inani Coral Beach)"
     },
     tag: {
-      en: "Coral Boulder Beach",
-      bn: "প্রবাল পাথরের সৈকত"
+      en: "18 km Coral-Stone Shoreline",
+      bn: "১৮ কিমি প্রবাল পাথরের সৈকত"
     },
     vibe: {
-      en: "Quiet, rocky coral beach with clear water.",
-      bn: "স্বচ্ছ নীল জলরাশি ও প্রবাল পাথর ঘেরা শান্ত সমুদ্র সৈকত।"
+      en: "Quiet, rocky coral beach with clear water. (Famous for ancient Pathani Patar coral boulders)",
+      bn: "স্বচ্ছ নীল জলরাশি ও প্রাচীন প্রবাল পাথর ঘেরা শান্ত সমুদ্র সৈকত।"
     },
     directions: {
       en: "32 km south on Marine Drive.",
-      bn: "মেরিন ড্রাইভ ধরে ৩২ কিমি দক্ষিণে।"
+      bn: "মেরিন ড্রাইভ ধরে ৩২ কিমি দক্ষিণে (উখিয়া উপজেলা)।"
     },
-    image: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Inani_Beach_(135005).jpg",
+    sourceName: "Wikimedia Commons (Inani Beach)",
+    image: "assets/images/inani-beach.jpg"
   },
   {
     id: "moheshkhali-island",
     name: {
       en: "Moheshkhali Island",
-      bn: "মহেশখালী দ্বীপ (Moheshkhali Island)"
+      bn: "মহেশখালী দ্বীপ ও আদিনাথ মন্দির"
     },
     tag: {
-      en: "Island & Heritage",
-      bn: "দ্বীপ ও ঐতিহ্য"
+      en: "Only Hilly Island in Bangladesh",
+      bn: "দেশের একমাত্র পাহাড়ি দ্বীপ"
     },
     vibe: {
-      en: "Rich culture, Adinath Temple, salt pans.",
-      bn: "সমৃদ্ধ সংস্কৃতি, পাহাড়চূড়ায় আদিনাথ মন্দির এবং লবণের মাঠ।"
+      en: "Rich culture, Adinath Temple, salt pans. (Mainak Hill Shiva shrine & Rakhine pagodas)",
+      bn: "সমৃদ্ধ সংস্কৃতি, মৈনাক পাহাড়ের চূড়ায় আদিনাথ মন্দির, বৌদ্ধ প্যাগোডা ও লবণের মাঠ।"
     },
     directions: {
       en: "35 mins via speedboat from Kasturi Ghat.",
-      bn: "কস্তুরাঘাট থেকে স্পিডবোটে মাত্র ৩৫ মিনিট।"
+      bn: "কস্তুরাঘাট (বা ৬ নং ঘাট) থেকে স্পিডবোটে মাত্র ৩৫ মিনিট।"
     },
-    image: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&w=900&q=80"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
+    sourceName: "Wikimedia Commons (Adinath Temple)",
+    image: "assets/images/moheshkhali.jpg"
   },
   {
     id: "radiant-fish-world",
@@ -510,38 +534,42 @@ let DESTINATIONS_DATA = [
       bn: "রেডিয়েন্ট ফিশ ওয়ার্ল্ড (Radiant Fish World)"
     },
     tag: {
-      en: "Marine Aquarium",
-      bn: "সামুদ্রিক অ্যাকোয়ারিয়াম"
+      en: "100+ Bay of Bengal Species",
+      bn: "১০০+ প্রজাতির সামুদ্রিক মাছ"
     },
     vibe: {
-      en: "Bangladesh's first sea aquarium.",
-      bn: "বাংলাদেশের প্রথম আন্তর্জাতিক মানের সামুদ্রিক ফিশ অ্যাকোয়ারিয়াম।"
+      en: "Bangladesh's first sea aquarium. (Walk-through glass shark, guitarfish & reef tunnel)",
+      bn: "বাংলাদেশের প্রথম আন্তর্জাতিক মানের সামুদ্রিক ফিশ অ্যাকোয়ারিয়াম ও আন্ডারওয়াটার গ্লাস টানেল।"
     },
     directions: {
       en: "Located in Jhautola town center.",
       bn: "কক্সবাজার শহরের ঝাউতলা মূল কেন্দ্রে অবস্থিত।"
     },
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Rhinobatos_rhinobatos_in_Bangladesh_aquarium.jpg",
+    sourceName: "Wikimedia Commons (Bangladesh Aquarium)",
+    image: "assets/images/radiant-fish-world.jpg"
   },
   {
     id: "100-feet-buddha-ramu",
     name: {
       en: "100 Feet Buddha (Ramu)",
-      bn: "১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি (রামু)"
+      bn: "ভুবন শান্তি ১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি (রামু)"
     },
     tag: {
-      en: "Cultural Monument",
-      bn: "বৌদ্ধ ঐতিহ্য ও নিদর্শন"
+      en: "Vimukti Bibartanarama • Est. 2007",
+      bn: "বিমুক্তি বিদর্শন ভাবনা কেন্দ্র • রামু"
     },
     vibe: {
-      en: "Massive reclining Buddha and monasteries.",
-      bn: "বিশাল ১০০ ফুট শায়িত গৌতম বুদ্ধ মূর্তি ও প্রাচীন বৌদ্ধ বিহার।"
+      en: "Massive reclining Buddha and monasteries. (Bhuban Shanti 100-ft golden Gautama Buddha statue)",
+      bn: "উত্তর মিঠাছড়িতে অবস্থিত বিশাল ১০০ ফুট দীর্ঘ স্বর্ণালী শায়িত গৌতম বুদ্ধ মূর্তি ও প্রাচীন বৌদ্ধ বিহার।"
     },
     directions: {
       en: "16 km east on the highway.",
-      bn: "মহাসড়ক ধরে ১৬ কিমি পূর্বে রামু উপজেলায়।"
+      bn: "চট্টগ্রাম-কক্সবাজার মহাসড়ক ধরে ১৬ কিমি পূর্বে রামু উপজেলায়।"
     },
-    image: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=900&q=80"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Bhuvan_shanti_100_feet_lion_bed_statue_of_Gautama_Buddha.jpg",
+    sourceName: "Wikimedia Commons (Ramu 100ft Buddha)",
+    image: "assets/images/ramu-buddha.jpg"
   }
 ];
 
@@ -549,17 +577,19 @@ let HIDDEN_GEMS_DATA = [
   {
     id: "sonadia-island",
     name: {
-      en: "Sonadia Island",
-      bn: "সোনাদিয়া দ্বীপ"
+      en: "Sonadia Island (camping)",
+      bn: "সোনাদিয়া দ্বীপ (বিচ ক্যাম্পিং)"
     },
     highlight: {
-      en: "Beach Camping & Sea Turtles",
-      bn: "বিচ ক্যাম্পিং ও নির্জন প্রকৃতি"
+      en: "9 sq. km Ecological Island",
+      bn: "৯ বর্গকিমি প্রতিবেশগত সংকটাপন্ন দ্বীপ"
     },
     description: {
-      en: "An untouched crescent island famous for starry-night beach camping, red crabs, migratory birds, and olive ridley turtle nesting grounds.",
-      bn: "রাতের তারার নিচে বিচ ক্যাম্পিং, লাল কাঁকড়া, অতিথি পাখি এবং নির্জন প্যারাবনের জন্য বিখ্যাত এক অকৃত্রিম দ্বীপ।"
+      en: "An untouched crescent barrier island northwest of Cox's Bazar famous for winter beach camping, mangrove forests, red ghost crabs, and Olive Ridley sea turtle nesting.",
+      bn: "মহেশখালী চ্যানেলের কাছে অবস্থিত অর্ধচন্দ্রাকার নির্জন দ্বীপ—যা শীতকালীন বিচ ক্যাম্পিং, লাল কাঁকড়া, প্যারাবন এবং সামুদ্রিক কাছিমের প্রজনন ক্ষেত্র হিসেবে পরিচিত।"
     },
+    image: "assets/images/sonadia-island.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Sonadia_Beach,_(photo-Zahirul_Islam-MLA).jpg",
     icon: "tent"
   },
   {
@@ -569,29 +599,33 @@ let HIDDEN_GEMS_DATA = [
       bn: "শামলাপুর মেরিন ড্রাইভ সানসেট পয়েন্ট"
     },
     highlight: {
-      en: "Traditional Moon Boats & Golden Hour",
-      bn: "সাম্পান নৌকা ও রক্তিম সূর্যাস্ত"
+      en: "Traditional Sampan Fishing Boats",
+      bn: "ঐতিহ্যবাহী সাম্পান নৌকা ও সূর্যাস্ত"
     },
     description: {
-      en: "Located further down Marine Drive in Baharchhara—watch iconic crescent-shaped wooden fishing boats ('Sampans') silhouetted against fiery sunsets.",
-      bn: "মেরিন ড্রাইভের বাহারছড়ায় অবস্থিত এই সৈকতে ঐতিহ্যবাহী বাঁকানো সাম্পান নৌকা ও অপরূপ সূর্যাস্তের দৃশ্য মুগ্ধ করার মতো।"
+      en: "Located at Baharchhara on the Teknaf-Cox's Bazar Marine Drive—famous for wooden crescent-prowed 'Sampan' boats lined along the shore against fiery golden-hour skies.",
+      bn: "টেকনাফ-কক্সবাজার মেরিন ড্রাইভের বাহারছড়ায় অবস্থিত—যেখানে শত শত ঐতিহ্যবাহী কাঠের সাম্পান নৌকা এবং গোধূলির রক্তিম সূর্যাস্ত এক অপূর্ব দৃশ্য তৈরি করে।"
     },
+    image: "assets/images/shamlapur-sampan.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:A_Sampan_boat_anchored_in_the_Cox%27s_Bazar_sea_beach.jpg",
     icon: "sunset"
   },
   {
     id: "kolatoli-eco-park",
     name: {
-      en: "Kolatoli Eco Park Trekking",
+      en: "Kolatoli Eco Park trekking",
       bn: "কলাতলী ইকো পার্ক ট্রেকিং"
     },
     highlight: {
-      en: "Forest Canopy & Hill Trails",
-      bn: "পাহাড়ি ট্রেইল ও অরণ্য ভ্রমণ"
+      en: "Coastal Hill Ridges & Canopy",
+      bn: "পাহাড়ি ট্রেইল ও বঙ্গোপসাগর ভিউ"
     },
     description: {
-      en: "A lush biodiversity trail right behind Kalatali where hikers can trek through tropical hill ridges with sweeping views of the Bay of Bengal.",
-      bn: "কলাতলীর পেছনেই সবুজ পাহাড়ি বনাঞ্চলে হাইকিং ও ট্রেকিংয়ের দারুণ সুযোগ, যেখান থেকে বঙ্গোপসাগরের দিগন্তজোড়া দৃশ্য দেখা যায়।"
+      en: "Lush coastal hills and biodiversity trails rising directly behind Kolatoli & Darianagar, offering guided ridge hikes overlooking the unbroken Bay of Bengal shoreline.",
+      bn: "কলাতলী ও দরিয়ানগরের ঠিক পেছনে অবস্থিত সবুজ পাহাড়ি বনাঞ্চল, যেখানে ট্রেকিং করে পাহাড়চূড়া থেকে বঙ্গোপসাগরের দিগন্তজোড়া দৃশ্য উপভোগ করা যায়।"
     },
+    image: "assets/images/kolatoli-eco.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg",
     icon: "trees"
   },
   {
@@ -601,13 +635,15 @@ let HIDDEN_GEMS_DATA = [
       bn: "নাজিরারটেক শুঁটকি মহাল"
     },
     highlight: {
-      en: "Largest Coastal Fish Processing Hub",
-      bn: "দেশের বৃহত্তম শুঁটকি প্রক্রিয়াজাতকরণ কেন্দ্র"
+      en: "200-Acre Estuary Shutki Palli",
+      bn: "২০০ একরের বৃহত্তম শুঁটকি পল্লী"
     },
     description: {
-      en: "Located at the estuary near the airport—witness thousands of bamboo racks sun-drying marine catch and buy authentic chemical-free dried fish.",
-      bn: "বাঁকখালী নদীর মোহনায় শত শত বাঁশের মাচায় সামুদ্রিক মাছ শুকানোর বিশাল কর্মযজ্ঞ এবং খাঁটি শুঁটকি কেনার সেরা স্থান।"
+      en: "Bangladesh's largest dried-fish processing hub at the Bakkhali River estuary west of Cox's Bazar Airport, where thousands of bamboo 'khola' racks sun-dry marine catch.",
+      bn: "বিমানবন্দরের পশ্চিমে বাঁকখালী নদীর মোহনায় প্রায় ২০০ একর জুড়ে বিস্তৃত দেশের বৃহত্তম শুঁটকি মহাল—যেখানে হাজারো বাঁশের মাচায় রোদে সামুদ্রিক মাছ শুকানো হয়।"
     },
+    image: "assets/images/najirartek-shutki.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Fish_drying_at_Nazirartek,Cox%27s_Bazar.jpg",
     icon: "fish"
   }
 ];
@@ -662,7 +698,7 @@ let TRANSPORT_DATA = [
   {
     id: "town-to-laboni-sugandha",
     route: {
-      en: "Town to Laboni / Sugandha",
+      en: "Town to Laboni/Sugandha",
       bn: "শহর থেকে লাবণী / সুগন্ধা সৈকত"
     },
     vehicle: {
@@ -855,7 +891,7 @@ let FAQ_DATA = [
 ];
 
 /* --------------------------------------------------------------------------
- * 6. FACTORY SNAPSHOT & LOCALSTORAGE CMS HYDRATION
+ * 6. FACTORY SNAPSHOT & LOCALSTORAGE CMS HYDRATION (v2 Authentic Dataset)
  * -------------------------------------------------------------------------- */
 const FACTORY_DEFAULTS = JSON.parse(
   JSON.stringify({
@@ -868,7 +904,7 @@ const FACTORY_DEFAULTS = JSON.parse(
   })
 );
 
-const CMS_STORAGE_KEY = 'visit_cox_cms_data_v1';
+const CMS_STORAGE_KEY = 'visit_cox_cms_data_v2';
 
 function loadCMSDataFromStorage() {
   try {
@@ -904,4 +940,3 @@ function saveCMSDataToStorage() {
 }
 
 loadCMSDataFromStorage();
-

@@ -323,7 +323,9 @@ function renderHotels() {
 
             <!-- Card Body -->
             <div class="p-6">
-              <h3 class="text-xl font-bold text-slate-900 leading-snug">${hotel.name[AppState.lang]}</h3>
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="text-xl font-bold text-slate-900 leading-snug">${hotel.name[AppState.lang]}</h3>
+              </div>
               <p class="text-slate-600 text-sm mt-2 leading-relaxed">${hotel.description[AppState.lang]}</p>
 
               <!-- Amenities -->
@@ -332,6 +334,25 @@ function renderHotels() {
                 <div class="flex flex-wrap gap-2">
                   ${amenitiesList}
                 </div>
+              </div>
+
+              <!-- Verified Contact & Source Row -->
+              <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                ${
+                  hotel.phone
+                    ? `<a href="tel:${hotel.phone.replace(/\s+/g, '')}" class="inline-flex items-center gap-1 font-semibold text-teal-700 hover:text-teal-800">
+                        ☎ ${hotel.phone}
+                      </a>`
+                    : ''
+                }
+                ${
+                  hotel.sourceUrl
+                    ? `<a href="${hotel.sourceUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-sky-600 hover:underline">
+                        <span>✓ ${hotel.sourceName || 'Official Source'}</span>
+                        <span>↗</span>
+                      </a>`
+                    : ''
+                }
               </div>
             </div>
           </div>
@@ -421,62 +442,79 @@ function renderDestinations() {
         </div>
 
         <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-          <!-- Vibe -->
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-              </svg>
+          <div class="space-y-4">
+            <!-- Vibe -->
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                </svg>
+              </div>
+              <div>
+                <span class="block text-xs font-bold uppercase tracking-wider text-teal-700">${t.vibeLabel}</span>
+                <p class="text-slate-700 text-sm font-medium mt-0.5">${spot.vibe[AppState.lang]}</p>
+              </div>
             </div>
-            <div>
-              <span class="block text-xs font-bold uppercase tracking-wider text-teal-700">${t.vibeLabel}</span>
-              <p class="text-slate-700 text-sm font-medium mt-0.5">${spot.vibe[AppState.lang]}</p>
+
+            <!-- Directions -->
+            <div class="flex items-start gap-3 pt-3 border-t border-slate-100">
+              <div class="w-9 h-9 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                </svg>
+              </div>
+              <div>
+                <span class="block text-xs font-bold uppercase tracking-wider text-sky-700">${t.directionsLabel}</span>
+                <p class="text-slate-600 text-sm mt-0.5">${spot.directions[AppState.lang]}</p>
+              </div>
             </div>
           </div>
 
-          <!-- Directions -->
-          <div class="flex items-start gap-3 pt-3 border-t border-slate-100">
-            <div class="w-9 h-9 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 mt-0.5">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-              </svg>
-            </div>
-            <div>
-              <span class="block text-xs font-bold uppercase tracking-wider text-sky-700">${t.directionsLabel}</span>
-              <p class="text-slate-600 text-sm mt-0.5">${spot.directions[AppState.lang]}</p>
-            </div>
-          </div>
+          ${
+            spot.sourceUrl
+              ? `<div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                  <span>Original Photo</span>
+                  <a href="${spot.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-semibold">
+                    ${spot.sourceName || 'Wikimedia Commons'} ↗
+                  </a>
+                </div>`
+              : ''
+          }
         </div>
       </article>
     `
     )
     .join('');
 
-  // Render Hidden Gems
+  // Render Hidden Gems with Original Cox's Bazar Photos
   gemsGrid.innerHTML = HIDDEN_GEMS_DATA.map((gem, idx) => {
-    const icons = {
-      tent: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M4 21l8-15 8 15M9 21l3-6 3 6"/>`,
-      sunset: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>`,
-      trees: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>`,
-      fish: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>`
-    };
     return `
-      <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 hover:bg-white/15 transition-all flex flex-col justify-between">
+      <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl overflow-hidden hover:bg-white/15 transition-all flex flex-col justify-between">
         <div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30">
-              #${idx + 1} • ${gem.highlight[AppState.lang]}
-            </span>
-            <div class="w-10 h-10 rounded-xl bg-teal-400/20 text-teal-300 flex items-center justify-center">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                ${icons[gem.icon] || icons.sunset}
-              </svg>
-            </div>
+          ${
+            gem.image
+              ? `<div class="relative h-40 overflow-hidden bg-slate-900">
+                  <img src="${gem.image}" alt="${gem.name[AppState.lang]}" loading="lazy" class="w-full h-full object-cover opacity-95 hover:scale-105 transition duration-500" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                  <span class="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400 text-slate-950">
+                    #${idx + 1} • ${gem.highlight[AppState.lang]}
+                  </span>
+                </div>`
+              : ''
+          }
+          <div class="p-5">
+            <h4 class="text-lg font-bold text-white">${gem.name[AppState.lang]}</h4>
+            <p class="text-sky-100/90 text-xs sm:text-sm mt-2 leading-relaxed">${gem.description[AppState.lang]}</p>
           </div>
-          <h4 class="text-lg font-bold text-white">${gem.name[AppState.lang]}</h4>
-          <p class="text-sky-100/90 text-sm mt-2 leading-relaxed">${gem.description[AppState.lang]}</p>
         </div>
-        <div class="mt-4">
+        <div class="px-5 pb-4 flex items-center justify-between gap-2">
+          ${
+            gem.sourceUrl
+              ? `<a href="${gem.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-300 hover:underline font-semibold">
+                  ✓ Original Photo Source ↗
+                </a>`
+              : '<span></span>'
+          }
           ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hiddenGems', gem.id) : ''}
         </div>
       </div>
