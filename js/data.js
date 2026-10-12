@@ -136,16 +136,19 @@ const UI_TEXT = {
       subtitle: "Quick, verified answers to the most common questions from domestic and international travelers."
     },
     chatbot: {
-      title: "Cox's Bazar Travel Assistant",
-      status: "Online • Verified Local Data",
-      welcome: "Hello! I can help you with hotel prices, transport routes, and tourist spots in Cox's Bazar. What do you need help with today?",
-      inputPlaceholder: "Ask about hotels, Tomtoms, Inani, fares...",
+      title: "Cox's Bazar Smart AI Guide",
+      status: "Online • Specific Local Prices, Routes & Contacts",
+      welcome: "Hello! Ask me anything specific—like 'Sea Crown phone & price', 'Cheapest hotel', 'How to reach Ramu or Inani', 'Best seafood at Poushee', 'Marine Drive bike rental', or 'My trip budget'!",
+      inputPlaceholder: "Ask specific hotel, spot, fare, restaurant, or route...",
       sendBtn: "Send",
       quickPrompts: [
-        "Hotel prices & contacts",
-        "How to reach Inani?",
-        "What is Tomtom & Chander Gari?",
-        "Best time to visit?"
+        "Cheapest hotel?",
+        "Hotel Sea Crown details",
+        "Inani & Himchari route",
+        "Best seafood & Poushee?",
+        "Marine Drive bike cost?",
+        "My trip budget?",
+        "Emergency numbers"
       ]
     },
     footer: {
@@ -274,16 +277,19 @@ const UI_TEXT = {
       subtitle: "কক্সবাজার ভ্রমণ সম্পর্কে দেশি ও বিদেশি পর্যটকদের সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্নের প্রামাণ্য উত্তর।"
     },
     chatbot: {
-      title: "Cox's Bazar Travel Assistant",
-      status: "অনলাইন • প্রামাণ্য তথ্যভান্ডার",
-      welcome: "Hello! I can help you with hotel prices, transport routes, and tourist spots in Cox's Bazar. What do you need help with today?",
-      inputPlaceholder: "হোটেল ভাড়া, ইনানী, টমটম বা দর্শনীয় স্থান সম্পর্কে লিখুন...",
+      title: "Cox's Bazar Smart AI Guide",
+      status: "অনলাইন • সুনির্দিষ্ট ভাড়া, রুট ও হোটেল তথ্য",
+      welcome: "স্বাগতম! আমাকে যেকোনো নির্দিষ্ট প্রশ্ন করুন—যেমন: 'সী ক্রাউন হোটেলের ভাড়া ও ফোন', 'সবচেয়ে কম দামের হোটেল', 'ইনানী বা রামু কীভাবে যাব', 'পৌষী রেস্তোরাঁর খাবার খরচ', 'মেরিন ড্রাইভে বাইক ভাড়া', বা 'আমার ট্রিপ বাজেট কত'!",
+      inputPlaceholder: "নির্দিষ্ট হোটেল, স্পট, ভাড়া, খাবার বা রুট সম্পর্কে লিখুন...",
       sendBtn: "পাঠান",
       quickPrompts: [
-        "হোটেলের ভাড়া ও ফোন নাম্বার",
-        "ইনানী সৈকতে কীভাবে যাব?",
-        "টমটম ও চান্দের গাড়ি কী?",
-        "ভ্রমণের সেরা সময় কোনটি?"
+        "সবচেয়ে সস্তা হোটেল কোনটি?",
+        "হোটেল সী ক্রাউন বিস্তারিত",
+        "ইনানী ও হিমছড়ি রুট",
+        "পৌষী ও সেরা সি-ফুড কোথায়?",
+        "মেরিন ড্রাইভে বাইক ভাড়া?",
+        "আমার ট্রিপ বাজেট কত?",
+        "জরুরি পুলিশ ও হাসপাতাল নাম্বার"
       ]
     },
     footer: {

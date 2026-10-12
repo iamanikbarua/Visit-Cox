@@ -1442,12 +1442,20 @@ function renderChatQuickPrompts() {
       <button
         type="button"
         onclick="handleUserChatSubmission('${prompt.replace(/'/g, "\\'")}')"
-        class="text-xs bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 px-3 py-1.5 rounded-full font-medium transition">
+        class="text-xs bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 px-3 py-1.5 rounded-full font-semibold whitespace-nowrap transition cursor-pointer">
         ${prompt}
       </button>
     `
     )
     .join('');
+}
+
+function escapeUserChatHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function appendChatMessage(sender, htmlText) {
@@ -1459,7 +1467,7 @@ function appendChatMessage(sender, htmlText) {
     wrapper.className = 'flex justify-end';
     wrapper.innerHTML = `
       <div class="max-w-[82%] bg-sky-700 text-white px-4 py-2.5 rounded-2xl rounded-br-xs text-sm shadow-sm">
-        ${htmlText}
+        ${escapeUserChatHTML(htmlText)}
       </div>
     `;
   } else {
@@ -1468,7 +1476,7 @@ function appendChatMessage(sender, htmlText) {
       <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-600 to-teal-500 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
         CB
       </div>
-      <div class="max-w-[84%] bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-xs text-sm leading-relaxed shadow-xs">
+      <div class="max-w-[88%] bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-xs text-xs sm:text-sm leading-relaxed shadow-xs space-y-2">
         ${htmlText}
       </div>
     `;
@@ -1478,58 +1486,873 @@ function appendChatMessage(sender, htmlText) {
   messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
+function buildChatFollowUpChips(chips) {
+  if (!Array.isArray(chips) || !chips.length) return '';
+  return `
+    <div class="pt-2 mt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+      ${chips
+        .map(
+          c => `
+          <button
+            type="button"
+            onclick="handleUserChatSubmission('${c.replace(/'/g, "\\'")}')"
+            class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer"
+          >
+            💬 ${c}
+          </button>
+        `
+        )
+        .join('')}
+    </div>
+  `;
+}
+
+function buildSingleHotelChatCard(hotel, lang) {
+  const priceStr = formatPriceRange(hotel.minBDT, hotel.maxBDT);
+  const amenitiesStr = (hotel.amenities[lang] || []).join(' • ');
+  return `
+    <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-1.5">
+      <div class="flex items-center gap-2.5">
+        <img src="${hotel.image}" alt="${hotel.name[lang]}" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between gap-1">
+            <strong class="text-slate-900 text-xs sm:text-sm truncate">${hotel.name[lang]}</strong>
+            <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-extrabold shrink-0">★ ${hotel.rating}</span>
+          </div>
+          <div class="text-xs font-extrabold text-teal-700">${priceStr} <span class="font-normal text-slate-500">/${lang === 'en' ? 'night' : 'রাত'}</span></div>
+        </div>
+      </div>
+      <div class="text-[11px] text-slate-600">
+        📍 <strong>${lang === 'en' ? 'Location:' : 'অবস্থান:'}</strong> ${hotel.location[lang]}
+      </div>
+      <div class="text-[11px] text-slate-600">
+        ✨ <strong>${lang === 'en' ? 'Amenities:' : 'সুবিধা:'}</strong> ${amenitiesStr}
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-1.5 pt-1">
+        ${
+          hotel.phone
+            ? `<a href="tel:${hotel.phone.replace(/\s+/g, '')}" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition">
+                📞 ${hotel.phone}
+              </a>`
+            : ''
+        }
+        <button
+          type="button"
+          onclick="if(typeof selectItineraryHotel==='function'){selectItineraryHotel('${hotel.id}', true);}"
+          class="px-2.5 py-1 rounded-lg bg-ocean-950 hover:bg-sky-800 text-amber-300 text-[11px] font-bold transition cursor-pointer"
+        >
+          🏨 ${lang === 'en' ? 'Use in My Trip Plan' : 'ট্রিপ প্ল্যানে নিন'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 /**
  * ============================================================================
- * AI BACKEND INTEGRATION HOOK
+ * INTELLIGENT MULTI-INTENT & SPECIFIC ENTITY TRAVEL ASSISTANT ENGINE
  * ============================================================================
  */
 async function fetchTravelAssistantReply(userText) {
-  const q = userText.toLowerCase();
+  const raw = userText.trim();
+  const q = raw.toLowerCase();
+  const lang = AppState.lang;
+  const fmtSingle = bdt => formatPriceRange(bdt, bdt);
 
-  // Simulate natural assistant thinking delay (450ms)
-  await new Promise(resolve => setTimeout(resolve, 450));
+  // Short natural thinking delay
+  await new Promise(resolve => setTimeout(resolve, 320));
 
-  // Smart Contextual Matcher from our exact dataset
-  if (q.includes('hotel') || q.includes('stay') || q.includes('price') || q.includes('হোটেল') || q.includes('ভাড়া') || q.includes('sea crown') || q.includes('kollol') || q.includes('nisanah') || q.includes('orchid') || q.includes('prime park')) {
-    const lines = HOTELS_DATA.map(
-      h => `• <strong>${h.name[AppState.lang]}</strong> (${h.location[AppState.lang]}): ${formatPriceRange(h.minBDT, h.maxBDT)}/night`
+  // --------------------------------------------------------------------------
+  // 1. CHECK FOR SPECIFIC HOTEL BY NAME FIRST (Never dump generic list if user asks about 1 hotel!)
+  // --------------------------------------------------------------------------
+  const hotelAliasMap = [
+    { id: 'hotel-sea-crown', keys: ['sea crown', 'seacrown', 'সী ক্রাউন', 'সি ক্রাউন'] },
+    { id: 'prime-park-hotel', keys: ['prime park', 'primepark', 'প্রাইম পার্ক'] },
+    { id: 'hotel-kollol', keys: ['kollol', 'কল্লোল', 'kasundi', 'কাসুন্দি'] },
+    { id: 'nisanah-resort', keys: ['nisanah', 'নিসানাহ'] },
+    { id: 'white-orchid', keys: ['white orchid', 'whiteorchid', 'হোয়াইট অর্কিড', 'অর্কিড'] }
+  ];
+
+  const matchedSpecificHotels = [];
+  hotelAliasMap.forEach(entry => {
+    if (entry.keys.some(k => q.includes(k))) {
+      const found = HOTELS_DATA.find(h => h.id === entry.id);
+      if (found) matchedSpecificHotels.push(found);
+    }
+  });
+
+  if (matchedSpecificHotels.length > 0) {
+    const cards = matchedSpecificHotels.map(h => buildSingleHotelChatCard(h, lang)).join('');
+    const h0 = matchedSpecificHotels[0];
+    const leadText =
+      lang === 'en'
+        ? `Here are the specific verified details for <strong>${h0.name.en}</strong>:`
+        : `<strong>${h0.name.bn}</strong>-এর সুনির্দিষ্ট তথ্য নিচে দেওয়া হলো:`;
+
+    return `
+      <div>${leadText}</div>
+      <div class="space-y-2">${cards}</div>
+      ${buildChatFollowUpChips(
+        lang === 'en'
+          ? ['Cheapest hotel?', 'Hotels near Laboni Beach', 'My trip budget?']
+          : ['সবচেয়ে সস্তা হোটেল কোনটি?', 'লাবণী বিচের হোটেল', 'আমার ট্রিপ বাজেট কত?']
+      )}
+    `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 2. SPECIFIC HOTEL COMPARISON / FILTER INTENTS (Cheapest, Pool, Beachfront, Area)
+  // --------------------------------------------------------------------------
+  const isAskingHotel =
+    q.includes('hotel') ||
+    q.includes('resort') ||
+    q.includes('stay') ||
+    q.includes('room') ||
+    q.includes('accommodation') ||
+    q.includes('হোটেল') ||
+    q.includes('রিসোর্ট') ||
+    q.includes('থাকার') ||
+    q.includes('রুম');
+
+  const isAskingCheap =
+    q.includes('cheap') ||
+    q.includes('budget') ||
+    q.includes('low price') ||
+    q.includes('lowest') ||
+    q.includes('affordable') ||
+    q.includes('সস্তা') ||
+    q.includes('কম দামে') ||
+    q.includes('সাশ্রয়ী');
+
+  if (isAskingCheap && (isAskingHotel || !q.includes('food'))) {
+    const sortedCheap = [...HOTELS_DATA].sort((a, b) => a.minBDT - b.minBDT).slice(0, 2);
+    const cheapest = sortedCheap[0];
+    const second = sortedCheap[1];
+    return lang === 'en'
+      ? `
+        <div>💡 <strong>Most Budget-Friendly Hotels in Cox's Bazar:</strong></div>
+        <div>The most affordable option is <strong>${cheapest.name.en}</strong> starting at <strong>${formatPriceRange(cheapest.minBDT, cheapest.maxBDT)}/night</strong>, followed by <strong>${second.name.en}</strong> (${formatPriceRange(second.minBDT, second.maxBDT)}/night):</div>
+        <div class="space-y-2">${sortedCheap.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
+        ${buildChatFollowUpChips(['Beachfront hotel?', 'Hotel with swimming pool?', 'My trip budget?'])}
+      `
+      : `
+        <div>💡 <strong>কক্সবাজারের সবচেয়ে সাশ্রয়ী হোটেল:</strong></div>
+        <div>সবচেয়ে কম ভাড়ায় রয়েছে <strong>${cheapest.name.bn}</strong> (প্রতি রাত <strong>${formatPriceRange(cheapest.minBDT, cheapest.maxBDT)}</strong>) এবং <strong>${second.name.bn}</strong> (${formatPriceRange(second.minBDT, second.maxBDT)}):</div>
+        <div class="space-y-2">${sortedCheap.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
+        ${buildChatFollowUpChips(['সৈকত সংলগ্ন হোটেল?', 'সুইমিং পুলসহ হোটেল?', 'আমার ট্রিপ বাজেট কত?'])}
+      `;
+  }
+
+  if (q.includes('pool') || q.includes('পুল') || q.includes('সুইমিং')) {
+    const kollol = HOTELS_DATA.find(h => h.id === 'hotel-kollol') || HOTELS_DATA[0];
+    return lang === 'en'
+      ? `
+        <div>🏊 <strong>Hotel with Swimming Pool:</strong></div>
+        <div><strong>${kollol.name.en}</strong> at Laboni Point features an outdoor swimming pool, in-house Kasundi restaurant, and immediate access to Laboni Beach:</div>
+        ${buildSingleHotelChatCard(kollol, lang)}
+        ${buildChatFollowUpChips(['Hotel Sea Crown details', 'Cheapest hotel?', 'Laboni Beach info'])}
+      `
+      : `
+        <div>🏊 <strong>সুইমিং পুলসহ হোটেল:</strong></div>
+        <div>লাবণী পয়েন্টে অবস্থিত <strong>${kollol.name.bn}</strong>-এ সুইমিং পুল এবং নিজস্ব কাসুন্দি রেস্তোরাঁ রয়েছে:</div>
+        ${buildSingleHotelChatCard(kollol, lang)}
+        ${buildChatFollowUpChips(['হোটেল সী ক্রাউন বিস্তারিত', 'সবচেয়ে সস্তা হোটেল কোনটি?'])}
+      `;
+  }
+
+  if (
+    isAskingHotel &&
+    (q.includes('beachfront') ||
+      q.includes('sea view') ||
+      q.includes('ocean') ||
+      q.includes('best') ||
+      q.includes('family') ||
+      q.includes('সৈকত') ||
+      q.includes('সেরা') ||
+      q.includes('ফ্যামিলি'))
+  ) {
+    const seaCrown = HOTELS_DATA.find(h => h.id === 'hotel-sea-crown') || HOTELS_DATA[0];
+    const kollol = HOTELS_DATA.find(h => h.id === 'hotel-kollol') || HOTELS_DATA[2];
+    return lang === 'en'
+      ? `
+        <div>🌊 <strong>Top Beachfront & Family Hotels:</strong></div>
+        <div>• <strong>${seaCrown.name.en} (4.6★)</strong> is right on Sugandha Beach (Marine Drive) with direct beach access & free buffet breakfast.<br/>• <strong>${kollol.name.en} (4.5★)</strong> is at Laboni Point with a swimming pool:</div>
+        <div class="space-y-2">${buildSingleHotelChatCard(seaCrown, lang)}${buildSingleHotelChatCard(kollol, lang)}</div>
+        ${buildChatFollowUpChips(['Cheapest hotel?', 'Best seafood nearby?', 'My trip budget?'])}
+      `
+      : `
+        <div>🌊 <strong>সেরা সৈকত সংলগ্ন ও ফ্যামিলি হোটেল:</strong></div>
+        <div>• <strong>${seaCrown.name.bn} (৪.৬★)</strong> সরাসরি সুগন্ধা সৈকতে অবস্থিত (ফ্রি ব্রেকফাস্টসহ)।<br/>• <strong>${kollol.name.bn} (৪.৫★)</strong> লাবণী পয়েন্টে সুইমিং পুলসহ:</div>
+        <div class="space-y-2">${buildSingleHotelChatCard(seaCrown, lang)}${buildSingleHotelChatCard(kollol, lang)}</div>
+        ${buildChatFollowUpChips(['সবচেয়ে সস্তা হোটেল কোনটি?', 'সেরা সি-ফুড রেস্তোরাঁ?'])}
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 3. SPECIFIC TOURIST SPOTS, HIDDEN GEMS & BEACHES
+  // --------------------------------------------------------------------------
+  const spotKnowledge = [
+    {
+      id: 'spot-inani',
+      keys: ['inani', 'ইনানী', 'ইনানি', 'coral boulder', 'pathani patar'],
+      title: { en: '🪨 Inani Coral Beach (32 km South)', bn: '🪨 ইনানী প্রবাল সৈকত (৩২ কিমি দক্ষিণে)' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Famous 18 km shoreline with ancient black coral boulders, calm tidal pools & crystal-clear water.<br/>• <strong>How to Go:</strong> 32 km south of town via scenic Marine Drive (~1 hour).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>Chander Gari (Open Jeep)</strong> costs <strong>${formatPriceRange(1500, 2000)}</strong> for a group, or rent a <strong>Bike/Scooter</strong> for <strong>${fmtSingle(1500)}/day</strong>.<br/>• <strong>Best Time:</strong> Morning during low tide (when coral rocks are exposed) or sunset.`,
+        bn: `• <strong>কেন যাবেন:</strong> প্রাচীন প্রবাল পাথর, স্বচ্ছ নীল জলরাশি ও শান্ত ঢেউয়ের জন্য বিখ্যাত ১৮ কিমি দীর্ঘ সৈকত।<br/>• <strong>দূরত্ব ও সময়:</strong> মেরিন ড্রাইভ ধরে শহর থেকে ৩২ কিমি দক্ষিণে (প্রায় ১ ঘণ্টা)।<br/>• <strong>যাতায়াত ভাড়া:</strong> গ্রুপের জন্য রিজার্ভ <strong>চান্দের গাড়ি</strong> ভাড়া <strong>${formatPriceRange(1500, 2000)}</strong> অথবা সারাদিনের জন্য <strong>বাইক ভাড়া ${fmtSingle(1500)}</strong>।`
+      },
+      chips: {
+        en: ['Himchari waterfall info', 'Shamlapur sunset point', 'Marine Drive bike cost?'],
+        bn: ['হিমছড়ি ঝর্ণার তথ্য', 'শামলাপুর সানসেট পয়েন্ট', 'মেরিন ড্রাইভে বাইক ভাড়া?']
+      }
+    },
+    {
+      id: 'spot-himchari',
+      keys: ['himchari', 'himchori', 'হিমছড়ি', 'হিমছড়ি', 'waterfall', 'ঝর্ণা'],
+      title: { en: '⛰️ Himchari National Park & Waterfalls (18 km South)', bn: '⛰️ হিমছড়ি জাতীয় উদ্যান ও ঝর্ণা (১৮ কিমি দক্ষিণে)' },
+      body: {
+        en: `• <strong>Why Visit:</strong> 1,729-hectare evergreen reserve (Est. 1980) where green hills meet the Bay of Bengal, featuring coastal waterfalls and hilltop ocean viewpoints.<br/>• <strong>How to Go:</strong> 18 km south along Marine Drive (~30 mins from Kolatoli).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${formatPriceRange(300, 400)}</strong>, or combine with Inani by <strong>Chander Gari (${formatPriceRange(1500, 2000)})</strong>.<br/>• <strong>Entry & Trekking:</strong> ~${fmtSingle(120)} for park & hilltop stairs.`,
+        bn: `• <strong>কেন যাবেন:</strong> ১,৭২৯ হেক্টর সংরক্ষিত চিরহরিৎ বন, প্রাকৃতিক ঝর্ণা এবং পাহাড়ের চূড়া থেকে বঙ্গোপসাগরের প্যানোরামিক ভিউ।<br/>• <strong>দূরত্ব ও সময়:</strong> কলাতলী থেকে মেরিন ড্রাইভ ধরে ১৮ কিমি দক্ষিণে (প্রায় ৩০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${formatPriceRange(300, 400)}</strong>। পার্ক এন্ট্রি ও পাহাড় ট্রেকিং ~${fmtSingle(120)}।`
+      },
+      chips: {
+        en: ['How to reach Inani?', 'Marine Drive bike cost?', 'Best time to visit?'],
+        bn: ['ইনানী সৈকতে কীভাবে যাব?', 'মেরিন ড্রাইভে বাইক ভাড়া?', 'ভ্রমণের সেরা সময়?']
+      }
+    },
+    {
+      id: 'spot-moheshkhali',
+      keys: ['moheshkhali', 'maheshkhali', 'মহেশখালী', 'adinath', 'আদিনাথ', 'kasturi ghat', 'কস্তুরাঘাট', '6 no ghat', '৬ নং ঘাট'],
+      title: { en: '🏝️ Moheshkhali Island & Adinath Temple', bn: '🏝️ মহেশখালী দ্বীপ ও আদিনাথ মন্দির' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Bangladesh's only hilly island—home to the historic <strong>Adinath Shiva Temple</strong> atop Mainak Hill, Rakhine Buddhist pagodas, and coastal salt pans.<br/>• <strong>How to Go:</strong> Take a Tomtom to <strong>Kasturi Ghat (6 No. Jetty)</strong> in Cox's Bazar town, then board a <strong>35-minute Speedboat</strong> across the Bakkhali channel.<br/>• <strong>Exact Fare:</strong> Speedboat is <strong>${formatPriceRange(80, 100)} per passenger</strong> each way (life jackets provided). On the island, local Tomtoms/rickshaws to Adinath Hill cost ~${formatPriceRange(100, 150)}.`,
+        bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের একমাত্র পাহাড়ি দ্বীপ—মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক <strong>আদিনাথ মন্দির</strong>, বৌদ্ধ প্যাগোডা ও লবণের মাঠ।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের <strong>কস্তুরাঘাট (৬ নং ঘাট)</strong> থেকে স্পিডবোটে মাত্র ৩৫ মিনিটে মহেশখালী যাওয়া যায়।<br/>• <strong>ভাড়া:</strong> স্পিডবোট ভাড়া জনপ্রতি <strong>${formatPriceRange(80, 100)}</strong>।`
+      },
+      chips: {
+        en: ['Sonadia Island camping', 'Ramu 100ft Buddha', 'Add to my itinerary'],
+        bn: ['সোনাদিয়া দ্বীপ ক্যাম্পিং', 'রামু ১০০ ফুট বুদ্ধ মূর্তি', 'আমার ট্রিপ বাজেট কত?']
+      }
+    },
+    {
+      id: 'spot-ramu-buddha',
+      keys: ['ramu', 'রামু', 'buddha', 'বুদ্ধ', 'monastery', 'বিহার', '100 feet', '১০০ ফুট'],
+      title: { en: '🛕 100 Feet Reclining Golden Buddha at Ramu', bn: '🛕 রামুর ভুবন শান্তি ১০০ ফুট স্বর্ণালী বুদ্ধ মূর্তি' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Home to the awe-inspiring 100-foot reclining Gautama Buddha statue (<em>Vimukti Bibartanarama</em>, Est. 2007) and ancient wooden Rakhine Buddhist monasteries.<br/>• <strong>How to Go:</strong> 16 km east of Cox's Bazar town along the Chittagong-Cox's Bazar highway (~40 mins).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${formatPriceRange(400, 500)}</strong>.<br/>• <strong>Etiquette Tip:</strong> Remove shoes and cover shoulders & knees before entering temple halls.`,
+        bn: `• <strong>কেন যাবেন:</strong> উত্তর মিঠাছড়িতে অবস্থিত ১০০ ফুট দীর্ঘ শায়িত গৌতম বুদ্ধ মূর্তি এবং প্রাচীন বৌদ্ধ বিহার।<br/>• <strong>দূরত্ব ও সময়:</strong> শহর থেকে ১৬ কিমি পূর্বে (প্রায় ৪০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${formatPriceRange(400, 500)}</strong>।<br/>• <strong>সৌজন্যতা:</strong> মন্দিরে প্রবেশের আগে জুতো খুলুন এবং শালীন পোশাক পরিধান করুন।`
+      },
+      chips: {
+        en: ['Moheshkhali Island info', 'Radiant Fish World', 'Cultural dress code?'],
+        bn: ['মহেশখালী দ্বীপ ভ্রমণ', 'রেডিয়েন্ট ফিশ ওয়ার্ল্ড', 'পোশাক ও সংস্কৃতি বিধি?']
+      }
+    },
+    {
+      id: 'spot-radiant-fish-world',
+      keys: ['radiant', 'aquarium', 'fish world', 'রেডিয়েন্ট', 'অ্যাকোয়ারিয়াম', 'ফিশ ওয়ার্ল্ড', 'shark'],
+      title: { en: '🐠 Radiant Fish World Aquarium (Jhautola)', bn: '🐠 রেডিয়েন্ট ফিশ ওয়ার্ল্ড অ্যাকোয়ারিয়াম (ঝাউতলা)' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Bangladesh's first marine aquarium featuring 100+ Bay of Bengal species, sharks, rays, and a walk-through underwater glass tunnel.<br/>• <strong>Location:</strong> Right in <strong>Jhautola town center</strong> (5 mins from Laboni/Sugandha by Tomtom for <strong>${formatPriceRange(15, 20)}</strong>).<br/>• <strong>Entry Ticket:</strong> ~<strong>${fmtSingle(300)}</strong> per person. Great for families and evening visits (right next to Poushee Restaurant!).`,
+        bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের প্রথম সামুদ্রিক অ্যাকোয়ারিয়াম—যেখানে ১০০+ প্রজাতির মাছ, হাঙর এবং আন্ডারওয়াটার গ্লাস টানেল রয়েছে।<br/>• <strong>অবস্থান ও ভাড়া:</strong> শহরের ঝাউতলায় অবস্থিত (টমটম ভাড়া মাত্র <strong>${formatPriceRange(15, 20)}</strong>)। প্রবেশ টিকিট জনপ্রতি প্রায় <strong>${fmtSingle(300)}</strong>।`
+      },
+      chips: {
+        en: ['Poushee Restaurant cost?', 'Laboni & Sugandha Beach', '3-Day Family Plan'],
+        bn: ['পৌষী রেস্তোরাঁর খাবার খরচ?', 'লাবণী ও সুগন্ধা সৈকত', '৩ দিনের ফ্যামিলি প্ল্যান']
+      }
+    },
+    {
+      id: 'spot-sonadia',
+      keys: ['sonadia', 'সোনাদিয়া', 'camping', 'ক্যাম্পিং', 'turtle', 'red crab', 'লাল কাঁকড়া'],
+      title: { en: '⛺ Sonadia Ecological Island (9 sq. km)', bn: '⛺ সোনাদিয়া দ্বীপ (বিচ ক্যাম্পিং ও লাল কাঁকড়া)' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Untouched crescent barrier island northwest of Cox's Bazar—famous for winter beach camping, mangrove forests, red ghost crabs, and Olive Ridley sea turtle nesting.<br/>• <strong>How to Go:</strong> Board a boat/speedboat from <strong>Kasturi Ghat (6 No. Ghat)</strong> via Moheshkhali channel.<br/>• <strong>Est. Activity Cost:</strong> ~<strong>${fmtSingle(900)}</strong> for eco-boat transfer & island excursion. Best visited Nov–Feb.`,
+        bn: `• <strong>কেন যাবেন:</strong> নির্জন অর্ধচন্দ্রাকার দ্বীপ—শীতকালীন বিচ ক্যাম্পিং, লাল কাঁকড়া, প্যারাবন এবং সামুদ্রিক কাছিমের জন্য বিখ্যাত।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের কস্তুরাঘাট থেকে ট্রলার বা স্পিডবোটে যাওয়া যায় (বোট ও ইকো ট্রিপ খরচ ~<strong>${fmtSingle(900)}</strong>)।`
+      },
+      chips: {
+        en: ['Moheshkhali speedboat?', 'Best season to visit?', 'Shamlapur sunset point'],
+        bn: ['মহেশখালী স্পিডবোট ভাড়া?', 'ভ্রমণের সেরা সময়?', 'শামলাপুর সানসেট পয়েন্ট']
+      }
+    },
+    {
+      id: 'spot-shamlapur-sunset',
+      keys: ['shamlapur', 'শামলাপুর', 'sampan', 'সাম্পান', 'baharchhara', 'বাহারছড়া', 'sunset point', 'সূর্যাস্ত'],
+      title: { en: '🌅 Shamlapur Marine Drive Sunset & Sampan Boats', bn: '🌅 শামলাপুর বাহারছড়া সাম্পান ঘাট ও সূর্যাস্ত' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Located 45 km south at Baharchhara on Marine Drive—famous for traditional crescent-prowed wooden <strong>Sampan fishing boats</strong> lined up against golden-hour skies.<br/>• <strong>How to Go:</strong> Ride a rented <strong>Bike (${fmtSingle(1500)}/day)</strong> or <strong>Chander Gari (${formatPriceRange(1500, 2000)})</strong> past Inani Beach.<br/>• <strong>Safety Tip:</strong> Enjoy the 5:00 PM sunset and start your return ride toward Cox's Bazar town before dark.`,
+        bn: `• <strong>কেন যাবেন:</strong> মেরিন ড্রাইভের ৪৫ কিমি দক্ষিণে বাহারছড়ায় অবস্থিত—ঐতিহ্যবাহী কাঠের সাম্পান নৌকা ও গোধূলির সূর্যাস্তের ছবির জন্য অনন্য।<br/>• <strong>কীভাবে যাবেন:</strong> ইনানী পেরিয়ে বাইকে বা চান্দের গাড়িতে সহজেই যাওয়া যায়।`
+      },
+      chips: {
+        en: ['Marine Drive bike cost?', 'Inani Beach details', 'Is Marine Drive safe at night?'],
+        bn: ['মেরিন ড্রাইভে বাইক ভাড়া?', 'ইনানী সৈকত বিস্তারিত', 'রাতে মেরিন ড্রাইভ কি নিরাপদ?']
+      }
+    },
+    {
+      id: 'spot-kolatoli-eco-park',
+      keys: ['eco park', 'ইকো পার্ক', 'darianagar', 'দরিয়ানগর', 'trekking', 'ট্রেকিং'],
+      title: { en: '🌿 Kolatoli Eco Park & Darianagar Hill Trails', bn: '🌿 কলাতলী ইকো পার্ক ও দরিয়ানগর পাহাড়ি ট্রেইল' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Coastal hill ridges and caves rising directly behind South Kolatoli & Darianagar (5 km from town), offering panoramic views over the Bay of Bengal and nearby beach parasailing.<br/>• <strong>Stay Nearby:</strong> <strong>Nisanah Resort</strong> (${formatPriceRange(1500, 3000)}/night) is right next to Kolatoli Eco Park.`,
+        bn: `• <strong>কেন যাবেন:</strong> দক্ষিণ কলাতলী ও দরিয়ানগরের পাহাড়ি ট্রেইল থেকে বঙ্গোপসাগরের অপূর্ব দৃশ্য এবং প্যারাসেইলিং জোন।<br/>• <strong>পাশের রিসোর্ট:</strong> <strong>নিসানাহ রিসোর্ট</strong> (${formatPriceRange(1500, 3000)}/রাত)।`
+      },
+      chips: {
+        en: ['Nisanah Resort details', 'Parasailing cost?', 'Himchari National Park'],
+        bn: ['নিসানাহ রিসোর্ট বিস্তারিত', 'প্যারাসেইলিং খরচ কত?', 'হিমছড়ি জাতীয় উদ্যান']
+      }
+    },
+    {
+      id: 'spot-najirartek-shutki',
+      keys: ['najirartek', 'nazirartek', 'নাজিরারটেক', 'shutki', 'শুঁটকি', 'dried fish'],
+      title: { en: '🐟 Najirartek Dried Fish Hub (200-Acre Shutki Palli)', bn: '🐟 নাজিরারটেক শুঁটকি মহাল (দেশের বৃহত্তম শুঁটকি পল্লী)' },
+      body: {
+        en: `• <strong>Why Visit:</strong> Bangladesh's largest sun-dried marine fish (<em>Shutki</em>) processing estuary west of Cox's Bazar Airport, where thousands of bamboo racks dry Rupchanda, Loitta, and Chhuri fish.<br/>• <strong>How to Go:</strong> 20 mins by Tomtom/CNG from town. Best visited between 8:00 AM and 11:00 AM; you can also buy fresh wholesale dried fish here.`,
+        bn: `• <strong>কেন যাবেন:</strong> বিমানবন্দরের পশ্চিমে বাঁকখালী নদীর মোহনায় ২০০ একর জুড়ে দেশের বৃহত্তম শুঁটকি মহাল।<br/>• <strong>টিপস:</strong> সকাল ৮টা–১১টার মধ্যে ঘুরে দেখার সেরা সময়; এখান থেকে পাইকারি দামে ভালো মানের লইট্টা ও রূপচাঁদা শুঁটকি কেনা যায়।`
+      },
+      chips: {
+        en: ['Burmese Market shopping', 'Best seafood restaurants?', 'Moheshkhali Island'],
+        bn: ['বার্মিজ মার্কেটে কেনাকাটা', 'সেরা সি-ফুড রেস্তোরাঁ?', 'মহেশখালী দ্বীপ']
+      }
+    },
+    {
+      id: 'spot-laboni-sugandha',
+      keys: ['laboni', 'sugandha', 'লাবণী', 'সুগন্ধা', 'kolatoli beach', 'কলাতলী সৈকত'],
+      title: { en: '🏖️ Laboni, Sugandha & Kolatoli Main Beaches', bn: '🏖️ লাবণী, সুগন্ধা ও কলাতলী প্রধান সমুদ্র সৈকত' },
+      body: {
+        en: `• <strong>Laboni Point:</strong> Closest to town, iconic beach monument, Burmese handicraft markets, and <strong>Hotel Kollol</strong>.<br/>• <strong>Sugandha Point:</strong> Famous for evening live fish-fry stalls, water sports (Jet Ski/ATV), and <strong>Hotel Sea Crown</strong>.<br/>• <strong>Kolatoli Point:</strong> Main bus arrival hub (Dolphin Mor) with <strong>Prime Park Hotel</strong> & <strong>White Orchid</strong>.<br/>• <strong>Transit:</strong> Shared <strong>Tomtoms</strong> connect all three points in 5–10 mins for just <strong>${formatPriceRange(10, 20)}</strong>!`,
+        bn: `• <strong>লাবণী পয়েন্ট:</strong> শহরের সবচেয়ে কাছে, বার্মিজ মার্কেট ও <strong>হোটেল কল্লোল</strong> সংলগ্ন।<br/>• <strong>সুগন্ধা পয়েন্ট:</strong> সন্ধ্যার লাইভ ফিশ ফ্রাই মার্কেট, জেট স্কি ও <strong>হোটেল সী ক্রাউন</strong> সংলগ্ন।<br/>• <strong>কলাতলী পয়েন্ট:</strong> বাস নামার প্রধান স্থান (ডলফিন মোড়)।<br/>• <strong>যাতায়াত:</strong> মাত্র <strong>${formatPriceRange(10, 20)}</strong> টমটম ভাড়ায় এক পয়েন্ট থেকে অন্য পয়েন্টে যাওয়া যায়!`
+      },
+      chips: {
+        en: ['Hotel Sea Crown details', 'Sugandha live fish fry?', 'Swimming safety rules?'],
+        bn: ['হোটেল সী ক্রাউন বিস্তারিত', 'সুগন্ধা ফিশ ফ্রাই মার্কেট?', 'সৈকতে গোসলের নিয়ম?']
+      }
+    }
+  ];
+
+  const matchedSpots = spotKnowledge.filter(sp => sp.keys.some(k => q.includes(k)));
+  if (matchedSpots.length > 0) {
+    const blocks = matchedSpots
+      .map(
+        sp => `
+        <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-200/80 space-y-1.5">
+          <div class="font-extrabold text-ocean-950 text-xs sm:text-sm">${sp.title[lang]}</div>
+          <div class="text-xs text-slate-700 leading-relaxed">${sp.body[lang]}</div>
+          <div class="pt-1 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onclick="if(typeof addSpotFromWebsiteCard==='function'){addSpotFromWebsiteCard('${sp.id}');}"
+              class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-[11px] font-bold transition cursor-pointer"
+            >
+              + ${lang === 'en' ? 'Add to My Trip & Route Map' : 'ট্রিপ ও রুট ম্যাপে যোগ করুন'}
+            </button>
+          </div>
+        </div>
+      `
+      )
+      .join('');
+
+    return `
+      <div class="space-y-2.5">${blocks}</div>
+      ${buildChatFollowUpChips(matchedSpots[0].chips[lang])}
+    `;
+  }
+
+  // Saint Martin / Teknaf / Patuartek specific query
+  if (q.includes('saint martin') || q.includes('st martin') || q.includes('সেন্টমার্টিন') || q.includes('টেকনাফ') || q.includes('teknaf') || q.includes('patuartek') || q.includes('পাটুয়ারটেক')) {
+    return lang === 'en'
+      ? `
+        <div>🚢 <strong>Teknaf, Patuartek & Saint Martin's Island Info:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>Marine Drive to Teknaf:</strong> The scenic Marine Drive runs a full <strong>80 km</strong> from Kolatoli through Himchari (18 km), Inani (32 km), Patuartek, and Shamlapur (45 km) down to Teknaf.<br/>
+          • <strong>Saint Martin's Ships:</strong> Tourist ships operate seasonally (typically winter months, subject to official Bangladesh Govt. ecological directives) from Cox's Bazar (BIWTA Ghat) or Teknaf.<br/>
+          • <strong>Best Alternative Island Trips Year-Round:</strong> Visit <strong>Moheshkhali Island</strong> (35 mins by speedboat from Kasturi Ghat, ${formatPriceRange(80, 100)}) or <strong>Sonadia Island</strong>!
+        </div>
+        ${buildChatFollowUpChips(['Moheshkhali Island info', 'Sonadia Island camping', '5-Day Bike & Island Plan'])}
+      `
+      : `
+        <div>🚢 <strong>টেকনাফ, পাটুয়ারটেক ও সেন্টমার্টিন তথ্য:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>মেরিন ড্রাইভ (৮০ কিমি):</strong> কলাতলী থেকে হিমছড়ি (১৮ কিমি), ইনানী (৩২ কিমি), পাটুয়ারটেক ও শামলাপুর (৪৫ কিমি) হয়ে টেকনাফ পর্যন্ত ৮০ কিমি দীর্ঘ।<br/>
+          • <strong>দ্বীপ ভ্রমণ বিকল্প:</strong> কস্তুরাঘাট থেকে মাত্র ৩৫ মিনিটে <strong>মহেশখালী দ্বীপ</strong> (${formatPriceRange(80, 100)}) এবং <strong>সোনাদিয়া দ্বীপ</strong> সহজেই ভ্রমণ করতে পারেন।
+        </div>
+        ${buildChatFollowUpChips(['মহেশখালী দ্বীপ ভ্রমণ', 'সোনাদিয়া দ্বীপ ক্যাম্পিং', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 4. SPECIFIC FOOD, SEAFOOD & RESTAURANT QUERIES (Poushee, Jhaubon, Mermaid, etc.)
+  // --------------------------------------------------------------------------
+  if (
+    q.includes('food') ||
+    q.includes('eat') ||
+    q.includes('restaurant') ||
+    q.includes('dining') ||
+    q.includes('seafood') ||
+    q.includes('poushee') ||
+    q.includes('jhaubon') ||
+    q.includes('mermaid') ||
+    q.includes('salt bistro') ||
+    q.includes('handi') ||
+    q.includes('fish fry') ||
+    q.includes('rupchanda') ||
+    q.includes('loitta') ||
+    q.includes('crab') ||
+    q.includes('mezbani') ||
+    q.includes('খাবার') ||
+    q.includes('রেস্তোরাঁ') ||
+    q.includes('রেস্টুরেন্ট') ||
+    q.includes('পৌষী') ||
+    q.includes('ঝাউবন') ||
+    q.includes('মারমেইড') ||
+    q.includes('সি-ফুড') ||
+    q.includes('মাছ') ||
+    q.includes('কাঁকড়া') ||
+    q.includes('ভর্তা')
+  ) {
+    if (q.includes('poushee') || q.includes('পৌষী') || q.includes('mezbani') || q.includes('ভর্তা')) {
+      return lang === 'en'
+        ? `
+          <div>🍛 <strong>Poushee Restaurant (Jhautola Main Road):</strong></div>
+          <div class="text-xs text-slate-700 space-y-1">
+            • <strong>Famous For:</strong> Traditional Chittagong Mezbani beef, crispy Loitta fish fry, Rupchanda curry, and <strong>25+ types of local Bharta</strong> (mashed specialties).<br/>
+            • <strong>Avg. Meal Cost:</strong> ~<strong>${fmtSingle(450)} per person</strong>.<br/>
+            • <strong>How to Go:</strong> 5 mins by shared Tomtom (${formatPriceRange(15, 20)}) from Laboni or Sugandha Beach.
+          </div>
+          ${buildChatFollowUpChips(['Mermaid Beach Cafe?', 'Sugandha live fish fry?', 'Radiant Fish World nearby'])}
+        `
+        : `
+          <div>🍛 <strong>পৌষী রেস্তোরাঁ (ঝাউতলা মেইন রোড):</strong></div>
+          <div class="text-xs text-slate-700 space-y-1">
+            • <strong>বিখ্যাত খাবার:</strong> ঐতিহ্যবাহী মেজবানি গোশত, লইট্টা ফ্রাই, রূপচাঁদা মাছ ও ২৫+ পদের সুস্বাদু ভর্তা।<br/>
+            • <strong>গড় খরচ:</strong> জনপ্রতি প্রায় <strong>${fmtSingle(450)}</strong>। (লাবণী/সুগন্ধা থেকে টমটম ভাড়া ${formatPriceRange(15, 20)})।
+          </div>
+          ${buildChatFollowUpChips(['মারমেইড বিচ ক্যাফে?', 'সুগন্ধা লাইভ ফিশ ফ্রাই?', 'রেডিয়েন্ট ফিশ ওয়ার্ল্ড'])}
+        `;
+    }
+
+    if (q.includes('mermaid') || q.includes('মারমেইড')) {
+      return lang === 'en'
+        ? `
+          <div>🦞 <strong>Mermaid Beach Cafe (Marine Drive / Pechardwip):</strong></div>
+          <div class="text-xs text-slate-700 space-y-1">
+            • <strong>Vibe:</strong> Iconic beachfront eco-cafe with bamboo cabanas, wood-fired seafood platters, grilled lobster/snapper, and candlelight ocean dining.<br/>
+            • <strong>Avg. Cost:</strong> ~<strong>${fmtSingle(1400)} per person</strong>. Ideal stop during a Marine Drive afternoon ride!
+          </div>
+          ${buildChatFollowUpChips(['Poushee Restaurant cost?', 'Marine Drive bike cost?', 'Inani Beach route'])}
+        `
+        : `
+          <div>🦞 <strong>মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ):</strong></div>
+          <div class="text-xs text-slate-700 space-y-1">
+            • <strong>বিশেষত্ব:</strong> সমুদ্রের পাড়ে ক্যান্ডেললাইট ডিনার, সি-ফুড প্ল্যাটার ও মনোরম পরিবেশ।<br/>
+            • <strong>গড় খরচ:</strong> জনপ্রতি প্রায় <strong>${fmtSingle(1400)}</strong>।
+          </div>
+          ${buildChatFollowUpChips(['পৌষী রেস্তোরাঁর খরচ?', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}
+        `;
+    }
+
+    return lang === 'en'
+      ? `
+        <div>🍽️ <strong>Best Places to Eat in Cox's Bazar (With Avg. Per-Person Cost):</strong></div>
+        <div class="text-xs text-slate-700 space-y-1.5">
+          • 🍛 <strong>Poushee Restaurant (Jhautola):</strong> Famous 25+ Bhartas, Loitta fry & Mezbani beef — <strong>~${fmtSingle(450)}</strong><br/>
+          • 🐟 <strong>Jhaubon Restaurant (Sugandha Point):</strong> Fresh grilled Rupchanda & seafood thali — <strong>~${fmtSingle(550)}</strong><br/>
+          • 🦀 <strong>Sugandha Beach Live Fish Fry Stalls:</strong> Open-air fried crab, squid, tuna & red snapper by the waves — <strong>~${fmtSingle(600)}</strong><br/>
+          • 🍲 <strong>Handi Restaurant (Kalatali):</strong> Hyderabadi dum biryani & tandoori platters — <strong>~${fmtSingle(650)}</strong><br/>
+          • ☕ <strong>Salt Bistro & Ocean Cafe:</strong> Artisan coffee, pasta & continental brunch — <strong>~${fmtSingle(850)}</strong><br/>
+          • 🦞 <strong>Mermaid Beach Cafe (Marine Drive):</strong> Beachfront seafood platter & candlelight vibe — <strong>~${fmtSingle(1400)}</strong>
+        </div>
+        ${buildChatFollowUpChips(['Poushee details', 'Mermaid Beach Cafe', 'My trip budget?'])}
+      `
+      : `
+        <div>🍽️ <strong>কক্সবাজারের সেরা রেস্তোরাঁ ও জনপ্রতি গড় খাবার খরচ:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1.5">
+          • 🍛 <strong>পৌষী রেস্তোরাঁ (ঝাউতলা):</strong> ২৫+ পদের ভর্তা, লইট্টা ফ্রাই ও মেজবানি গোশত — <strong>~${fmtSingle(450)}</strong><br/>
+          • 🐟 <strong>ঝাউবন রেস্তোরাঁ (সুগন্ধা পয়েন্ট):</strong> রূপচাঁদা গ্রিল ও সি-ফুড থালি — <strong>~${fmtSingle(550)}</strong><br/>
+          • 🦀 <strong>সুগন্ধা সৈকত লাইভ ফিশ ফ্রাই:</strong> গরম গরম কাঁকড়া, অক্টোপাস ও কোরাল ফ্রাই — <strong>~${fmtSingle(600)}</strong><br/>
+          • 🍲 <strong>হান্ডি রেস্তোরাঁ (কলাতলী):</strong> হায়দ্রাবাদি বিরিয়ানি ও তান্দুরি — <strong>~${fmtSingle(650)}</strong><br/>
+          • 🦞 <strong>মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ):</strong> সি-ফুড প্ল্যাটার ও বিচ ডিনার — <strong>~${fmtSingle(1400)}</strong>
+        </div>
+        ${buildChatFollowUpChips(['পৌষী রেস্তোরাঁ', 'মারমেইড বিচ ক্যাফে', 'আমার ট্রিপ বাজেট কত?'])}
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 5. SPECIFIC ACTIVITIES: MARINE DRIVE BIKE, PARASAILING, JET SKI, SHOPPING
+  // --------------------------------------------------------------------------
+  if (q.includes('bike') || q.includes('scooter') || q.includes('motorcycle') || q.includes('বাইক') || q.includes('স্কুটার') || q.includes('মোটরসাইকেল')) {
+    return lang === 'en'
+      ? `
+        <div>🏍️ <strong>Riding by Bike on Marine Drive (80 km Ocean Highway):</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>Rental Cost:</strong> ~<strong>${fmtSingle(1500)}/day</strong> (includes fuel for the Kolatoli → Himchari → Inani → Shamlapur route).<br/>
+          • <strong>Best Route:</strong> Start from Kolatoli/Sugandha at 8:30 AM → stop at <strong>Himchari</strong> (18 km) → <strong>Inani Coral Beach</strong> (32 km) → lunch at <strong>Mermaid Cafe</strong> → sunset at <strong>Shamlapur Sampan Beach</strong> (45 km).<br/>
+          • <strong>Requirements & Safety:</strong> Carry your original NID/Passport & driving license, wear a helmet, and finish your return ride before sunset.
+        </div>
+        <div class="pt-1">
+          <button
+            type="button"
+            onclick="if(typeof applyItineraryPreset==='function'){applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});}"
+            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
+          >
+            🏍️ Load 5-Day Bike & Island Plan
+          </button>
+        </div>
+        ${buildChatFollowUpChips(['Inani & Himchari route', 'Is Marine Drive safe at night?', 'Chander Gari jeep cost?'])}
+      `
+      : `
+        <div>🏍️ <strong>মেরিন ড্রাইভ রোডে বাইক / স্কুটার রাইডিং (৮০ কিমি):</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>ভাড়া ও খরচ:</strong> সারাদিনের বাইক ভাড়া জ্বালানিসহ প্রায় <strong>${fmtSingle(1500)}</strong>।<br/>
+          • <strong>সেরা রুট:</strong> কলাতলী → হিমছড়ি (১৮ কিমি) → ইনানী প্রবাল সৈকত (৩২ কিমি) → শামলাপুর সাম্পান ঘাট (৪৫ কিমি)।<br/>
+          • <strong>নিরাপত্তা টিপস:</strong> মূল এনআইডি ও ড্রাইভিং লাইসেন্স সাথে রাখুন এবং সূর্যাস্তের আগে শহরে ফিরে আসুন।
+        </div>
+        <div class="pt-1">
+          <button
+            type="button"
+            onclick="if(typeof applyItineraryPreset==='function'){applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});}"
+            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
+          >
+            🏍️ ৫ দিনের বাইক ও দ্বীপ প্ল্যান লোড করুন
+          </button>
+        </div>
+        ${buildChatFollowUpChips(['ইনানী ও হিমছড়ি রুট', 'চান্দের গাড়ি ভাড়া কত?'])}
+      `;
+  }
+
+  if (q.includes('parasail') || q.includes('jet ski') || q.includes('jetski') || q.includes('atv') || q.includes('water sport') || q.includes('প্যারাসেইলিং') || q.includes('জেট স্কি')) {
+    return lang === 'en'
+      ? `
+        <div>🪂 <strong>Parasailing, Jet Ski & Beach ATV Guide:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>Parasailing:</strong> Conducted at <strong>Darianagar / Himchari Marine Drive point</strong> (~10–15 km south of Kolatoli). Cost is ~<strong>${fmtSingle(1500)}–${fmtSingle(2500)}</strong> depending on flight height.<br/>
+          • <strong>Jet Ski & Beach Quad Bike (ATV):</strong> Available at <strong>Sugandha Point, Kolatoli & Inani Beach</strong> (~${fmtSingle(500)}–${fmtSingle(1500)}).<br/>
+          • <strong>Safety Tip:</strong> Always wear the life vest and confirm the exact ride duration before paying.
+        </div>
+        ${buildChatFollowUpChips(['Sugandha Beach details', 'Marine Drive bike cost?', 'My trip budget?'])}
+      `
+      : `
+        <div>🪂 <strong>প্যারাসেইলিং, জেট স্কি ও বিচ বাইক:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>প্যারাসেইলিং:</strong> মেরিন ড্রাইভের দরিয়ানগর ও হিমছড়ি পয়েন্টে প্যারাসেইলিং করা যায় (খরচ ~<strong>${fmtSingle(1500)}–${fmtSingle(2500)}</strong>)।<br/>
+          • <strong>জেট স্কি ও বিচ বাইক:</strong> সুগন্ধা, কলাতলী ও ইনানী সৈকতে পাওয়া যায়।
+        </div>
+        ${buildChatFollowUpChips(['সুগন্ধা সৈকত বিস্তারিত', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}
+      `;
+  }
+
+  if (q.includes('shop') || q.includes('burmese') || q.includes('pickle') || q.includes('achar') || q.includes('pearl') || q.includes('বার্মিজ') || q.includes('কেনাকাটা') || q.includes('আচার')) {
+    return lang === 'en'
+      ? `
+        <div>🛍️ <strong>Burmese Market & Local Shopping Guide:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>Where to Shop:</strong> Laboni Point Beach Market, Tekpara Burmese Market (in town), and Adinath Temple jetty stalls.<br/>
+          • <strong>Best Buys:</strong> Tangy Burmese pickles (<em>Achar</em>), Rakhine handwoven textiles & lungis, natural sea pearls, shell handicrafts, and sun-dried fish (<em>Shutki</em>).<br/>
+          • <strong>Budget Tip:</strong> Bargaining politely by 20–30% is normal for handicrafts and pearls (est. shopping budget ~<strong>${fmtSingle(500)}</strong>).
+        </div>
+        ${buildChatFollowUpChips(['Najirartek Shutki Hub', 'Laboni Beach info', 'Best seafood restaurants?'])}
+      `
+      : `
+        <div>🛍️ <strong>বার্মিজ মার্কেট ও কেনাকাটা গাইড:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>কোথায় কিনবেন:</strong> লাবণী পয়েন্ট মার্কেট এবং শহরের টেকপাড়া বার্মিজ মার্কেট।<br/>
+          • <strong>কী কিনবেন:</strong> বার্মিজ আচার, রাখাইন তাঁতের কাপড়, সামুদ্রিক মুক্তার গহনা, ঝিনুকের তৈরি শোপিস ও শুঁটকি।
+        </div>
+        ${buildChatFollowUpChips(['নাজিরারটেক শুঁটকি মহাল', 'লাবণী ও সুগন্ধা সৈকত'])}
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 6. HOW TO REACH COX'S BAZAR (TRAIN / FLIGHT / BUS FROM DHAKA OR CHITTAGONG)
+  //    AND LOCAL TRANSPORT VEHICLES (TOMTOM, CHANDER GARI, CNG, SPEEDBOAT)
+  // --------------------------------------------------------------------------
+  if (
+    q.includes('dhaka') ||
+    q.includes('chittagong') ||
+    q.includes('chattogram') ||
+    q.includes('train') ||
+    q.includes('railway') ||
+    q.includes('flight') ||
+    q.includes('airport') ||
+    q.includes('bus') ||
+    q.includes('ঢাকা') ||
+    q.includes('চট্টগ্রাম') ||
+    q.includes('ট্রেন') ||
+    q.includes('বিমান') ||
+    q.includes('বাস')
+  ) {
+    return lang === 'en'
+      ? `
+        <div>🚆✈️🚌 <strong>How to Reach Cox's Bazar (Train, Flight & Bus):</strong></div>
+        <div class="text-xs text-slate-700 space-y-1.5">
+          • 🚆 <strong>By Train (Iconic Oyster Railway Station):</strong> Direct trains <em>Cox's Bazar Express</em> & <em>Parjotak Express</em> run from Dhaka (Kamalapur/Airport) & Chattogram (~8.5 hrs from Dhaka; Shovon Chair ~${fmtSingle(695)}, AC Snigdha ~${fmtSingle(1325)}). From the station, a Tomtom/CNG to Kolatoli/Laboni takes 15 mins.<br/>
+          • ✈️ <strong>By Flight (Cox's Bazar Airport - CXB):</strong> 1-hour flight from Dhaka via Biman, US-Bangla, Novoair, or Air Astra. The airport is just 10 mins from Laboni Beach!<br/>
+          • 🚌 <strong>By Bus (Dolphin Mor / Kolatoli):</strong> AC Sleeper/Business & Non-AC buses from Dhaka (8–10 hrs, ${formatPriceRange(1200, 2500)}) or Chattogram (3.5–4 hrs) drop you right at <strong>Dolphin Mor</strong>.
+        </div>
+        ${buildChatFollowUpChips(['Local Tomtom & CNG fares', 'Hotels near Kalatali', 'My trip budget?'])}
+      `
+      : `
+        <div>🚆✈️🚌 <strong>ঢাকা বা চট্টগ্রাম থেকে কক্সবাজার আসার উপায়:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1.5">
+          • 🚆 <strong>ট্রেনে (আইকনিক ঝিনুক রেলস্টেশন):</strong> ঢাকা থেকে সরাসরি <em>কক্সবাজার এক্সপ্রেস</em> ও <em>পর্যটক এক্সপ্রেস</em> ট্রেনে (~৮.৫ ঘণ্টা; শোভন চেয়ার ~${fmtSingle(695)}, স্নিগ্ধা এসি ~${fmtSingle(1325)}) আসা যায়।<br/>
+          • ✈️ <strong>বিমানে (কক্সবাজার এয়ারপোর্ট):</strong> ঢাকা থেকে মাত্র ১ ঘণ্টায় ফ্লাইটে আসা যায় (এয়ারপোর্ট থেকে লাবণী বিচ মাত্র ১০ মিনিট)।<br/>
+          • 🚌 <strong>বাসে (ডলফিন মোড়, কলাতলী):</strong> এসি/নন-এসি বাসে সরাসরি কলাতলীর ডলফিন মোড়ে নামা যায়।
+        </div>
+        ${buildChatFollowUpChips(['স্থানীয় টমটম ও সিএনজি ভাড়া', 'কলাতলীর হোটেল ভাড়া'])}
+      `;
+  }
+
+  if (
+    q.includes('tomtom') ||
+    q.includes('easybike') ||
+    q.includes('chander') ||
+    q.includes('cng') ||
+    q.includes('speedboat') ||
+    q.includes('vehicle') ||
+    q.includes('transport') ||
+    q.includes('fare') ||
+    q.includes('টমটম') ||
+    q.includes('ইজিবাইক') ||
+    q.includes('চান্দের') ||
+    q.includes('সিএনজি') ||
+    q.includes('স্পিডবোট') ||
+    q.includes('যাতায়াত')
+  ) {
+    const rows = TRANSPORT_DATA.map(
+      tr =>
+        `• <strong>${tr.route[lang]}</strong> (${tr.vehicle[lang]}): <strong class="text-teal-700">${formatPriceRange(tr.minBDT, tr.maxBDT)}</strong> — ${tr.modeNote[lang]}, ${tr.duration[lang]}`
     ).join('<br/>');
-    return AppState.lang === 'en'
-      ? `Here are the top hotels in Cox's Bazar (${AppState.currency}):<br/><br/>${lines}`
-      : `কক্সবাজারের প্রধান হোটেলগুলোর প্রতি রাতের ভাড়া (${AppState.currency}):<br/><br/>${lines}`;
+
+    return lang === 'en'
+      ? `
+        <div>🚕 <strong>Verified Local Transport Fares & Vehicles (${AppState.currency}):</strong></div>
+        <div class="text-xs text-slate-700 leading-relaxed">${rows}</div>
+        <div class="p-2 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-950">
+          💡 <strong>Quick Guide:</strong> <em>Tomtoms</em> are cheap shared electric 3-wheelers for beach hops; <em>Chander Gari</em> is an open-top 10–14 seat 4x4 jeep for Marine Drive; <em>Speedboats</em> depart from Kasturi Ghat.
+        </div>
+        ${buildChatFollowUpChips(['Marine Drive bike cost?', 'How to reach Inani?', 'How to reach Ramu?'])}
+      `
+      : `
+        <div>🚕 <strong>কক্সবাজারের স্থানীয় যাতায়াত ভাড়া (${AppState.currency}):</strong></div>
+        <div class="text-xs text-slate-700 leading-relaxed">${rows}</div>
+        <div class="p-2 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-950">
+          💡 <strong>টিপস:</strong> স্বল্প দূরত্বে শেয়ারড <em>টমটম</em>, মেরিন ড্রাইভে গ্রুপের জন্য <em>চান্দের গাড়ি</em> এবং মহেশখালীর জন্য কস্তুরাঘাটের <em>স্পিডবোট</em> ব্যবহার করুন।
+        </div>
+        ${buildChatFollowUpChips(['মেরিন ড্রাইভে বাইক ভাড়া?', 'ইনানী কীভাবে যাব?', 'রামু কীভাবে যাব?'])}
+      `;
   }
 
-  if (q.includes('inani') || q.includes('ইনানী') || q.includes('chander') || q.includes('চান্দের')) {
-    const inaniFare = formatPriceRange(1500, 2000);
-    return AppState.lang === 'en'
-      ? `<strong>Inani Beach</strong> is 32 km south on the scenic Marine Drive (about 1 hour). You can hire a reserved <strong>Chander Gari (open-top group jeep)</strong> for <strong>${inaniFare}</strong>.`
-      : `<strong>ইনানী সৈকত</strong> মেরিন ড্রাইভ ধরে ৩২ কিমি দক্ষিণে (সময় লাগে প্রায় ১ ঘণ্টা)। গ্রুপের জন্য রিজার্ভ <strong>চান্দের গাড়ি (খোলা জিপ)</strong> ভাড়া <strong>${inaniFare}</strong>।`;
+  // --------------------------------------------------------------------------
+  // 7. LIVE PERSONAL TRIP BUDGET, ROUTE & ITINERARY PLANNER ASSISTANT
+  // --------------------------------------------------------------------------
+  if (
+    q.includes('budget') ||
+    q.includes('total cost') ||
+    q.includes('how much') ||
+    q.includes('my trip') ||
+    q.includes('itinerary') ||
+    q.includes('day plan') ||
+    q.includes('2 day') ||
+    q.includes('3 day') ||
+    q.includes('5 day') ||
+    q.includes('route') ||
+    q.includes('বাজেট') ||
+    q.includes('খরচ কত') ||
+    q.includes('ট্রিপ প্ল্যান') ||
+    q.includes('রুট')
+  ) {
+    if (typeof calculateItineraryBudget === 'function' && typeof FeaturesState !== 'undefined') {
+      const b = calculateItineraryBudget();
+      const hotelName = b.selectedHotel ? b.selectedHotel.name[lang] : 'Hotel Sea Crown';
+      return lang === 'en'
+        ? `
+          <div>📊 <strong>Your Live Cox's Bazar Trip Summary (${FeaturesState.totalDays} Days / ${b.nights} Nights):</strong></div>
+          <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-xs space-y-1">
+            <div>🏨 <strong>Base Hotel (${hotelName}):</strong> ${fmtSingle(b.totalHotelBDT)} (${b.nights} nights)</div>
+            <div>🏍️ <strong>Local Travel & Rides:</strong> ${fmtSingle(b.totalTransportBDT)}</div>
+            <div>🍽️ <strong>Restaurants & Food:</strong> ${fmtSingle(b.totalDiningBDT)}</div>
+            <div>🪂 <strong>Activities & Fun:</strong> ${fmtSingle(b.totalActivitiesBDT)}</div>
+            <div class="pt-1 border-t border-sky-200 font-extrabold text-ocean-950 text-sm">
+              💰 Est. Total Trip Cost: <span class="text-teal-700">${fmtSingle(b.grandTotalBDT)}</span>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <button type="button" onclick="applyItineraryPreset('2day_quick'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">⚡ 2-Day Plan</button>
+            <button type="button" onclick="applyItineraryPreset('3day_family'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">👨‍👩‍👧 3-Day Family</button>
+            <button type="button" onclick="applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-extrabold cursor-pointer">🏍️ 5-Day Bike Plan</button>
+          </div>
+        `
+        : `
+          <div>📊 <strong>আপনার বর্তমান কক্সবাজার ট্রিপ সামারি (${FeaturesState.totalDays} দিন / ${b.nights} রাত):</strong></div>
+          <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-xs space-y-1">
+            <div>🏨 <strong>হোটেল (${hotelName}):</strong> ${fmtSingle(b.totalHotelBDT)} (${b.nights} রাত)</div>
+            <div>🏍️ <strong>যাতায়াত ও বাইক:</strong> ${fmtSingle(b.totalTransportBDT)}</div>
+            <div>🍽️ <strong>রেস্তোরাঁ ও খাবার:</strong> ${fmtSingle(b.totalDiningBDT)}</div>
+            <div>🪂 <strong>অ্যাক্টিভিটি:</strong> ${fmtSingle(b.totalActivitiesBDT)}</div>
+            <div class="pt-1 border-t border-sky-200 font-extrabold text-ocean-950 text-sm">
+              💰 সর্বমোট আনুমানিক খরচ: <span class="text-teal-700">${fmtSingle(b.grandTotalBDT)}</span>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <button type="button" onclick="applyItineraryPreset('2day_quick'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">⚡ ২ দিন</button>
+            <button type="button" onclick="applyItineraryPreset('3day_family'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">👨‍👩‍👧 ৩ দিন ফ্যামিলি</button>
+            <button type="button" onclick="applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-extrabold cursor-pointer">🏍️ ৫ দিন বাইক প্ল্যান</button>
+          </div>
+        `;
+    }
   }
 
-  if (q.includes('tomtom') || q.includes('easybike') || q.includes('টমটম') || q.includes('ইজিবাইক')) {
-    const laboniFare = formatPriceRange(15, 20);
-    const kalataliFare = formatPriceRange(10, 10);
-    return AppState.lang === 'en'
-      ? `<strong>Tomtoms (Easybikes)</strong> are battery-powered 3-wheelers for short hops:<br/>• Town to Laboni/Sugandha: <strong>${laboniFare}</strong> (Shared, 10 mins)<br/>• Kalatali to Sugandha: <strong>${kalataliFare}</strong> (Shared, 5 mins)`
-      : `<strong>টমটম (ইজিবাইক)</strong> হলো ব্যাটারিচালিত অটোরিকশা:<br/>• শহর থেকে লাবণী/সুগন্ধা: <strong>${laboniFare}</strong> (শেয়ারড, ১০ মিনিট)<br/>• কলাতলী থেকে সুগন্ধা: <strong>${kalataliFare}</strong> (শেয়ারড, ৫ মিনিট)`;
+  // --------------------------------------------------------------------------
+  // 8. EMERGENCY, POLICE, HOSPITAL, SAFETY, WEATHER & CURRENCY EXCHANGE
+  // --------------------------------------------------------------------------
+  if (
+    q.includes('police') ||
+    q.includes('emergency') ||
+    q.includes('hospital') ||
+    q.includes('doctor') ||
+    q.includes('ambulance') ||
+    q.includes('999') ||
+    q.includes('lifeguard') ||
+    q.includes('পুলিশ') ||
+    q.includes('হাসপাতাল') ||
+    q.includes('জরুরি') ||
+    q.includes('সাহায্য')
+  ) {
+    const contacts = UI_TEXT[lang].essentialSection.emergency.contacts;
+    return `
+      <div>🚨 <strong>${lang === 'en' ? '24/7 Official Emergency & Tourist Police Hotlines:' : '২৪/৭ জরুরি সেবা ও ট্যুরিস্ট পুলিশ নাম্বার:'}</strong></div>
+      <div class="space-y-1.5">
+        ${contacts
+          .map(
+            c => `
+            <div class="p-2 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-between gap-2 text-xs">
+              <div>
+                <strong class="text-slate-900 block">${c.name}</strong>
+                <span class="text-[10px] text-slate-500">${c.note}</span>
+              </div>
+              <a href="tel:${c.number.replace(/\s+/g, '')}" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-extrabold text-[11px] shrink-0">📞 ${c.number}</a>
+            </div>
+          `
+          )
+          .join('')}
+      </div>
+    `;
   }
 
-  if (q.includes('moheshkhali') || q.includes('মহেশখালী') || q.includes('speedboat')) {
-    const boatFare = formatPriceRange(80, 100);
-    return AppState.lang === 'en'
-      ? `To visit <strong>Moheshkhali Island</strong> (Adinath Temple & salt pans), head to <strong>Kasturi Ghat</strong> in town and take a 35-minute speedboat ride for <strong>${boatFare}</strong> per passenger.`
-      : `<strong>মহেশখালী দ্বীপে</strong> যেতে শহরের <strong>কস্তুরাঘাট</strong> থেকে জনপ্রতি <strong>${boatFare}</strong> ভাড়ায় ৩৫ মিনিটের স্পিডবোটে যেতে পারেন।`;
+  if (q.includes('safe') || q.includes('swim') || q.includes('flag') || q.includes('night') || q.includes('dress') || q.includes('etiquette') || q.includes('নিরাপদ') || q.includes('সাঁতার') || q.includes('পতাকা') || q.includes('পোশাক')) {
+    return lang === 'en'
+      ? `
+        <div>🛡️ <strong>Beach Safety, Night Travel & Cultural Tips:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • 🏊 <strong>Swimming Flags:</strong> Swim ONLY between <strong>Green Flags</strong> monitored by CIPRB Sea Safe Lifeguards. Never enter the water when <strong>Red Flags</strong> are raised or after dark.<br/>
+          • 🌅 <strong>Marine Drive at Night:</strong> Complete your Marine Drive (Inani/Shamlapur) trip before sunset for better visibility and safety.<br/>
+          • 👕 <strong>Dress Code:</strong> Modest family-friendly beachwear (t-shirts & shorts/trousers) is standard; cover shoulders/knees and remove shoes at Ramu & Adinath temples.
+        </div>
+        ${buildChatFollowUpChips(['Emergency numbers', 'Best time to visit?', 'Inani & Himchari route'])}
+      `
+      : `
+        <div>🛡️ <strong>সৈকতের নিরাপত্তা ও ভ্রমণ নির্দেশিকা:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • 🏊 <strong>সাঁতার ও পতাকা:</strong> শুধুমাত্র সি-সেফ লাইফগার্ডদের <strong>সবুজ পতাকা</strong> চিহ্নিত স্থানে গোসল করুন। লাল পতাকা থাকলে বা সন্ধ্যার পর সমুদ্রে নামবেন না।<br/>
+          • 🌅 <strong>মেরিন ড্রাইভ:</strong> নিরাপত্তার জন্য সূর্যাস্তের আগেই মেরিন ড্রাইভ ভ্রমণ শেষ করুন।
+        </div>
+        ${buildChatFollowUpChips(['জরুরি পুলিশ ও হাসপাতাল নাম্বার', 'ভ্রমণের সেরা সময়?'])}
+      `;
   }
 
-  if (q.includes('best time') || q.includes('weather') || q.includes('সেরা সময়') || q.includes('আবহাওয়া')) {
-    return AppState.lang === 'en'
-      ? `The best time to visit Cox's Bazar is during the winter months from <strong>November to February</strong> when the weather is cool, sunny, and dry.`
-      : `কক্সবাজার ভ্রমণের সেরা সময় হলো শীতকাল—<strong>নভেম্বর থেকে ফেব্রুয়ারি</strong> মাস, যখন আবহাওয়া ঠান্ডা ও শুষ্ক থাকে।`;
+  if (q.includes('best time') || q.includes('weather') || q.includes('season') || q.includes('rain') || q.includes('monsoon') || q.includes('winter') || q.includes('সেরা সময়') || q.includes('আবহাওয়া') || q.includes('শীতকাল') || q.includes('বর্ষা')) {
+    const w = UI_TEXT[lang].essentialSection.weather;
+    return `
+      <div>☀️ <strong>${w.title}:</strong></div>
+      <div class="text-xs text-slate-700 space-y-1.5">
+        <div>• <strong>${w.peakTitle}:</strong> ${w.peakDesc}</div>
+        <div>• <strong>${w.shoulderTitle}:</strong> ${w.shoulderDesc}</div>
+        <div>• <strong>${w.monsoonTitle}:</strong> ${w.monsoonDesc}</div>
+      </div>
+      ${buildChatFollowUpChips(
+        lang === 'en'
+          ? ['Cheapest hotel?', 'Inani & Himchari route', 'Sonadia Island camping']
+          : ['সবচেয়ে সস্তা হোটেল কোনটি?', 'ইনানী ও হিমছড়ি রুট']
+      )}
+    `;
   }
 
-  return AppState.lang === 'en'
-    ? `I can help you with:<br/>• <strong>Hotels:</strong> Sea Crown, Prime Park, Kollol, Nisanah Resort, White Orchid<br/>• <strong>Spots:</strong> Inani, Himchari, Moheshkhali, Ramu, Sonadia<br/>• <strong>Transport:</strong> Tomtom, CNG, Chander Gari, or Speedboat fares.<br/>Just ask about any spot or hotel!`
-    : `আমি আপনাকে সাহায্য করতে পারি:<br/>• <strong>হোটেল ভাড়া:</strong> সী ক্রাউন, প্রাইম পার্ক, কল্লোল, নিসানাহ, হোয়াইট অর্কিড<br/>• <strong>দর্শনীয় স্থান:</strong> ইনানী, হিমছড়ি, মহেশখালী, রামু, সোনাদিয়া<br/>• <strong>যাতায়াত ভাড়া:</strong> টমটম, সিএনজি, চান্দের গাড়ি ও স্পিডবোট।`;
+  if (q.includes('currency') || q.includes('exchange') || q.includes('dollar') || q.includes('usd') || q.includes('atm') || q.includes('money') || q.includes('ডলার') || q.includes('মানি এক্সচেঞ্জ')) {
+    return lang === 'en'
+      ? `
+        <div>💱 <strong>Currency Exchange, USD & ATM Guide:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • <strong>Exchange Rate on Portal:</strong> 1 USD ≈ ${CONFIG.exchangeRateUSD} BDT.<br/>
+          • <strong>Where to Exchange:</strong> Authorized money changers and banks (City Bank, BRAC Bank, DBBL, Islami Bank) with 24/7 Visa/Mastercard ATMs are located along <strong>Kalatali Main Road, Laboni Point, and Cox's Bazar Town</strong>.<br/>
+          • <strong>Tip:</strong> Carry cash BDT for local Tomtoms, speedboats, and beach stalls.
+        </div>
+        <div class="pt-1">
+          <button type="button" onclick="toggleCurrency()" class="px-2.5 py-1 rounded-lg bg-teal-600 text-white text-[11px] font-bold cursor-pointer">
+            💱 Switch Website Currency (Currently: ${AppState.currency})
+          </button>
+        </div>
+      `
+      : `
+        <div>💱 <strong>মুদ্রা বিনিময় (Currency Exchange) ও এটিএম তথ্য:</strong></div>
+        <div class="text-xs text-slate-700 space-y-1">
+          • কলাতলী রোড, লাবণী পয়েন্ট ও মূল শহরে অনুমোদিত মানি এক্সচেঞ্জার এবং ২৪/৭ এটিএম বুথ (ডাচ-বাংলা, সিটি ব্যাংক, ব্র্যাক ব্যাংক) রয়েছে।<br/>
+          • স্থানীয় টমটম, স্পিডবোট ও ছোট দোকানে খরচের জন্য সাথে নগদ টাকা (BDT) রাখুন।
+        </div>
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 9. GENERAL HOTEL OVERVIEW (Only when user asks generally for "all hotels" / "hotel list")
+  // --------------------------------------------------------------------------
+  if (isAskingHotel || q.includes('price') || q.includes('ভাড়া')) {
+    const lines = HOTELS_DATA.map(
+      h =>
+        `• <strong>${h.name[lang]}</strong> (${h.locationKey}): <strong class="text-teal-700">${formatPriceRange(h.minBDT, h.maxBDT)}</strong>/night — 📞 <a href="tel:${h.phone.replace(/\s+/g, '')}" class="underline text-sky-700">${h.phone}</a>`
+    ).join('<br/>');
+
+    return lang === 'en'
+      ? `
+        <div>🏨 <strong>All 5 Verified Hotels in Cox's Bazar (${AppState.currency}):</strong></div>
+        <div class="text-xs text-slate-700 leading-relaxed">${lines}</div>
+        <div class="text-[11px] text-slate-500">Tap any hotel below to see its full address, amenities & booking link:</div>
+        ${buildChatFollowUpChips(['Hotel Sea Crown details', 'Prime Park Hotel details', 'Hotel Kollol details', 'Cheapest hotel?'])}
+      `
+      : `
+        <div>🏨 <strong>কক্সবাজারের ৫টি ভেরিফাইড হোটেলের ভাড়া ও ফোন (${AppState.currency}):</strong></div>
+        <div class="text-xs text-slate-700 leading-relaxed">${lines}</div>
+        ${buildChatFollowUpChips(['হোটেল সী ক্রাউন বিস্তারিত', 'প্রাইম পার্ক হোটেল', 'সবচেয়ে সস্তা হোটেল কোনটি?'])}
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 10. CONVERSATIONAL GREETING OR SMART CONTEXTUAL GUIDE
+  // --------------------------------------------------------------------------
+  return lang === 'en'
+    ? `
+      <div>👋 <strong>I'm your Cox's Bazar Smart AI Guide!</strong> Ask me anything specific—or tap a topic below for instant verified details:</div>
+      <div class="text-xs text-slate-600 space-y-1">
+        • 🏨 <strong>Specific Hotels:</strong> <em>"Sea Crown details"</em>, <em>"Cheapest hotel"</em>, <em>"Hotel with pool"</em><br/>
+        • 📍 <strong>Exact Routes & Spots:</strong> <em>"Inani & Himchari route"</em>, <em>"Moheshkhali speedboat"</em>, <em>"Ramu Buddha"</em>, <em>"Sonadia camping"</em><br/>
+        • 🍽️ <strong>Food & Adventure:</strong> <em>"Best seafood & Poushee?"</em>, <em>"Marine Drive bike cost?"</em>, <em>"Parasailing"</em><br/>
+        • 📊 <strong>Trip Planner:</strong> <em>"My trip budget?"</em>, <em>"How to come from Dhaka by train?"</em>
+      </div>
+      ${buildChatFollowUpChips([
+        'Cheapest hotel?',
+        'Inani & Himchari route',
+        'Best seafood & Poushee?',
+        'Marine Drive bike cost?',
+        'My trip budget?'
+      ])}
+    `
+    : `
+      <div>👋 <strong>আমি আপনার কক্সবাজার স্মার্ট এআই গাইড!</strong> যেকোনো নির্দিষ্ট প্রশ্ন লিখুন অথবা নিচের বাটনে ক্লিক করুন:</div>
+      <div class="text-xs text-slate-600 space-y-1">
+        • 🏨 <strong>নির্দিষ্ট হোটেল:</strong> <em>"সী ক্রাউন বিস্তারিত"</em>, <em>"সবচেয়ে সস্তা হোটেল"</em>, <em>"সুইমিং পুলসহ হোটেল"</em><br/>
+        • 📍 <strong>স্পট ও রুট:</strong> <em>"ইনানী ও হিমছড়ি রুট"</em>, <em>"মহেশখালী স্পিডবোট"</em>, <em>"রামু বৌদ্ধ বিহার"</em><br/>
+        • 🍽️ <strong>খাবার ও অ্যাডভেঞ্চার:</strong> <em>"পৌষী ও সেরা সি-ফুড কোথায়?"</em>, <em>"মেরিন ড্রাইভে বাইক ভাড়া?"</em>
+      </div>
+      ${buildChatFollowUpChips([
+        'সবচেয়ে সস্তা হোটেল কোনটি?',
+        'ইনানী ও হিমছড়ি রুট',
+        'পৌষী ও সেরা সি-ফুড কোথায়?',
+        'মেরিন ড্রাইভে বাইক ভাড়া?',
+        'আমার ট্রিপ বাজেট কত?'
+      ])}
+    `;
 }
 
 async function handleUserChatSubmission(prefilledText) {

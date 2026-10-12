@@ -1387,15 +1387,25 @@
       <div
         id="chatbot-messages"
         class="p-4 space-y-3.5 overflow-y-auto bg-slate-50/80 flex-1"
-        style="min-height: 250px; max-height: 310px;"
+        style="min-height: 270px; max-height: 340px;"
       >
-        <!-- Required Initial Welcome Message -->
+        <!-- Initial Smart Welcome Message -->
         <div class="flex items-start gap-2.5">
           <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-600 to-teal-500 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
             CB
           </div>
-          <div class="max-w-[84%] bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-xs text-sm leading-relaxed shadow-xs">
-            Hello! I can help you with hotel prices, transport routes, and tourist spots in Cox's Bazar. What do you need help with today?
+          <div class="max-w-[88%] bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-xs text-xs sm:text-sm leading-relaxed shadow-xs space-y-2">
+            <div>
+              👋 <strong>Hello! I'm your Cox's Bazar Smart AI Guide.</strong> Ask me about any specific hotel, route, fare, seafood spot, or activity:
+            </div>
+            <div class="pt-1.5 border-t border-slate-100 flex flex-wrap gap-1.5">
+              <button type="button" onclick="handleUserChatSubmission('Hotel Sea Crown details')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🏨 Sea Crown Details</button>
+              <button type="button" onclick="handleUserChatSubmission('Cheapest hotel?')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">💰 Cheapest Hotel</button>
+              <button type="button" onclick="handleUserChatSubmission('Inani & Himchari route')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🪨 Inani & Himchari</button>
+              <button type="button" onclick="handleUserChatSubmission('Best seafood & Poushee?')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🍛 Best Seafood</button>
+              <button type="button" onclick="handleUserChatSubmission('Marine Drive bike cost?')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🏍️ Bike Rental</button>
+              <button type="button" onclick="handleUserChatSubmission('My trip budget?')" class="px-2.5 py-1 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-[11px] font-extrabold transition cursor-pointer">📊 My Trip Budget</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1416,7 +1426,7 @@
         <input
           id="chatbot-input"
           type="text"
-          placeholder="Ask about hotels, Tomtoms, Inani, fares..."
+          placeholder="Ask specific hotel, spot, fare, restaurant, or route..."
           autocomplete="off"
           class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
         />
@@ -1467,9 +1477,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-simplebuilder"></script>
-  <script src="js/admin.js?v=20261013-simplebuilder"></script>
-  <script src="js/app.js?v=20261013-simplebuilder"></script>
-  <script src="js/features.js?v=20261013-simplebuilder"></script>
+  <script src="js/data.js?v=20261013-smartchat"></script>
+  <script src="js/admin.js?v=20261013-smartchat"></script>
+  <script src="js/app.js?v=20261013-smartchat"></script>
+  <script src="js/features.js?v=20261013-smartchat"></script>
 </body>
 </html>
