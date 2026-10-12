@@ -521,13 +521,13 @@
   </section>
 
   <!-- ========================================================================
-       3. DESTINATIONS & SIGHTSEEING (IMAGE CARDS + HIDDEN GEMS)
+       3. DESTINATIONS & SIGHTSEEING (SLIDING CAROUSEL + HIDDEN GEMS)
        ======================================================================== -->
-  <section id="destinations" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
+  <section id="destinations" class="py-20 md:py-28 bg-white border-t border-slate-200/60 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-14">
+      <div class="text-center max-w-3xl mx-auto mb-10">
         <span
           id="destinations-eyebrow"
           class="inline-block text-xs font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100 px-3 py-1 rounded-full mb-3"
@@ -545,8 +545,92 @@
         </p>
       </div>
 
-      <!-- Main Sightseeing Cards Grid -->
-      <div id="destinations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Destinations Slider Top Control Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div class="inline-flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-50 px-3.5 py-2 rounded-full border border-slate-200/80 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+          <span id="destination-slider-counter">Swipe or use arrows to explore destinations</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="destination-autoplay-btn"
+            onclick="toggleDestinationAutoSlide()"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-slate-50 hover:bg-sky-50 text-slate-700 border border-slate-200 transition shadow-2xs"
+            title="Toggle Auto-Slide"
+          >
+            <span id="destination-autoplay-icon">⏸</span>
+            <span id="destination-autoplay-label">Auto-Slide On</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="slideDestinations(-1)"
+            aria-label="Previous Destination"
+            class="w-10 h-10 rounded-full bg-white hover:bg-sky-700 text-slate-700 hover:text-white border border-slate-200 hover:border-sky-700 flex items-center justify-center transition shadow-xs"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            onclick="slideDestinations(1)"
+            aria-label="Next Destination"
+            class="w-10 h-10 rounded-full bg-sky-700 hover:bg-sky-800 text-white border border-sky-700 flex items-center justify-center transition shadow-sm"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Destinations Sliding Track Wrapper with Floating Side Arrows -->
+      <div
+        class="relative group/destslider"
+        onmouseenter="pauseDestinationAutoSlide(true)"
+        onmouseleave="pauseDestinationAutoSlide(false)"
+        ontouchstart="pauseDestinationAutoSlide(true)"
+        ontouchend="pauseDestinationAutoSlide(false)"
+      >
+        <!-- Left Floating Arrow (Desktop) -->
+        <button
+          type="button"
+          onclick="slideDestinations(-1)"
+          aria-label="Slide Left"
+          class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-ocean-950/90 hover:bg-sky-600 text-white border-2 border-white shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Main Sightseeing Cards Sliding Track -->
+        <div
+          id="destinations-grid"
+          class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1"
+        >
+          <!-- Populated dynamically via app.js -->
+        </div>
+
+        <!-- Right Floating Arrow (Desktop) -->
+        <button
+          type="button"
+          onclick="slideDestinations(1)"
+          aria-label="Slide Right"
+          class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-ocean-950/90 hover:bg-sky-600 text-white border-2 border-white shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Destinations Slider Dots Indicator Bar -->
+      <div id="destination-slider-dots" class="mt-2 flex items-center justify-center gap-2">
         <!-- Populated dynamically via app.js -->
       </div>
 
@@ -1250,9 +1334,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261012-slider"></script>
-  <script src="js/admin.js?v=20261012-slider"></script>
-  <script src="js/app.js?v=20261012-slider"></script>
-  <script src="js/features.js?v=20261012-slider"></script>
+  <script src="js/data.js?v=20261012-destslider"></script>
+  <script src="js/admin.js?v=20261012-destslider"></script>
+  <script src="js/app.js?v=20261012-destslider"></script>
+  <script src="js/features.js?v=20261012-destslider"></script>
 </body>
 </html>

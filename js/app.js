@@ -584,12 +584,20 @@ function openHotelInquiry(hotelId) {
 }
 
 /* --------------------------------------------------------------------------
- * SECTION 3: DESTINATIONS & HIDDEN GEMS RENDERER
+ * SECTION 3: DESTINATIONS & HIDDEN GEMS RENDERER (SLIDING CAROUSEL)
  * -------------------------------------------------------------------------- */
+let destinationAutoSlideTimer = null;
+let destinationSliderActiveIndex = 0;
+let destinationAutoSlideEnabled = true;
+let destinationSliderHoverPaused = false;
+let destinationScrollListenerAttached = false;
+
 function renderDestinations() {
   const t = UI_TEXT[AppState.lang].destinationsSection;
   const spotsGrid = document.getElementById('destinations-grid');
   const gemsGrid = document.getElementById('hidden-gems-grid');
+  const dotsContainer = document.getElementById('destination-slider-dots');
+  const counterEl = document.getElementById('destination-slider-counter');
   if (!spotsGrid || !gemsGrid) return;
 
   const q = AppState.searchQuery.trim().toLowerCase();
@@ -601,10 +609,40 @@ function renderDestinations() {
     return text.includes(q);
   });
 
-  spotsGrid.innerHTML = filteredSpots
-    .map(
-      spot => `
-      <article class="coastal-card group bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm flex flex-col">
+  updateDestinationAutoSlideUI();
+
+  if (filteredSpots.length === 0) {
+    spotsGrid.innerHTML = `
+      <div class="w-full bg-slate-50 rounded-3xl p-10 text-center border border-slate-200">
+        <p class="text-slate-600 font-medium">${
+          AppState.lang === 'en'
+            ? 'No destinations match your current search filter.'
+            : 'আপনার অনুসন্ধানের সাথে কোনো দর্শনীয় স্থান মেলেনি।'
+        }</p>
+        <button onclick="resetSearchAndFilters()" class="mt-4 px-5 py-2.5 bg-sky-600 text-white rounded-xl text-sm font-semibold hover:bg-sky-700 transition">
+          ${AppState.lang === 'en' ? 'Show All Destinations' : 'সব দর্শনীয় স্থান দেখুন'}
+        </button>
+      </div>
+    `;
+    if (dotsContainer) dotsContainer.innerHTML = '';
+    if (counterEl) {
+      counterEl.textContent = AppState.lang === 'en' ? '0 Destinations Found' : '০টি স্থান পাওয়া গেছে';
+    }
+  } else {
+    if (counterEl) {
+      counterEl.textContent =
+        AppState.lang === 'en'
+          ? `Showing ${filteredSpots.length} Iconic Destinations • Swipe or Click Arrows ← →`
+          : `${formatNumber(filteredSpots.length, 'bn')}টি জনপ্রিয় দর্শনীয় স্থান • বামে-ডানে স্লাইড করুন ← →`;
+    }
+
+    spotsGrid.innerHTML = filteredSpots
+      .map(
+        (spot, idx) => `
+      <article
+        data-destination-slide-index="${idx}"
+        class="coastal-card group shrink-0 snap-start w-[88%] sm:w-[350px] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm flex flex-col"
+      >
         <div class="relative h-60 overflow-hidden bg-slate-200">
           <img
             src="${spot.image}"
@@ -664,7 +702,7 @@ function renderDestinations() {
             <button
               type="button"
               onclick="if(typeof addSpotFromWebsiteCard==='function') addSpotFromWebsiteCard('${spot.id}')"
-              class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-2xs"
+              class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-2xs shrink-0"
             >
               ${AppState.lang === 'en' ? '+ Add to My Trip' : '+ ট্রিপ প্ল্যানে নিন'}
             </button>
@@ -672,8 +710,13 @@ function renderDestinations() {
         </div>
       </article>
     `
-    )
-    .join('');
+      )
+      .join('');
+
+    renderDestinationSliderDots(filteredSpots.length);
+    initDestinationSliderEvents();
+    startDestinationAutoSlide();
+  }
 
   // Render Hidden Gems with Original Cox's Bazar Photos
   gemsGrid.innerHTML = HIDDEN_GEMS_DATA.map((gem, idx) => {
@@ -709,6 +752,135 @@ function renderDestinations() {
       </div>
     `;
   }).join('');
+}
+
+function renderDestinationSliderDots(totalSlides) {
+  const dotsContainer = document.getElementById('destination-slider-dots');
+  if (!dotsContainer) return;
+
+  if (totalSlides <= 1) {
+    dotsContainer.innerHTML = '';
+    return;
+  }
+
+  dotsContainer.innerHTML = Array.from({ length: totalSlides })
+    .map((_, idx) => {
+      const isActive = idx === destinationSliderActiveIndex;
+      return `
+        <button
+          type="button"
+          onclick="slideToDestinationIndex(${idx})"
+          aria-label="Go to destination slide ${idx + 1}"
+          class="h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+            isActive ? 'w-8 bg-sky-700 shadow-xs' : 'w-2.5 bg-slate-300 hover:bg-sky-400'
+          }"
+        ></button>
+      `;
+    })
+    .join('');
+}
+
+function slideDestinations(direction) {
+  const track = document.getElementById('destinations-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('article[data-destination-slide-index]');
+  if (!slides.length) return;
+
+  const firstCard = slides[0];
+  const gap = 24; // gap-6 = 24px
+  const stepWidth = firstCard.offsetWidth + gap;
+  const maxScrollLeft = track.scrollWidth - track.clientWidth;
+
+  if (direction > 0) {
+    if (track.scrollLeft >= maxScrollLeft - 20) {
+      track.scrollTo({ left: 0, behavior: 'smooth' });
+      destinationSliderActiveIndex = 0;
+    } else {
+      track.scrollBy({ left: stepWidth, behavior: 'smooth' });
+      destinationSliderActiveIndex = Math.min(slides.length - 1, destinationSliderActiveIndex + 1);
+    }
+  } else {
+    if (track.scrollLeft <= 20) {
+      track.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+      destinationSliderActiveIndex = slides.length - 1;
+    } else {
+      track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
+      destinationSliderActiveIndex = Math.max(0, destinationSliderActiveIndex - 1);
+    }
+  }
+
+  renderDestinationSliderDots(slides.length);
+}
+
+function slideToDestinationIndex(index) {
+  const track = document.getElementById('destinations-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('article[data-destination-slide-index]');
+  if (!slides[index]) return;
+
+  const targetLeft = slides[index].offsetLeft - track.offsetLeft;
+  track.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  destinationSliderActiveIndex = index;
+  renderDestinationSliderDots(slides.length);
+}
+
+function initDestinationSliderEvents() {
+  const track = document.getElementById('destinations-grid');
+  if (!track || destinationScrollListenerAttached) return;
+  destinationScrollListenerAttached = true;
+
+  track.addEventListener(
+    'scroll',
+    () => {
+      const slides = track.querySelectorAll('article[data-destination-slide-index]');
+      if (!slides.length) return;
+      const firstCard = slides[0];
+      const stepWidth = firstCard.offsetWidth + 24;
+      const currentIdx = Math.min(
+        slides.length - 1,
+        Math.max(0, Math.round(track.scrollLeft / stepWidth))
+      );
+      if (currentIdx !== destinationSliderActiveIndex) {
+        destinationSliderActiveIndex = currentIdx;
+        renderDestinationSliderDots(slides.length);
+      }
+    },
+    { passive: true }
+  );
+}
+
+function startDestinationAutoSlide() {
+  if (destinationAutoSlideTimer) {
+    clearInterval(destinationAutoSlideTimer);
+  }
+  destinationAutoSlideTimer = setInterval(() => {
+    if (!destinationAutoSlideEnabled || destinationSliderHoverPaused) return;
+    slideDestinations(1);
+  }, 4600);
+}
+
+function toggleDestinationAutoSlide() {
+  destinationAutoSlideEnabled = !destinationAutoSlideEnabled;
+  updateDestinationAutoSlideUI();
+}
+
+function pauseDestinationAutoSlide(isPaused) {
+  destinationSliderHoverPaused = Boolean(isPaused);
+}
+
+function updateDestinationAutoSlideUI() {
+  const iconEl = document.getElementById('destination-autoplay-icon');
+  const labelEl = document.getElementById('destination-autoplay-label');
+  if (iconEl) {
+    iconEl.textContent = destinationAutoSlideEnabled ? '⏸' : '▶';
+  }
+  if (labelEl) {
+    if (AppState.lang === 'bn') {
+      labelEl.textContent = destinationAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
+    } else {
+      labelEl.textContent = destinationAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
+    }
+  }
 }
 
 /* --------------------------------------------------------------------------
