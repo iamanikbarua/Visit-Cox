@@ -175,6 +175,7 @@
           <a href="#itinerary-section" data-nav="itinerary" data-section-link="itinerary-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-amber-300 hover:text-amber-200">Plan My Trip</a>
           <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Transport</a>
           <a href="#essential-info" data-nav="essentialInfo" data-section-link="essential-info" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Essential Info</a>
+          <a href="#blog-section" data-nav="blog" data-section-link="blog-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-emerald-300 hover:text-amber-300">Blog</a>
           <a href="#faq" data-nav="faq" data-section-link="faq" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">FAQ</a>
         </nav>
 
@@ -265,6 +266,8 @@
         <a href="#itinerary-section" data-nav="itinerary" class="px-3.5 py-2.5 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 flex items-center justify-between">Plan My Trip</a>
         <a href="#transport" data-nav="transport" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Transport</a>
         <a href="#essential-info" data-nav="essentialInfo" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Essential Info</a>
+        <a href="#blog-section" data-nav="blog" class="px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 flex items-center justify-between">Travel Blog ✍️</a>
+        <a href="blog.html" class="px-3.5 py-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 flex items-center justify-between">Open Full Blog Page →</a>
         <a href="#faq" data-nav="faq" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">FAQ</a>
       </nav>
     </div>
@@ -1019,9 +1022,93 @@
   </section>
 
   <!-- ========================================================================
+       5B. COX'S BAZAR TRAVEL BLOG & COMMUNITY PUBLISHING HUB
+       ======================================================================== -->
+  <section id="blog-section" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section Heading + Write Post & Full Blog Page Buttons -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+        <div class="max-w-2xl">
+          <span
+            id="blog-section-eyebrow"
+            class="inline-block text-xs font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full mb-3"
+          >
+            📰 TRAVEL BLOG &amp; COMMUNITY STORIES
+          </span>
+          <h2
+            id="blog-section-title"
+            class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+          >
+            Cox’s Bazar Travel Blog &amp; Local Guides
+          </h2>
+          <p id="blog-section-subtitle" class="mt-2.5 text-slate-600 text-base">
+            Read insider tips on Marine Drive routes, authentic seafood spots, and island hopping — or write and publish your own blog post to share information with fellow travelers!
+          </p>
+        </div>
+
+        <!-- Action Buttons: Write Blog Post + Open Dedicated Blog Page -->
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onclick="openBlogEditorModal(null)"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
+          >
+            <span>✍️</span>
+            <span id="blog-write-btn-text">Write &amp; Publish Blog Post</span>
+          </button>
+
+          <a
+            href="blog.html"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-ocean-950 hover:bg-sky-900 text-white font-extrabold text-xs sm:text-sm shadow-md transition"
+          >
+            <span>📖</span>
+            <span id="blog-open-page-text">Open Full Blog Page</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills + Live Blog Search Bar -->
+      <div class="mb-8 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div
+          id="blog-category-filters"
+          class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0"
+        >
+          <!-- Populated dynamically via blog.js -->
+        </div>
+
+        <div class="relative w-full md:w-72 shrink-0">
+          <svg
+            class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            id="blog-search-input"
+            type="text"
+            oninput="handleBlogSearchInput(this.value)"
+            placeholder="Search blog posts, tags, or topics..."
+            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-xs sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
+          />
+        </div>
+      </div>
+
+      <!-- Blog Posts Grid (Populated dynamically via blog.js) -->
+      <div id="blog-posts-grid">
+        <!-- Populated dynamically via blog.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
        6A. FAQ / Q&A SECTION (ACCORDION LAYOUT)
        ======================================================================== -->
-  <section id="faq" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
+  <section id="faq" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section Heading -->
@@ -1086,6 +1173,7 @@
             <li><a href="#itinerary-section" data-nav="itinerary" class="hover:text-white transition text-amber-300">Itinerary</a></li>
             <li><a href="#transport" data-nav="transport" class="hover:text-white transition">Transport</a></li>
             <li><a href="#essential-info" data-nav="essentialInfo" class="hover:text-white transition">Essential Info</a></li>
+            <li><a href="blog.html" class="hover:text-white transition text-emerald-300 font-bold">Travel Blog ✍️</a></li>
             <li><a href="#faq" data-nav="faq" class="hover:text-white transition">FAQ</a></li>
           </ul>
         </div>
@@ -1477,9 +1565,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-smartchat"></script>
-  <script src="js/admin.js?v=20261013-smartchat"></script>
-  <script src="js/app.js?v=20261013-smartchat"></script>
-  <script src="js/features.js?v=20261013-smartchat"></script>
+  <script src="js/data.js?v=20261013-blog"></script>
+  <script src="js/admin.js?v=20261013-blog"></script>
+  <script src="js/app.js?v=20261013-blog"></script>
+  <script src="js/features.js?v=20261013-blog"></script>
+  <script src="js/blog.js?v=20261013-blog"></script>
 </body>
 </html>

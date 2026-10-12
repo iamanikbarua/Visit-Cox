@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cox's Bazar Travel Blog & Community Stories | Visit Cox's Bazar</title>
+  <meta
+    name="description"
+    content="Read and publish travel stories, food guides, Marine Drive tips, and local insights on the Cox's Bazar Travel Blog."
+  />
+
+  <!-- Google Fonts: Plus Jakarta Sans, Playfair Display & Hind Siliguri (for Bengali) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: {
+              950: '#072138',
+              900: '#0a2e4d',
+              800: '#0369a1',
+              600: '#0284c7',
+              400: '#38bdf8'
+            },
+            sand: {
+              50: '#fdfbf7',
+              100: '#f5ebe0',
+              200: '#e8d5c4'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/images/favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/images/favicon.png" />
+
+  <!-- Custom Coastal Theme Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css?v=20261013-blog" />
+</head>
+
+<body data-page="blog" class="antialiased bg-sand-50 selection:bg-sky-600 selection:text-white min-h-screen flex flex-col">
+
+  <!-- ========================================================================
+       STICKY NAVIGATION BAR (Blog Page)
+       ======================================================================== -->
+  <header
+    id="main-navbar"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-ocean-950/95 backdrop-blur-md border-b border-white/10"
+  >
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between gap-3 h-18 sm:h-20">
+
+        <!-- Brand Logo -->
+        <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group shrink-0 whitespace-nowrap">
+          <img
+            src="assets/images/favicon.png"
+            alt="Visit Cox Logo"
+            class="w-10 h-10 sm:w-11 sm:h-11 object-contain drop-shadow-md group-hover:scale-105 transition shrink-0"
+          />
+          <div class="flex items-center gap-2">
+            <span
+              id="blog-nav-brand"
+              class="text-base sm:text-lg xl:text-xl font-extrabold text-white tracking-tight whitespace-nowrap"
+            >
+              Visit Cox's Bazar
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-300/30 text-[11px] font-extrabold uppercase tracking-wider">
+              Blog
+            </span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav
+          aria-label="Blog Navigation"
+          class="hidden lg:flex items-center gap-1.5 bg-white/5 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/10 text-xs font-bold text-sky-100"
+        >
+          <a href="index.html#home" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300 transition">← Main Guide</a>
+          <a href="index.html#hotels" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300 transition">Hotels</a>
+          <a href="index.html#destinations" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300 transition">Destinations</a>
+          <a href="index.html#map-section" class="px-3 py-1.5 rounded-full hover:bg-white/10 text-teal-300 hover:text-amber-300 transition">Route Planner</a>
+          <a href="index.html#itinerary-section" class="px-3 py-1.5 rounded-full hover:bg-white/10 text-amber-300 hover:text-amber-200 transition">Plan My Trip</a>
+          <a href="blog.html" class="px-3.5 py-1.5 rounded-full bg-sky-500 text-white shadow-sm"> Travel Blog</a>
+        </nav>
+
+        <!-- Right Controls: Write Post CTA + Language Switcher -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <button
+            type="button"
+            onclick="openBlogEditorModal(null)"
+            class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs shadow-md transition cursor-pointer whitespace-nowrap"
+          >
+            <span>✍️</span>
+            <span id="nav-write-post-label">Write Blog Post</span>
+          </button>
+
+          <!-- Dual Language Switcher -->
+          <div
+            class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 shrink-0 whitespace-nowrap"
+            role="group"
+            aria-label="Language Switcher"
+          >
+            <button type="button" data-lang-btn="en" onclick="switchBlogPageLang('en')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer">EN</button>
+            <button type="button" data-lang-btn="bn" onclick="switchBlogPageLang('bn')" class="px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap cursor-pointer">বাংলা</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       BLOG HERO BANNER WITH SEARCH & PUBLISH CTA
+       ======================================================================== -->
+  <section class="relative pt-28 pb-16 sm:pt-32 sm:pb-20 bg-gradient-to-br from-ocean-950 via-ocean-900 to-teal-900 text-white overflow-hidden">
+    <!-- Background Decorative Image & Overlay -->
+    <div class="absolute inset-0 opacity-25 pointer-events-none">
+      <img
+        src="assets/images/marine-drive-boats.jpg"
+        alt="Cox's Bazar Travel Stories"
+        class="w-full h-full object-cover"
+      />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-ocean-950 via-ocean-950/80 to-ocean-950/60 pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/15 border border-amber-300/30 text-amber-300 text-xs font-extrabold uppercase tracking-widest mb-4">
+            <span>📰</span>
+            <span id="blog-page-badge">COX'S BAZAR TRAVEL BLOG & COMMUNITY STORIES</span>
+          </div>
+          <h1
+            id="blog-page-title"
+            class="font-display text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight"
+          >
+            Share Your Cox’s Bazar Stories, Guides &amp; Travel Tips
+          </h1>
+          <p id="blog-page-subtitle" class="mt-3.5 text-sky-100/90 text-sm sm:text-base leading-relaxed max-w-2xl">
+            Read real guides on Marine Drive routes, local shutki &amp; seafood spots, budget breakdowns, and island adventures — or publish your own blog post with photos to help fellow travelers!
+          </p>
+        </div>
+
+        <!-- Primary Action Box -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-3xl p-5 sm:p-6 shrink-0 lg:w-80 shadow-xl">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-1" id="blog-cta-box-eyebrow">
+            Got Travel Information to Share?
+          </div>
+          <p class="text-xs text-sky-100/85 leading-relaxed mb-4" id="blog-cta-box-desc">
+            Publish your own Cox’s Bazar article, hotel review, food guide, or safety tip in seconds.
+          </p>
+          <button
+            type="button"
+            onclick="openBlogEditorModal(null)"
+            class="w-full py-3 px-5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>✍️</span>
+            <span id="blog-cta-box-btn">Create &amp; Publish Blog Post</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Filter Bar -->
+      <div class="mt-10 bg-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-slate-200/90 text-slate-800">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <!-- Category Filter Pills -->
+          <div
+            id="blog-category-filters"
+            class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0"
+          >
+            <!-- Populated dynamically via blog.js -->
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-full md:w-72 shrink-0">
+            <svg
+              class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              id="blog-search-input"
+              type="text"
+              oninput="handleBlogSearchInput(this.value)"
+              placeholder="Search blog posts, tags, or authors..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-xs sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       MAIN BLOG ARTICLES GRID
+       ======================================================================== -->
+  <main class="flex-1 py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Quick Back Link + Post Counter -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-8">
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90 text-xs font-bold shadow-2xs transition"
+          >
+            <span>←</span>
+            <span id="blog-back-home-label">Back to Main Tourism Guide</span>
+          </a>
+        </div>
+
+        <button
+          type="button"
+          onclick="openBlogEditorModal(null)"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold shadow-sm transition cursor-pointer"
+        >
+          <span>+</span>
+          <span id="blog-secondary-write-btn">New Blog Post</span>
+        </button>
+      </div>
+
+      <!-- Blog Posts Grid (Populated via blog.js) -->
+      <div id="blog-posts-grid">
+        <!-- Populated dynamically via blog.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="bg-ocean-950 text-sky-100 py-10 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/images/favicon.png" alt="Visit Cox Logo" class="w-9 h-9 object-contain" />
+        <div>
+          <span class="font-extrabold text-white text-sm">Visit Cox's Bazar • Travel Blog</span>
+          <p class="text-xs text-sky-300/75">Share your coastal experiences, food discoveries, and travel tips.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs font-bold">
+        <a href="index.html" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition">Main Website</a>
+        <button
+          type="button"
+          onclick="openBlogEditorModal(null)"
+          class="px-3.5 py-2 rounded-xl bg-amber-400 text-slate-950 font-extrabold hover:bg-amber-300 transition cursor-pointer"
+        >
+          ✍️ Write a Post
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Data & Blog Scripts -->
+  <script src="js/data.js?v=20261013-blog"></script>
+  <script>
+    // Minimal AppState shim for standalone blog.html page
+    window.AppState = window.AppState || { lang: 'en', currency: 'BDT' };
+
+    function switchBlogPageLang(lang) {
+      window.AppState.lang = lang;
+      document.documentElement.lang = lang;
+      const isEN = lang === 'en';
+
+      document.querySelectorAll('[data-lang-btn="en"]').forEach(el => {
+        el.className = isEN
+          ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer'
+          : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap cursor-pointer';
+      });
+      document.querySelectorAll('[data-lang-btn="bn"]').forEach(el => {
+        el.className = !isEN
+          ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap cursor-pointer'
+          : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap cursor-pointer';
+      });
+
+      const setTxt = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+
+      setTxt('blog-nav-brand', isEN ? "Visit Cox's Bazar" : 'ভিজিট কক্সবাজার');
+      setTxt('nav-write-post-label', isEN ? 'Write Blog Post' : 'ব্লগ লিখুন');
+      setTxt('blog-page-badge', isEN ? "COX'S BAZAR TRAVEL BLOG & COMMUNITY STORIES" : 'কক্সবাজার ট্রাভেল ব্লগ ও ভ্রমণ গল্প');
+      setTxt('blog-page-title', isEN ? 'Share Your Cox’s Bazar Stories, Guides & Travel Tips' : 'আপনার কক্সবাজার ভ্রমণের অভিজ্ঞতা, গাইড ও টিপস শেয়ার করুন');
+      setTxt(
+        'blog-page-subtitle',
+        isEN
+          ? 'Read real guides on Marine Drive routes, local shutki & seafood spots, budget breakdowns, and island adventures — or publish your own blog post with photos to help fellow travelers!'
+          : 'মেরিন ড্রাইভ রুট, স্থানীয় সামুদ্রিক খাবার, বাজেট প্ল্যান ও দ্বীপ ভ্রমণের বাস্তব গাইড পড়ুন — অথবা ছবি সহ আপনার নিজের ব্লগ পোস্ট প্রকাশ করুন!'
+      );
+      setTxt('blog-cta-box-eyebrow', isEN ? 'Got Travel Information to Share?' : 'ভ্রমণ তথ্য শেয়ার করতে চান?');
+      setTxt('blog-cta-box-desc', isEN ? 'Publish your own Cox’s Bazar article, hotel review, food guide, or safety tip in seconds.' : 'কয়েক সেকেন্ডে আপনার নিজের কক্সবাজার আর্টিকেল, হোটেল রিভিউ বা ফুড গাইড প্রকাশ করুন।');
+      setTxt('blog-cta-box-btn', isEN ? 'Create & Publish Blog Post' : 'নতুন ব্লগ পোস্ট প্রকাশ করুন');
+      setTxt('blog-back-home-label', isEN ? 'Back to Main Tourism Guide' : 'মূল গাইডে ফিরে যান');
+      setTxt('blog-secondary-write-btn', isEN ? 'New Blog Post' : 'নতুন ব্লগ পোস্ট');
+
+      const searchInput = document.getElementById('blog-search-input');
+      if (searchInput) {
+        searchInput.placeholder = isEN ? 'Search blog posts, tags, or authors...' : 'ব্লগ পোস্ট, ট্যাগ বা লেখকের নাম খুঁজুন...';
+      }
+
+      if (typeof renderBlogSection === 'function') {
+        renderBlogSection();
+      }
+    }
+  </script>
+  <script src="js/blog.js?v=20261013-blog"></script>
+</body>
+</html>

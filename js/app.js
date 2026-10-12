@@ -2406,6 +2406,7 @@ function initScrollListeners() {
     'itinerary-section',
     'transport',
     'essential-info',
+    'blog-section',
     'faq'
   ];
 
@@ -2467,6 +2468,9 @@ function renderAll() {
   renderChatQuickPrompts();
   if (typeof renderInteractiveFeatures === 'function') {
     renderInteractiveFeatures();
+  }
+  if (typeof renderBlogSection === 'function') {
+    renderBlogSection();
   }
 }
 
