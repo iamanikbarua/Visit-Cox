@@ -634,6 +634,7 @@ function renderHotels() {
                 src="${hotel.image}"
                 alt="${hotel.name[AppState.lang]}"
                 loading="lazy"
+                decoding="async"
                 class="card-img w-full h-full object-cover"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-slate-950/30"></div>
@@ -1211,6 +1212,7 @@ function renderDestinations() {
             src="${spot.image}"
             alt="${spot.name[AppState.lang]}"
             loading="lazy"
+            decoding="async"
             class="card-img w-full h-full object-cover"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
@@ -1304,6 +1306,7 @@ function renderDestinations() {
                     src="${gem.image}"
                     alt="${gem.name[AppState.lang]}"
                     loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-500"
                   />
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent"></div>
@@ -1730,6 +1733,7 @@ function renderActivities() {
               src="${act.image}"
               alt="${nameText}"
               loading="lazy"
+              decoding="async"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent"></div>
@@ -2387,7 +2391,7 @@ function handleLiveHeroSearchInput() {
         class="w-full p-2.5 rounded-xl hover:bg-sky-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
       >
         <div class="flex items-center gap-2.5 min-w-0">
-          <img src="${h.image}" alt="${h.name[lang]}" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          <img src="${h.image}" alt="${h.name[lang]}" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
           <div class="min-w-0">
             <span class="block text-[10px] font-extrabold uppercase tracking-wider text-sky-700">🏨 ${lang === 'en' ? 'Hotel' : 'হোটেল'}</span>
             <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${h.name[lang]}</span>
@@ -2407,7 +2411,7 @@ function handleLiveHeroSearchInput() {
         class="w-full p-2.5 rounded-xl hover:bg-teal-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
       >
         <div class="flex items-center gap-2.5 min-w-0">
-          <img src="${s.image}" alt="${s.name[lang]}" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          <img src="${s.image}" alt="${s.name[lang]}" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
           <div class="min-w-0">
             <span class="block text-[10px] font-extrabold uppercase tracking-wider text-teal-700">📍 ${lang === 'en' ? 'Sightseeing Spot' : 'দর্শনীয় স্থান'}</span>
             <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${s.name[lang]}</span>
@@ -2427,7 +2431,7 @@ function handleLiveHeroSearchInput() {
         class="w-full p-2.5 rounded-xl hover:bg-amber-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
       >
         <div class="flex items-center gap-2.5 min-w-0">
-          <img src="${act.image}" alt="${act.name[lang]}" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          <img src="${act.image}" alt="${act.name[lang]}" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
           <div class="min-w-0">
             <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-700">🏄 ${lang === 'en' ? 'Coastal Activity' : 'রোমাঞ্চকর অ্যাক্টিভিটি'}</span>
             <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${act.name[lang]}</span>
@@ -2629,7 +2633,7 @@ function buildSingleHotelChatCard(hotel, lang) {
   return `
     <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-1.5">
       <div class="flex items-center gap-2.5">
-        <img src="${hotel.image}" alt="${hotel.name[lang]}" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
+        <img src="${hotel.image}" alt="${hotel.name[lang]}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-1">
             <strong class="text-slate-900 text-xs sm:text-sm truncate">${hotel.name[lang]}</strong>
@@ -3591,8 +3595,12 @@ async function handleUserChatSubmission(prefilledText) {
 /* --------------------------------------------------------------------------
  * MOBILE MENU, SCROLL PROGRESS BAR & ACTIVE SECTION SCROLLSPY
  * -------------------------------------------------------------------------- */
-function toggleMobileMenu() {
-  AppState.isMobileMenuOpen = !AppState.isMobileMenuOpen;
+function toggleMobileMenu(forceState) {
+  if (typeof forceState === 'boolean') {
+    AppState.isMobileMenuOpen = forceState;
+  } else {
+    AppState.isMobileMenuOpen = !AppState.isMobileMenuOpen;
+  }
   const menu = document.getElementById('mobile-nav-drawer');
   if (menu) {
     menu.classList.toggle('hidden', !AppState.isMobileMenuOpen);

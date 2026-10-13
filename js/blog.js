@@ -474,6 +474,7 @@ function renderBlogSection() {
                 src="${post.image || 'assets/images/inani-beach.jpg'}"
                 alt="${title.replace(/"/g, '&quot;')}"
                 loading="lazy"
+                decoding="async"
                 class="card-img w-full h-full object-cover"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
@@ -583,6 +584,8 @@ function openBlogReaderModal(postId) {
       <img
         src="${post.image || 'assets/images/inani-beach.jpg'}"
         alt="${title.replace(/"/g, '&quot;')}"
+        loading="lazy"
+        decoding="async"
         class="w-full h-full object-cover opacity-90"
       />
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>

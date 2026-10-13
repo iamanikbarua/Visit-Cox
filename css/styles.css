@@ -15,21 +15,46 @@
   --coral-accent: #f97316;
 }
 
-/* Smooth scrolling & base typography */
+/* Smooth scrolling, responsiveness & Poppins typography */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
-body {
-  font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, button, input, select, textarea {
+  font-family: 'Poppins', 'Hind Siliguri', sans-serif;
   background-color: var(--sand-light);
   color: #0f172a;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .font-display {
-  font-family: 'Playfair Display', 'Hind Siliguri', serif;
+  font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+}
+
+/* Global Responsiveness & Performance Safeguards */
+body {
+  max-width: 100vw;
+  position: relative;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* Custom Scrollbar */
@@ -304,6 +329,31 @@ body {
 
 .hotel-slider-track::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+}
+
+/* ==========================================================================
+   Responsive & Performance Optimizations (Mobile to 4K Displays)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .coastal-card {
+    width: 88% !important;
+    max-width: 330px;
+  }
+  
+  .nav-link-pill,
+  button,
+  select {
+    min-height: 38px;
+  }
+}
+
+/* Hardware accelerated smooth sliding transitions */
+.hero-slide,
+.coastal-card,
+.hotel-slider-track {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 
