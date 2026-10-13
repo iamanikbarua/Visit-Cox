@@ -873,31 +873,118 @@
         <!-- Populated dynamically via app.js -->
       </div>
 
-      <!-- Special Highlighted Section: HIDDEN GEMS -->
-      <div class="mt-20 rounded-3xl bg-gradient-to-br from-ocean-950 via-ocean-900 to-teal-900 p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+      <!-- Special Highlighted Section: HIDDEN GEMS (Animated Sliding Carousel) -->
+      <div class="mt-20 rounded-3xl bg-gradient-to-br from-ocean-950 via-ocean-900 to-teal-900 p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden">
         <!-- Decorative Background Glow -->
-        <div class=" -top-24 -right-24 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl pointer-events-none absolute"></div>
+        <div class="-top-24 -right-24 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl pointer-events-none absolute"></div>
+        <div class="-bottom-24 -left-24 w-96 h-96 rounded-full bg-amber-400/10 blur-3xl pointer-events-none absolute"></div>
 
         <div class="relative z-10">
-          <div class="max-w-2xl mb-10">
-            <span
-              id="hidden-gems-badge"
-              class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-300 bg-amber-400/15 border border-amber-300/30 px-3.5 py-1 rounded-full mb-3"
-            >
-              OFF THE BEATEN PATH
-            </span>
-            <h3
-              id="hidden-gems-title"
-              class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
-            >
-              Hidden Gems of Cox's Bazar
-            </h3>
-            <p id="hidden-gems-subtitle" class="mt-2 text-sky-100/85 text-sm sm:text-base">
-              Escape the crowds and experience untouched islands, golden sunset points, eco trails, and authentic local trade hubs.
-            </p>
+          <!-- Header & Top Slider Controls -->
+          <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+            <div class="max-w-2xl">
+              <span
+                id="hidden-gems-badge"
+                class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-300 bg-amber-400/15 border border-amber-300/30 px-3.5 py-1 rounded-full mb-3"
+              >
+                OFF THE BEATEN PATH
+              </span>
+              <h3
+                id="hidden-gems-title"
+                class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
+              >
+                Hidden Gems of Cox's Bazar
+              </h3>
+              <p id="hidden-gems-subtitle" class="mt-2 text-sky-100/85 text-sm sm:text-base">
+                Escape the crowds and experience untouched islands, golden sunset points, eco trails, and authentic local trade hubs.
+              </p>
+            </div>
+
+            <!-- Slider Control Buttons -->
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <div class="inline-flex items-center gap-2 text-xs font-bold text-sky-200 bg-white/10 px-3.5 py-2 rounded-full border border-white/15 backdrop-blur-sm shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="gems-slider-counter">10 Hidden Gems • Swipe or Click ← →</span>
+              </div>
+
+              <button
+                type="button"
+                id="gems-autoplay-btn"
+                onclick="toggleHiddenGemsAutoSlide()"
+                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 transition shadow-2xs backdrop-blur-sm cursor-pointer"
+                title="Toggle Auto-Slide"
+              >
+                <span id="gems-autoplay-icon">⏸</span>
+                <span id="gems-autoplay-label">Auto-Slide On</span>
+              </button>
+
+              <button
+                type="button"
+                onclick="slideHiddenGems(-1)"
+                aria-label="Previous Gem"
+                class="w-10 h-10 rounded-full bg-white/10 hover:bg-amber-400 text-white hover:text-slate-950 border border-white/20 hover:border-amber-400 flex items-center justify-center transition shadow-xs cursor-pointer"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                onclick="slideHiddenGems(1)"
+                aria-label="Next Gem"
+                class="w-10 h-10 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 border border-amber-400 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <div id="hidden-gems-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <!-- Sliding Track Wrapper with Side Arrows -->
+          <div
+            class="relative group/gemsslider"
+            onmouseenter="pauseHiddenGemsAutoSlide(true)"
+            onmouseleave="pauseHiddenGemsAutoSlide(false)"
+            ontouchstart="pauseHiddenGemsAutoSlide(true)"
+            ontouchend="pauseHiddenGemsAutoSlide(false)"
+          >
+            <!-- Left Floating Arrow (Desktop) -->
+            <button
+              type="button"
+              onclick="slideHiddenGems(-1)"
+              aria-label="Slide Left"
+              class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ocean-950/90 hover:bg-amber-400 text-white hover:text-slate-950 border-2 border-white/30 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <!-- Horizontal Sliding Hidden Gems Track -->
+            <div
+              id="hidden-gems-grid"
+              class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1 scroll-smooth"
+            >
+              <!-- Populated dynamically via app.js -->
+            </div>
+
+            <!-- Right Floating Arrow (Desktop) -->
+            <button
+              type="button"
+              onclick="slideHiddenGems(1)"
+              aria-label="Slide Right"
+              class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ocean-950/90 hover:bg-amber-400 text-white hover:text-slate-950 border-2 border-white/30 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Hidden Gems Slider Dots Indicator Bar -->
+          <div id="hidden-gems-slider-dots" class="mt-3 flex items-center justify-center gap-2">
             <!-- Populated dynamically via app.js -->
           </div>
         </div>

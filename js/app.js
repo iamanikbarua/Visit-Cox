@@ -229,6 +229,16 @@ function renderStaticText() {
   setText('hidden-gems-badge', t.destinationsSection.hiddenGemsBadge);
   setText('hidden-gems-title', t.destinationsSection.hiddenGemsTitle);
   setText('hidden-gems-subtitle', t.destinationsSection.hiddenGemsSubtitle);
+  const gemsCounterEl = document.getElementById('gems-slider-counter');
+  if (gemsCounterEl) {
+    gemsCounterEl.textContent =
+      AppState.lang === 'en'
+        ? `${HIDDEN_GEMS_DATA.length} Hidden Gems • Swipe or Click ← →`
+        : `${formatNumber(HIDDEN_GEMS_DATA.length, 'bn')}টি হিডেন জেম • স্লাইড বা তীর ক্লিক করুন ← →`;
+  }
+  if (typeof updateHiddenGemsAutoSlideUI === 'function') {
+    updateHiddenGemsAutoSlideUI();
+  }
 
   // Activities Section
   if (t.activitiesSection) {
@@ -1268,40 +1278,63 @@ function renderDestinations() {
     startDestinationAutoSlide();
   }
 
-  // Render Hidden Gems with Original Cox's Bazar Photos
+  // Render Hidden Gems with Original Cox's Bazar Photos & Interactive Sliding Carousel
+  const gemsCounterEl = document.getElementById('gems-slider-counter');
+  if (gemsCounterEl) {
+    gemsCounterEl.textContent =
+      AppState.lang === 'en'
+        ? `${HIDDEN_GEMS_DATA.length} Hidden Gems • Swipe or Click ← →`
+        : `${formatNumber(HIDDEN_GEMS_DATA.length, 'bn')}টি হিডেন জেম • স্লাইড বা তীর ক্লিক করুন ← →`;
+  }
+
   gemsGrid.innerHTML = HIDDEN_GEMS_DATA.map((gem, idx) => {
     return `
-      <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl overflow-hidden hover:bg-white/15 transition-all flex flex-col justify-between">
+      <article
+        data-gem-slide-index="${idx}"
+        class="shrink-0 snap-start w-[88%] sm:w-[320px] md:w-[340px] lg:w-[360px] bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/15 hover:border-amber-300/40 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col justify-between group shadow-lg"
+      >
         <div>
           ${
             gem.image
-              ? `<div class="relative h-40 overflow-hidden bg-slate-900">
-                  <img src="${gem.image}" alt="${gem.name[AppState.lang]}" loading="lazy" class="w-full h-full object-cover opacity-95 hover:scale-105 transition duration-500" />
-                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                  <span class="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400 text-slate-950">
+              ? `<div class="relative h-44 overflow-hidden bg-slate-950">
+                  <img
+                    src="${gem.image}"
+                    alt="${gem.name[AppState.lang]}"
+                    loading="lazy"
+                    class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent"></div>
+                  <span class="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400 text-slate-950 shadow-xs">
                     #${idx + 1} • ${gem.highlight[AppState.lang]}
                   </span>
                 </div>`
               : ''
           }
           <div class="p-5">
-            <h4 class="text-lg font-bold text-white">${gem.name[AppState.lang]}</h4>
+            <h4 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">${gem.name[AppState.lang]}</h4>
             <p class="text-sky-100/90 text-xs sm:text-sm mt-2 leading-relaxed">${gem.description[AppState.lang]}</p>
           </div>
         </div>
-        <div class="px-5 pb-4 flex items-center justify-between gap-2">
+        <div class="px-5 pb-5 pt-2 border-t border-white/10 flex items-center justify-between gap-2">
           ${
             gem.sourceUrl
-              ? `<a href="${gem.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-300 hover:underline font-semibold">
-                  ✓ Original Photo Source ↗
+              ? `<a href="${gem.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-300 hover:text-amber-300 hover:underline font-semibold transition-colors">
+                  ✓ ${AppState.lang === 'en' ? 'Photo Source' : 'ছবির উৎস'} ↗
                 </a>`
               : '<span></span>'
           }
-          ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hiddenGems', gem.id) : ''}
+          <div class="flex items-center gap-1.5">
+            ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hiddenGems', gem.id) : ''}
+          </div>
         </div>
-      </div>
+      </article>
     `;
   }).join('');
+
+  renderHiddenGemsSliderDots(HIDDEN_GEMS_DATA.length);
+  initHiddenGemsSliderEvents();
+  startHiddenGemsAutoSlide();
+  updateHiddenGemsAutoSlideUI();
 }
 
 function renderDestinationSliderDots(totalSlides) {
@@ -1429,6 +1462,144 @@ function updateDestinationAutoSlideUI() {
       labelEl.textContent = destinationAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
     } else {
       labelEl.textContent = destinationAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * SECTION 3B: HIDDEN GEMS SLIDING CAROUSEL CONTROLLER
+ * -------------------------------------------------------------------------- */
+let hiddenGemsSliderActiveIndex = 0;
+let hiddenGemsAutoSlideTimer = null;
+let hiddenGemsAutoSlideEnabled = true;
+let hiddenGemsSliderHoverPaused = false;
+let hiddenGemsScrollListenerAttached = false;
+
+function renderHiddenGemsSliderDots(totalSlides) {
+  const dotsContainer = document.getElementById('hidden-gems-slider-dots');
+  if (!dotsContainer) return;
+
+  if (totalSlides <= 1) {
+    dotsContainer.innerHTML = '';
+    return;
+  }
+
+  dotsContainer.innerHTML = Array.from({ length: totalSlides })
+    .map((_, idx) => {
+      const isActive = idx === hiddenGemsSliderActiveIndex;
+      return `
+        <button
+          type="button"
+          onclick="slideToGemIndex(${idx})"
+          aria-label="Go to hidden gem ${idx + 1}"
+          class="h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+            isActive ? 'w-8 bg-amber-400 shadow-xs' : 'w-2.5 bg-white/30 hover:bg-white/60'
+          }"
+        ></button>
+      `;
+    })
+    .join('');
+}
+
+function slideHiddenGems(direction) {
+  const track = document.getElementById('hidden-gems-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('[data-gem-slide-index]');
+  if (!slides.length) return;
+
+  const firstCard = slides[0];
+  const gap = 24; // gap-6 = 24px
+  const stepWidth = firstCard.offsetWidth + gap;
+  const maxScrollLeft = track.scrollWidth - track.clientWidth;
+
+  if (direction > 0) {
+    if (track.scrollLeft >= maxScrollLeft - 20) {
+      track.scrollTo({ left: 0, behavior: 'smooth' });
+      hiddenGemsSliderActiveIndex = 0;
+    } else {
+      track.scrollBy({ left: stepWidth, behavior: 'smooth' });
+      hiddenGemsSliderActiveIndex = Math.min(slides.length - 1, hiddenGemsSliderActiveIndex + 1);
+    }
+  } else {
+    if (track.scrollLeft <= 20) {
+      track.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+      hiddenGemsSliderActiveIndex = slides.length - 1;
+    } else {
+      track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
+      hiddenGemsSliderActiveIndex = Math.max(0, hiddenGemsSliderActiveIndex - 1);
+    }
+  }
+
+  renderHiddenGemsSliderDots(slides.length);
+}
+
+function slideToGemIndex(index) {
+  const track = document.getElementById('hidden-gems-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('[data-gem-slide-index]');
+  if (!slides[index]) return;
+
+  const targetLeft = slides[index].offsetLeft - track.offsetLeft;
+  track.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  hiddenGemsSliderActiveIndex = index;
+  renderHiddenGemsSliderDots(slides.length);
+}
+
+function initHiddenGemsSliderEvents() {
+  const track = document.getElementById('hidden-gems-grid');
+  if (!track || hiddenGemsScrollListenerAttached) return;
+  hiddenGemsScrollListenerAttached = true;
+
+  track.addEventListener(
+    'scroll',
+    () => {
+      const slides = track.querySelectorAll('[data-gem-slide-index]');
+      if (!slides.length) return;
+      const firstCard = slides[0];
+      const stepWidth = firstCard.offsetWidth + 24;
+      const currentIdx = Math.min(
+        slides.length - 1,
+        Math.max(0, Math.round(track.scrollLeft / stepWidth))
+      );
+      if (currentIdx !== hiddenGemsSliderActiveIndex) {
+        hiddenGemsSliderActiveIndex = currentIdx;
+        renderHiddenGemsSliderDots(slides.length);
+      }
+    },
+    { passive: true }
+  );
+}
+
+function startHiddenGemsAutoSlide() {
+  if (hiddenGemsAutoSlideTimer) {
+    clearInterval(hiddenGemsAutoSlideTimer);
+  }
+  hiddenGemsAutoSlideTimer = setInterval(() => {
+    if (!hiddenGemsAutoSlideEnabled || hiddenGemsSliderHoverPaused) return;
+    slideHiddenGems(1);
+  }, 4400);
+}
+
+function toggleHiddenGemsAutoSlide() {
+  hiddenGemsAutoSlideEnabled = !hiddenGemsAutoSlideEnabled;
+  updateHiddenGemsAutoSlideUI();
+}
+
+function pauseHiddenGemsAutoSlide(isPaused) {
+  hiddenGemsSliderHoverPaused = Boolean(isPaused);
+}
+
+function updateHiddenGemsAutoSlideUI() {
+  const iconEl = document.getElementById('gems-autoplay-icon');
+  const labelEl = document.getElementById('gems-autoplay-label');
+  if (iconEl) {
+    iconEl.textContent = hiddenGemsAutoSlideEnabled ? '⏸' : '▶';
+  }
+  if (labelEl) {
+    if (AppState.lang === 'bn') {
+      labelEl.textContent = hiddenGemsAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
+    } else {
+      labelEl.textContent = hiddenGemsAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
     }
   }
 }
