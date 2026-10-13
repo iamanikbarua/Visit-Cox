@@ -23,6 +23,7 @@ const AppState = {
   hotelSortBy: 'recommended',    // 'recommended' | 'price-asc' | 'price-desc' | 'stars-desc'
   searchQuery: '',
   searchCategory: 'all',
+  activityFilter: 'all',
   activeFaqId: 'faq-1',
   isChatOpen: false,
   isMobileMenuOpen: false
@@ -148,6 +149,7 @@ function renderStaticText() {
   document.querySelectorAll('[data-nav="home"]').forEach(el => (el.textContent = t.nav.home));
   document.querySelectorAll('[data-nav="hotels"]').forEach(el => (el.textContent = t.nav.hotels));
   document.querySelectorAll('[data-nav="destinations"]').forEach(el => (el.textContent = t.nav.destinations));
+  document.querySelectorAll('[data-nav="activities"]').forEach(el => (el.textContent = t.nav.activities || (AppState.lang === 'bn' ? 'অ্যাক্টিভিটি' : 'Activities')));
   document.querySelectorAll('[data-nav="transport"]').forEach(el => (el.textContent = t.nav.transport));
   document.querySelectorAll('[data-nav="essentialInfo"]').forEach(el => (el.textContent = t.nav.essentialInfo));
   document.querySelectorAll('[data-nav="faq"]').forEach(el => (el.textContent = t.nav.faq));
@@ -180,7 +182,7 @@ function renderStaticText() {
   // Hero Stats (Interactive Glass Cards)
   const statsContainer = document.getElementById('hero-stats-grid');
   if (statsContainer) {
-    const statTargets = ['#destinations', '#map-section', '#destinations', '#essential-info'];
+    const statTargets = ['#hotels', '#destinations', '#hidden-gems-grid', '#activities-section'];
     statsContainer.innerHTML = t.hero.stats
       .map(
         (stat, idx) => `
@@ -227,6 +229,13 @@ function renderStaticText() {
   setText('hidden-gems-badge', t.destinationsSection.hiddenGemsBadge);
   setText('hidden-gems-title', t.destinationsSection.hiddenGemsTitle);
   setText('hidden-gems-subtitle', t.destinationsSection.hiddenGemsSubtitle);
+
+  // Activities Section
+  if (t.activitiesSection) {
+    setText('activities-eyebrow', t.activitiesSection.eyebrow);
+    setText('activities-title', t.activitiesSection.title);
+    setText('activities-subtitle', t.activitiesSection.subtitle);
+  }
 
   setText('transport-eyebrow', t.transportSection.eyebrow);
   setText('transport-title', t.transportSection.title);
@@ -1425,6 +1434,232 @@ function updateDestinationAutoSlideUI() {
 }
 
 /* --------------------------------------------------------------------------
+ * SECTION 3C: ACTIVITIES & COASTAL ADVENTURES RENDERER
+ * -------------------------------------------------------------------------- */
+function renderActivities() {
+  const container = document.getElementById('activities-grid');
+  const filtersContainer = document.getElementById('activity-category-filters');
+  if (!container) return;
+
+  const t = UI_TEXT[AppState.lang].activitiesSection || {
+    filterAll: 'All Activities',
+    filterWater: 'Water Sports',
+    filterBeach: 'Beach & Riding',
+    filterSafari: 'Jeep & Tours',
+    filterNight: 'Camping & Night',
+    addToTrip: '+ Add to My Trip',
+    estCost: 'Estimated Price',
+    locationLabel: 'Location',
+    durationLabel: 'Duration'
+  };
+
+  // Render Category Filter Buttons
+  if (filtersContainer) {
+    const categories = [
+      { key: 'all', label: t.filterAll },
+      { key: 'water', label: t.filterWater },
+      { key: 'beach', label: t.filterBeach },
+      { key: 'safari', label: t.filterSafari },
+      { key: 'night', label: t.filterNight }
+    ];
+
+    filtersContainer.innerHTML = categories
+      .map(cat => {
+        const isActive = (AppState.activityFilter || 'all') === cat.key;
+        return `
+          <button
+            type="button"
+            onclick="setActivityFilter('${cat.key}')"
+            class="px-3.5 py-1.5 rounded-full text-xs font-bold transition shadow-2xs cursor-pointer ${
+              isActive
+                ? 'bg-amber-400 text-slate-950 font-extrabold shadow-sm'
+                : 'bg-white hover:bg-amber-50 text-slate-700 border border-slate-200'
+            }"
+          >
+            ${cat.label}
+          </button>
+        `;
+      })
+      .join('');
+  }
+
+  const q = AppState.searchQuery.trim().toLowerCase();
+  const activities = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).filter(act => {
+    // Category match
+    if (AppState.activityFilter && AppState.activityFilter !== 'all') {
+      if (act.category !== AppState.activityFilter) return false;
+    }
+    // Search query match
+    if (q && (AppState.searchCategory === 'all' || AppState.searchCategory === 'spots')) {
+      const text = `${act.name.en} ${act.name.bn} ${act.location.en} ${act.location.bn} ${act.description.en} ${act.description.bn}`.toLowerCase();
+      if (!text.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (activities.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
+        <p class="text-slate-600 font-medium">${
+          AppState.lang === 'en'
+            ? 'No activities match the selected filter.'
+            : 'নির্বাচিত ফিল্টারে কোনো অ্যাক্টিভিটি পাওয়া যায়নি।'
+        }</p>
+        <button onclick="setActivityFilter('all')" class="mt-4 px-5 py-2.5 bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition">
+          ${AppState.lang === 'en' ? 'Show All Activities' : 'সব অ্যাক্টিভিটি দেখুন'}
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = activities
+    .map(act => {
+      const priceText = formatPriceRange(act.priceBDT, act.priceMaxBDT);
+      const badgeText = act.badge ? act.badge[AppState.lang] : '';
+      const nameText = act.name[AppState.lang];
+      const locText = act.location[AppState.lang];
+      const durText = act.duration[AppState.lang];
+      const diffText = act.difficulty[AppState.lang];
+      const descText = act.description[AppState.lang];
+      const noteText = act.priceNote ? act.priceNote[AppState.lang] : '';
+      const includedList = act.included ? act.included[AppState.lang] : [];
+
+      return `
+        <article class="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-56 overflow-hidden bg-slate-900">
+            <img
+              src="${act.image}"
+              alt="${nameText}"
+              loading="lazy"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent"></div>
+            ${
+              badgeText
+                ? `
+              <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950 shadow-md">
+                ★ ${badgeText}
+              </span>
+            `
+                : ''
+            }
+            <span class="absolute top-4 right-4 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/20 backdrop-blur-md text-white border border-white/20">
+              ${diffText}
+            </span>
+            <div class="absolute bottom-3 left-5 right-5">
+              <h3 class="text-xl font-extrabold text-white leading-tight drop-shadow-sm">
+                ${nameText}
+              </h3>
+            </div>
+          </div>
+
+          <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <!-- Price Card Pill -->
+              <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200/70 flex items-center justify-between">
+                <div>
+                  <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-800">${t.estCost}</span>
+                  <span class="text-base sm:text-lg font-black text-amber-950">${priceText}</span>
+                </div>
+                <span class="text-[11px] text-amber-800/80 font-medium text-right max-w-[150px] leading-tight">
+                  ${noteText}
+                </span>
+              </div>
+
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${descText}
+              </p>
+
+              <!-- Key Info: Location & Duration -->
+              <div class="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
+                <div class="space-y-0.5">
+                  <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">${t.locationLabel}</span>
+                  <span class="font-bold text-slate-800 leading-tight block">${locText}</span>
+                </div>
+                <div class="space-y-0.5">
+                  <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">${t.durationLabel}</span>
+                  <span class="font-bold text-slate-800 leading-tight block">${durText}</span>
+                </div>
+              </div>
+
+              <!-- Included Features Chips -->
+              ${
+                includedList.length > 0
+                  ? `
+                <div class="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                  ${includedList
+                    .map(
+                      item => `
+                    <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-medium">
+                      ✓ ${item}
+                    </span>
+                  `
+                    )
+                    .join('')}
+                </div>
+              `
+                  : ''
+              }
+            </div>
+
+            <!-- Bottom Action Buttons -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onclick="inquireAboutActivity('${act.id}')"
+                class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-2xs text-center"
+              >
+                ${AppState.lang === 'en' ? '💬 Inquire with AI Guide' : '💬 গাইডের পরামর্শ নিন'}
+              </button>
+              <button
+                type="button"
+                onclick="addActivityToTrip('${act.id}')"
+                class="py-2.5 px-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition shadow-2xs shrink-0"
+                title="${t.addToTrip}"
+              >
+                ${t.addToTrip}
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join('');
+}
+
+function setActivityFilter(cat) {
+  AppState.activityFilter = cat;
+  renderActivities();
+}
+
+function inquireAboutActivity(actId) {
+  const act = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).find(a => a.id === actId);
+  if (!act) return;
+  const name = act.name[AppState.lang];
+  const prompt =
+    AppState.lang === 'en'
+      ? `Tell me details, price and safety guidelines for ${name}`
+      : `${name}-এর বিস্তারিত খরচ ও নিরাপত্তা নির্দেশাবলী জানান`;
+  toggleChatbot(true);
+  handleUserChatSubmission(prompt);
+}
+
+function addActivityToTrip(actId) {
+  const act = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).find(a => a.id === actId);
+  if (!act) return;
+  const toastMsg =
+    AppState.lang === 'en'
+      ? `Added "${act.name.en}" to your trip wishlist!`
+      : `"${act.name.bn}" আপনার ট্রিপ তালিকায় যোগ করা হয়েছে!`;
+  if (typeof showAdminToast === 'function') {
+    showAdminToast(toastMsg);
+  } else {
+    alert(toastMsg);
+  }
+}
+
+/* --------------------------------------------------------------------------
  * SECTION 4: TRANSPORTATION & PRICING TABLE + FOREIGNER GLOSSARY
  * -------------------------------------------------------------------------- */
 function renderTransport() {
@@ -2075,11 +2310,32 @@ async function fetchTravelAssistantReply(userText) {
   // 1. CHECK FOR SPECIFIC HOTEL BY NAME FIRST (Never dump generic list if user asks about 1 hotel!)
   // --------------------------------------------------------------------------
   const hotelAliasMap = [
+    { id: 'sayeman-beach-resort', keys: ['sayeman', 'সায়মন', 'সায়মন বিচ'] },
+    { id: 'sea-pearl-beach-resort', keys: ['sea pearl', 'royal tulip', 'সী পার্ল', 'রয়্যাল টিউলিপ', 'সি পার্ল'] },
+    { id: 'mermaid-beach-resort', keys: ['mermaid beach', 'মারমেইড বিচ'] },
+    { id: 'ocean-paradise-hotel', keys: ['ocean paradise', 'ওশান প্যারাডাইস', 'ওশন প্যারাডাইস'] },
+    { id: 'hotel-the-cox-today', keys: ['cox today', 'কক্স টুডে', 'the cox today'] },
+    { id: 'best-western-bay-watch', keys: ['best western', 'bay watch', 'বেস্ট ওয়েস্টার্ন', 'বে ওয়াচ'] },
+    { id: 'long-beach-hotel', keys: ['long beach', 'লং বিচ'] },
+    { id: 'seagull-hotel', keys: ['seagull', 'সীগাল', 'সিগাল'] },
+    { id: 'neeshorgo-hotel-resort', keys: ['neeshorgo', 'নিসর্গ'] },
+    { id: 'grace-cox-smart-hotel', keys: ['grace cox', 'গ্রেস কক্স'] },
+    { id: 'mermaid-eco-resort', keys: ['mermaid eco', 'মারমেইড ইকো'] },
+    { id: 'praasad-paradise-hotel', keys: ['praasad', 'প্রসাদ'] },
     { id: 'hotel-sea-crown', keys: ['sea crown', 'seacrown', 'সী ক্রাউন', 'সি ক্রাউন'] },
-    { id: 'prime-park-hotel', keys: ['prime park', 'primepark', 'প্রাইম পার্ক'] },
     { id: 'hotel-kollol', keys: ['kollol', 'কল্লোল', 'kasundi', 'কাসুন্দি'] },
-    { id: 'nisanah-resort', keys: ['nisanah', 'নিসানাহ'] },
-    { id: 'white-orchid', keys: ['white orchid', 'whiteorchid', 'হোয়াইট অর্কিড', 'অর্কিড'] }
+    { id: 'prime-park-hotel', keys: ['prime park', 'primepark', 'প্রাইম পার্ক'] },
+    { id: 'white-orchid', keys: ['white orchid', 'whiteorchid', 'হোয়াইট অর্কিড'] },
+    { id: 'hotel-shaibal', keys: ['shaibal', 'শৈবাল', 'parjatan', 'পর্যটন'] },
+    { id: 'windy-terrace-boutique', keys: ['windy terrace', 'উইন্ডি টেরেস'] },
+    { id: 'hotel-sea-palace', keys: ['sea palace', 'সী প্যালেস', 'সি প্যালেস'] },
+    { id: 'hotel-sigiriya', keys: ['sigiriya', 'সিগিরিয়া'] },
+    { id: 'hotel-upasham', keys: ['upasham', 'উপশম'] },
+    { id: 'deric-eco-village', keys: ['deric', 'ডেরিক'] },
+    { id: 'royal-beach-resort', keys: ['royal beach', 'রয়্যাল বিচ'] },
+    { id: 'coral-reef-hotel', keys: ['coral reef', 'কোরাল রিফ'] },
+    { id: 'inani-royal-resort', keys: ['inani royal', 'ইনানী রয়্যাল'] },
+    { id: 'nisanah-resort', keys: ['nisanah', 'নিসানাহ'] }
   ];
 
   const matchedSpecificHotels = [];
@@ -2477,6 +2733,73 @@ async function fetchTravelAssistantReply(userText) {
           • 🦞 <strong>মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ):</strong> সি-ফুড প্ল্যাটার ও বিচ ডিনার — <strong>~${fmtSingle(1400)}</strong>
         </div>
         ${buildChatFollowUpChips(['পৌষী রেস্তোরাঁ', 'মারমেইড বিচ ক্যাফে', 'আমার ট্রিপ বাজেট কত?'])}
+      `;
+  }
+
+  // --------------------------------------------------------------------------
+  // 4B. MATCH SPECIFIC ACTIVITY BY NAME OR CATEGORY (Surfing, Horse Riding, Kayaking, etc.)
+  // --------------------------------------------------------------------------
+  const matchedActivity = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).find(act => {
+    const en = act.name.en.toLowerCase();
+    const bn = act.name.bn.toLowerCase();
+    const actId = act.id.replace(/-/g, ' ');
+    const actKeys = [en, actId];
+    if (act.id === 'surfing-lesson') actKeys.push('surfing', 'surf', 'সার্ফিং', 'সার্ফ');
+    if (act.id === 'beach-horse-riding') actKeys.push('horse', 'horse ride', 'ঘোড়া', 'ঘোড়ায় চড়া');
+    if (act.id === 'parasailing-sky-gliding') actKeys.push('parasail', 'parasailing', 'প্যারাসেইলিং', 'প্যারাসেলিং');
+    if (act.id === 'chander-gari-safari') actKeys.push('chander gari safari', 'jeep safari', 'চান্দের গাড়ি সাফারি', 'জিপ সাফারি');
+    if (act.id === 'beach-atv-quad-biking') actKeys.push('atv', 'quad bike', 'কোয়াড বাইক');
+    if (act.id === 'jet-ski-speed-riding') actKeys.push('jet ski', 'jetski', 'জেট স্কি');
+    if (act.id === 'mangrove-estuary-kayaking') actKeys.push('kayak', 'kayaking', 'reju khal kayak', 'কায়াক', 'কায়াকিং');
+    if (act.id === 'speedboat-thrill-cruise') actKeys.push('speedboat cruise', 'স্পিডবোট ক্রুজ');
+    if (act.id === 'beach-camping-bonfire-bbq') actKeys.push('camping', 'bonfire', 'bbq', 'ক্যাম্পিং', 'বারবিকিউ', 'ক্যাম্পফায়ার');
+    if (act.id === 'marine-drive-cycling-tour') actKeys.push('cycling', 'bicycle', 'সাইকেল', 'সাইক্লিং');
+    return actKeys.some(k => q.includes(k) || bn.includes(k));
+  });
+
+  if (matchedActivity) {
+    const act = matchedActivity;
+    const priceText = formatPriceRange(act.priceBDT, act.priceMaxBDT);
+    return lang === 'en'
+      ? `
+        <div>🏄 <strong>${act.name.en}</strong></div>
+        <div class="text-xs text-slate-700 space-y-1 mt-1">
+          • <strong>Estimated Price:</strong> <strong>${priceText}</strong> (${act.priceNote.en})<br/>
+          • <strong>Location:</strong> ${act.location.en}<br/>
+          • <strong>Duration:</strong> ${act.duration.en} • <strong>Level:</strong> ${act.difficulty.en}<br/>
+          • <strong>Overview:</strong> ${act.description.en}<br/>
+          • <strong>Included:</strong> ${act.included.en.join(', ')}
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button
+            type="button"
+            onclick="addActivityToTrip('${act.id}')"
+            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
+          >
+            + Add to My Trip
+          </button>
+        </div>
+        ${buildChatFollowUpChips(['Top 10 activities list', 'Best seafood restaurants', 'My trip budget?'])}
+      `
+      : `
+        <div>🏄 <strong>${act.name.bn}</strong></div>
+        <div class="text-xs text-slate-700 space-y-1 mt-1">
+          • <strong>আনুমানিক খরচ:</strong> <strong>${priceText}</strong> (${act.priceNote.bn})<br/>
+          • <strong>স্থান:</strong> ${act.location.bn}<br/>
+          • <strong>সময়কাল:</strong> ${act.duration.bn} • <strong>ধরন:</strong> ${act.difficulty.bn}<br/>
+          • <strong>বিবরণ:</strong> ${act.description.bn}<br/>
+          • <strong>যা যা থাকছে:</strong> ${act.included.bn.join(', ')}
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button
+            type="button"
+            onclick="addActivityToTrip('${act.id}')"
+            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
+          >
+            + ট্রিপ প্ল্যানে যোগ করুন
+          </button>
+        </div>
+        ${buildChatFollowUpChips(['১০টি অ্যাক্টিভিটি তালিকা', 'সেরা সি-ফুড রেস্তোরাঁ', 'আমার ট্রিপ বাজেট কত?'])}
       `;
   }
 
@@ -2911,6 +3234,7 @@ function initScrollListeners() {
     'home',
     'hotels',
     'destinations',
+    'activities-section',
     'map-section',
     'itinerary-section',
     'transport',
@@ -2971,6 +3295,7 @@ function renderAll() {
   renderStaticText();
   renderHotels();
   renderDestinations();
+  renderActivities();
   renderTransport();
   renderEssentialInfo();
   renderFAQs();

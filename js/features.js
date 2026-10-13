@@ -268,6 +268,166 @@ const MAP_LOCATIONS = [
     image: 'assets/images/moheshkhali.jpg',
     targetSection: '#destinations'
   },
+  {
+    id: 'map-laboni-beach',
+    category: 'spots',
+    lat: 21.4365,
+    lng: 91.972,
+    name: {
+      en: 'Laboni Beach & Promenade',
+      bn: 'লাবণী সমুদ্র সৈকত ও প্রমোদভ্রমণ'
+    },
+    categoryLabel: {
+      en: 'Tourist Spot • Oldest Beach Hub',
+      bn: 'দর্শনীয় স্থান • প্রধান সৈকত'
+    },
+    description: {
+      en: 'Town center shoreline with umbrellas, souvenir stalls, and lifeguard swimming areas.',
+      bn: 'কক্সবাজার শহরের প্রধান সৈকত প্রাঙ্গণ ও লাইফগার্ড নজরদারি জোন।'
+    },
+    image: 'assets/images/hero-coxs-bazar.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-sugandha-beach',
+    category: 'spots',
+    lat: 21.425,
+    lng: 91.9775,
+    name: {
+      en: 'Sugandha Beach & Live Seafood Market',
+      bn: 'সুগন্ধা বিচ ও রাতের মার্কেট'
+    },
+    categoryLabel: {
+      en: 'Tourist Spot • Evening Vibe & Food',
+      bn: 'দর্শনীয় স্থান • সান্ধ্যকালীন আড্ডা ও খাবার'
+    },
+    description: {
+      en: 'Vibrant beach hub famous for live charcoal fish fry, quad biking, and evening crowds.',
+      bn: 'লাইভ সি-ফুড চারকোল ফ্রাই, বিচ কোয়াড বাইকিং ও সন্ধ্যার আড্ডার জন্য খ্যাত।'
+    },
+    image: 'assets/images/hero-coxs-bazar.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-daria-nagar-caves',
+    category: 'spots',
+    lat: 21.385,
+    lng: 92.002,
+    name: {
+      en: 'Daria Nagar Caves & Parasailing Point',
+      bn: 'দরিয়ানগর প্রাকৃতিক গুহা ও প্যারাসেইলিং'
+    },
+    categoryLabel: {
+      en: 'Tourist Spot • 8 km South',
+      bn: 'দর্শনীয় স্থান • ৮ কিমি দক্ষিণে'
+    },
+    description: {
+      en: 'Ancient natural sea caves, mountain hiking streams, and coastal parasailing hub.',
+      bn: 'প্রাকৃতিক সামুদ্রিক গুহা, পাহাড়ি ট্রেইল এবং সমুদ্রের ওপর প্যারাসেইলিং পয়েন্ট।'
+    },
+    image: 'assets/images/kolatoli-eco.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-reju-khal-estuary',
+    category: 'spots',
+    lat: 21.282,
+    lng: 92.038,
+    name: {
+      en: 'Reju Khal Estuary & Kayak Point',
+      bn: 'রেজু খাল মোহনা ও কায়াকিং'
+    },
+    categoryLabel: {
+      en: 'Tourist Spot • 24 km South',
+      bn: 'দর্শনীয় স্থান • ২৪ কিমি দক্ষিণে'
+    },
+    description: {
+      en: 'Serene mangrove estuary where freshwater meets the sea, ideal for peaceful kayaking.',
+      bn: 'পাহাড়ঘেরা রেজু খালের মোহনা ও শান্ত ম্যানগ্রোভ কায়াকিং পয়েন্ট।'
+    },
+    image: 'assets/images/inani-beach.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-ramu-buddha',
+    category: 'spots',
+    lat: 21.455,
+    lng: 92.102,
+    name: {
+      en: '100 Feet Reclining Buddha (Ramu)',
+      bn: '১০০ ফুট সিংহশয্যা বুদ্ধ মূর্তি (রামু)'
+    },
+    categoryLabel: {
+      en: 'Heritage Spot • 16 km East',
+      bn: 'ঐতিহাসিক স্থান • ১৬ কিমি পূর্বে'
+    },
+    description: {
+      en: 'Awe-inspiring 100-foot golden reclining Buddha statue and ancient Rakhine monasteries.',
+      bn: 'উত্তর মিঠাছড়িতে অবস্থিত দেশের বৃহত্তম ১০০ ফুট দীর্ঘ স্বর্ণালী শায়িত বুদ্ধ মূর্তি।'
+    },
+    image: 'assets/images/ramu-buddha.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-radiant-fish-world',
+    category: 'spots',
+    lat: 21.442,
+    lng: 91.978,
+    name: {
+      en: 'Radiant Fish World Aquarium',
+      bn: 'রেডিয়েন্ট ফিশ ওয়ার্ল্ড (ঝাউতলা)'
+    },
+    categoryLabel: {
+      en: 'Attraction • Town Center',
+      bn: 'বিনোদন কেন্দ্র • ঝাউতলা'
+    },
+    description: {
+      en: "Bangladesh's premier sea aquarium featuring underwater glass shark tunnel.",
+      bn: '১০০+ প্রজাতির সামুদ্রিক মাছ ও আন্ডারওয়াটার গ্লাস টানেল সমৃদ্ধ আন্তর্জাতিক মানের অ্যাকোয়ারিয়াম।'
+    },
+    image: 'assets/images/radiant-fish-world.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-sonadia-island',
+    category: 'spots',
+    lat: 21.52,
+    lng: 91.89,
+    name: {
+      en: 'Sonadia Ecological Island',
+      bn: 'সোনাদিয়া দ্বীপ (বিচ ক্যাম্পিং)'
+    },
+    categoryLabel: {
+      en: 'Hidden Gem • Barrier Island',
+      bn: 'হিডেন জেম • নির্জন দ্বীপ'
+    },
+    description: {
+      en: 'Pristine barrier island famed for winter camping, red crabs, and sea turtles.',
+      bn: 'শীতকালীন বিচ ক্যাম্পিং, লাল কাঁকড়া ও সামুদ্রিক কাছিম প্রজননের নির্জন দ্বীপ।'
+    },
+    image: 'assets/images/sonadia-island.jpg',
+    targetSection: '#destinations'
+  },
+  {
+    id: 'map-shamlapur',
+    category: 'spots',
+    lat: 21.1,
+    lng: 92.085,
+    name: {
+      en: 'Shamlapur Marine Drive Sunset Point',
+      bn: 'শামলাপুর সাম্পান ঘাট ও সানসেট পয়েন্ট'
+    },
+    categoryLabel: {
+      en: 'Hidden Gem • 45 km South',
+      bn: 'হিডেন জেম • ৪৫ কিমি দক্ষিণে'
+    },
+    description: {
+      en: 'Traditional wooden Sampan fishing boats lined against fiery golden-hour skies.',
+      bn: 'শত শত ঐতিহ্যবাহী কাঠের সাম্পান নৌকা ও সূর্যাস্তের মনোরম ফটোগ্রাফি পয়েন্ট।'
+    },
+    image: 'assets/images/shamlapur-sampan.jpg',
+    targetSection: '#destinations'
+  },
 
   // TRANSPORT HUBS
   {
@@ -478,6 +638,46 @@ const ITIN_ACTIVITIES_CATALOG = [
     badge: { en: 'Local Shopping', bn: 'কেনাকাটা' },
     costBDT: 500,
     icon: '🛍️'
+  },
+  {
+    id: 'act-surfing-lesson',
+    name: {
+      en: 'Surfing & Wave Riding Lessons at Laboni Surf Club',
+      bn: 'লাবণী সার্ফ ক্লাবে সার্ফিং ও ওয়েভ রাইডিং প্রশিক্ষণ'
+    },
+    badge: { en: 'Ocean Thrill', bn: 'রোমাঞ্চকর খেলা' },
+    costBDT: 1500,
+    icon: '🏄'
+  },
+  {
+    id: 'act-beach-horse-riding',
+    name: {
+      en: 'Shoreline Beach Horse Riding at Sunset (Sugandha)',
+      bn: 'সুগন্ধা সৈকতে গোধূলির সূর্যাস্তে ঘোড়ায় চড়া'
+    },
+    badge: { en: 'Classic Leisure', bn: 'জনপ্রিয় অভিজ্ঞতা' },
+    costBDT: 250,
+    icon: '🐎'
+  },
+  {
+    id: 'act-reju-khal-kayak',
+    name: {
+      en: 'Reju Khal Mangrove Estuary Kayaking Experience',
+      bn: 'রেজু খাল মোহনায় ম্যানগ্রোভ কায়াকিং অভিজ্ঞতা'
+    },
+    badge: { en: 'Eco Waters', bn: 'ইকো কায়াকিং' },
+    costBDT: 350,
+    icon: '🛶'
+  },
+  {
+    id: 'act-marine-cycling',
+    name: {
+      en: 'Coastal Cycling Tour on Marine Drive to Himchari',
+      bn: 'মেরিন ড্রাইভ ধরে হিমছড়ি পর্যন্ত কোস্টাল সাইক্লিং'
+    },
+    badge: { en: 'Eco Road Trip', bn: 'সাইক্লিং ট্যুর' },
+    costBDT: 300,
+    icon: '🚲'
   }
 ];
 

@@ -25,6 +25,7 @@ const UI_TEXT = {
       home: "Home",
       hotels: "Hotels",
       destinations: "Destinations",
+      activities: "Activities",
       transport: "Transport",
       essentialInfo: "Essential Info",
       faq: "FAQ"
@@ -42,10 +43,10 @@ const UI_TEXT = {
       searchCategoryTransport: "Local Transport",
       searchBtn: "Search Guide",
       stats: [
-        { value: "120 km", label: "Unbroken Natural Beach" },
-        { value: "80 km", label: "Scenic Marine Drive" },
-        { value: "9+", label: "Verified Spots & Gems" },
-        { value: "24/7", label: "Tourist Police & Lifeguards" }
+        { value: "26+", label: "Top-Rated Renowned Hotels" },
+        { value: "14", label: "Iconic Sightseeing Spots" },
+        { value: "10", label: "Hidden Food & Cultural Gems" },
+        { value: "10", label: "Thrilling Coastal Activities" }
       ]
     },
     hotelsSection: {
@@ -86,9 +87,23 @@ const UI_TEXT = {
       vibeLabel: "The Vibe",
       directionsLabel: "Directions",
       sourceLabel: "Verified Source",
-      hiddenGemsBadge: "OFF THE BEATEN PATH • ORIGINAL PHOTOS",
-      hiddenGemsTitle: "Hidden Gems of Cox's Bazar",
-      hiddenGemsSubtitle: "Venture beyond the main beach to untouched barrier islands, traditional Sampan sunset points, hill trails, and Bangladesh's largest dried-fish estuary."
+      hiddenGemsBadge: "LOCAL FOOD & AUTHENTIC CULTURE",
+      hiddenGemsTitle: "10 Hidden Gems: Local Food & Cultural Heritage",
+      hiddenGemsSubtitle: "Taste legendary Loitta fry, 30+ bhartas at Poushee, live seafood grilling at Sugandha, and visit Rakhine handloom weavers and traditional salt pans."
+    },
+    activitiesSection: {
+      eyebrow: "THINGS TO DO & COASTAL THRILLS",
+      title: "Top 10 Activities in Cox's Bazar",
+      subtitle: "From riding the surf and beach parasailing to open-top Marine Drive jeep safaris and night bonfires—verified rates, locations, and safety briefings.",
+      filterAll: "All Activities",
+      filterWater: "Water Sports",
+      filterBeach: "Beach & Riding",
+      filterSafari: "Jeep & Tours",
+      filterNight: "Camping & Night",
+      addToTrip: "+ Add to My Trip",
+      estCost: "Estimated Price",
+      locationLabel: "Location",
+      durationLabel: "Duration"
     },
     transportSection: {
       eyebrow: "LOCAL TRANSIT & FARES",
@@ -186,6 +201,7 @@ const UI_TEXT = {
       home: "হোম",
       hotels: "হোটেল",
       destinations: "দর্শনীয় স্থান",
+      activities: "অ্যাক্টিভিটি",
       transport: "যাতায়াত ও ভাড়া",
       essentialInfo: "জরুরি তথ্য",
       faq: "প্রশ্নোত্তর"
@@ -203,10 +219,10 @@ const UI_TEXT = {
       searchCategoryTransport: "স্থানীয় যাতায়াত",
       searchBtn: "অনুসন্ধান করুন",
       stats: [
-        { value: "১২০ কিমি", label: "অবিচ্ছিন্ন প্রাকৃতিক সৈকত" },
-        { value: "৮০ কিমি", label: "মেরিন ড্রাইভ সড়ক" },
-        { value: "৯+", label: "প্রামাণ্য দর্শনীয় স্থান" },
-        { value: "২৪/৭", label: "ট্যুরিস্ট পুলিশ ও লাইফগার্ড" }
+        { value: "২৬+", label: "শীর্ষস্থানীয় হোটেল (৫★–২★)" },
+        { value: "১৪টি", label: "জনপ্রিয় দর্শনীয় স্থান" },
+        { value: "১০টি", label: "খাবার ও সংস্কৃতির হিডেন জেম" },
+        { value: "১০টি", label: "রোমাঞ্চকর অ্যাক্টিভিটি" }
       ]
     },
     hotelsSection: {
@@ -247,9 +263,23 @@ const UI_TEXT = {
       vibeLabel: "পরিবেশ ও আমেজ",
       directionsLabel: "যাতায়াত নির্দেশনা",
       sourceLabel: "তথ্যসূত্র ও ছবি",
-      hiddenGemsBadge: "নির্জন ও অনন্য স্থান • আসল আলোকচিত্র",
-      hiddenGemsTitle: "কক্সবাজারের হিডেন জেমস (অদেখা সৌন্দর্য)",
-      hiddenGemsSubtitle: "কোলাহল ছাড়িয়ে ঘুরে আসুন সোনাদিয়া দ্বীপ, শামলাপুর সাম্পান ঘাট, কলাতলী ইকো-পার্ক এবং দেশের বৃহত্তম নাজিরারটেক শুঁটকি মহাল।"
+      hiddenGemsBadge: "ঐতিহ্যবাহী খাবার ও স্থানীয় সংস্কৃতি",
+      hiddenGemsTitle: "১০টি হিডেন জেম: স্থানীয় সি-ফুড ও সংস্কৃতি",
+      hiddenGemsSubtitle: "পৌষীর বিখ্যাত ৩০+ পদের ভর্তা ও রূপচাঁদা ফ্রাই, সুগন্ধার লাইভ সি-ফুড গ্রিল, রাখাইন তাঁত পল্লী এবং ঐতিহ্যবাহী মিষ্টি পান ও লবণের মাঠ।"
+    },
+    activitiesSection: {
+      eyebrow: "রোমাঞ্চ ও সৈকত অ্যাক্টিভিটি",
+      title: "কক্সবাজারের সেরা ১০টি অ্যাক্টিভিটি ও অভিজ্ঞতা",
+      subtitle: "সার্ফিং, প্যারাসেইলিং, খোলা চান্দের গাড়িতে সাফারি থেকে শুরু করে সৈকত ক্যাম্পিং ও বারবিকিউ—সঠিক লোকেশন ও ভাড়ার তালিকা।",
+      filterAll: "সব অ্যাক্টিভিটি",
+      filterWater: "ওয়াটার স্পোর্টস",
+      filterBeach: "সৈকত ও রাইডিং",
+      filterSafari: "জিপ ও ট্যুর",
+      filterNight: "ক্যাম্পিং ও রাতযাপন",
+      addToTrip: "+ ট্রিপ প্ল্যানে নিন",
+      estCost: "আনুমানিক খরচ",
+      locationLabel: "স্থান",
+      durationLabel: "সময়কাল"
     },
     transportSection: {
       eyebrow: "সহজ যাতায়াত নির্দেশিকা",
@@ -990,6 +1020,800 @@ let HOTELS_DATA = [
     image: "assets/images/white-orchid.jpg"
   },
   {
+    id: "seagull-hotel",
+    name: {
+      en: "Seagull Hotel",
+      bn: "সীগাল হোটেল (Seagull Hotel & Resort)"
+    },
+    stars: 4,
+    starLabel: {
+      en: "4-Star Premium",
+      bn: "৪-তারকা প্রিমিয়াম"
+    },
+    locationKey: "sugandha",
+    spotName: {
+      en: "Sugandha Point",
+      bn: "সুগন্ধা পয়েন্ট"
+    },
+    location: {
+      en: "Plot 3-4, Hotel Motel Zone, Sugandha Beach Road, Cox's Bazar",
+      bn: "প্লট ৩-৪, হোটেল মোটেল জোন, সুগন্ধা বিচ রোড, কক্সবাজার"
+    },
+    minBDT: 5500,
+    maxBDT: 13500,
+    rating: "4.6",
+    badge: {
+      en: "4-Star Iconic Beach Resort",
+      bn: "৪-তারকা আইকনিক বিচ রিসোর্ট"
+    },
+    amenities: {
+      en: ["Large Outdoor Pool", "Parijat Dining", "Near Sugandha Beach", "Health Club & Spa", "Conference Halls"],
+      bn: ["বিশাল আউটডোর পুল", "পারিজাত রেস্তোরাঁ", "সুগন্ধা সৈকতের কাছে", "হেলথ ক্লাব ও স্পা", "কনফারেন্স হল"]
+    },
+    facilities: {
+      en: [
+        "Sprawling outdoor swimming pool with children's splash pool & sun loungers",
+        "Parijat Multi-Cuisine Restaurant & Rangoli Indian Specialty Dining",
+        "2-minute direct walk to Sugandha Sea Beach and evening market",
+        "Health club, sauna, steam room & massage therapies",
+        "Expansive corporate banquet and conference halls",
+        "Complimentary buffet breakfast, airport transfers & high-speed Wi-Fi"
+      ],
+      bn: [
+        "শিশুদের স্প্ল্যাশ পুল ও সান লাউঞ্জারসহ সুবিশাল আউটডোর সুইমিং পুল",
+        "পারিজাত মাল্টি-কুইজিন ও রঙ্গোলি ইন্ডিয়ান স্পেশালিটি রেস্তোরাঁ",
+        "সুগন্ধা সমুদ্র সৈকত ও ইভনিং মার্কেট থেকে মাত্র ২ মিনিটের হাঁটা পথ",
+        "হেলথ ক্লাব, সনা, স্টিম বাথ ও থেরাপিউটিক ম্যাসাজ",
+        "বিশাল কর্পোরেট ব্যাংকুয়েট ও আন্তর্জাতিক কনফারেন্স হল",
+        "কমপ্লিমেন্টারি বুফে ব্রেকফাস্ট, ফ্রি এয়ারপোর্ট শাটল ও হাই-স্পিড ওয়াই-ফাই"
+      ]
+    },
+    description: {
+      en: "A landmark 4-star beach resort located near Sugandha Point. Features a magnificent outdoor swimming pool, Parijat multi-cuisine dining, a wellness health club, and easy access to the beach. Hotline: +880 1766-666530.",
+      bn: "সুগন্ধা পয়েন্টের কাছে অবস্থিত ঐতিহ্যবাহী ৪-তারকা বিচ রিসোর্ট। বিশাল সুইমিং পুল, পারিজাত ডাইনিং, হেলথ ক্লাব ও সৈকতের একদম কাছে অবস্থিত। হটলাইন: +880 1766-666530।"
+    },
+    phone: "+880 1766-666530",
+    sourceUrl: "https://seagullhotelbd.com",
+    sourceName: "seagullhotelbd.com",
+    image: "assets/images/hotel-sea-crown.jpg"
+  },
+  {
+    id: "neeshorgo-hotel-resort",
+    name: {
+      en: "Neeshorgo Hotel & Resort",
+      bn: "নিসর্গ হোটেল অ্যান্ড রিসোর্ট (Neeshorgo Hotel & Resort)"
+    },
+    stars: 4,
+    starLabel: {
+      en: "4-Star Premium",
+      bn: "৪-তারকা প্রিমিয়াম"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Marine Drive / South Kolatoli",
+      bn: "মেরিন ড্রাইভ / দক্ষিণ কলাতলী"
+    },
+    location: {
+      en: "Plot 492, Marine Drive Road, South Kolatoli, Cox's Bazar",
+      bn: "প্লট ৪৯২, মেরিন ড্রাইভ রোড, দক্ষিণ কলাতলী, কক্সবাজার"
+    },
+    minBDT: 4800,
+    maxBDT: 11500,
+    rating: "4.6",
+    badge: {
+      en: "4-Star 360° Ocean Panorama",
+      bn: "৪-তারকা ৩৬০° ওশান প্যানোরামা"
+    },
+    amenities: {
+      en: ["360° Ocean Rooftop", "Infinity Sunset Pool", "Ocean View Balcony", "Cafe Paa", "Airport Shuttle"],
+      bn: ["৩৬০° ওশান ভিউ রুফটপ", "ইনফিনিটি সানসেট পুল", "সি-ভিউ ব্যালকনি", "ক্যাফে পা", "এয়ারপোর্ট শাটল"]
+    },
+    facilities: {
+      en: [
+        "Signature glass-walled rooftop restaurant with 360-degree Bay of Bengal views",
+        "Rooftop sunset infinity swimming pool overlooking the hills and ocean",
+        "Private panoramic sea-view balconies in premier deluxe rooms",
+        "Complimentary grand breakfast buffet & airport transfer",
+        "Direct access to scenic Marine Drive coastal boulevard",
+        "24-hour dedicated travel desk and prompt room service"
+      ],
+      bn: [
+        "বঙ্গোপসাগরের ৩৬০ ডিগ্রি দৃশ্যসহ সিগনেচার কাচের ঘেরা রুফটপ রেস্তোরাঁ",
+        "পাহাড় ও সমুদ্রের দৃশ্য সমৃদ্ধ রুফটপ সানসেট ইনফিনিটি সুইমিং পুল",
+        "প্রিমিয়ার ডিলাক্স রুমে ব্যক্তিগত প্যানোরামিক সি-ভিউ ব্যালকনি",
+        "কমপ্লিমেন্টারি গ্র্যান্ড বুফে ব্রেকফাস্ট ও ফ্রি বিমানবন্দর শাটল",
+        "মেরিন ড্রাইভ মনোরম উপকূলীয় সড়কের প্রবেশমুখেই অবস্থিত",
+        "২৪ ঘণ্টা সার্বক্ষণিক ট্রাভেল ডেস্ক ও দ্রুত রুম সার্ভিস"
+      ]
+    },
+    description: {
+      en: "Perched along scenic Marine Drive at South Kolatoli, Neeshorgo offers an iconic 360-degree glass rooftop restaurant, a rooftop sunset pool, private ocean-view balconies, and premium comfort. Hotline: +880 1755-666870.",
+      bn: "দক্ষিণ কলাতলী মেরিন ড্রাইভে অবস্থিত প্রিমিয়াম ৪-তারকা হোটেল। বিখ্যাত ৩৬০ ডিগ্রি রুফটপ ভিউ রেস্টুরেন্ট, রুফটপ পুল ও সি-ভিউ ব্যালকনি সমৃদ্ধ। হটলাইন: +880 1755-666870।"
+    },
+    phone: "+880 1755-666870",
+    sourceUrl: "https://neeshorgohotel.com",
+    sourceName: "neeshorgohotel.com",
+    image: "assets/images/hero-coxs-bazar.jpg"
+  },
+  {
+    id: "grace-cox-smart-hotel",
+    name: {
+      en: "Grace Cox Smart Hotel",
+      bn: "গ্রেস কক্স স্মার্ট হোটেল (Grace Cox Smart Hotel)"
+    },
+    stars: 4,
+    starLabel: {
+      en: "4-Star Smart Hotel",
+      bn: "৪-তারকা স্মার্ট হোটেল"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Kolatoli Beach Road",
+      bn: "কলাতলী বিচ রোড"
+    },
+    location: {
+      en: "Plot 20, Block C, Hotel Motel Zone, Kolatoli, Cox's Bazar",
+      bn: "প্লট ২০, ব্লক সি, হোটেল মোটেল জোন, কলাতলী, কক্সবাজার"
+    },
+    minBDT: 5200,
+    maxBDT: 12000,
+    rating: "4.7",
+    badge: {
+      en: "4-Star Smart Automated Hotel",
+      bn: "৪-তারকা স্মার্ট অটোমেটেড হোটেল"
+    },
+    amenities: {
+      en: ["Smart Touch Automation", "Indoor Heated Plunge Pool", "Sky Lounge BBQ", "Modern Gym", "Free Buffet Breakfast"],
+      bn: ["স্মার্ট টাচ অটোমেশন", "ইনডোর হিটেড প্লাঞ্জ পুল", "স্কাই লাউঞ্জ বারবিকিউ", "মডার্ন জিম", "ফ্রি বুফে ব্রেকফাস্ট"]
+    },
+    facilities: {
+      en: [
+        "First IoT-powered smart hotel in Cox's Bazar with touch & app-controlled room automation",
+        "All-weather indoor heated swimming plunge pool & Jacuzzi",
+        "Rooftop open-air Sky Lounge with live barbecue and ocean breeze",
+        "High-tech fitness studio with cardiovascular equipment",
+        "Ultra-high-speed fiber Wi-Fi throughout all rooms and suites",
+        "Complimentary international buffet breakfast & airport transfer"
+      ],
+      bn: [
+        "কক্সবাজারের প্রথম আইওটি-চালিত স্মার্ট হোটেল (টাচ ও অ্যাপ নিয়ন্ত্রিত রুম)",
+        "সকল ঋতুতে ব্যবহারোপযোগী ইনডোর হিটেড সুইমিং প্লাঞ্জ পুল ও জ্যাকুজি",
+        "রুফটপ স্কাই লাউঞ্জ (লাইভ বারবিকিউ ও সমুদ্রের মৃদু বাতাস)",
+        "আধুনিক কার্ডিও যন্ত্রপাতি সমৃদ্ধ হাই-টেক ফিটনেস স্টুডিও",
+        "সকল রুম ও স্যুটে আল্ট্রা হাই-স্পিড ফাইবার ওয়াই-ফাই",
+        "কমপ্লিমেন্টারি আন্তর্জাতিক বুফে ব্রেকফাস্ট ও বিমানবন্দর পিক-ড্রপ"
+      ]
+    },
+    description: {
+      en: "Cox's Bazar's premier smart-tech hotel situated in Kolatoli. Boasts IoT-automated suites, an all-weather indoor heated pool, rooftop Sky Lounge BBQ, and state-of-the-art hospitality. Hotline: +880 1700-707788.",
+      bn: "কলাতলীতে অবস্থিত কক্সবাজারের প্রথম স্মার্ট-টেক হোটেল। অত্যাধুনিক আইওটি অটোমেশন রুম, ইনডোর হিটেড সুইমিং পুল, রুফটপ স্কাই লাউঞ্জ ও প্রিমিয়াম সেবা। হটলাইন: +880 1700-707788।"
+    },
+    phone: "+880 1700-707788",
+    sourceUrl: "https://gracecoxhotel.com",
+    sourceName: "gracecoxhotel.com",
+    image: "assets/images/prime-park-hotel.jpg"
+  },
+  {
+    id: "mermaid-eco-resort",
+    name: {
+      en: "Mermaid Eco Resort",
+      bn: "মারমেইড ইকো রিসোর্ট (Mermaid Eco Resort Pechar Dwip)"
+    },
+    stars: 4,
+    starLabel: {
+      en: "4-Star Eco Sanctuary",
+      bn: "৪-তারকা ইকো স্যাঙ্কচুয়ারি"
+    },
+    locationKey: "pecharthal",
+    spotName: {
+      en: "Pechar Dwip / Reju Khal",
+      bn: "পেঁচারদ্বীপ / রেজু খাল"
+    },
+    location: {
+      en: "Pechar Dwip, Marine Drive (near Reju Khal Bridge), Ramu / Cox's Bazar",
+      bn: "পেঁচারদ্বীপ, মেরিন ড্রাইভ (রেজু খাল সেতুর কাছে), রামু / কক্সবাজার"
+    },
+    minBDT: 6000,
+    maxBDT: 14000,
+    rating: "4.7",
+    badge: {
+      en: "4-Star Tidal Canal Eco Resort",
+      bn: "৪-তারকা টাইডাল ক্যানাল ইকো রিসোর্ট"
+    },
+    amenities: {
+      en: ["Overwater Eco Cottages", "Organic Garden Dining", "Canal Kayaking", "Open-Air Spa", "Beach Trail Access"],
+      bn: ["ওভারওয়াটার ইকো কটেজ", "অর্গানিক গার্ডেন ডাইনিং", "ক্যানাল কায়াকিং", "ওপেন-এয়ার স্পা", "সৈকত ট্রেইল অ্যাক্সেস"]
+    },
+    facilities: {
+      en: [
+        "Artisan timber and bamboo overwater cottages set along a serene saltwater tidal canal",
+        "Organic farm-to-table open-air restaurant serving fresh coastal catches and homegrown produce",
+        "Complimentary canal boat rides, stand-up paddleboarding, and ocean kayaks",
+        "Open-air Ayurvedic wellness pavilion and yoga deck",
+        "Private path leading to the secluded sands of Pechar Dwip beach",
+        "Nightly driftwood bonfires and candlelit outdoor dining"
+      ],
+      bn: [
+        "শান্ত লবণাক্ত খালের পাড়ে প্রাকৃতিক কাঠ ও বাঁশের তৈরি ওভারওয়াটার নান্দনিক কটেজ",
+        "তাজা সি-ফুড ও নিজস্ব খামারের শাকসবজি সমৃদ্ধ ফার্ম-টু-টেবিল উন্মুক্ত রেস্তোরাঁ",
+        "শান্ত খালে নৌকা ভ্রমণ, প্যাডেল বোর্ডিং ও কায়াকিং সুবিধা",
+        "প্রাকৃতিক আয়ুর্বেদিক ওয়েলনেস প্যাভিলিয়ন ও ইয়োগা ডেক",
+        "পেঁচারদ্বীপের নির্জন সমুদ্র সৈকতে যাওয়ার নিজস্ব সুন্দর মেঠোপথ",
+        "প্রতি সন্ধ্যায় সৈকতমুখী বনফায়ার ও মনোরম ক্যান্ডেললাইট ডিনার"
+      ]
+    },
+    description: {
+      en: "An enchanting eco-sanctuary along the Reju Khal tidal canal near Marine Drive. Features overwater bamboo cottages, farm-to-table organic dining, canal kayaking, and tranquil nature vibes. Hotline: +880 1841-416464.",
+      bn: "মেরিন ড্রাইভের কাছে রেজু খালের মোহনায় অবস্থিত রূপময় পরিবেশবান্ধব ইকো রিসোর্ট। খালের ওপর কাঠের ভিলা, অর্গানিক খাবার, কায়াকিং ও শান্ত সবুজ প্রকৃতি। হটলাইন: +880 1841-416464।"
+    },
+    phone: "+880 1841-416464",
+    sourceUrl: "https://mermaidecoresort.com",
+    sourceName: "mermaidecoresort.com",
+    image: "assets/images/shamlapur-sampan.jpg"
+  },
+  {
+    id: "praasad-paradise",
+    name: {
+      en: "Praasad Paradise Hotel & Resort",
+      bn: "প্রাসাদ প্যারাডাইস হোটেল অ্যান্ড রিসোর্ট (Praasad Paradise)"
+    },
+    stars: 4,
+    starLabel: {
+      en: "4-Star Premium",
+      bn: "৪-তারকা প্রিমিয়াম"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "New Beach Road",
+      bn: "নিউ বিচ রোড"
+    },
+    location: {
+      en: "Plot 9, New Beach Road, Kolatoli, Cox's Bazar",
+      bn: "প্লট ৯, নিউ বিচ রোড, কলাতলী, কক্সবাজার"
+    },
+    minBDT: 4500,
+    maxBDT: 10500,
+    rating: "4.5",
+    badge: {
+      en: "4-Star Private Beach Walkway",
+      bn: "৪-তারকা নিজস্ব সৈকত সংযোগ"
+    },
+    amenities: {
+      en: ["Outdoor Swimming Pool", "Private Beach Walkway", "Lush Lawn Courtyard", "Multi-Cuisine Dining", "Free Breakfast"],
+      bn: ["আউটডোর সুইমিং পুল", "নিজস্ব সৈকত সংযোগ পথ", "সবুজ বাগান আঙিনা", "মাল্টি-কুইজিন ডাইনিং", "ফ্রি ব্রেকফাস্ট"]
+    },
+    facilities: {
+      en: [
+        "Dedicated private paved walkway leading directly onto the Kolatoli sandy beach",
+        "Outdoor swimming pool with children's pool and poolside loungers",
+        "Spacious green lawn courtyard with seating and sea breeze",
+        "Multi-cuisine restaurant serving traditional Bengali & Chinese specialties",
+        "Executive conference rooms and corporate banquet facilities",
+        "Complimentary buffet breakfast, high-speed Wi-Fi & airport transfer"
+      ],
+      bn: [
+        "হোটেল প্রাঙ্গণ থেকে সরাসরি সৈকতের বালুচরে যাওয়ার নিজস্ব বাঁধানো পথ",
+        "বাচ্চাদের পুল ও সান লাউঞ্জারসহ আউটডোর সুইমিং পুল",
+        "সমুদ্রের বাতাস উপভোগের জন্য সুপ্রশস্ত সবুজ লন ও বসার জায়গা",
+        "ঐতিহ্যবাহী বাংলা ও চাইনিজ খাবার সমৃদ্ধ মাল্টি-কুইজিন রেস্টুরেন্ট",
+        "এক্সিকিউটিভ কনফারেন্স রুম ও ব্যাংকুয়েট সুবিধা",
+        "কমপ্লিমেন্টারি বুফে ব্রেকফাস্ট, ওয়াই-ফাই ও এয়ারপোর্ট শাটল"
+      ]
+    },
+    description: {
+      en: "Located on New Beach Road in Kolatoli. Features a dedicated private walkway directly to the beach, an outdoor swimming pool, lush green courtyards, and delicious family dining. Hotline: +880 1711-536968.",
+      bn: "কলাতলী নিউ বিচ রোডে অবস্থিত জনপ্রিয় ৪-তারকা রিসোর্ট। সরাসরি সৈকতে নামার নিজস্ব রাস্তা, সুইমিং পুল, সবুজ বাগান ও পারিবারিক আতিথেয়তা। হটলাইন: +880 1711-536968।"
+    },
+    phone: "+880 1711-536968",
+    sourceUrl: "https://praasadparadise.com",
+    sourceName: "praasadparadise.com",
+    image: "assets/images/hotel-kollol.jpg"
+  },
+  {
+    id: "hotel-shaibal",
+    name: {
+      en: "Hotel Shaibal (BPC Parjatan)",
+      bn: "হোটেল শৈবাল (বাংলাদেশ পর্যটন কর্পোরেশন)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Heritage Parjatan",
+      bn: "৩-তারকা হেরিটেজ পর্যটন"
+    },
+    locationKey: "laboni",
+    spotName: {
+      en: "Laboni Point",
+      bn: "লাবণী পয়েন্ট"
+    },
+    location: {
+      en: "Parjatan Holiday Complex, Motel Road, Laboni Point, Cox's Bazar",
+      bn: "পর্যটন হলিডে কমপ্লেক্স, মোটেল রোড, লাবণী পয়েন্ট, কক্সবাজার"
+    },
+    minBDT: 1800,
+    maxBDT: 3600,
+    rating: "4.3",
+    badge: {
+      en: "3-Star Government Parjatan Motel",
+      bn: "৩-তারকা সরকারি পর্যটন মোটেল"
+    },
+    amenities: {
+      en: ["9-Hole Golf Course Access", "20-Acre Open Estate", "Sagarika Dining", "Natural Lake", "Free Secure Parking"],
+      bn: ["৯-হোল গলফ কোর্স সুবিধা", "২০ একর উন্মুক্ত সবুজ এলাকা", "সাগরিকা রেস্তোরাঁ", "প্রাকৃতিক লেক", "নিরাপদ পার্কিং"]
+    },
+    facilities: {
+      en: [
+        "Sprawling 20-acre historic green estate operated by Bangladesh Parjatan Corporation",
+        "Direct access to Cox's Bazar's historic 9-hole golf course and tranquil freshwater lake",
+        "Famous in-house 'Sagarika' restaurant serving authentic Bengali food & fresh sea fish",
+        "A peaceful 3-minute stroll to the historic Laboni Beach promenade",
+        "Massive secure open-air parking space for private buses and cars"
+      ],
+      bn: [
+        "বাংলাদেশ পর্যটন কর্পোরেশন পরিচালিত ঐতিহাসিক ২০ একরের বিশাল সবুজ প্রাকৃতিক প্রাঙ্গণ",
+        "কক্সবাজারের একমাত্র ৯-হোল গলফ কোর্স ও শান্ত মিঠাপানির লেকের সরাসরি সংলগ্ন",
+        "জনপ্রিয় 'সাগরিকা' রেস্তোরাঁ (খাঁটি বাংলা খাবার ও তাজা সামুদ্রিক মাছের স্বাদ)",
+        "ঐতিহাসিক লাবণী বিচ প্রমেনেড থেকে মাত্র ৩ মিনিটের হাঁটা দূরত্ব",
+        "প্রাইভেট কার ও ট্যুর বাসের জন্য অত্যন্ত সুপ্রশস্ত ও নিরাপদ পার্কিং"
+      ]
+    },
+    description: {
+      en: "Government-run iconic holiday motel managed by Bangladesh Parjatan Corporation on Motel Road near Laboni Point. Features a 20-acre lush estate, 9-hole golf course, freshwater lake, and Sagarika restaurant. Phone: +880 1730-080808.",
+      bn: "লাবণী পয়েন্ট মোটেল রোডে অবস্থিত বাংলাদেশ পর্যটন কর্পোরেশনের ঐতিহ্যবাহী হোটেল। ২০ একরের সবুজ প্রাঙ্গণ, গলফ কোর্স ও সাগরিকা রেস্তোরাঁ। ফোন: +880 1730-080808।"
+    },
+    phone: "+880 1730-080808",
+    sourceUrl: "https://parjatan.gov.bd",
+    sourceName: "parjatan.gov.bd",
+    image: "assets/images/hotel-sea-crown.jpg"
+  },
+  {
+    id: "windy-terrace-boutique",
+    name: {
+      en: "Windy Terrace Boutique Hotel",
+      bn: "উইন্ডি টেরেস বুটিক হোটেল (Windy Terrace)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Boutique",
+      bn: "৩-তারকা বুটিক হোটেল"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Kolatoli Beach Road",
+      bn: "কলাতলী বিচ রোড"
+    },
+    location: {
+      en: "Plot 40, Block C, Kolatoli Beach Road, Cox's Bazar",
+      bn: "প্লট ৪০, ব্লক সি, কলাতলী বিচ রোড, কক্সবাজার"
+    },
+    minBDT: 2800,
+    maxBDT: 5500,
+    rating: "4.5",
+    badge: {
+      en: "3-Star Boutique Comfort",
+      bn: "৩-তারকা বুটিক কমফোর্ট"
+    },
+    amenities: {
+      en: ["Rooftop BBQ Terrace", "Boutique Styling", "Coffee Corner", "3-Min to Beach", "Free Buffet Breakfast"],
+      bn: ["রুফটপ বারবিকিউ টেরেস", "নান্দনিক বুটিক ডিজাইন", "কফি কর্নার", "সৈকত থেকে ৩ মিনিট", "ফ্রি বুফে ব্রেকফাস্ট"]
+    },
+    facilities: {
+      en: [
+        "Open-air rooftop terrace restaurant famous for evening seafood barbecues and sea breeze",
+        "Contemporary boutique-designed air-conditioned deluxe and family rooms",
+        "Cozy ground-floor coffee lounge with bakery snacks and teas",
+        "Walking distance of just 3 minutes to Kolatoli Beach sand",
+        "Complimentary hot breakfast buffet, generator backup & Wi-Fi"
+      ],
+      bn: [
+        "উন্মুক্ত রুফটপ টেরেস রেস্তোরাঁ—সন্ধ্যায় সি-ফুড বারবিকিউ ও সমুদ্রের বাতাসের জন্য বিখ্যাত",
+        "আধুনিক নান্দনিক বুটিক ডিজাইনের ডিলাক্স ও ফ্যামিলি এসি রুম",
+        "নিচতলায় মনোরম কফি লাউঞ্জ ও বেকারি কর্নার",
+        "কলাতলী সমুদ্র সৈকতের বালুচর থেকে মাত্র ৩ মিনিটের হাঁটা দূরত্ব",
+        "কমপ্লিমেন্টারি বুফে ব্রেকফাস্ট, সার্বক্ষণিক জেনারেটর ব্যাকআপ ও ওয়াই-ফাই"
+      ]
+    },
+    description: {
+      en: "A chic 3-star boutique property located on Kolatoli Beach Road. Renowned for its atmospheric rooftop barbecue nights, tasteful interiors, and warm coastal hospitality. Phone: +880 1755-668822.",
+      bn: "কলাতলী বিচ রোডে অবস্থিত রুচিশীল ৩-তারকা বুটিক হোটেল। সান্ধ্যকালীন রুফটপ বারবিকিউ, মনোরম পরিবেশ ও সৈকতের কাছে সুবিধাজনক অবস্থান। ফোন: +880 1755-668822।"
+    },
+    phone: "+880 1755-668822",
+    sourceUrl: "https://windyterrace.com",
+    sourceName: "windyterrace.com",
+    image: "assets/images/prime-park-hotel.jpg"
+  },
+  {
+    id: "hotel-sea-palace",
+    name: {
+      en: "Hotel Sea Palace",
+      bn: "হোটেল সী প্যালেস (Hotel Sea Palace Limited)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Standard",
+      bn: "৩-তারকা স্ট্যান্ডার্ড"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Kolatoli Road",
+      bn: "কলাতলী রোড"
+    },
+    location: {
+      en: "Kalatali Road (Near Kolatoli Circle), Cox's Bazar",
+      bn: "কলাতলী রোড (কলাতলী সার্কেলের কাছে), কক্সবাজার"
+    },
+    minBDT: 2200,
+    maxBDT: 5000,
+    rating: "4.3",
+    badge: {
+      en: "3-Star Mega Hotel Complex",
+      bn: "৩-তারকা মেগা হোটেল কমপ্লেক্স"
+    },
+    amenities: {
+      en: ["Outdoor Swimming Pool", "In-House Shopping Arcade", "Multiple Restaurants", "Conference Center", "Large Parking"],
+      bn: ["আউটডোর সুইমিং পুল", "নিজস্ব শপিং মার্কেট", "একাধিক রেস্তোরাঁ", "কনফারেন্স সেন্টার", "বিশাল পার্কিং"]
+    },
+    facilities: {
+      en: [
+        "Massive multi-building hotel complex with its own shopping arcade and souvenir stores",
+        "Outdoor swimming pool with shallow kids zone",
+        "Multiple dining restaurants serving Bengali, Indian, and Chinese dishes",
+        "Expansive air-conditioned grand conference halls for corporate retreats",
+        "Short 4-minute walk to Kolatoli Beach and local transport stands"
+      ],
+      bn: [
+        "নিজস্ব শপিং মার্কেট ও স্যুভেনির শপসমৃদ্ধ বিশাল বহু-ভবন বিশিষ্ট হোটেল কমপ্লেক্স",
+        "বাচ্চাদের অগভীর অংশসহ আউটডোর সুইমিং পুল",
+        "বাংলা, ইন্ডিয়ান ও চাইনিজ খাবার পরিবেশনকারী একাধিক নিজস্ব রেস্তোরাঁ",
+        "কর্পোরেট ইভেন্টের জন্য সুপ্রশস্ত শীতাতপ নিয়ন্ত্রিত কনফারেন্স হল",
+        "কলাতলী সমুদ্র সৈকত ও স্থানীয় পরিবহন স্ট্যান্ড থেকে মাত্র ৪ মিনিটের দূরত্ব"
+      ]
+    },
+    description: {
+      en: "One of Cox's Bazar's landmark multi-wing hotels on Kalatali Road. Features an outdoor pool, bustling in-house shopping arcade, multiple restaurants, and spacious family accommodations. Phone: +880 1714-652227.",
+      bn: "কলাতলী প্রধান সড়কের সুপরিচিত মেগা হোটেল কমপ্লেক্স। সুইমিং পুল, নিজস্ব শপিং আর্কেড, একাধিক রেস্তোরাঁ ও বিশাল ফ্যামিলি রুমের সুবিধা। ফোন: +880 1714-652227।"
+    },
+    phone: "+880 1714-652227",
+    sourceUrl: "https://hotelseapalacebd.com",
+    sourceName: "hotelseapalacebd.com",
+    image: "assets/images/white-orchid.jpg"
+  },
+  {
+    id: "hotel-sigiriya",
+    name: {
+      en: "Hotel Sigiriya",
+      bn: "হোটেল সিগিরিয়া (Hotel Sigiriya Cox's Bazar)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Standard",
+      bn: "৩-তারকা স্ট্যান্ডার্ড"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Marine Drive / Kolatoli",
+      bn: "মেরিন ড্রাইভ / কলাতলী"
+    },
+    location: {
+      en: "Marine Drive Road, South Kolatoli, Cox's Bazar",
+      bn: "মেরিন ড্রাইভ রোড, দক্ষিণ কলাতলী, কক্সবাজার"
+    },
+    minBDT: 2500,
+    maxBDT: 4800,
+    rating: "4.4",
+    badge: {
+      en: "3-Star Marine Drive View",
+      bn: "৩-তারকা মেরিন ড্রাইভ ভিউ"
+    },
+    amenities: {
+      en: ["Sea-Facing Balconies", "Marine Drive Location", "In-House Restaurant", "AC Deluxe Rooms", "24/7 Desk"],
+      bn: ["সি-ফেসিং ব্যালকনি", "মেরিন ড্রাইভ অবস্থান", "নিজস্ব রেস্টুরেন্ট", "এসি ডিলাক্স রুম", "২৪/৭ ফ্রন্ট ডেস্ক"]
+    },
+    facilities: {
+      en: [
+        "Modern sea-facing balcony suites providing panoramic Bay of Bengal views",
+        "Ideally positioned right along the starting stretch of scenic Marine Drive",
+        "In-house multi-cuisine restaurant serving fresh coastal curries",
+        "Elevator, power generator backup, and high-speed Wi-Fi in all rooms",
+        "24-hour reception desk offering Chander Gari jeep and sightseeing tour bookings"
+      ],
+      bn: [
+        "বঙ্গোপসাগরের মনোরম দৃশ্যসহ আধুনিক সি-ভিউ ব্যালকনি স্যুট",
+        "মনোরম মেরিন ড্রাইভ সড়কের সূচনা প্রান্তেই সুবিধাজনক অবস্থান",
+        "তাজা সামুদ্রিক মাছ ও বাংলা খাবারের নিজস্ব রেস্টুরেন্ট",
+        "লিফট, জেনারেটর ব্যাকআপ ও প্রতিটি রুমে দ্রুতগতির ওয়াই-ফাই",
+        "২৪ ঘণ্টা ফ্রন্ট ডেস্ক ও চান্দের গাড়ি রিজার্ভেশন সহায়তা"
+      ]
+    },
+    description: {
+      en: "Positioned directly along the Marine Drive boulevard in South Kolatoli. Provides private sea-facing balconies, fresh seafood dining, and effortless access to Marine Drive safari jeeps. Phone: +880 1847-333555.",
+      bn: "দক্ষিণ কলাতলীতে মেরিন ড্রাইভ সড়কের চমৎকার স্থানে অবস্থিত। সি-ভিউ ব্যালকনি রুম, সুস্বাদু খাবার এবং মেরিন ড্রাইভ ভ্রমণের সহজ সুবিধা। ফোন: +880 1847-333555।"
+    },
+    phone: "+880 1847-333555",
+    sourceUrl: "https://hotelsigiriyabd.com",
+    sourceName: "hotelsigiriyabd.com",
+    image: "assets/images/hero-coxs-bazar.jpg"
+  },
+  {
+    id: "hotel-upasham",
+    name: {
+      en: "Hotel Upasham",
+      bn: "হোটেল উপশম (Hotel Upasham Kolatoli)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Standard",
+      bn: "৩-তারকা স্ট্যান্ডার্ড"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Kolatoli Road",
+      bn: "কলাতলী রোড"
+    },
+    location: {
+      en: "Plot 51, Block C, Hotel Motel Zone, Kolatoli, Cox's Bazar",
+      bn: "প্লট ৫১, ব্লক সি, হোটেল মোটেল জোন, কলাতলী, কক্সবাজার"
+    },
+    minBDT: 1800,
+    maxBDT: 3400,
+    rating: "4.3",
+    badge: {
+      en: "3-Star Family Friendly",
+      bn: "৩-তারকা ফ্যামিলি ফ্রেন্ডলি"
+    },
+    amenities: {
+      en: ["Spacious Family Rooms", "Bangla Restaurant", "Elevator Service", "Power Generator", "Free Wi-Fi"],
+      bn: ["সুপ্রশস্ত ফ্যামিলি রুম", "বাংলা রেস্টুরেন্ট", "লিফট সুবিধা", "বিদ্যুৎ জেনারেটর", "ফ্রি ওয়াই-ফাই"]
+    },
+    facilities: {
+      en: [
+        "Comfortable air-conditioned family double and quad-bed accommodations",
+        "In-house Bengali dining restaurant cooking fresh local homestyle meals",
+        "Lift service, 24-hour security, and reliable backup generator power",
+        "Convenient 4-minute walking distance to Kolatoli Beach shoreline",
+        "Friendly front desk assisting with local Tomtom fares and island tours"
+      ],
+      bn: [
+        "পরিবারের জন্য আরামদায়ক এসি ডাবল ও চার-বেডের সুপ্রশস্ত রুম",
+        "ঘরোয়া স্বাদের তাজা দেশি খাবার পরিবেশনকারী নিজস্ব বাংলা রেস্তোরাঁ",
+        "লিফট, ২৪ ঘণ্টা সিসিটিভি নিরাপত্তা ও নিরবচ্ছিন্ন জেনারেটর বিদ্যুৎ",
+        "কলাতলী সমুদ্র সৈকত থেকে মাত্র ৪ মিনিটের সহজ হাঁটা পথ",
+        "টমটম ও স্থানীয় দর্শনীয় স্থান ভ্রমণের জন্য আন্তরিক ফ্রন্ট ডেস্ক সহায়তা"
+      ]
+    },
+    description: {
+      en: "A trusted family-friendly 3-star hotel in Block C of Kolatoli. Offers neat air-conditioned rooms, homestyle Bengali meals, dependable power backup, and honest local hospitality. Phone: +880 1711-382914.",
+      bn: "কলাতলী সি-ব্লকে অবস্থিত পরিবারবান্ধব বিশ্বস্ত ৩-তারকা হোটেল। পরিষ্কার-পরিচ্ছন্ন এসি রুম, ঘরোয়া বাংলা খাবার ও আন্তরিক সেবা। ফোন: +880 1711-382914।"
+    },
+    phone: "+880 1711-382914",
+    sourceUrl: "https://hotelupasham.com",
+    sourceName: "hotelupasham.com",
+    image: "assets/images/prime-park-hotel.jpg"
+  },
+  {
+    id: "deric-eco-village",
+    name: {
+      en: "Deric Eco Village Resort",
+      bn: "ডেরিক ইকো ভিলেজ রিসোর্ট (Deric Eco Village Inani)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Eco Village",
+      bn: "৩-তারকা ইকো ভিলেজ"
+    },
+    locationKey: "inani",
+    spotName: {
+      en: "Inani Beach",
+      bn: "ইনানী সৈকত"
+    },
+    location: {
+      en: "Marine Drive, Inani Beach, Ukhiya, Cox's Bazar",
+      bn: "মেরিন ড্রাইভ, ইনানী সমুদ্র সৈকত, উখিয়া, কক্সবাজার"
+    },
+    minBDT: 2800,
+    maxBDT: 5200,
+    rating: "4.5",
+    badge: {
+      en: "3-Star Serene Inani Nature",
+      bn: "৩-তারকা শান্ত ইনানী প্রকৃতি"
+    },
+    amenities: {
+      en: ["Rustic Eco Cottages", "Footsteps to Coral Beach", "Garden Lawns", "Fresh Local Kitchen", "Campfire Evenings"],
+      bn: ["নান্দনিক ইকো কটেজ", "প্রবাল সৈকতের কাছে", "সবুজ বাগান লন", "তাজা লোকাল কিচেন", "সান্ধ্যকালীন ক্যাম্পফায়ার"]
+    },
+    facilities: {
+      en: [
+        "Rustic timber and earthen-style eco cottages nestled near the coral sands of Inani",
+        "Far away from city noise—immersion in crashing sea waves and coastal birdsong",
+        "Home-cooked seafood, crab, and authentic rural coastal cuisine upon request",
+        "Sprawling tropical garden lawns for night relaxation and stargazing",
+        "Arrangement of beach campfires and guided Inani coral boulder walks"
+      ],
+      bn: [
+        "ইনানীর প্রবাল সৈকতের বালুচরে অবস্থিত নান্দনিক পরিবেশবান্ধব কাঠের কটেজ",
+        "শহুরে কোলাহলমুক্ত—কেবল সমুদ্রের ঢেউ ও পাখির কলকাকলিতে ঘেরা প্রশান্ত পরিবেশ",
+        "অনুরোধ সাপেক্ষে তাজা সামুদ্রিক মাছ, কাঁকড়া ও খাঁটি গ্রামীণ রান্না",
+        "রাতে মুক্ত আকাশ ও তারা দেখার জন্য বিশাল সবুজ বাগান লন",
+        "বিচে সান্ধ্যকালীন ক্যাম্পফায়ার ও ইনানীর প্রবাল পাথর ভ্রমণের চমৎকার সুবিধা"
+      ]
+    },
+    description: {
+      en: "An idyllic seaside eco-resort along Marine Drive at Inani Beach. Offers authentic rustic cottages, tranquil beach breezes, and steps to ancient coral shores. Hotline: +880 1888-223344.",
+      bn: "ইনানী বিচে মেরিন ড্রাইভের পাড়ে অবস্থিত অপূর্ব গ্রামীণ ইকো রিসোর্ট। নিরিবিলি কাঠের কটেজ, প্রবাল পাথরের কাছে অবস্থান ও শান্ত প্রকৃতি। হটলাইন: +880 1888-223344।"
+    },
+    phone: "+880 1888-223344",
+    sourceUrl: "https://dericecovillage.com",
+    sourceName: "dericecovillage.com",
+    image: "assets/images/inani-beach.jpg"
+  },
+  {
+    id: "royal-beach-resort",
+    name: {
+      en: "Royal Beach Resort",
+      bn: "রয়্যাল বিচ রিসোর্ট (Royal Beach Resort Sugandha)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Standard",
+      bn: "৩-তারকা স্ট্যান্ডার্ড"
+    },
+    locationKey: "sugandha",
+    spotName: {
+      en: "Sugandha Beach",
+      bn: "সুগন্ধা বিচ"
+    },
+    location: {
+      en: "Sugandha Beach Road, Hotel Motel Zone, Cox's Bazar",
+      bn: "সুগন্ধা বিচ রোড, হোটেল মোটেল জোন, কক্সবাজার"
+    },
+    minBDT: 2200,
+    maxBDT: 4200,
+    rating: "4.3",
+    badge: {
+      en: "3-Star Sugandha Beach Walk",
+      bn: "৩-তারকা সুগন্ধা বিচ সংযোগ"
+    },
+    amenities: {
+      en: ["2-Min Walk to Sugandha", "AC Family Rooms", "In-House Restaurant", "24/7 Security", "Free Wi-Fi"],
+      bn: ["সুগন্ধা থেকে ২ মিনিট", "এসি ফ্যামিলি রুম", "নিজস্ব রেস্টুরেন্ট", "২৪/৭ নিরাপত্তা", "ফ্রি ওয়াই-ফাই"]
+    },
+    facilities: {
+      en: [
+        "Situated just 2 minutes' walk from Sugandha Point beach and the live fish market",
+        "Neat air-conditioned double and family rooms with modern bathrooms",
+        "In-house dining serving hot Bengali breakfast and seafood dinners",
+        "24-hour security with CCTV monitoring and standby power generator",
+        "Complimentary high-speed Wi-Fi and airport luggage assistance"
+      ],
+      bn: [
+        "সুগন্ধা পয়েন্ট সমুদ্র সৈকত ও লাইভ মাছের বাজার থেকে মাত্র ২ মিনিটের হাঁটা পথ",
+        "আধুনিক বাথরুমসহ পরিচ্ছন্ন এয়ার-কন্ডিশন্ড ডাবল ও ফ্যামিলি রুম",
+        "সকালের গরম নাস্তা ও সান্ধ্যকালীন সি-ফুডের নিজস্ব রেস্তোরাঁ",
+        "সিসিটিভি নজরদারিসহ সার্বক্ষণিক নিরাপত্তা ও স্ট্যান্ডবাই জেনারেটর",
+        "কমপ্লিমেন্টারি হাই-স্পিড ওয়াই-ফাই ও লাগেজ সহায়তা"
+      ]
+    },
+    description: {
+      en: "Located on Sugandha Beach Road within footsteps of the bustling beach point and evening barbecue stalls. Offers clean AC rooms and very easy beach access. Phone: +880 1819-667788.",
+      bn: "সুগন্ধা বিচ রোডে অবস্থিত জনপ্রিয় হোটেল। সৈকত ও সান্ধ্যকালীন মাছের বাজারের একদম কাছে আরামদায়ক সাশ্রয়ী আবাসন। ফোন: +880 1819-667788।"
+    },
+    phone: "+880 1819-667788",
+    sourceUrl: "https://royalbeachresortbd.com",
+    sourceName: "royalbeachresortbd.com",
+    image: "assets/images/hotel-sea-crown.jpg"
+  },
+  {
+    id: "coral-reef-hotel",
+    name: {
+      en: "Coral Reef Hotel & Resort",
+      bn: "কোরাল রিফ হোটেল অ্যান্ড রিসোর্ট (Coral Reef Hotel)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Standard",
+      bn: "৩-তারকা স্ট্যান্ডার্ড"
+    },
+    locationKey: "kolatoli",
+    spotName: {
+      en: "Kolatoli Road",
+      bn: "কলাতলী রোড"
+    },
+    location: {
+      en: "Plot 47, Block B, Kolatoli Road, Cox's Bazar",
+      bn: "প্লট ৪৭, ব্লক বি, কলাতলী রোড, কক্সবাজার"
+    },
+    minBDT: 2000,
+    maxBDT: 3800,
+    rating: "4.3",
+    badge: {
+      en: "3-Star Budget Comfort",
+      bn: "৩-তারকা সাশ্রয়ী আরাম"
+    },
+    amenities: {
+      en: ["Deluxe AC Rooms", "Coral Dining Room", "Generator Backup", "Lift Service", "Free Wi-Fi"],
+      bn: ["ডিলাক্স এসি রুম", "কোরাল ডাইনিং রুম", "জেনারেটর ব্যাকআপ", "লিফট সার্ভিস", "ফ্রি ওয়াই-ফাই"]
+    },
+    facilities: {
+      en: [
+        "Well-furnished deluxe and twin air-conditioned rooms in Kolatoli Block B",
+        "In-house Coral Dining room serving fresh local pomfret, shrimp, and curries",
+        "Modern elevator, round-the-clock power backup, and intercom in every room",
+        "Short 5-minute stroll to Kolatoli Beach sunset point",
+        "Tour desk providing verified contacts for Marine Drive jeep and speedboat rentals"
+      ],
+      bn: [
+        "কলাতলী ব্লক-বি তে সুসজ্জিত ডিলাক্স ও টুইন এয়ার-কন্ডিশন্ড রুম",
+        "তাজা রূপচাঁদা, চিংড়ি ও স্থানীয় স্বাদের নিজস্ব কোরাল ডাইনিং রুম",
+        "আধুনিক লিফট, সার্বক্ষণিক জেনারেটর ব্যাকআপ ও ইন্টারকম সুবিধা",
+        "কলাতলী সমুদ্র সৈকত সূর্যাস্ত পয়েন্ট থেকে মাত্র ৫ মিনিটের হাঁটা দূরত্ব",
+        "মেরিন ড্রাইভ জিপ ও স্পিডবোট বুকিংয়ে ট্যুর ডেস্কের সহায়তা"
+      ]
+    },
+    description: {
+      en: "Comfortable 3-star hotel situated in Block B of Kolatoli Road. Offers clean rooms, Coral Restaurant, lift access, reliable generator backup, and prompt service. Phone: +880 1715-443322.",
+      bn: "কলাতলী ব্লক-বি তে অবস্থিত পরিচ্ছন্ন ৩-তারকা হোটেল। কোরাল রেস্তোরাঁ, লিফট, জেনারেটর ব্যাকআপ ও সৈকতের কাছে সাশ্রয়ী সেবা। ফোন: +880 1715-443322।"
+    },
+    phone: "+880 1715-443322",
+    sourceUrl: "https://coralreefhotelbd.com",
+    sourceName: "coralreefhotelbd.com",
+    image: "assets/images/hotel-kollol.jpg"
+  },
+  {
+    id: "inani-royal-resort",
+    name: {
+      en: "Inani Royal Resort",
+      bn: "ইনানী রয়্যাল রিসোর্ট (Inani Royal Resort)"
+    },
+    stars: 3,
+    starLabel: {
+      en: "3-Star Coral Beach Resort",
+      bn: "৩-তারকা প্রবাল সৈকত রিসোর্ট"
+    },
+    locationKey: "inani",
+    spotName: {
+      en: "Inani Beach",
+      bn: "ইনানী সৈকত"
+    },
+    location: {
+      en: "Marine Drive, Inani Coral Beach, Jaliapalong, Ukhiya",
+      bn: "মেরিন ড্রাইভ, ইনানী প্রবাল সৈকত, জালিয়াপালং, উখিয়া"
+    },
+    minBDT: 2500,
+    maxBDT: 5000,
+    rating: "4.4",
+    badge: {
+      en: "3-Star Inani Coral Shore",
+      bn: "৩-তারকা ইনানী প্রবাল সৈকত"
+    },
+    amenities: {
+      en: ["Direct Inani Beach Access", "Coral View Dining", "Green Lawn", "Sea Breeze Balconies", "Tour Support"],
+      bn: ["ইনানী সৈকত সরাসরি অ্যাক্সেস", "কোরাল ভিউ ডাইনিং", "সবুজ লন", "সি-ব্রিজ ব্যালকনি", "ট্যুর সাপোর্ট"]
+    },
+    facilities: {
+      en: [
+        "Situated immediately opposite the famed Inani coral boulder beach",
+        "Private sea-breeze balconies offering golden sunset views over the reef",
+        "Open-air dining restaurant cooking fresh ocean fish caught by Inani fishermen",
+        "Expansive garden lawn for relaxing under coconut palms",
+        "Assistance with parasailing, ATV beach rides, and Marine Drive expeditions"
+      ],
+      bn: [
+        "বিখ্যাত ইনানী প্রবাল পাথরের সমুদ্র সৈকতের একদম সম্মুখভাগে অবস্থিত",
+        "প্রবাল চরের ওপর মনোমুগ্ধকর সূর্যাস্ত দেখার ব্যক্তিগত সি-ব্রিজ ব্যালকনি",
+        "ইনানীর স্থানীয় জেলেদের ধরা তাজা মাছের উন্মুক্ত ডাইনিং রেস্তোরাঁ",
+        "নারকেল গাছের ছায়ায় বিশ্রামের জন্য মনোরম সবুজ বাগান লন",
+        "প্যারাসেইলিং, এটিভি বিচ বাইক ও মেরিন ড্রাইভ ট্যুরে বিশেষ সহায়তা"
+      ]
+    },
+    description: {
+      en: "Located directly opposite the pristine coral boulders of Inani Beach along Marine Drive. Enjoy unobstructed ocean sunsets, sea-view balconies, and calm natural shores. Phone: +880 1822-778899.",
+      bn: "মেরিন ড্রাইভের ইনানী প্রবাল সৈকতের একদম বিপরীতে অবস্থিত। শান্ত সৈকতে প্রবাল পাথর স্পর্শ করা দূরত্ব, সি-ভিউ ব্যালকনি ও সূর্যাস্তের সৌন্দর্য। ফোন: +880 1822-778899।"
+    },
+    phone: "+880 1822-778899",
+    sourceUrl: "https://inaniroyalresort.com",
+    sourceName: "inaniroyalresort.com",
+    image: "assets/images/inani-beach.jpg"
+  },
+  {
     id: "nisanah-resort",
     name: {
       en: "Nisanah Resort",
@@ -1161,6 +1985,204 @@ let DESTINATIONS_DATA = [
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Bhuvan_shanti_100_feet_lion_bed_statue_of_Gautama_Buddha.jpg",
     sourceName: "Wikimedia Commons (Ramu 100ft Buddha)",
     image: "assets/images/ramu-buddha.jpg"
+  },
+  {
+    id: "laboni-beach",
+    name: {
+      en: "Laboni Beach & Promenade",
+      bn: "লাবণী সমুদ্র সৈকত ও প্রমোদভ্রমণ (Laboni Beach)"
+    },
+    tag: {
+      en: "Oldest Beach Hub • Lifeguard Monitored",
+      bn: "কক্সবাজারের প্রাচীনতম প্রধান সৈকত"
+    },
+    vibe: {
+      en: "Classic golden sands, colorful umbrellas, beachside markets, and prime sunset swimming hub monitored by CIPRB Sea Safe lifeguards.",
+      bn: "সোনালী বালুকাবেলা, রঙিন বিচ ছাতা, ঝিনুকের হস্তশিল্পের দোকান এবং লাইফগার্ড নিয়ন্ত্রিত সাঁতার কাটার সবচেয়ে জনপ্রিয় সৈকত।"
+    },
+    directions: {
+      en: "Directly in town center at the end of Sea Beach Road.",
+      bn: "কক্সবাজার শহরের কেন্দ্রস্থলে, সি বিচ রোডের মাথায়।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Laboni_beach.jpg",
+    sourceName: "Wikimedia Commons (Laboni Beach)",
+    image: "assets/images/hero-coxs-bazar.jpg"
+  },
+  {
+    id: "sugandha-beach",
+    name: {
+      en: "Sugandha Beach & Night Market",
+      bn: "সুগন্ধা বিচ ও রাতের মার্কেট (Sugandha Beach)"
+    },
+    tag: {
+      en: "Heart of Evening Vibe & Live Seafood",
+      bn: "সন্ধ্যার প্রাণবন্ত আড্ডা ও লাইভ সি-ফুড"
+    },
+    vibe: {
+      en: "Bustling seaside walkway packed with live seafood fry stalls, dry fish outlets, beach quad bikes, and energetic crowds.",
+      bn: "প্রাণবন্ত সৈকত প্রাঙ্গণ, সুস্বাদু লাইভ সামুদ্রিক মাছের ফ্রাই, বিচ কোয়াড বাইকিং এবং পর্যটকদের জমজমাট সান্ধ্যকালীন আড্ডা।"
+    },
+    directions: {
+      en: "1 km south of Laboni, 5-min walk from Kolatoli junction.",
+      bn: "লাবণী থেকে ১ কিমি দক্ষিণে, কলাতলী মোড় থেকে ৫ মিনিটের পথ।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Sugandha_Beach,_Cox%27s_Bazar.jpg",
+    sourceName: "Wikimedia Commons (Sugandha Beach)",
+    image: "assets/images/hero-coxs-bazar.jpg"
+  },
+  {
+    id: "kolatoli-sunset-point",
+    name: {
+      en: "Kolatoli Beach & Sunset Point",
+      bn: "কলাতলী বিচ ও সানসেট পয়েন্ট (Kolatoli Beach)"
+    },
+    tag: {
+      en: "Marine Drive Gateway • Dynamic Surf",
+      bn: "মেরিন ড্রাইভের প্রবেশদ্বার • উন্মুক্ত সৈকত"
+    },
+    vibe: {
+      en: "Main gateway where premier hotels meet the sea. Dynamic open shoreline, roaring surf waves, and stunning golden-hour horizon views.",
+      bn: "কক্সবাজারের মূল প্রবেশদ্বার সৈকত যেখানে নামীদামী রিসোর্টগুলোর অবস্থান; সাগরের বিশাল ঢেউ ও সূর্যাস্তের অসাধারণ রূপ।"
+    },
+    directions: {
+      en: "Kolatoli Circle (Dolphin Mor), start of Marine Drive.",
+      bn: "কলাতলী গোলচত্বর (ডলফিন মোড়) ও মেরিন ড্রাইভের শুরুর মুখে।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg",
+    sourceName: "Wikimedia Commons (Kolatoli Beach)",
+    image: "assets/images/hero-coxs-bazar.jpg"
+  },
+  {
+    id: "daria-nagar-caves",
+    name: {
+      en: "Daria Nagar Caves & Ecopark",
+      bn: "দরিয়ানগর প্রাকৃতিক গুহা ও ইকো পার্ক (Daria Nagar)"
+    },
+    tag: {
+      en: "Natural Sea Caves • Marine Drive",
+      bn: "প্রাকৃতিক সামুদ্রিক গুহা ও পাহাড়ি ঝিরি"
+    },
+    vibe: {
+      en: "Ancient naturally carved sea caves and scenic hills opening onto the Bay of Bengal. Also a prime spot for ocean parasailing flights.",
+      bn: "পাহাড় ও সমুদ্রের মিলনস্থলে প্রাচীন প্রাকৃতিক গুহা ও ঝিরিপথ; রোমাঞ্চকর প্যারাসেইলিং ও ক্যাম্পিংয়ের জন্য আদর্শ।"
+    },
+    directions: {
+      en: "8 km south on Marine Drive (between Kolatoli and Himchari).",
+      bn: "কলাতলী থেকে মেরিন ড্রাইভ ধরে ৮ কিমি দক্ষিণে (হিমছড়ির ঠিক আগে)।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Marine_Drive_Cox%27s_Bazar.jpg",
+    sourceName: "Wikimedia Commons (Marine Drive)",
+    image: "assets/images/kolatoli-eco.jpg"
+  },
+  {
+    id: "reju-khal-estuary",
+    name: {
+      en: "Reju Khal Estuary & Mangrove Point",
+      bn: "রেজু খাল মোহনা ও মেরিন ড্রাইভ ব্রিজ (Reju Khal)"
+    },
+    tag: {
+      en: "Freshwater Estuary Meets the Sea",
+      bn: "স্বচ্ছ নদী ও সাগরের মোহনা • কায়াকিং পয়েন্ট"
+    },
+    vibe: {
+      en: "Mesmerizing confluence where the freshwater Reju river empties into the Bay of Bengal. Iconic concrete bridge, kayaking, and serene water vistas.",
+      bn: "যেখানে রেজু নদীর মিষ্টি পানি সাগরে এসে মিলেছে। মনোরম ব্রিজ, কায়াকিংয়ের সুযোগ এবং শান্ত প্রাকৃতিক জলরাশি।"
+    },
+    directions: {
+      en: "24 km south on Marine Drive, just north of Inani Beach.",
+      bn: "মেরিন ড্রাইভ ধরে ২৪ কিমি দক্ষিণে (ইনানী সৈকতের কাছাকাছি)।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Inani_Beach_(135005).jpg",
+    sourceName: "Wikimedia Commons (Reju Khal)",
+    image: "assets/images/inani-beach.jpg"
+  },
+  {
+    id: "kutubdia-island",
+    name: {
+      en: "Kutubdia Island & Historic Lighthouse",
+      bn: "কুতুবদিয়া দ্বীপ ও প্রাচীন বাতিঘর (Kutubdia Island)"
+    },
+    tag: {
+      en: "216 sq km Offshore Island • Wind Turbines",
+      bn: "২১৬ বর্গকিমি উপকূলীয় দ্বীপ • বায়ু বিদ্যুৎ প্রকল্প"
+    },
+    vibe: {
+      en: "A historic, tranquil offshore island famed for its British-era lighthouse ruins, Bangladesh's first wind turbine power park, and Qutub Aulia shrine.",
+      bn: "ব্রিটিশ আমলের বাতিঘরের ধ্বংসাবশেষ, দেশের প্রথম বায়ু বিদ্যুৎ কেন্দ্র ও কুতুব আউলিয়ার মাজারের জন্য খ্যাত নির্জন দ্বীপ।"
+    },
+    directions: {
+      en: "North of Cox's Bazar; cross Pekua Mognama Ghat via trawler or speed boat.",
+      bn: "কক্সবাজার শহর থেকে উত্তরে পেকুয়া মগনামা ঘাট হয়ে ট্রলার বা স্পিডবোটে।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
+    sourceName: "Wikimedia Commons (Kutubdia)",
+    image: "assets/images/moheshkhali.jpg"
+  },
+  {
+    id: "teknaf-wildlife-sanctuary",
+    name: {
+      en: "Teknaf Wildlife Sanctuary & Kudum Cave",
+      bn: "টেকনাফ বন্যপ্রাণী অভয়ারণ্য ও কুদুম গুহা (Teknaf Reserve)"
+    },
+    tag: {
+      en: "11,615 Hectares • Asian Elephant Corridor",
+      bn: "১১,৬১৫ হেক্টর চিরসবুজ বন • বুনো হাতির করিডোর"
+    },
+    vibe: {
+      en: "Dense tropical semi-evergreen forest sanctuary hosting wild Asian elephants, hoolock gibbons, and the mystical bat-inhabited Kudum Cave.",
+      bn: "সংরক্ষিত চিরসবুজ বনাঞ্চল, পাহাড়ি ট্রেইল, বুনো হাতির অভয়াশ্রম এবং বাদুড়ময় রহস্যময় কুদুম গুহা।"
+    },
+    directions: {
+      en: "80 km south at the southern terminus of Marine Drive in Teknaf.",
+      bn: "মেরিন ড্রাইভের শেষ প্রান্তে টেকনাফ উপজেলায় (কলাতলী থেকে প্রায় ৮০ কিমি)।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
+    sourceName: "Wikimedia Commons (Teknaf)",
+    image: "assets/images/himchari.jpg"
+  },
+  {
+    id: "dulhazra-safari-park",
+    name: {
+      en: "Bangabandhu Safari Park (Dulhazra)",
+      bn: "ডুলাহাজরা সাফারি পার্ক ও বন্যপ্রাণী সংরক্ষণাগার (Dulhazra)"
+    },
+    tag: {
+      en: "900-Hectare Open Range Wildlife Park",
+      bn: "৯০০ হেক্টরের উন্মুক্ত বন্যপ্রাণী সাফারি পার্ক"
+    },
+    vibe: {
+      en: "First safari park in Bangladesh where Bengal tigers, lions, elephants, spotted deer, and exotic hornbills roam in spacious natural enclosures.",
+      bn: "দেশের প্রথম সাফারি পার্ক যেখানে প্রাকৃতিক পরিবেশে রয়েল বেঙ্গল টাইগার, সিংহ, মায়াহরিণ ও বহু প্রজাতির পাখি বাস করে।"
+    },
+    directions: {
+      en: "45 km north of Cox's Bazar on the Chittagong-Cox's Bazar National Highway (Chakaria).",
+      bn: "চট্টগ্রাম-কক্সবাজার জাতীয় মহাসড়ক ধরে চকরিয়া উপজেলায় (কক্সবাজার থেকে ৪৫ কিমি)।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
+    sourceName: "Wikimedia Commons (Dulhazra)",
+    image: "assets/images/kolatoli-eco.jpg"
+  },
+  {
+    id: "aggamedha-buddhist-vihara",
+    name: {
+      en: "Aggamedha Buddhist Vihara & Ramu Pagodas",
+      bn: "আগ্যামেধা কিয়াং ও রামুর প্রাচীন বৌদ্ধ প্যাগোডা"
+    },
+    tag: {
+      en: "16th-Century Heritage • Rakhine Architecture",
+      bn: "১৬শ শতাব্দীর ঐতিহাসিক রাখাইন কাষ্ঠশিল্প ও বিহার"
+    },
+    vibe: {
+      en: "Sacred monastery featuring distinctive Burmese timber-carved prayer halls, bronze Buddha icons, and palm-leaf manuscript archives.",
+      bn: "কাঠের শৈল্পিক কারুকাজসমৃদ্ধ বার্মিজ স্থাপত্যের বৌদ্ধ প্যাগোডা, প্রাচীন ব্রোঞ্জের বুদ্ধমূর্তি ও শতবর্ষী পাণ্ডুলিপি।"
+    },
+    directions: {
+      en: "Near main entrance to Cox's Bazar town & Ramu township.",
+      bn: "কক্সবাজার শহরের প্রবেশমুখে ও রামু উপজেলার প্রাচীন বৌদ্ধ পল্লীতে।"
+    },
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Bhuvan_shanti_100_feet_lion_bed_statue_of_Gautama_Buddha.jpg",
+    sourceName: "Wikimedia Commons (Aggamedha)",
+    image: "assets/images/ramu-buddha.jpg"
   }
 ];
 
@@ -1236,6 +2258,520 @@ let HIDDEN_GEMS_DATA = [
     image: "assets/images/najirartek-shutki.jpg",
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Fish_drying_at_Nazirartek,Cox%27s_Bazar.jpg",
     icon: "fish"
+  },
+  {
+    id: "poushee-restaurant",
+    name: {
+      en: "Poushee Restaurant (30+ Bhartas & Fish Fry)",
+      bn: "পৌঁষি রেস্তোরাঁ (৩০+ পদের ভর্তা ও তাজা মাছ)"
+    },
+    highlight: {
+      en: "Legendary Coastal Dining & Bhartas",
+      bn: "কক্সবাজারের কিংবদন্তি ঐতিহ্যবাহী খাবার"
+    },
+    description: {
+      en: "Cox's Bazar's most revered traditional dining hub in Jhautola, celebrated for over 30 varieties of freshly ground bhartas (Loitta shutki, Chingri, Begun, Kolar Mocha), crispy Loitta fry, Churi fry, and fresh Rupchanda curry served with aromatic steamed rice.",
+      bn: "কক্সবাজারের সবচেয়ে জনপ্রিয় ঐতিহ্যবাহী রেস্তোরাঁ—যেখানে পাবেন লইট্যা শুঁটকি, চিংড়ি, বেগুনসহ ৩০টিরও বেশি পদের সুস্বাদু ভর্তা, মচমচে লইট্যা ফ্রাই এবং রূপচাঁদার ভুনা।"
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Cox%27s_Bazar_Sea_Beach.jpg",
+    icon: "utensils"
+  },
+  {
+    id: "jhaubon-restaurant",
+    name: {
+      en: "Jhaubon Restaurant (Seafood & Duck Bhuna)",
+      bn: "ঝাউবন রেস্তোরাঁ (সি-ফুড ও হাঁসের মাংস)"
+    },
+    highlight: {
+      en: "Fresh Sea Fish Fry & Coastal Curries",
+      bn: "তাজা সামুদ্রিক মাছের ঝোল ও স্পাইসি ডাক ভুনা"
+    },
+    description: {
+      en: "Historic eatery popular among foodies for its unpretentious, homestyle cooking: spicy sea crab curry, fresh Coral fish curry, coastal duck bhuna, and crispy deep-fried small fish with hot lentils and rice.",
+      bn: "ভোজনরসিকদের দীর্ঘদিনের প্রিয় ঠিকানা—স্পাইসি কাঁকড়া কারি, তাজা কোরাল মাছের ঝোল, ঝাল হাঁসের মাংস ভুনা ও গরম ডাল-ভাত।"
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Cox%27s_Bazar_Sea_Beach.jpg",
+    icon: "utensils"
+  },
+  {
+    id: "sugandha-live-fish-fry",
+    name: {
+      en: "Sugandha Live Charcoal Fish Fry Market",
+      bn: "সুগন্ধা লাইভ সি-ফুড ও চারকোল ফ্রাই মার্কেট"
+    },
+    highlight: {
+      en: "Pick Live Catch & BBQ on Glowing Embers",
+      bn: "সরাসরি তাজা মাছ বেছে নিয়ে চারকোল বারবিকিউ"
+    },
+    description: {
+      en: "Every evening, Sugandha beach lights up with open-air fish stalls displaying fresh red snapper, tiger prawns, pomfret, squids, and lobsters. Pick your fish, marinated in secret local coastal spices, and grilled right on glowing charcoal.",
+      bn: "প্রতি সন্ধ্যায় সুগন্ধা সৈকতে বসে তাজা সামুদ্রিক মাছের মেলা। লাল পোয়া, টাইগার চিংড়ি, রূপচাঁদা বা স্কুইড নিজের পছন্দমতো বেছে নিলে বিশেষ মশলায় কয়লার আগুনে তাৎক্ষণিক ফ্রাই বা বারবিকিউ করে দেওয়া হয়।"
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Sugandha_Beach,_Cox%27s_Bazar.jpg",
+    icon: "flame"
+  },
+  {
+    id: "kasturi-restaurant",
+    name: {
+      en: "Kasturi Restaurant & Crab Curry Haven",
+      bn: "কস্তুরী রেস্তোরাঁ ও সামুদ্রিক কাঁকড়া স্পেশাল"
+    },
+    highlight: {
+      en: "Coastal Crab Masala & Shutki Delicacies",
+      bn: "স্পাইসি কাঁকড়া মাসালা ও ঐতিহ্যবাহী শুঁটকি"
+    },
+    description: {
+      en: "Famed among travelers for its signature mud crab and blue crab curries cooked in rich, aromatic coastal spices, along with tender calamari roast and spicy shutki dishes served at affordable prices.",
+      bn: "কক্সবাজারের সুপরিচিত সি-ফুড স্পট—বিশেষ করে মালাই ও ঝাল মশলায় রান্না করা সামুদ্রিক কাঁকড়া, অক্টোপাস/স্কুইড রোস্ট এবং ঐতিহ্যবাহী শুঁটকি চাটনি।"
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Cox%27s_Bazar_Sea_Beach.jpg",
+    icon: "utensils"
+  },
+  {
+    id: "rakhine-handloom-village",
+    name: {
+      en: "Rakhine Handloom Weaving Village (Ramu & Moheshkhali)",
+      bn: "রাখাইন ঐতিহ্যবাহী তাঁতপল্লী (রামু ও মহেশখালী)"
+    },
+    highlight: {
+      en: "Indigenous Ancestral Wooden Looms",
+      bn: "শতবর্ষী কাঠের তাঁতে বোনা সিল্ক ও সুতি পোশাক"
+    },
+    description: {
+      en: "Visit the serene indigenous Rakhine homesteads where master weavers craft vibrant geometric silk lungis, shawls, bedcovers, and bags on ancestral handlooms. Experience living cultural heritage and buy directly from artisans.",
+      bn: "শান্ত রাখাইন পল্লীতে ঘুরে দেখা যায় ঐতিহ্যবাহী কাঠের তাঁতযন্ত্র। সেখানে কারিগররা পরম যত্নে তৈরি করেন রঙিন রাখাইন থামি, লুঙ্গি ও চাদর; সরাসরি শিল্পীদের কাছ থেকে পণ্য কেনার দারুণ অভিজ্ঞতা।"
+    },
+    image: "assets/images/ramu-buddha.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
+    icon: "sparkles"
+  },
+  {
+    id: "moheshkhali-betel-salt",
+    name: {
+      en: "Moheshkhali Sweet Betel Leaf & Salt Pans",
+      bn: "মহেশখালীর ঐতিহ্যবাহী মিষ্টি পান ও লবণের মাঠ"
+    },
+    highlight: {
+      en: "Artisan Coastal Agriculture & Salt Evaporation",
+      bn: "বিখ্যাত সুস্বাদু মিষ্টি পান ও সমুদ্রজল থেকে লবণ উৎপাদন"
+    },
+    description: {
+      en: "Moheshkhali is nationally renowned for its sweet-aroma 'Paan' (betel leaf) cultivated in lush shaded bamboo 'Boroj', and extensive white salt evaporation fields that glisten like snow under the coastal winter sun.",
+      bn: "মহেশখালীর মিষ্টি সুবাসযুক্ত পানের বরজ এবং উপকূলীয় লবণের মাঠ এক অনন্য সাংস্কৃতিক দৃশ্য। শীতের রোদে সাদা লবণের মাঠ বরফের প্রান্তরের মতো জ্বলজ্বল করে।"
+    },
+    image: "assets/images/moheshkhali.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
+    icon: "sun"
+  }
+];
+
+/* --------------------------------------------------------------------------
+ * 3B. ACTIVITIES & COASTAL ADVENTURES (10 Verified Experiences with Prices)
+ * -------------------------------------------------------------------------- */
+let ACTIVITIES_DATA = [
+  {
+    id: "surfing-lesson",
+    name: {
+      en: "Surfing & Ocean Wave Riding",
+      bn: "সার্ফিং ও ওয়েভ রাইডিং (Surfing Lesson)"
+    },
+    category: "water",
+    priceBDT: 1500,
+    priceMaxBDT: 2500,
+    priceNote: {
+      en: "per session (instructor + surfboard included)",
+      bn: "প্রতি সেশন (ইন্সট্রাক্টর ও সার্ফবোর্ড সহ)"
+    },
+    location: {
+      en: "Laboni Beach & Kolatoli Point (Cox's Bazar Surf Club)",
+      bn: "লাবণী বিচ ও কলাতলী পয়েন্ট (কক্সবাজার সার্ফ ক্লাব)"
+    },
+    duration: {
+      en: "1.5 – 2 Hours",
+      bn: "১.৫ – ২ ঘণ্টা"
+    },
+    difficulty: {
+      en: "Beginner to Intermediate",
+      bn: "নতুন থেকে মধ্যম"
+    },
+    badge: {
+      en: "Top Ocean Sport",
+      bn: "সেরা রোমাঞ্চকর খেলা"
+    },
+    description: {
+      en: "Learn to catch and ride the Bay of Bengal swells under the guidance of certified local surf lifesavers. Includes international-standard soft-top boards, rashguards, safety leashes, and ocean reading instructions.",
+      bn: "দক্ষ স্থানীয় সার্ফারদের নির্দেশনায় বঙ্গোপসাগরের ঢেউয়ের ওপর ভেসে চলার রোমাঞ্চ উপভোগ করুন। সার্ফবোর্ড, সেফটি গিয়ার ও প্রাথমিক প্রশিক্ষণ অন্তর্ভুক্ত।"
+    },
+    included: {
+      en: ["Certified Surf Instructor", "Surfboard & Safety Leash", "Rashguard Vest", "Basic Safety Briefing"],
+      bn: ["প্রশিক্ষিত সার্ফ ট্রেইনার", "সার্ফবোর্ড ও সেফটি রশি", "র‌্যাশগার্ড টি-শার্ট", "নিরাপত্তা ব্রিফিং"]
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    icon: "waves"
+  },
+  {
+    id: "beach-horse-riding",
+    name: {
+      en: "Beach Shoreline Horse Riding",
+      bn: "সমুদ্র সৈকতে ঘোড়ায় চড়া (Horse Riding)"
+    },
+    category: "beach",
+    priceBDT: 200,
+    priceMaxBDT: 500,
+    priceNote: {
+      en: "per ride (15-30 min) / ৳600 per hour",
+      bn: "প্রতি রাইড (১৫-৩০ মিনিট) / ঘণ্টায় ৬০০ টাকা"
+    },
+    location: {
+      en: "Sugandha Beach & Laboni Beach",
+      bn: "সুগন্ধা ও লাবণী সমুদ্র সৈকত"
+    },
+    duration: {
+      en: "15 – 30 Mins",
+      bn: "১৫ – ৩০ মিনিট"
+    },
+    difficulty: {
+      en: "Easy & Family-Friendly",
+      bn: "সহজ ও পরিবারবান্ধব"
+    },
+    badge: {
+      en: "Iconic Experience",
+      bn: "জনপ্রিয় অভিজ্ঞতা"
+    },
+    description: {
+      en: "Trotting across the gentle surf line on decorated horses accompanied by local handlers. An iconic Cox's Bazar tradition offering unbeatable photo moments against crashing waves and golden sunsets.",
+      bn: "সমুদ্রের ফেনিল ঢেউয়ের ধারে ঘোড়ার পিঠে চড়ে মনোরম ভ্রমণ। গোধূলির সূর্যাস্তে ছবি তোলা ও পরিবারের সাথে উপভোগ করার অন্যতম ক্লাসিক অভিজ্ঞতা।"
+    },
+    included: {
+      en: ["Trained Coastal Horse", "Experienced Handler Assistance", "Shoreline Trot Route", "Photo Opportunity"],
+      bn: ["প্রশিক্ষিত সৈকত ঘোড়া", "অভিজ্ঞ হ্যান্ডলার সহায়তা", "সৈকত ভ্রমণ", "ছবি তোলার সুযোগ"]
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    icon: "sparkles"
+  },
+  {
+    id: "parasailing-sky-gliding",
+    name: {
+      en: "Ocean Parasailing & Sky Gliding",
+      bn: "প্যারাসেইলিং ও ওশান স্কাই গ্লাইডিং"
+    },
+    category: "water",
+    priceBDT: 2000,
+    priceMaxBDT: 3500,
+    priceNote: {
+      en: "per flight (Normal or Ocean Dip)",
+      bn: "প্রতি ফ্লাইট (নরমাল বা ওয়াটার ডিপ সহ)"
+    },
+    location: {
+      en: "Daria Nagar Beach & Kolatoli Point",
+      bn: "দরিয়ানগর বিচ ও কলাতলী পয়েন্ট"
+    },
+    duration: {
+      en: "10 – 15 Mins",
+      bn: "১০ – ১৫ মিনিট"
+    },
+    difficulty: {
+      en: "Thrilling Adventure",
+      bn: "রোমাঞ্চকর আকাশ ভ্রমণ"
+    },
+    badge: {
+      en: "300ft Aerial View",
+      bn: "৩০০ ফুট উঁচুতে ওড়া"
+    },
+    description: {
+      en: "Fly 300+ feet in the sky harnessed to a colorful parachute towed by a 200-horsepower speedboat. Experience breathtaking bird’s-eye views of the infinite blue ocean and lush green coastal mountains.",
+      bn: "শক্তিশালী স্পিডবোটের সাথে প্যারাস্যুটে বাঁধা অবস্থায় ৩০০ ফুট আকাশে ওড়ার শ্বাসরুদ্ধকর অভিজ্ঞতা। আকাশ থেকে দেখুন দিগন্তজোড়া নীল সাগর ও সবুজ পাহাড়।"
+    },
+    included: {
+      en: ["Tandem/Solo Parachute Flight", "Coast Guard Standard Lifejacket", "Speedboat Towing System", "Optional Water-Dip Thrill"],
+      bn: ["প্যারাস্যুট ফ্লাইট", "আন্তর্জাতিক মানের লাইফজ্যাকেট", "হাই-স্পিড বোট সিস্টেম", "ঐচ্ছিক ওয়াটার ডিপ"]
+    },
+    image: "assets/images/kolatoli-eco.jpg",
+    icon: "wind"
+  },
+  {
+    id: "chander-gari-safari",
+    name: {
+      en: "Chander Gari Marine Drive Jeep Safari",
+      bn: "চান্দের গাড়িতে মেরিন ড্রাইভ ওপেন-এয়ার সাফারি"
+    },
+    category: "safari",
+    priceBDT: 3000,
+    priceMaxBDT: 5500,
+    priceNote: {
+      en: "per full reserved jeep (10-14 passengers)",
+      bn: "পুরো জিপ রিজার্ভ (১০-১৪ জন যাত্রী)"
+    },
+    location: {
+      en: "Kolatoli to Himchari, Inani & Shamlapur (Marine Drive)",
+      bn: "কলাতলী থেকে হিমছড়ি, ইনানী ও শামলাপুর (মেরিন ড্রাইভ)"
+    },
+    duration: {
+      en: "4 – 6 Hours",
+      bn: "৪ – ৬ ঘণ্টা"
+    },
+    difficulty: {
+      en: "All Ages / Group Favorite",
+      bn: "সব বয়সের / গ্রুপের জন্য সেরা"
+    },
+    badge: {
+      en: "Must-Do Group Trip",
+      bn: "গ্রুপ ভ্রমণের সেরা আকর্ষণ"
+    },
+    description: {
+      en: "Hop into an open-roof modified 4x4 'Chander Gari' (Moon Car) and cruise down the world's longest 80 km Marine Drive highway, wedged between towering emerald hills on one side and roaring waves on the other.",
+      bn: "খোলা ছাদের চান্দের গাড়িতে দলবেঁধে গান গাইতে গাইতে মেরিন ড্রাইভ ধরে ছুটে চলা—একপাশে পাহাড়ের সবুজ দেয়াল আর অন্যপাশে গর্জনশীল সাগর। কক্সবাজারের সবচেয়ে সেরা স্মৃতি।"
+    },
+    included: {
+      en: ["Dedicated 4x4 Utility Jeep", "Experienced Marine Drive Driver", "Stops at Himchari & Inani", "Flexible Sunset Photo Stops"],
+      bn: ["রিজার্ভ ৪x৪ চান্দের গাড়ি", "অভিজ্ঞ ড্রাইভার", "হিমছড়ি ও ইনানী যাত্রাবিরতি", "মনোরম স্থানে ফটো স্টপ"]
+    },
+    image: "assets/images/himchari.jpg",
+    icon: "compass"
+  },
+  {
+    id: "beach-atv-quad-biking",
+    name: {
+      en: "Beach ATV Quad Biking",
+      bn: "সৈকতে এটিভি কোয়াড বাইকিং (ATV Quad Bike)"
+    },
+    category: "beach",
+    priceBDT: 300,
+    priceMaxBDT: 500,
+    priceNote: {
+      en: "per ride / round (10-15 min)",
+      bn: "প্রতি রাইড / রাউন্ড (১০-১৫ মিনিট)"
+    },
+    location: {
+      en: "Laboni Beach, Sugandha & Kolatoli Shore",
+      bn: "লাবণী, সুগন্ধা ও কলাতলী সৈকত"
+    },
+    duration: {
+      en: "10 – 15 Mins",
+      bn: "১০ – ১৫ মিনিট"
+    },
+    difficulty: {
+      en: "Exciting & Easy",
+      bn: "উত্তেজনাপূর্ণ ও সহজ"
+    },
+    badge: {
+      en: "High-Traction Thrill",
+      bn: "বালুকাবেলায় স্পিড"
+    },
+    description: {
+      en: "Power across the wide low-tide shoreline on 4-wheel all-terrain quad bikes. Simple throttle-and-brake controls make it accessible for beginners while providing an invigorating rush of sea spray.",
+      bn: "শক্তিশালী ফোর-হুইল এটিভি কোয়াড বাইকে চেপে সৈকতের ভেজা বালিতে ঝড় তোলার দারুণ আনন্দ। সহজ কন্ট্রোল এবং সম্পূর্ণ নিরাপদ হেলমেটযুক্ত রাইডিং।"
+    },
+    included: {
+      en: ["Automatic 4x4 ATV Quad Bike", "Safety Helmet", "Beach Marshall Guidance", "Shoreline Circuit"],
+      bn: ["স্বয়ংক্রিয় এটিভি বাইক", "সেফটি হেলমেট", "ট্র্যাক মার্শাল গাইড", "সৈকত সার্কিট রাইড"]
+    },
+    image: "assets/images/hero-coxs-bazar.jpg",
+    icon: "zap"
+  },
+  {
+    id: "jet-ski-speed-riding",
+    name: {
+      en: "Jet Ski High-Speed Ocean Riding",
+      bn: "জেট স্কি হাই-স্পিড রাইডিং (Jet Ski)"
+    },
+    category: "water",
+    priceBDT: 600,
+    priceMaxBDT: 1200,
+    priceNote: {
+      en: "per ride (with pilot or guided solo)",
+      bn: "প্রতি রাইড (পাইলটসহ বা সুপারভাইজড)"
+    },
+    location: {
+      en: "Laboni Point & Inani Sea Beach",
+      bn: "লাবণী পয়েন্ট ও ইনানী সৈকত"
+    },
+    duration: {
+      en: "10 – 15 Mins",
+      bn: "১০ – ১৫ মিনিট"
+    },
+    difficulty: {
+      en: "High Adrenaline",
+      bn: "তীব্র গতির রোমাঞ্চ"
+    },
+    badge: {
+      en: "Wave Slicer",
+      bn: "ঢেউ ভাঙা গতি"
+    },
+    description: {
+      en: "Slice through open ocean waves at high speeds on powerful personal watercraft. Ride tandem with an expert pilot or take the handlebars under strict coast guard perimeter safety.",
+      bn: "শক্তিশালী জেট স্কিতে সাগরের উত্তাল ঢেউ কেটে বিদ্যুৎ গতিতে ছুটে চলা। অভিজ্ঞ পাইলটের তত্ত্বাবধানে জীবনের অন্যতম সেরা অ্যাডভেঞ্চার।"
+    },
+    included: {
+      en: ["High-Powered Watercraft", "CE-Certified Life Jacket", "Professional Pilot Escort", "Emergency Rescue Patrol"],
+      bn: ["হাই-পাওয়ার জেট স্কি", "লাইফজ্যাকেট", "পেশাদার পাইলট সহায়তা", "জরুরি রেসকিউ সুরক্ষা"]
+    },
+    image: "assets/images/inani-beach.jpg",
+    icon: "waves"
+  },
+  {
+    id: "mangrove-estuary-kayaking",
+    name: {
+      en: "Reju Khal Mangrove & Estuary Kayaking",
+      bn: "রেজু খাল ও মোহনায় ম্যানগ্রোভ কায়াকিং"
+    },
+    category: "water",
+    priceBDT: 300,
+    priceMaxBDT: 500,
+    priceNote: {
+      en: "per person (single or tandem kayak)",
+      bn: "জনপ্রতি (সিঙ্গেল বা ডাবল কায়াক)"
+    },
+    location: {
+      en: "Reju Khal Bridge (Marine Drive, Ukhiya)",
+      bn: "রেজু খাল ব্রিজ (মেরিন ড্রাইভ, উখিয়া)"
+    },
+    duration: {
+      en: "45 – 60 Mins",
+      bn: "৪৫ – ৬০ মিনিট"
+    },
+    difficulty: {
+      en: "Peaceful & Eco-Friendly",
+      bn: "শান্ত ও প্রকৃতিবান্ধব"
+    },
+    badge: {
+      en: "Eco Tourism Gem",
+      bn: "ইকো ট্যুরিজম"
+    },
+    description: {
+      en: "Paddle peacefully along the winding freshwater Reju river and mangrove wetlands where calm green waters meet coastal hills. Spot kingfishers, herons, and enjoy a meditative break away from crowded beach hubs.",
+      bn: "সবুজ পাহাড়ের কোল ঘেঁষে বয়ে চলা রেজু খালের শান্ত জলে কায়াক চালিয়ে ঘুরে বেড়ানোর অপূর্ব অনুভূতি। চারপাশের নিস্তব্ধ প্রকৃতি, মাছরাঙার ওড়াউড়ি ও বিশুদ্ধ বাতাস।"
+    },
+    included: {
+      en: ["Sit-on-top Single/Double Kayak", "Double-bladed Paddle", "Life Jacket", "Dry Bag for Mobile"],
+      bn: ["সিঙ্গেল/ডাবল কায়াক", "প্যাডেল", "লাইফজ্যাকেট", "মোবাইলের ওয়াটারপ্রুফ ব্যাগ"]
+    },
+    image: "assets/images/inani-beach.jpg",
+    icon: "compass"
+  },
+  {
+    id: "speedboat-thrill-cruise",
+    name: {
+      en: "Speedboat Thrill Cruise to Moheshkhali",
+      bn: "মহেশখালী চ্যানেলে স্পিডবোট রোমাঞ্চ ক্রুজ"
+    },
+    category: "water",
+    priceBDT: 90,
+    priceMaxBDT: 2500,
+    priceNote: {
+      en: "৳90 shared per person / ৳2,500 private reserve",
+      bn: "জনপ্রতি ৯০ টাকা (শেয়ারড) / ২,৫০০ টাকা (রিজার্ভ)"
+    },
+    location: {
+      en: "Kasturi Ghat (6 No. Ghat) to Moheshkhali Jetty",
+      bn: "কস্তুরাঘাট (৬ নং ঘাট) থেকে মহেশখালী জেটি"
+    },
+    duration: {
+      en: "30 – 40 Mins",
+      bn: "৩০ – ৪০ মিনিট"
+    },
+    difficulty: {
+      en: "Fast Marine Transit",
+      bn: "দ্রুতগতির নৌযাত্রা"
+    },
+    badge: {
+      en: "Island Gateway",
+      bn: "দ্বীপযাত্রার বাহন"
+    },
+    description: {
+      en: "An electrifying high-speed water crossing across the Bakkhali river channel into the Bay of Bengal waters towards the hilly island of Moheshkhali. Life vests provided for all passengers.",
+      bn: "বাঁকখালী নদী ও বঙ্গোপসাগরের মোহনা চিরে তীব্র গতিতে ছুটে চলা স্পিডবোট। স্বল্প সময়ে মহেশখালী দ্বীপে পৌঁছানোর পাশাপাশি এক অবিস্মরণীয় রোমাঞ্চ।"
+    },
+    included: {
+      en: ["Fast Twin-Engine Speedboat", "Life Jacket for Every Passenger", "River Estuary Panoramas", "Direct Island Pier Drop"],
+      bn: ["দ্রুতগতির স্পিডবোট", "যাত্রীদের লাইফজ্যাকেট", "মোহনার মনোরম দৃশ্য", "দ্বীপে সরাসরি পৌঁছানো"]
+    },
+    image: "assets/images/moheshkhali.jpg",
+    icon: "anchor"
+  },
+  {
+    id: "beach-camping-bonfire-bbq",
+    name: {
+      en: "Night Beach Camping & Bonfire BBQ",
+      bn: "নাইট বিচ ক্যাম্পিং ও লাইভ বারবিকিউ (Camping & BBQ)"
+    },
+    category: "night",
+    priceBDT: 1500,
+    priceMaxBDT: 2500,
+    priceNote: {
+      en: "per person (tent, mat, live BBQ dinner & breakfast)",
+      bn: "জনপ্রতি (তাঁবু, বিছানা, লাইভ বারবিকিউ ডিনার ও নাস্তা)"
+    },
+    location: {
+      en: "Sonadia Island & Shamlapur Eco Coast",
+      bn: "সোনাদিয়া দ্বীপ ও শামলাপুর নির্জন সৈকত"
+    },
+    duration: {
+      en: "Overnight (5:00 PM – 9:00 AM)",
+      bn: "রাত্রিযাপন (বিকেল ৫টা – সকাল ৯টা)"
+    },
+    difficulty: {
+      en: "Outdoor Adventure",
+      bn: "আউটডোর অ্যাডভেঞ্চার"
+    },
+    badge: {
+      en: "Starlit Nights",
+      bn: "তারার নিচে রাতযাপন"
+    },
+    description: {
+      en: "Sleep under a blanket of stars with the gentle rhythmic crash of ocean waves. Gather around a crackling beach bonfire with live grilled sea fish or chicken, acoustic music, and sunrise tea.",
+      bn: "নির্জন সৈকতে তাঁবু খাটিয়ে খোলা আকাশের নিচে রাত কাটানো। রাতের সাগরের গর্জন, জ্বলন্ত ক্যাম্পফায়ার, তাজা মাছের বারবিকিউ এবং ভোরের রক্তিম সূর্যোদয়।"
+    },
+    included: {
+      en: ["Weatherproof Dome Tent & Bedding", "Live Charcoal Fish/Chicken BBQ", "Beach Bonfire Setup", "Morning Coastal Breakfast"],
+      bn: ["ওয়াটারপ্রুফ তাঁবু ও ম্যাট্রেস", "লাইভ চারকোল বারবিকিউ ডিনার", "ক্যাম্পফায়ার ও আলো", "সকালের নাস্তা"]
+    },
+    image: "assets/images/sonadia-island.jpg",
+    icon: "tent"
+  },
+  {
+    id: "marine-drive-cycling-tour",
+    name: {
+      en: "Coastal Cycling on Marine Drive",
+      bn: "মেরিন ড্রাইভে কোস্টাল সাইক্লিং ট্যুর"
+    },
+    category: "beach",
+    priceBDT: 250,
+    priceMaxBDT: 500,
+    priceNote: {
+      en: "per half-day bicycle rental",
+      bn: "হাফ-ডে বাইসাইকেল ভাড়া"
+    },
+    location: {
+      en: "Kolatoli to Himchari National Park (18 km stretch)",
+      bn: "কলাতলী থেকে হিমছড়ি জাতীয় উদ্যান (১৮ কিমি)"
+    },
+    duration: {
+      en: "2 – 4 Hours",
+      bn: "২ – ৪ ঘণ্টা"
+    },
+    difficulty: {
+      en: "Moderate Fitness",
+      bn: "মাঝারি শারীরিক কসরত"
+    },
+    badge: {
+      en: "Eco Road Trip",
+      bn: "পরিবেশবান্ধব ভ্রমণ"
+    },
+    description: {
+      en: "Rent geared mountain bikes or classic city bicycles to pedal smoothly along the paved coastal highway. Breathe the salt air, stop at roadside green coconut stalls, and enjoy complete travel freedom at your own pace.",
+      bn: "গিয়ার সাইকেল নিয়ে মেরিন ড্রাইভের মসৃণ পিচঢালা পথে স্বপ্নের মতো ভ্রমণ। সাগরের তাজা বাতাস, ডাবের পানি পানের বিরতি এবং সম্পূর্ণ নিজের গতিতে প্রাকৃতিক সৌন্দর্য উপভোগ।"
+    },
+    included: {
+      en: ["Multi-speed Mountain Bike", "Bicycle Lock & Helmet", "Route Map & Safety Advice", "Support Hotline"],
+      bn: ["মাল্টি-স্পিড মাউন্টেন বাইক", "লক ও সাইক্লিং হেলমেট", "রুট ম্যাপ ও পরামর্শ", "জরুরি হেল্পলাইন"]
+    },
+    image: "assets/images/himchari.jpg",
+    icon: "compass"
   }
 ];
 
@@ -1490,12 +3026,13 @@ const FACTORY_DEFAULTS = JSON.parse(
     hotels: HOTELS_DATA,
     destinations: DESTINATIONS_DATA,
     hiddenGems: HIDDEN_GEMS_DATA,
+    activities: ACTIVITIES_DATA,
     transport: TRANSPORT_DATA,
     faqs: FAQ_DATA
   })
 );
 
-const CMS_STORAGE_KEY = 'visit_cox_cms_data_v3';
+const CMS_STORAGE_KEY = 'visit_cox_cms_data_v4';
 
 function loadCMSDataFromStorage() {
   try {
@@ -1503,7 +3040,7 @@ function loadCMSDataFromStorage() {
     if (!raw) return;
     const parsed = JSON.parse(raw);
     if (parsed.exchangeRateUSD) CONFIG.exchangeRateUSD = Number(parsed.exchangeRateUSD);
-    if (Array.isArray(parsed.hotels) && parsed.hotels.length >= 10) {
+    if (Array.isArray(parsed.hotels) && parsed.hotels.length >= 20) {
       HOTELS_DATA = parsed.hotels;
     } else if (Array.isArray(parsed.hotels)) {
       // Merge stored custom hotels with default hotels
@@ -1515,8 +3052,15 @@ function loadCMSDataFromStorage() {
         }
       });
     }
-    if (Array.isArray(parsed.destinations)) DESTINATIONS_DATA = parsed.destinations;
-    if (Array.isArray(parsed.hiddenGems)) HIDDEN_GEMS_DATA = parsed.hiddenGems;
+    if (Array.isArray(parsed.destinations) && parsed.destinations.length >= 10) {
+      DESTINATIONS_DATA = parsed.destinations;
+    }
+    if (Array.isArray(parsed.hiddenGems) && parsed.hiddenGems.length >= 8) {
+      HIDDEN_GEMS_DATA = parsed.hiddenGems;
+    }
+    if (Array.isArray(parsed.activities) && parsed.activities.length >= 8) {
+      ACTIVITIES_DATA = parsed.activities;
+    }
     if (Array.isArray(parsed.transport)) TRANSPORT_DATA = parsed.transport;
     if (Array.isArray(parsed.faqs)) FAQ_DATA = parsed.faqs;
   } catch (err) {
@@ -1531,6 +3075,7 @@ function saveCMSDataToStorage() {
       hotels: HOTELS_DATA,
       destinations: DESTINATIONS_DATA,
       hiddenGems: HIDDEN_GEMS_DATA,
+      activities: ACTIVITIES_DATA,
       transport: TRANSPORT_DATA,
       faqs: FAQ_DATA,
       updatedAt: new Date().toISOString()

@@ -881,6 +881,9 @@ function resetCMSDataToDefaults() {
   HOTELS_DATA = JSON.parse(JSON.stringify(FACTORY_DEFAULTS.hotels));
   DESTINATIONS_DATA = JSON.parse(JSON.stringify(FACTORY_DEFAULTS.destinations));
   HIDDEN_GEMS_DATA = JSON.parse(JSON.stringify(FACTORY_DEFAULTS.hiddenGems));
+  if (FACTORY_DEFAULTS.activities) {
+    ACTIVITIES_DATA = JSON.parse(JSON.stringify(FACTORY_DEFAULTS.activities));
+  }
   TRANSPORT_DATA = JSON.parse(JSON.stringify(FACTORY_DEFAULTS.transport));
   FAQ_DATA = JSON.parse(JSON.stringify(FACTORY_DEFAULTS.faqs));
 

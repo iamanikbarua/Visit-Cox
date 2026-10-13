@@ -181,6 +181,7 @@
           <a href="#home" data-nav="home" data-section-link="home" class="nav-link-pill nav-link-active px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Home</a>
           <a href="#hotels" data-nav="hotels" data-section-link="hotels" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Hotels</a>
           <a href="#destinations" data-nav="destinations" data-section-link="destinations" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Destinations</a>
+          <a href="#activities-section" data-nav="activities" data-section-link="activities-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Activities</a>
           <a href="#map-section" data-nav="map" data-section-link="map-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-teal-300 hover:text-amber-300">Route Planner</a>
           <a href="#itinerary-section" data-nav="itinerary" data-section-link="itinerary-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-amber-300 hover:text-amber-200">Plan My Trip</a>
           <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Transport</a>
@@ -272,6 +273,7 @@
         <a href="#home" data-nav="home" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Home</a>
         <a href="#hotels" data-nav="hotels" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Hotels</a>
         <a href="#destinations" data-nav="destinations" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Destinations</a>
+        <a href="#activities-section" data-nav="activities" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Activities 🏄‍♂️</a>
         <a href="#map-section" data-nav="map" class="px-3.5 py-2.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 flex items-center justify-between">Route Planner</a>
         <a href="#itinerary-section" data-nav="itinerary" class="px-3.5 py-2.5 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 flex items-center justify-between">Plan My Trip</a>
         <a href="#transport" data-nav="transport" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Transport</a>
@@ -895,10 +897,48 @@
             </p>
           </div>
 
-          <div id="hidden-gems-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div id="hidden-gems-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <!-- Populated dynamically via app.js -->
           </div>
         </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       2B. ACTIVITIES & COASTAL ADVENTURES (SURFING, PARASAILING, JEEP SAFARI, ETC.)
+       ======================================================================== -->
+  <section id="activities-section" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section Heading -->
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span
+          id="activities-eyebrow"
+          class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100 px-3.5 py-1 rounded-full mb-3 shadow-2xs"
+        >
+          THINGS TO DO &amp; COASTAL THRILLS
+        </span>
+        <h2
+          id="activities-title"
+          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+        >
+          Top 10 Activities &amp; Adventures in Cox's Bazar
+        </h2>
+        <p id="activities-subtitle" class="mt-3 text-slate-600 text-base">
+          From riding the surf and beach parasailing to open-top Marine Drive jeep safaris and night bonfires—verified rates, locations, and safety briefings.
+        </p>
+
+        <!-- Activities Category Filter Pills -->
+        <div id="activity-category-filters" class="mt-6 flex flex-wrap items-center justify-center gap-2">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </div>
+
+      <!-- Activities Grid -->
+      <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <!-- Populated dynamically via app.js -->
       </div>
 
     </div>
