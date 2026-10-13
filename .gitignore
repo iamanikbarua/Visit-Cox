@@ -1,0 +1,8 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Exports & User Downloads
+*.pdf
+*.mp4
+Visit-Cox-Itinerary-*.png

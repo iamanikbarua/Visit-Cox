@@ -2373,12 +2373,17 @@ function setItineraryTotalDays(daysCount) {
 
   const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
   showUserToast(
-    lang === 'en' ? `Trip set to ${count} Days (${count - 1} Nights)!` : `ভ্রমণ ${count} দিনে সেট করা হয়েছে!`,
-    lang === 'en' ? 'View Pass ↓' : 'পাস দেখুন ↓',
-    '#visual-itinerary-poster'
+    lang === 'en' ? `Trip set to ${count} Days (${count - 1} Nights)!` : `ভ্রমণ ${count} দিনে সেট করা হয়েছে!`
   );
-  renderItineraryStudio();
-  renderMapMarkersAndFilters();
+  if (typeof renderItineraryStudio === 'function') {
+    renderItineraryStudio();
+  }
+  if (typeof renderMapMarkersAndFilters === 'function' && FeaturesState.mapInstance) {
+    renderMapMarkersAndFilters();
+  }
+  if (typeof composeSteppedItinerary === 'function') {
+    composeSteppedItinerary(count, FeaturesState.tripVibe || 'relaxing');
+  }
 }
 
 function setItineraryActiveDayTab(dayNum) {
@@ -3872,7 +3877,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Head to Sugandha Beach for the iconic Cox's Bazar sunset. Savor live grilled Rupchanda and hot local tea by the shoreline.",
       eveningBn: "সুগন্ধা বিচে সূর্যাস্তের মনোরম দৃশ্য উপভোগ। লাইভ রূপচাঁদা ফ্রাই এবং চা পানের অভিজ্ঞতা।",
       corridor: "Kolatoli & Sugandha Beachfront",
-      vehicle: "Easy-bike Tomtom (৳30-৳50)"
+      vehicle: "Easy-bike Tomtom (৳30–৳50)",
+      tip: {
+        en: "Sugandha Beach gets lively before dusk; secure an oceanfront chair around 5:00 PM for the sunset.",
+        bn: "সূর্যাস্তের সুন্দর দৃশ্য দেখতে বিকেল ৫টার মধ্যে সুগন্ধা বিচে সমুদ্রমুখী চেয়ার নিন।"
+      }
     },
     {
       day: 2,
@@ -3885,7 +3894,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Sunset stop at Shamlapur Fishing Village to see traditional wooden Sampan boats returning with their fresh daily catch.",
       eveningBn: "শামলাপুর সৈকতে সাম্পান নৌকার ফিরে আসা ও সোনালী সূর্যাস্ত দর্শন।",
       corridor: "Marine Drive to Inani (32 km)",
-      vehicle: "Chander Gari Jeep or Reserved CNG (৳1,200-৳1,800)"
+      vehicle: "Chander Gari Jeep or Reserved CNG (৳1,200–৳1,800)",
+      tip: {
+        en: "Inani coral rocks are best seen at low tide. Inquire about tidal timings at your hotel front desk.",
+        bn: "ভাটার সময় ইনানীর প্রবাল পাথরগুলো সুন্দর দৃশ্যমান হয়। সকালের জোয়ার-ভাটার সময় জেনে নিন।"
+      }
     },
     {
       day: 3,
@@ -3898,7 +3911,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Final relaxed beachfront dinner at Mermaid Cafe with candle-lit coastal ambiance.",
       eveningBn: "মারমেইড ক্যাফেতে উপকূলীয় মৃদু আলোয় সুস্বাদু ডিনারের মাধ্যমে সফরের সমাপ্তি।",
       corridor: "Himchari & Main Town (12 km)",
-      vehicle: "Reserved Tomtom or CNG (৳400-৳600)"
+      vehicle: "Reserved Tomtom or CNG (৳400–৳600)",
+      tip: {
+        en: "Himchari hilltop has ~200 stairs; visit before noon or late afternoon to avoid direct midday sun.",
+        bn: "হিমছড়ির সিঁড়ি বেয়ে ওঠার জন্য সকালের রোদ বা বিকেলের স্নিগ্ধ সময় সবচেয়ে উপযুক্ত।"
+      }
     },
     {
       day: 4,
@@ -3911,7 +3928,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Return to the main town harbor at sunset. Quiet dinner by the bay.",
       eveningBn: "সূর্যাস্তে ঘাটে ফিরে আসা ও স্থানীয় স্নিগ্ধ ডিনার।",
       corridor: "Moheshkhali Channel to Sonadia",
-      vehicle: "Speedboat & Wooden Trawler (৳1,500-৳2,200)"
+      vehicle: "Speedboat & Wooden Trawler (৳1,500–৳2,200)",
+      tip: {
+        en: "Wear lightweight sandals suitable for shallow water disembarkation on tidal sandbanks.",
+        bn: "নৌকা থেকে নামার সুবিধার্থে সহজে শুকায় এমন স্যান্ডেল বা জুতো পরুন।"
+      }
     },
     {
       day: 5,
@@ -3924,7 +3945,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Depart Cox's Bazar via air or scenic train through the coastal rail bridge.",
       eveningBn: "কক্সবাজার আন্তর্জাতিক বিমানবন্দর বা আইকনিক ঝিনুক স্টেশন থেকে বিদায়।",
       corridor: "Town to Airport / Railway Station",
-      vehicle: "Reserved AC Car / CNG (৳300-৳500)"
+      vehicle: "Reserved AC Car / CNG (৳300–৳500)",
+      tip: {
+        en: "The iconic Oyster Railway Station is an architectural landmark; arrive 40 mins early to explore.",
+        bn: "আইকনিক ঝিনুক আকৃতির রেলওয়ে স্টেশন ঘুরে দেখতে ট্রেনের সময়ের ৪০ মিনিট আগে পৌঁছান।"
+      }
     }
   ],
   adventure: [
@@ -3939,7 +3964,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Parasailing flight over the turquoise waters at Laboni or Kolatoli Point. Live seafood BBQ.",
       eveningBn: "বিকেলে আকাশে প্যারাসেইলিং ও রাতে বিচসাইড বারবিকিউ।",
       corridor: "Kolatoli to Himchari",
-      vehicle: "Open Chander Gari 4x4 (৳1,800-৳2,500)"
+      vehicle: "Open Chander Gari 4x4 (৳1,800–৳2,500)",
+      tip: {
+        en: "Morning high tides offer the best wave formation for beginners learning to surf.",
+        bn: "সকালে জোয়ারের সময় সার্ফিং শেখার জন্য উপযুক্ত ঢেউ তৈরি হয়।"
+      }
     },
     {
       day: 2,
@@ -3952,7 +3981,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Campfire by the beach in Pechar Dwip with acoustic guitar and bonfire under the starlight.",
       eveningBn: "পেঁচার দ্বীপে ক্যাম্পফায়ার ও সমুদ্রের গর্জনে রাতের আয়োজন।",
       corridor: "Marine Drive (28 km)",
-      vehicle: "4x4 Jeep Safari"
+      vehicle: "4x4 Jeep Safari (৳1,500–৳2,000)",
+      tip: {
+        en: "Wear trainers with solid grip for the Himchari jungle trails; rocks can be damp from hill streams.",
+        bn: "পাহাড়ি ট্রেইলে চলার জন্য ভালো গ্রিপযুক্ত স্নিকার্স বা ট্র্যাকিং জুতো ব্যবহার করুন।"
+      }
     },
     {
       day: 3,
@@ -3965,7 +3998,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Speedboat return to town at high tide. Night exploration of beach night markets.",
       eveningBn: "বিকেলে স্পিডবোটে ফিরে আসা ও রাতের সৈকত বাজারে ঘুরে বেড়ানো।",
       corridor: "Channel Crossing & Mainak Hill",
-      vehicle: "High-speed Boat (৳120 shared / ৳1,500 reserved)"
+      vehicle: "High-speed Boat (৳120 shared / ৳1,500 reserved)",
+      tip: {
+        en: "Always ensure your life jacket is securely buckled before the boat throttles into open water.",
+        bn: "স্পিডবোট ছাড়ার পূর্বেই লাইফ জ্যাকেটের বাকল সঠিকভাবে আটকে নিন।"
+      }
     },
     {
       day: 4,
@@ -3978,7 +4015,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Return for hot grilled Loitta fish fry and traditional spicy coastal curries.",
       eveningBn: "সন্ধ্যায় মুচমুচে লইট্টা ফ্রাই ও মশলাদার সামুদ্রিক মাছের ডিনার।",
       corridor: "Sonadia Estuary (14 km)",
-      vehicle: "Trawler & Kayak Rental"
+      vehicle: "Trawler & Kayak Rental (৳1,200–৳1,800)",
+      tip: {
+        en: "Keep your smartphone and wallet inside a waterproof dry pouch during kayaking.",
+        bn: "কায়াকিং করার সময় ফোন ও মূল্যবান জিনিসপত্র ওয়াটারপ্রুফ পাউচে সুরক্ষিত রাখুন।"
+      }
     },
     {
       day: 5,
@@ -3991,7 +4032,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Departure with adrenaline-charged memories.",
       eveningBn: "রোমাঞ্চকর স্মৃতি নিয়ে কক্সবাজার থেকে প্রস্থান।",
       corridor: "Laboni to Transit Hub",
-      vehicle: "Local Transit"
+      vehicle: "Local Transit (৳100–৳200)",
+      tip: {
+        en: "Only bathe within designated green flag swim zones; obey lifeguard safety sirens at all times.",
+        bn: "লাইফগার্ড নির্দেশিত নিরাপদ সীমানার মধ্যেই অবস্থান করুন এবং সতর্কবার্তা মেনে চলুন।"
+      }
     }
   ],
   local: [
@@ -4006,7 +4051,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Dine at Poushee or Jhawbon for a massive spread of 30+ authentic Bangladeshi bhartas.",
       eveningBn: "পৌষী বা ঝাউবনে ৩০+ পদের দেশীয় ভর্তা ও পাহাড়ি খাবারের স্বাদ নেওয়া।",
       corridor: "Town Historic Quarters",
-      vehicle: "Walking & Local Tomtom (৳30-৳60)"
+      vehicle: "Walking & Local Tomtom (৳30–৳60)",
+      tip: {
+        en: "Kindly remove footwear respectfully outside monastery prayer halls and temples.",
+        bn: "বৌদ্ধ বিহার ও প্রার্থনাকক্ষে প্রবেশের পূর্বে জুতো খুলে শ্রদ্ধাশীল আচরণ বজায় রাখুন।"
+      }
     },
     {
       day: 2,
@@ -4019,7 +4068,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Return to town. Sample fresh green coconut water and crispy sweet roasted nuts.",
       eveningBn: "শহরে ফিরে ডাবের পানি ও সুস্বাদু বাদামের স্বাদ নেওয়া।",
       corridor: "Cox's Bazar to Ramu (16 km)",
-      vehicle: "CNG Auto-Rickshaw (৳400-৳600 roundtrip)"
+      vehicle: "CNG Auto-Rickshaw (৳400–৳600 roundtrip)",
+      tip: {
+        en: "Book your CNG on a round-trip basis so your driver waits while you explore the different monasteries.",
+        bn: "রামুর দর্শনীয় স্থানগুলো ঘুরে দেখার সুবিধার্থে সিএনজিটি যাওয়া-আসার চুক্তিতে রিজার্ভ করুন।"
+      }
     },
     {
       day: 3,
@@ -4032,7 +4085,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Watch traditional fishing crews mend their handmade nets along the salt marsh docks.",
       eveningBn: "লবণ চাষ ও জেলেদের জাল বোনার দৃশ্য দেখা।",
       corridor: "Maheshkhali Island",
-      vehicle: "Speedboat & Island Tomtom"
+      vehicle: "Speedboat & Island Tomtom (৳300–৳500)",
+      tip: {
+        en: "Sample the renowned Maheshkhali sweet betel leaf from vendors near the temple steps.",
+        bn: "মন্দির প্রাঙ্গণের দোকানগুলো থেকে মহেশখালীর বিখ্যাত মিষ্টি পানের স্বাদ নিতে পারেন।"
+      }
     },
     {
       day: 4,
@@ -4045,7 +4102,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Authentic dinner of spicy Loitta Shutki bhuna and hot steaming rice.",
       eveningBn: "স্থানীয় হোটেল থেকে খাঁটি লইট্টা শুঁটকি ভুনা দিয়ে রাতের ভোজন।",
       corridor: "Northern Coast (6 km)",
-      vehicle: "Tomtom (৳60-৳100)"
+      vehicle: "Tomtom (৳60–৳100)",
+      tip: {
+        en: "Morning hours (8:30–11:00 AM) offer the best natural daylight and active processing scenes.",
+        bn: "সকাল সাড়ে ৮টা থেকে ১১টার রোদে শুঁটকি প্রক্রিয়াকরণ ও ছবি তোলার সেরা দৃশ্য পাওয়া যায়।"
+      }
     },
     {
       day: 5,
@@ -4058,7 +4119,11 @@ const STEPPED_ITINERARY_PLANS = {
       eveningEn: "Depart with rich cultural memories of southern Bangladesh.",
       eveningBn: "অবিস্মরণীয় অভিজ্ঞতা নিয়ে বিদায়।",
       corridor: "Fishery Ghat & Town",
-      vehicle: "Local Transit"
+      vehicle: "Local Transit (৳100–৳200)",
+      tip: {
+        en: "Fishery Ghat operates at peak vigor between 6:30 and 8:00 AM when boats dock.",
+        bn: "ফিশারি ঘাটে ট্রলার ভিড়ার প্রাণবন্ত রূপ দেখতে সকাল ৭টার আগেই উপস্থিত হওয়া শ্রেয়।"
+      }
     }
   ]
 };
@@ -4073,9 +4138,9 @@ function composeSteppedItinerary(days, vibe) {
     const btn = document.getElementById(`btn-duration-${d}`);
     if (btn) {
       if (d === FeaturesState.totalDays) {
-        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition";
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer";
       } else {
-        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white text-charcoal transition";
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white text-charcoal transition cursor-pointer";
       }
     }
   });
@@ -4085,9 +4150,9 @@ function composeSteppedItinerary(days, vibe) {
     const btn = document.getElementById(`btn-vibe-${v}`);
     if (btn) {
       if (v === FeaturesState.tripVibe) {
-        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition";
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer";
       } else {
-        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white text-charcoal transition";
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white text-charcoal transition cursor-pointer";
       }
     }
   });
@@ -4098,78 +4163,104 @@ function composeSteppedItinerary(days, vibe) {
 
   const planList = (STEPPED_ITINERARY_PLANS[FeaturesState.tripVibe] || STEPPED_ITINERARY_PLANS.relaxing).slice(0, FeaturesState.totalDays);
 
-  const daysHTML = planList.map((item, idx) => {
+  const vibeLabels = {
+    relaxing: { en: 'Relaxing & Scenic', bn: 'প্রশান্তিদায়ক ও নৈসর্গিক' },
+    adventure: { en: 'Adventure & Coastal Waves', bn: 'অ্যাডভেঞ্চার ও রোমাঞ্চ' },
+    local: { en: 'Local Culture & Food Heritage', bn: 'ঐতিহ্য ও স্থানীয় খাবার' }
+  };
+  const activeVibeLabel = vibeLabels[FeaturesState.tripVibe] ? vibeLabels[FeaturesState.tripVibe][lang] : FeaturesState.tripVibe;
+
+  const daysHTML = planList.map((item) => {
     const title = lang === 'en' ? item.titleEn : item.titleBn;
     const morning = lang === 'en' ? item.morningEn : item.morningBn;
     const afternoon = lang === 'en' ? item.afternoonEn : item.afternoonBn;
     const evening = lang === 'en' ? item.eveningEn : item.eveningBn;
+    const tipText = item.tip ? (lang === 'en' ? item.tip.en : item.tip.bn) : '';
 
     return `
-      <div class="itinerary-day-card bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-6">
+      <div class="itinerary-day-card bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-xs space-y-6">
         
-        <!-- Day Banner -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-stone-200">
+        <!-- Day Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-stone-200/80">
           <div class="flex items-center gap-3">
-            <span class="px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider bg-charcoal text-white">
+            <span class="px-3.5 py-1 rounded-full text-xs font-mono font-bold tracking-wider bg-charcoal text-white">
               ${lang === 'en' ? `DAY 0${item.day}` : `দিন ০${item.day}`}
             </span>
-            <h4 class="font-serif text-2xl text-charcoal font-normal">
+            <h3 class="font-serif text-2xl sm:text-3xl text-charcoal font-normal tracking-tight">
               ${title}
-            </h4>
+            </h3>
           </div>
-          <span class="text-xs font-mono text-stone-500 uppercase">
-            ${item.corridor}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-mono">
+            <span>📍</span>
+            <span>${item.corridor}</span>
           </span>
         </div>
 
-        <!-- Vertical Timeline Nodes -->
-        <div class="space-y-6 pl-2">
+        <!-- 3 Neat Time Windows -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-1">
           
           <!-- Morning -->
-          <div class="timeline-item active-node">
-            <div class="timeline-node"></div>
-            <div class="space-y-1">
-              <span class="block text-xs font-mono uppercase tracking-wider text-terracotta-600 font-semibold">
-                ${lang === 'en' ? '07:30 – 11:30 • MORNING' : 'সকাল ০৭:৩০ – ১১:৩০'}
+          <div class="p-5 rounded-2xl bg-[#FAF9F6] border border-stone-200/80 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider font-semibold text-terracotta-600">
+                <span>🌅</span>
+                <span>${lang === 'en' ? '07:30 – 11:30' : 'সকাল ০৭:৩০ – ১১:৩০'}</span>
               </span>
-              <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
-                ${morning}
-              </p>
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white text-stone-500 border border-stone-200">
+                ${lang === 'en' ? 'Morning' : 'সকাল'}
+              </span>
             </div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
+              ${morning}
+            </p>
           </div>
 
           <!-- Afternoon -->
-          <div class="timeline-item">
-            <div class="timeline-node"></div>
-            <div class="space-y-1">
-              <span class="block text-xs font-mono uppercase tracking-wider text-sage-700 font-semibold">
-                ${lang === 'en' ? '12:30 – 16:00 • AFTERNOON' : 'দুপুর ১২:৩০ – ১৬:০০'}
+          <div class="p-5 rounded-2xl bg-[#FAF9F6] border border-stone-200/80 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider font-semibold text-sage-700">
+                <span>☀️</span>
+                <span>${lang === 'en' ? '12:30 – 16:00' : 'দুপুর ১২:৩০ – ১৬:০০'}</span>
               </span>
-              <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
-                ${afternoon}
-              </p>
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white text-stone-500 border border-stone-200">
+                ${lang === 'en' ? 'Afternoon' : 'দুপুর'}
+              </span>
             </div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
+              ${afternoon}
+            </p>
           </div>
 
           <!-- Evening -->
-          <div class="timeline-item">
-            <div class="timeline-node"></div>
-            <div class="space-y-1">
-              <span class="block text-xs font-mono uppercase tracking-wider text-charcoal font-semibold">
-                ${lang === 'en' ? '16:30 – 21:00 • SUNSET & EVENING' : 'বিকেল ১৬:৩০ – রাত ২১:০০'}
+          <div class="p-5 rounded-2xl bg-[#FAF9F6] border border-stone-200/80 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider font-semibold text-charcoal">
+                <span>🌙</span>
+                <span>${lang === 'en' ? '16:30 – 21:00' : 'সন্ধ্যা ১৬:৩০ – ২১:০০'}</span>
               </span>
-              <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
-                ${evening}
-              </p>
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white text-stone-500 border border-stone-200">
+                ${lang === 'en' ? 'Sunset & Night' : 'সন্ধ্যা ও রাত'}
+              </span>
             </div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
+              ${evening}
+            </p>
           </div>
 
         </div>
 
-        <!-- Transit & Logistics Footer -->
-        <div class="pt-4 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-stone-500">
-          <span>RECOMMENDED VEHICLE: ${item.vehicle}</span>
-          <span class="text-charcoal font-semibold">ALL SIGHTS VERIFIED ACTIVE</span>
+        <!-- Transit & Tip Logistics Bar -->
+        <div class="pt-4 border-t border-stone-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-stone-600">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-charcoal">🚗 ${lang === 'en' ? 'TRANSIT:' : 'যাতায়াত:'}</span>
+            <span>${item.vehicle}</span>
+          </div>
+          ${tipText ? `
+            <div class="flex items-center gap-1.5 text-stone-600 bg-stone-50 px-3 py-1.5 rounded-xl border border-stone-200/70">
+              <span>💡</span>
+              <span>${tipText}</span>
+            </div>
+          ` : ''}
         </div>
 
       </div>
@@ -4178,57 +4269,201 @@ function composeSteppedItinerary(days, vibe) {
 
   output.innerHTML = `
     <div class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      
+      <!-- Top Summary & Action Toolbar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2" data-no-export="true">
         <div>
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">
-            ${lang === 'en' ? `LIVE COMPILED TIMELINE (${FeaturesState.totalDays} DAYS)` : `সংকলিত রুট প্ল্যান (${FeaturesState.totalDays} দিন)`}
+            ${lang === 'en' ? `COMPILED ${FeaturesState.totalDays}-DAY PLAN` : `${FeaturesState.totalDays} দিনের সংকলিত রুট প্ল্যান`}
           </span>
           <span class="font-serif text-xl sm:text-2xl text-charcoal font-normal">
-            ${FeaturesState.tripVibe.toUpperCase()} RHYTHM
+            ${activeVibeLabel}
           </span>
         </div>
-        <div class="flex items-center gap-2">
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onclick="copyItineraryText()"
+            class="px-3.5 py-2 rounded-full border border-stone-300 hover:border-charcoal text-xs font-mono uppercase tracking-wider text-charcoal transition bg-white cursor-pointer"
+            title="Copy Itinerary to Clipboard"
+          >
+            ${lang === 'en' ? '📋 Copy Plan' : '📋 কপি করুন'}
+          </button>
+          <button
+            type="button"
+            onclick="printItinerary()"
+            class="px-3.5 py-2 rounded-full border border-stone-300 hover:border-charcoal text-xs font-mono uppercase tracking-wider text-charcoal transition bg-white cursor-pointer"
+            title="Print Itinerary"
+          >
+            ${lang === 'en' ? '🖨️ Print' : '🖨️ প্রিন্ট'}
+          </button>
           <button
             type="button"
             onclick="downloadItineraryPNG()"
-            class="px-4 py-2 rounded-full border border-stone-300 hover:border-charcoal text-xs font-mono uppercase tracking-wider text-charcoal transition bg-white"
+            class="px-3.5 py-2 rounded-full border border-stone-300 hover:border-charcoal text-xs font-mono uppercase tracking-wider text-charcoal transition bg-white cursor-pointer"
           >
-            Download PNG ➔
+            ${lang === 'en' ? '🖼️ Save PNG' : '🖼️ পিএনজি'}
           </button>
           <button
             type="button"
             onclick="downloadItineraryPDF()"
-            class="px-4 py-2 rounded-full bg-charcoal hover:bg-black text-xs font-mono uppercase tracking-wider text-white transition"
+            class="px-4 py-2 rounded-full bg-charcoal hover:bg-black text-xs font-mono uppercase tracking-wider text-white transition cursor-pointer"
           >
-            Download PDF ➔
+            ${lang === 'en' ? '📄 Download PDF' : '📄 পিডিএফ'}
           </button>
         </div>
       </div>
+
+      <!-- Days Stack -->
       <div class="space-y-6">
         ${daysHTML}
       </div>
+
     </div>
   `;
+}
+
+/* --------------------------------------------------------------------------
+ * EXPORT ACTIONS: PDF, PNG, PRINT & CLIPBOARD
+ * -------------------------------------------------------------------------- */
+async function downloadItineraryPNG() {
+  const targetEl = document.getElementById('itinerary-stepped-output');
+  if (!targetEl) return;
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+
+  if (typeof html2canvas === 'undefined') {
+    window.print();
+    return;
+  }
+
+  showUserToast(lang === 'en' ? 'Generating PNG image...' : 'ইমেজ প্রস্তুত হচ্ছে...');
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+    const canvas = await html2canvas(targetEl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#FAF9F6',
+      logging: false,
+      ignoreElements: (element) => element.hasAttribute('data-no-export')
+    });
+    const link = document.createElement('a');
+    link.download = `Visit-Cox-Itinerary-${FeaturesState.totalDays}-Days-${FeaturesState.tripVibe || 'plan'}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showUserToast(lang === 'en' ? 'Downloaded Itinerary PNG!' : 'ইমেজ ডাউনলোড সম্পন্ন হয়েছে!');
+  } catch (err) {
+    console.error('PNG Export Error:', err);
+    window.print();
+  }
+}
+
+async function downloadItineraryPDF() {
+  const targetEl = document.getElementById('itinerary-stepped-output');
+  if (!targetEl) return;
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+
+  if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+    window.print();
+    return;
+  }
+
+  showUserToast(lang === 'en' ? 'Generating PDF itinerary...' : 'পিডিএফ তৈরি হচ্ছে...');
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+    const canvas = await html2canvas(targetEl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#FAF9F6',
+      logging: false,
+      ignoreElements: (element) => element.hasAttribute('data-no-export')
+    });
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    const { jsPDF } = window.jspdf;
+    const pdfWidthMm = 210; // A4 width
+    const pdfHeightMm = Math.round((canvas.height * pdfWidthMm) / canvas.width);
+
+    const pdf = new jsPDF({
+      orientation: pdfHeightMm > pdfWidthMm ? 'portrait' : 'landscape',
+      unit: 'mm',
+      format: [pdfWidthMm, Math.max(297, pdfHeightMm + 10)]
+    });
+
+    pdf.addImage(imgData, 'JPEG', 0, 5, pdfWidthMm, pdfHeightMm);
+    pdf.save(`Visit-Cox-Itinerary-${FeaturesState.totalDays}-Days-${FeaturesState.tripVibe || 'plan'}.pdf`);
+    showUserToast(lang === 'en' ? 'Downloaded Itinerary PDF!' : 'পিডিএফ ডাউনলোড সম্পন্ন হয়েছে!');
+  } catch (err) {
+    console.error('PDF Export Error:', err);
+    window.print();
+  }
+}
+
+function printItinerary() {
+  window.print();
+}
+
+function copyItineraryText() {
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  const planList = (STEPPED_ITINERARY_PLANS[FeaturesState.tripVibe] || STEPPED_ITINERARY_PLANS.relaxing).slice(0, FeaturesState.totalDays);
+  
+  let text = `VISIT COX'S BAZAR — ${FeaturesState.totalDays}-DAY ${FeaturesState.tripVibe.toUpperCase()} ITINERARY\n`;
+  text += `====================================================\n\n`;
+
+  planList.forEach(item => {
+    const title = lang === 'en' ? item.titleEn : item.titleBn;
+    const morning = lang === 'en' ? item.morningEn : item.morningBn;
+    const afternoon = lang === 'en' ? item.afternoonEn : item.afternoonBn;
+    const evening = lang === 'en' ? item.eveningEn : item.eveningBn;
+    const tip = item.tip ? (lang === 'en' ? item.tip.en : item.tip.bn) : '';
+
+    text += `[ DAY 0${item.day} — ${title} ]\n`;
+    text += `Corridor: ${item.corridor}\n`;
+    text += `• Morning (07:30 - 11:30): ${morning}\n`;
+    text += `• Afternoon (12:30 - 16:00): ${afternoon}\n`;
+    text += `• Evening (16:30 - 21:00): ${evening}\n`;
+    text += `• Transit: ${item.vehicle}\n`;
+    if (tip) text += `• Insider Tip: ${tip}\n`;
+    text += `\n`;
+  });
+
+  text += `Plan generated on Visit Cox (coxsbazar.xyz)\n`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showUserToast(lang === 'en' ? 'Itinerary copied to clipboard!' : 'রুট প্ল্যান কপি হয়েছে!');
+    }).catch(() => {
+      showUserToast(lang === 'en' ? 'Copied to clipboard' : 'কপি হয়েছে');
+    });
+  } else {
+    showUserToast(lang === 'en' ? 'Clipboard not supported' : 'ক্লিপবোর্ড সমর্থিত নয়');
+  }
 }
 
 /* --------------------------------------------------------------------------
  * 12. HOOK INTO GLOBAL RENDER & INITIALIZATION
  * -------------------------------------------------------------------------- */
 function renderInteractiveFeatures() {
-  renderItineraryStudio();
-  if (!FeaturesState.mapInstance) {
-    initTouristMap();
+  if (typeof renderItineraryStudio === 'function') {
+    renderItineraryStudio();
   }
-  renderMapMarkersAndFilters();
+  if (document.getElementById('coxs-bazar-map') && typeof L !== 'undefined') {
+    if (!FeaturesState.mapInstance) {
+      initTouristMap();
+    }
+    renderMapMarkersAndFilters();
+  }
   composeSteppedItinerary(FeaturesState.totalDays || 3, FeaturesState.tripVibe || 'relaxing');
 }
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    initTouristMap();
     renderInteractiveFeatures();
   });
 } else {
-  initTouristMap();
   renderInteractiveFeatures();
 }

@@ -84,12 +84,6 @@
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
-  <!-- Leaflet.js v1.9.4 CSS CDN -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
-  />
-
   <!-- Editorial Theme Stylesheet -->
   <link rel="stylesheet" href="css/styles.css?v=20261013-editorial" />
 </head>
@@ -134,7 +128,7 @@
         >
           <a href="#destinations" data-nav="destinations" data-section-link="destinations" class="nav-link-item">01 Destinations</a>
           <a href="#hotels" data-nav="hotels" data-section-link="hotels" class="nav-link-item">02 Stays</a>
-          <a href="#compass-section" data-nav="map" data-section-link="compass-section" class="nav-link-item">03 Compass &amp; Map</a>
+          <a href="#itinerary-section" data-nav="itinerary" data-section-link="itinerary-section" class="nav-link-item">03 Itinerary</a>
           <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-item">04 Transport</a>
           <a href="#faq" data-nav="faq" data-section-link="faq" class="nav-link-item">05 Journal &amp; FAQ</a>
         </nav>
@@ -210,7 +204,7 @@
       <nav class="flex flex-col gap-3 font-serif text-2xl text-charcoal">
         <a href="#destinations" onclick="toggleMobileMenu(false)" class="hover:italic transition">01 Destinations</a>
         <a href="#hotels" onclick="toggleMobileMenu(false)" class="hover:italic transition">02 Stays &amp; Sanctuaries</a>
-        <a href="#compass-section" onclick="toggleMobileMenu(false)" class="hover:italic transition">03 Compass &amp; Map</a>
+        <a href="#itinerary-section" onclick="toggleMobileMenu(false)" class="hover:italic transition">03 Itinerary Planner</a>
         <a href="#transport" onclick="toggleMobileMenu(false)" class="hover:italic transition">04 Transport &amp; Fares</a>
         <a href="#faq" onclick="toggleMobileMenu(false)" class="hover:italic transition">05 FAQ &amp; Journal</a>
       </nav>
@@ -679,142 +673,118 @@
   </section>
 
   <!-- ========================================================================
-       SECTION 4: THE LOCAL'S COMPASS (Cartography & Itinerary Engine)
+       SECTION 3: SIMPLE ITINERARY BUILDER (Neat, Clean & Clutter-Free)
        ======================================================================== -->
-  <section id="compass-section" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+  <section id="itinerary-section" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
 
       <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
-            03 / THE LOCAL'S COMPASS
+            03 / ITINERARY PLANNER
           </span>
           <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
-            Cartography &amp; Tailored Days
+            Curate Your Daily Journey
           </h2>
         </div>
         <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
-          A desaturated architectural map paired with an intelligent stepped itinerary engine.
+          Select your duration and travel rhythm. Get an immediate, neat, and clutter-free plan for morning, afternoon, and evening in Cox's Bazar.
         </p>
       </div>
 
-      <!-- Part A: Monochrome Desaturated Leaflet Map -->
-      <div id="map-section" class="space-y-4 mb-16">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-charcoal"></span>
-            <span class="text-xs font-mono tracking-wider uppercase text-charcoal font-semibold">
-              DESATURATED TOPOGRAPHY &amp; PINS
-            </span>
-          </div>
-          <!-- Map Pin Category Filters -->
-          <div id="map-category-filters" class="flex flex-wrap gap-2 text-xs font-medium"></div>
-        </div>
-
-        <!-- The Map Canvas Container -->
-        <div id="coxs-bazar-map" class="relative overflow-hidden"></div>
-
-        <!-- Map Shelf Track / Quicklist (Compatibility) -->
-        <div id="map-locations-quicklist" class="hidden"></div>
-        <div id="map-spot-shelf-track" class="hidden"></div>
-        <div id="map-day-spot-selector" class="hidden"></div>
-        <div id="map-floating-status-text" class="hidden"></div>
-      </div>
-
-      <!-- Part B: Minimalist Stepped Itinerary Engine -->
-      <div id="itinerary-section" class="pt-12 border-t border-stone-200">
+      <!-- Simple & Clean Stepped Controls -->
+      <div class="bg-[#FAF9F6] rounded-3xl p-6 sm:p-8 border border-stone-200 space-y-6">
         
-        <div class="max-w-2xl mb-10">
-          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-2">
-            STEPPED ITINERARY COMPOSER
-          </span>
-          <h3 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal">
-            Compose Your Route Plan
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 mt-2">
-            Select duration and rhythm below. Your visual timeline compiles dynamically without page refresh.
-          </p>
-        </div>
-
-        <!-- Stepped Form Controls -->
-        <div class="bg-[#FAF9F6] rounded-3xl p-6 sm:p-8 border border-stone-200 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           
-          <!-- Step 1: Duration -->
-          <div class="space-y-3">
-            <span class="block text-xs font-mono uppercase tracking-wider text-stone-500">STEP 1: CHOOSE DURATION</span>
-            <div class="flex flex-wrap gap-3">
+          <!-- Step 1: Duration Selector -->
+          <div class="lg:col-span-6 space-y-2.5">
+            <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">
+              1. Choose Duration
+            </label>
+            <div class="flex flex-wrap gap-2 sm:gap-2.5">
               <button
                 type="button"
                 onclick="setItineraryTotalDays(2); composeSteppedItinerary(2, FeaturesState.tripVibe || 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
                 id="btn-duration-2"
               >
-                2 Days (The Coastal Sprint)
+                2 Days (Quick Weekend)
               </button>
               <button
                 type="button"
                 onclick="setItineraryTotalDays(3); composeSteppedItinerary(3, FeaturesState.tripVibe || 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer"
                 id="btn-duration-3"
               >
-                3 Days (The Classic Escape)
+                3 Days (Classic Escape)
               </button>
               <button
                 type="button"
                 onclick="setItineraryTotalDays(5); composeSteppedItinerary(5, FeaturesState.tripVibe || 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
                 id="btn-duration-5"
               >
-                5 Days (The Deep Explorer)
+                5 Days (Full Coastline)
               </button>
             </div>
           </div>
 
-          <!-- Step 2: Vibe -->
-          <div class="space-y-3">
-            <span class="block text-xs font-mono uppercase tracking-wider text-stone-500">STEP 2: CHOOSE VIBE</span>
-            <div class="flex flex-wrap gap-3">
+          <!-- Step 2: Vibe Selector -->
+          <div class="lg:col-span-6 space-y-2.5">
+            <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">
+              2. Choose Travel Style
+            </label>
+            <div class="flex flex-wrap gap-2 sm:gap-2.5">
               <button
                 type="button"
                 onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer"
                 id="btn-vibe-relaxing"
               >
-                Relaxing &amp; Scenic
+                🌿 Relaxing &amp; Scenic
               </button>
               <button
                 type="button"
                 onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'adventure');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
                 id="btn-vibe-adventure"
               >
-                Adventure &amp; Coastal Waves
+                🏄 Adventure &amp; Waves
               </button>
               <button
                 type="button"
                 onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'local');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
                 id="btn-vibe-local"
               >
-                Local Culture &amp; Food
+                🏛️ Local Culture &amp; Food
               </button>
             </div>
           </div>
 
         </div>
 
-        <!-- Animated Vertical Timeline Output Container -->
-        <div id="itinerary-stepped-output" class="mt-12 space-y-8">
-          <!-- Filled dynamically via composeSteppedItinerary() -->
-        </div>
-
-        <!-- Hidden containers for Full Studio / Pass export support -->
-        <div id="itinerary-studio-builder" class="hidden"></div>
-        <div id="itinerary-output-container" class="mt-8"></div>
-        <div id="visual-itinerary-poster" class="hidden"></div>
-
       </div>
+
+      <!-- Neat & Clean Itinerary Output Cards Container -->
+      <div id="itinerary-stepped-output" class="mt-10 space-y-8">
+        <!-- Populated dynamically via composeSteppedItinerary() -->
+      </div>
+
+      <!-- Hidden compatibility containers -->
+      <div id="map-section" class="hidden">
+        <div id="map-category-filters"></div>
+        <div id="coxs-bazar-map"></div>
+        <div id="map-locations-quicklist"></div>
+        <div id="map-spot-shelf-track"></div>
+        <div id="map-day-spot-selector"></div>
+        <div id="map-floating-status-text"></div>
+      </div>
+      <div id="itinerary-studio-builder" class="hidden"></div>
+      <div id="itinerary-output-container" class="hidden"></div>
+      <div id="visual-itinerary-poster" class="hidden"></div>
 
     </div>
   </section>
@@ -933,7 +903,7 @@
           <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
             <li><a href="#destinations" class="hover:text-white transition">01 Destinations</a></li>
             <li><a href="#hotels" class="hover:text-white transition">02 Stays &amp; Sanctuaries</a></li>
-            <li><a href="#compass-section" class="hover:text-white transition">03 Compass &amp; Map</a></li>
+            <li><a href="#itinerary-section" class="hover:text-white transition">03 Itinerary Planner</a></li>
             <li><a href="#transport" class="hover:text-white transition">04 Local Transport</a></li>
             <li><a href="#faq" class="hover:text-white transition">05 FAQ &amp; Guidance</a></li>
           </ul>
@@ -1051,9 +1021,6 @@
     id="user-friendly-toast"
     class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-charcoal text-white text-xs font-mono px-5 py-2.5 rounded-full shadow-lg"
   ></div>
-
-  <!-- Leaflet.js v1.9.4 JS CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
   <!-- Visual Itinerary Export Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
