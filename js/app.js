@@ -625,136 +625,54 @@ function renderHotels() {
       return `
         <article
           data-hotel-slide-index="${idx}"
-          class="coastal-card shrink-0 snap-start w-[88%] sm:w-[350px] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm flex flex-col justify-between"
+          class="stay-card group flex flex-col justify-between cursor-pointer"
+          onclick="openHotelFacilitiesModal('${hotel.id}')"
         >
           <div>
-            <!-- Hotel Image & Floating Badges -->
-            <div class="relative h-56 overflow-hidden bg-slate-200">
+            <div class="relative overflow-hidden bg-stone-100">
               <img
                 src="${hotel.image}"
                 alt="${hotel.name[AppState.lang]}"
                 loading="lazy"
                 decoding="async"
-                class="card-img w-full h-full object-cover"
+                class="stay-img"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-slate-950/30"></div>
-
-              <!-- Top Left: Star Rating Badge -->
-              <div class="absolute top-3.5 left-3.5 flex items-center gap-1.5">
-                <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-ocean-950/90 text-amber-300 border border-amber-300/30 backdrop-blur-sm shadow-sm">
-                  ${starStars} ${hotel.stars}★
+              <div class="absolute top-3 left-3">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider uppercase bg-white/95 text-charcoal backdrop-blur-sm border border-stone-200/80 shadow-xs">
+                  ${hotel.stars}★ ${hotel.starLabel ? hotel.starLabel[AppState.lang] : ''}
                 </span>
               </div>
-
-              <!-- Top Right: User Review Rating -->
-              <div class="absolute top-3.5 right-3.5 flex items-center gap-1 bg-slate-900/85 backdrop-blur-sm text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold border border-white/10 shadow-sm">
-                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-                <span>${hotel.rating}</span>
-              </div>
-
-              <!-- Location Pill & Admin Controls on Image Bottom -->
-              <div class="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between text-white gap-2">
-                <span class="inline-flex items-center gap-1.5 text-xs font-bold bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full truncate">
-                  <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  </svg>
-                  <span class="truncate">${spotName}</span>
-                </span>
-                ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hotels', hotel.id) : ''}
+              <div class="absolute bottom-3 left-3 text-[11px] font-mono text-white bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-full">
+                ${spotName}
               </div>
             </div>
 
-            <!-- Card Body -->
-            <div class="p-5 sm:p-6">
-              <div class="flex items-start justify-between gap-2">
-                <div>
-                  <div class="inline-block px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide bg-teal-50 text-teal-800 border border-teal-200/80 mb-1">
-                    ${starLabel}
-                  </div>
-                  <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">${hotel.name[AppState.lang]}</h3>
-                </div>
-              </div>
-              <p class="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed line-clamp-3">${hotel.description[AppState.lang]}</p>
-
-              <!-- Key Amenities Preview & View Facilities Button -->
-              <div class="mt-4 pt-3 border-t border-slate-100">
-                <div class="flex items-center justify-between mb-2">
-                  <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">${t.amenitiesLabel}</p>
-                  <button
-                    type="button"
-                    onclick="openHotelFacilitiesModal('${hotel.id}')"
-                    class="inline-flex items-center gap-1 text-xs font-extrabold text-teal-700 hover:text-teal-900 hover:underline cursor-pointer"
-                  >
-                    <span>✨ ${isBn ? 'সুবিধাসমূহ' : 'Facilities Details'}</span>
-                    <span>→</span>
-                  </button>
-                </div>
-                <div class="flex flex-wrap gap-1.5">
-                  ${amenitiesList}
-                </div>
-              </div>
-
-              <!-- Verified Contact & Source Row -->
-              <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
-                ${
-                  hotel.phone
-                    ? `<a href="tel:${hotel.phone.replace(/\s+/g, '')}" class="inline-flex items-center gap-1 font-semibold text-teal-700 hover:text-teal-800">
-                        ☎ ${hotel.phone}
-                      </a>`
-                    : ''
-                }
-                ${
-                  hotel.sourceUrl
-                    ? `<a href="${hotel.sourceUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-sky-600 hover:underline">
-                        <span>✓ ${hotel.sourceName || 'Official Source'}</span>
-                        <span>↗</span>
-                      </a>`
-                    : ''
-                }
-              </div>
+            <div class="p-5">
+              <h3 class="font-serif text-xl sm:text-2xl text-charcoal font-normal group-hover:text-terracotta-600 transition leading-snug">
+                ${hotel.name[AppState.lang]}
+              </h3>
+              <p class="text-xs text-stone-500 mt-2 line-clamp-2 leading-relaxed font-normal">
+                ${hotel.description[AppState.lang]}
+              </p>
             </div>
           </div>
 
-          <!-- Card Footer with Dynamic Price & CTAs -->
-          <div class="px-5 sm:px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <span class="block text-[11px] text-slate-500 font-medium">${
-                isBn ? 'আনুমানিক ভাড়া' : 'Estimated Rate'
-              }</span>
-              <span class="text-base sm:text-lg font-extrabold text-sky-800">${priceText}</span>
-              <span class="text-xs text-slate-500 font-medium">${t.perNight}</span>
-            </div>
-            <div class="flex items-center gap-1.5">
+          <div class="p-5 pt-0">
+            <div class="pt-3 border-t border-stone-200/80 flex items-center justify-between">
+              <div>
+                <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">
+                  ${isBn ? 'শুরু' : 'From'}
+                </span>
+                <span class="font-serif text-base font-semibold text-charcoal">
+                  ${priceText}
+                </span>
+              </div>
               <button
                 type="button"
-                onclick="if(typeof selectItineraryHotel==='function') selectItineraryHotel('${hotel.id}', true)"
-                class="px-3 py-2 rounded-xl text-xs font-extrabold transition shadow-xs cursor-pointer ${
-                  typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
-                }">
-                ${
-                  typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
-                    ? (isBn ? '✓ প্ল্যানে আছে' : '✓ In Trip')
-                    : (isBn ? '+ ট্রিপে নিন' : '+ Pick')
-                }
-              </button>
-              <button
-                type="button"
-                onclick="openHotelFacilitiesModal('${hotel.id}')"
-                class="px-2.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 text-xs font-bold transition shadow-2xs shrink-0 cursor-pointer"
-                title="${isBn ? 'সুবিধাসমূহ দেখুন' : 'View Facilities'}"
+                onclick="event.stopPropagation(); openHotelFacilitiesModal('${hotel.id}')"
+                class="px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal hover:bg-charcoal hover:text-white transition cursor-pointer"
               >
-                ✨
-              </button>
-              <button
-                type="button"
-                onclick="openHotelInquiry('${hotel.id}')"
-                class="px-3 py-2 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold tracking-wide transition shadow-sm shrink-0 cursor-pointer">
-                ${t.inquireBtn}
+                ${isBn ? 'বুকিং ➔' : 'Reserve ➔'}
               </button>
             </div>
           </div>
@@ -2040,55 +1958,35 @@ function renderTransport() {
       const tooltipText = glossary ? glossary.desc[AppState.lang] : '';
 
       return `
-        <tr class="hover:bg-sky-50/70 transition-colors">
+        <tr class="hover:bg-stone-100/60 transition">
           <!-- Route -->
-          <td class="px-5 py-4 font-semibold text-slate-900 text-sm">
-            <div class="flex items-center justify-between gap-2.5">
-              <div class="flex items-center gap-2.5">
-                <span class="w-2 h-2 rounded-full bg-sky-600 shrink-0"></span>
-                <span>${item.route[AppState.lang]}</span>
-              </div>
+          <td class="font-serif text-base text-charcoal font-normal py-4 px-6">
+            <div class="flex items-center justify-between gap-3">
+              <span>${item.route[AppState.lang]}</span>
               ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('transport', item.id) : ''}
             </div>
           </td>
 
-          <!-- Vehicle with Interactive Foreigner Tooltip -->
-          <td class="px-5 py-4 text-sm">
-            <span tabindex="0" class="term-tooltip font-semibold text-sky-800 bg-sky-50 px-3 py-1 rounded-lg border border-sky-200/70">
+          <!-- Vehicle -->
+          <td class="py-4 px-6">
+            <span class="font-mono text-xs text-stone-700 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200">
               ${item.vehicle[AppState.lang]}
-              <svg class="w-3.5 h-3.5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span class="tooltip-box">${tooltipText}</span>
             </span>
           </td>
 
-          <!-- Dynamic Cost (BDT / USD) -->
-          <td class="px-5 py-4 font-extrabold text-teal-700 text-sm whitespace-nowrap">
+          <!-- Tariff -->
+          <td class="font-mono font-bold text-charcoal text-sm py-4 px-6 whitespace-nowrap">
             ${priceStr}
           </td>
 
-          <!-- Booking Mode (Shared / Reserved) -->
-          <td class="px-5 py-4 text-sm">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-              item.modeNote.en.includes('Shared')
-                ? 'bg-emerald-100 text-emerald-800'
-                : item.modeNote.en.includes('Per passenger')
-                ? 'bg-amber-100 text-amber-800'
-                : 'bg-indigo-100 text-indigo-800'
-            }">
-              ${item.modeNote[AppState.lang]}
-            </span>
+          <!-- Mode Note -->
+          <td class="text-xs font-mono text-stone-500 py-4 px-6">
+            ${item.modeNote[AppState.lang]}
           </td>
 
           <!-- Duration -->
-          <td class="px-5 py-4 text-sm text-slate-600 font-medium whitespace-nowrap">
-            <span class="inline-flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              ${item.duration[AppState.lang]}
-            </span>
+          <td class="text-xs font-mono text-stone-500 py-4 px-6 whitespace-nowrap">
+            ${item.duration[AppState.lang]}
           </td>
         </tr>
       `;
@@ -2217,7 +2115,6 @@ function renderFAQs() {
 
   container.innerHTML = FAQ_DATA.map(item => {
     const isOpen = AppState.activeFaqId === item.id;
-    // Dynamically show converted fare in FAQ #2 if USD is active
     let answerText = item.answer[AppState.lang];
     if (item.id === 'faq-2' && AppState.currency === 'USD') {
       const converted = formatPriceRange(80, 100);
@@ -2225,30 +2122,23 @@ function renderFAQs() {
     }
 
     return `
-      <div class="faq-item ${isOpen ? 'active' : ''} bg-white rounded-2xl border ${
-      isOpen ? 'border-sky-500 shadow-md shadow-sky-900/5' : 'border-slate-200/90'
-    } transition-all overflow-hidden">
+      <div class="faq-row ${isOpen ? 'active' : ''}">
         <button
           type="button"
           onclick="toggleFaqItem('${item.id}')"
+          class="faq-trigger"
           aria-expanded="${isOpen}"
-          class="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50/80 transition">
-          <span class="font-bold text-slate-900 text-base md:text-lg">${item.question[AppState.lang]}</span>
+        >
+          <span class="font-serif text-xl sm:text-2xl text-charcoal font-normal pr-4">${item.question[AppState.lang]}</span>
           <div class="flex items-center gap-3 shrink-0">
             ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('faqs', item.id) : ''}
-            <span class="faq-icon w-8 h-8 rounded-full ${
-              isOpen ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-600'
-            } flex items-center justify-center shrink-0 transition-transform duration-300">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </span>
+            <span class="faq-plus-icon">+</span>
           </div>
         </button>
-        <div class="faq-answer px-6">
-          <div class="pb-5 pt-1 text-slate-600 text-sm md:text-base leading-relaxed border-t border-slate-100">
+        <div class="faq-content">
+          <p class="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-2xl font-normal pb-4">
             ${answerText}
-          </div>
+          </p>
         </div>
       </div>
     `;
@@ -3668,6 +3558,47 @@ function initScrollListeners() {
 }
 
 /* --------------------------------------------------------------------------
+ * DRAGGABLE HORIZONTAL SCROLL & SCROLL REVEAL MICRO-INTERACTIONS
+ * -------------------------------------------------------------------------- */
+function initHorizontalDragScroll(el) {
+  if (!el) return;
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  el.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX - el.offsetLeft;
+    scrollLeft = el.scrollLeft;
+  });
+  el.addEventListener('mouseleave', () => { isDown = false; });
+  el.addEventListener('mouseup', () => { isDown = false; });
+  el.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    el.scrollLeft = scrollLeft - walk;
+  });
+}
+
+function initScrollReveal() {
+  if (typeof IntersectionObserver === 'undefined') return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('section, .bento-card, .stay-card, .timeline-item').forEach(el => {
+    el.classList.add('reveal');
+    observer.observe(el);
+  });
+}
+
+/* --------------------------------------------------------------------------
  * MASTER RENDER & INITIALIZATION
  * -------------------------------------------------------------------------- */
 function renderAll() {
@@ -3686,6 +3617,10 @@ function renderAll() {
   if (typeof renderBlogSection === 'function') {
     renderBlogSection();
   }
+  
+  const hotelsTrack = document.getElementById('hotels-grid');
+  if (hotelsTrack) initHorizontalDragScroll(hotelsTrack);
+  initScrollReveal();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

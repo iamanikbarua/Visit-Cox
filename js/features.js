@@ -1332,16 +1332,14 @@ function buildDayRouteData(dayObj, lang) {
 }
 
 function createNumberedRoutePin(badgeText, bgColor, isHotel) {
-  const size = isHotel ? 42 : 36;
-  const border = isHotel ? '3px solid #fbbf24' : '3px solid #ffffff';
+  const size = isHotel ? 36 : 30;
+  const pinClass = isHotel ? 'pin-stay' : 'pin-spot';
   return L.divIcon({
-    className: 'custom-leaflet-div-icon',
+    className: 'custom-minimal-leaflet-icon',
     html: `
       <div
-        class="custom-map-pin font-extrabold text-white flex items-center justify-center shadow-xl"
-        style="width:${size}px;height:${size}px;background:${bgColor};border:${border};font-size:${
-      isHotel ? '15px' : '13px'
-    };"
+        class="minimal-pin ${pinClass} font-mono font-bold text-white flex items-center justify-center shadow-md"
+        style="width:${size}px;height:${size}px;background:${isHotel ? '#0B2135' : '#C86446'};font-size:11px;"
       >
         ${badgeText}
       </div>
@@ -1361,9 +1359,10 @@ function initTouristMap() {
       scrollWheelZoom: false
     }).setView([COXS_BAZAR_CENTER.lat, COXS_BAZAR_CENTER.lng], COXS_BAZAR_CENTER.zoom);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
     }).addTo(FeaturesState.mapInstance);
 
     FeaturesState.markerLayerGroup = L.layerGroup().addTo(FeaturesState.mapInstance);
@@ -3858,7 +3857,362 @@ function printVisualItinerary() {
 }
 
 /* --------------------------------------------------------------------------
- * 10. HOOK INTO GLOBAL RENDER & INITIALIZATION
+ * 11. STEPPED ITINERARY COMPOSER (MINIMALIST AWARD-WINNING ENGINE)
+ * -------------------------------------------------------------------------- */
+const STEPPED_ITINERARY_PLANS = {
+  relaxing: [
+    {
+      day: 1,
+      titleEn: "The Oceanfront Horizon & Golden Sunset",
+      titleBn: "সমুদ্র উপকূল ও সূর্যাস্ত যাত্রা",
+      morningEn: "Arrive in Cox's Bazar. Check into your beachfront sanctuary. Leisurely morning walk along Kolatoli Beach to absorb the fresh Bay of Bengal sea breeze.",
+      morningBn: "কক্সবাজারে পৌঁছান। হোটেলে চেক-ইন করে কলাতলী বিচে সমুদ্রের ঠান্ডা হাওয়ায় সকালের আরামদায়ক হাঁটা।",
+      afternoonEn: "Sample authentic coastal delicacies at Poushee Restaurant (fresh bhartas & steamed rice). Relax by the resort pool or private balcony.",
+      afternoonBn: "পৌষী রেস্তোরাঁয় ঐতিহ্যবাহী নানান ভর্তা ও ভাত দিয়ে দুপুরের খাবার। বিকেলে কিছুটা বিশ্রাম।",
+      eveningEn: "Head to Sugandha Beach for the iconic Cox's Bazar sunset. Savor live grilled Rupchanda and hot local tea by the shoreline.",
+      eveningBn: "সুগন্ধা বিচে সূর্যাস্তের মনোরম দৃশ্য উপভোগ। লাইভ রূপচাঁদা ফ্রাই এবং চা পানের অভিজ্ঞতা।",
+      corridor: "Kolatoli & Sugandha Beachfront",
+      vehicle: "Easy-bike Tomtom (৳30-৳50)"
+    },
+    {
+      day: 2,
+      titleEn: "Marine Drive Scenic Drive & Inani Coral Serenity",
+      titleBn: "মেরিন ড্রাইভ ও ইনানী কোরাল শান্তি",
+      morningEn: "Take an open-top morning drive along the world's longest Marine Drive (80km) flanked by coastal hills and crashing ocean waves.",
+      morningBn: "মেরিন ড্রাইভ দিয়ে সকালের মুক্ত হাওয়ায় ড্রাইভ—একপাশে সবুজ পাহাড়, অন্যপাশে নীল সমুদ্র।",
+      afternoonEn: "Explore the ancient dead coral boulders of Inani Beach. Lounge under umbrellas away from urban crowds.",
+      afternoonBn: "ইনানী সৈকতে প্রবাল পাথরে বসে বিশ্রাম ও নির্মল প্রকৃতি উপভোগ।",
+      eveningEn: "Sunset stop at Shamlapur Fishing Village to see traditional wooden Sampan boats returning with their fresh daily catch.",
+      eveningBn: "শামলাপুর সৈকতে সাম্পান নৌকার ফিরে আসা ও সোনালী সূর্যাস্ত দর্শন।",
+      corridor: "Marine Drive to Inani (32 km)",
+      vehicle: "Chander Gari Jeep or Reserved CNG (৳1,200-৳1,800)"
+    },
+    {
+      day: 3,
+      titleEn: "Himchari Hilltop Panoramas & Rakhine Artifacts",
+      titleBn: "হিমছড়ি পাহাড় চূড়া ও রাখাইন ঐতিহ্য",
+      morningEn: "Ascend the scenic hilltop staircase of Himchari National Park for panoramic bird's-eye vistas of the unbroken shoreline.",
+      morningBn: "হিমছড়ি জাতীয় উদ্যানের পাহাড়ের চূড়ায় উঠে পাখির চোখে ১২০ কিমি সমুদ্রের রূপ অবলোকন।",
+      afternoonEn: "Visit the peaceful Rakhine Buddhist handicraft shops in town to discover hand-woven shawls, natural pearls, and Burmese sweets.",
+      afternoonBn: "শহরের রাখাইন পল্লীতে হাতে বোনা চাদর, মুক্তা ও বার্মিজ পণ্যের সংগ্রহ দেখা।",
+      eveningEn: "Final relaxed beachfront dinner at Mermaid Cafe with candle-lit coastal ambiance.",
+      eveningBn: "মারমেইড ক্যাফেতে উপকূলীয় মৃদু আলোয় সুস্বাদু ডিনারের মাধ্যমে সফরের সমাপ্তি।",
+      corridor: "Himchari & Main Town (12 km)",
+      vehicle: "Reserved Tomtom or CNG (৳400-৳600)"
+    },
+    {
+      day: 4,
+      titleEn: "Sonadia Offshore Nature Island",
+      titleBn: "সোনাদিয়া দ্বীপের অনাবিষ্কৃত প্রকৃতি",
+      morningEn: "Early boat expedition to Sonadia Island. Walk across desolate sandbars populated by thousands of scurrying red fiddler crabs.",
+      morningBn: "সোনাদিয়া দ্বীপে সকালের নৌকা ভ্রমণ। লাল কাঁকড়ার বিচরণ ও খাঁটি দ্বীপ প্রকৃতির অভিজ্ঞতা।",
+      afternoonEn: "Secluded beach picnic and exploration of mangrove saltwater channels and winter migratory birds.",
+      afternoonBn: "ম্যানগ্রোভ চ্যানেল ও পরিযায়ী পাখির কলকাকলি উপভোগ।",
+      eveningEn: "Return to the main town harbor at sunset. Quiet dinner by the bay.",
+      eveningBn: "সূর্যাস্তে ঘাটে ফিরে আসা ও স্থানীয় স্নিগ্ধ ডিনার।",
+      corridor: "Moheshkhali Channel to Sonadia",
+      vehicle: "Speedboat & Wooden Trawler (৳1,500-৳2,200)"
+    },
+    {
+      day: 5,
+      titleEn: "Rejuvenation, Spa & Coastal Farewell",
+      titleBn: "প্রশান্তি ও বিদায় বেলা",
+      morningEn: "Wake up to sunrise yoga or peaceful beachfront reflection. Savor an extended breakfast.",
+      morningBn: "সকালে সূর্যোদয় দেখা এবং সৈকতে শান্ত মনে হাঁটা।",
+      afternoonEn: "Pick up local souvenirs: dry fish from Najirartek or organic handmade soaps.",
+      afternoonBn: "স্মারক হিসেবে স্থানীয় খাঁটি শুঁটকি বা বার্মিজ হ্যান্ডিক্রাফট কেনাকাটা।",
+      eveningEn: "Depart Cox's Bazar via air or scenic train through the coastal rail bridge.",
+      eveningBn: "কক্সবাজার আন্তর্জাতিক বিমানবন্দর বা আইকনিক ঝিনুক স্টেশন থেকে বিদায়।",
+      corridor: "Town to Airport / Railway Station",
+      vehicle: "Reserved AC Car / CNG (৳300-৳500)"
+    }
+  ],
+  adventure: [
+    {
+      day: 1,
+      titleEn: "Wave Riding & Open-Air Jeep Safari",
+      titleBn: "সার্ফিং ও খোলা জিপ সাফারি",
+      morningEn: "Kick off Day 1 with an intro surfing session at Kolatoli beach with certified local surf instructors.",
+      morningBn: "কলাতলী বিচে অভিজ্ঞ কোচের তত্ত্বাবধানে সকালের রোমাঞ্চকর সার্ফিং শুরু।",
+      afternoonEn: "Hop on an open-top 4x4 Chander Gari for a wind-in-your-hair sprint along Marine Drive towards Himchari.",
+      afternoonBn: "খোলা ছাদের চান্দের গাড়িতে মেরিন ড্রাইভ ধরে পাহাড়ি বাতাসে স্পিড রাইড।",
+      eveningEn: "Parasailing flight over the turquoise waters at Laboni or Kolatoli Point. Live seafood BBQ.",
+      eveningBn: "বিকেলে আকাশে প্যারাসেইলিং ও রাতে বিচসাইড বারবিকিউ।",
+      corridor: "Kolatoli to Himchari",
+      vehicle: "Open Chander Gari 4x4 (৳1,800-৳2,500)"
+    },
+    {
+      day: 2,
+      titleEn: "Himchari Jungle Trekking & Inani Coral Coast",
+      titleBn: "হিমছড়ি ট্র্যাকিং ও ইনানী কোরাল অভিযান",
+      morningEn: "Trek through the lush secondary rainforest paths of Himchari National Park.",
+      morningBn: "হিমছড়ি জাতীয় উদ্যানের ট্রেইলে বন্য প্রকৃতি ও সবুজ পাহাড়ে ট্র্যাকিং।",
+      afternoonEn: "Ride high-speed beach quad bikes (ATV) across the compact sands of Inani.",
+      afternoonBn: "ইনানীর বিস্তৃত সৈকতে এটিভি মোটরবাইক চালানোর অভিজ্ঞতা।",
+      eveningEn: "Campfire by the beach in Pechar Dwip with acoustic guitar and bonfire under the starlight.",
+      eveningBn: "পেঁচার দ্বীপে ক্যাম্পফায়ার ও সমুদ্রের গর্জনে রাতের আয়োজন।",
+      corridor: "Marine Drive (28 km)",
+      vehicle: "4x4 Jeep Safari"
+    },
+    {
+      day: 3,
+      titleEn: "Moheshkhali Channel Speedboat Sprint",
+      titleBn: "মহেশখালী স্পিডবোট থ্রিল ও পাহাড়",
+      morningEn: "Board a twin-engine speedboat across the choppy Moheshkhali river channel from 6th Jetty.",
+      morningBn: "৬ নম্বর ঘাট থেকে দ্রুতগতির স্পিডবোটে বঙ্গোপসাগরের মোহনা পারাপার।",
+      afternoonEn: "Climb the 69 stairs of Mainak Hill to Adinath Temple. Panoramic views across the Bay.",
+      afternoonBn: "মৈনাক পাহাড়ের উঁচুতে আদিনাথ মন্দির ও বদ্বীপের বিস্তীর্ণ দৃশ্য।",
+      eveningEn: "Speedboat return to town at high tide. Night exploration of beach night markets.",
+      eveningBn: "বিকেলে স্পিডবোটে ফিরে আসা ও রাতের সৈকত বাজারে ঘুরে বেড়ানো।",
+      corridor: "Channel Crossing & Mainak Hill",
+      vehicle: "High-speed Boat (৳120 shared / ৳1,500 reserved)"
+    },
+    {
+      day: 4,
+      titleEn: "Sonadia Deep Channel Kayaking & Sand Dunes",
+      titleBn: "সোনাদিয়া কায়াকিং ও বালিয়াড়ি",
+      morningEn: "Paddle through the saltwater mangrove estuaries of Sonadia in sit-on-top sea kayaks.",
+      morningBn: "সোনাদিয়ার ম্যানগ্রোভ খালে শান্ত কায়াকিং অভিযান।",
+      afternoonEn: "Dune hiking across golden sand hills and spot migrating raptors and sea eagles.",
+      afternoonBn: "বালিয়াড়িতে হাইকিং ও পাখির ছবি তোলার দারুণ সুযোগ।",
+      eveningEn: "Return for hot grilled Loitta fish fry and traditional spicy coastal curries.",
+      eveningBn: "সন্ধ্যায় মুচমুচে লইট্টা ফ্রাই ও মশলাদার সামুদ্রিক মাছের ডিনার।",
+      corridor: "Sonadia Estuary (14 km)",
+      vehicle: "Trawler & Kayak Rental"
+    },
+    {
+      day: 5,
+      titleEn: "Beach Riding & High-Speed Farewell",
+      titleBn: "ঘোড়ায় চড়া ও রোমাঞ্চকর সমাপ্তি",
+      morningEn: "Early morning horse ride galloping along the wet sands of Laboni beach.",
+      morningBn: "লাবণী বিচে সকালের সমুদ্রের তীরে ঘোড়দৌড়।",
+      afternoonEn: "Final swim in certified safe flag zones under the watch of Sea Beach Lifeguards.",
+      afternoonBn: "লাইফগার্ড নির্দেশিত নিরাপদ জোনে সমুদ্রস্নান।",
+      eveningEn: "Departure with adrenaline-charged memories.",
+      eveningBn: "রোমাঞ্চকর স্মৃতি নিয়ে কক্সবাজার থেকে প্রস্থান।",
+      corridor: "Laboni to Transit Hub",
+      vehicle: "Local Transit"
+    }
+  ],
+  local: [
+    {
+      day: 1,
+      titleEn: "Rakhine Heritage, Handlooms & Sacred Pagodas",
+      titleBn: "রাখাইন ঐতিহ্য, তাঁতশিল্প ও প্যাগোডা",
+      morningEn: "Visit the centuries-old Aggameda Khyang Buddhist Monastery in Cox's Bazar town.",
+      morningBn: "কক্সবাজার শহরের ঐতিহাসিক আগ্যামেধা ক্যাং বৌদ্ধ বিহার পরিদর্শন।",
+      afternoonEn: "Walk into authentic Rakhine weaver households in Buddhist Temple Road. Watch wooden handlooms create vibrant textiles.",
+      afternoonBn: "বৌদ্ধ মন্দির সড়কে ঐতিহ্যবাহী রাখাইন তাঁতিদের তৈরি পোশাক ও হস্তশিল্প দর্শন।",
+      eveningEn: "Dine at Poushee or Jhawbon for a massive spread of 30+ authentic Bangladeshi bhartas.",
+      eveningBn: "পৌষী বা ঝাউবনে ৩০+ পদের দেশীয় ভর্তা ও পাহাড়ি খাবারের স্বাদ নেওয়া।",
+      corridor: "Town Historic Quarters",
+      vehicle: "Walking & Local Tomtom (৳30-৳60)"
+    },
+    {
+      day: 2,
+      titleEn: "Ramu 100-Ft Reclining Buddha & Bronze Foundries",
+      titleBn: "রামু ১০০ ফুট বুদ্ধ ও প্রাচীন কারুশিল্প",
+      morningEn: "Drive 16 km inland to Ramu to see the colossal 100-foot Reclining Gautama Buddha statue at Vimukti Bidarshan Bhabna Kendra.",
+      morningBn: "রামুতে অবস্থিত ১০০ ফুট দীর্ঘ ধ্যানমগ্ন বুদ্ধ মূর্তি ও বিহার দর্শন।",
+      afternoonEn: "Explore ancient wooden monasteries (Lanka Khyang) and traditional brass & bronze casting workshops.",
+      afternoonBn: "লঙ্কা ক্যাং ও স্থানীয় ব্রোঞ্জের কারিগরদের প্রাচীন শিল্পকর্ম দেখা।",
+      eveningEn: "Return to town. Sample fresh green coconut water and crispy sweet roasted nuts.",
+      eveningBn: "শহরে ফিরে ডাবের পানি ও সুস্বাদু বাদামের স্বাদ নেওয়া।",
+      corridor: "Cox's Bazar to Ramu (16 km)",
+      vehicle: "CNG Auto-Rickshaw (৳400-৳600 roundtrip)"
+    },
+    {
+      day: 3,
+      titleEn: "Maheshkhali Hillside Pilgrimage & Golden Pagodas",
+      titleBn: "মহেশখালী তীর্থযাত্রা ও স্বর্ণ মন্দির",
+      morningEn: "Cross the channel to Maheshkhali Island. Visit the ancient Adinath Shiva Temple and the Buddhist Golden Temple.",
+      morningBn: "মহেশখালী গিয়ে ঐতিহাসিক আদিনাথ মন্দির ও স্বর্ণ প্যাগোডা পরিদর্শন।",
+      afternoonEn: "Taste local sweet betel leaves (Paan) and fresh island bananas grown on Mainak Hill.",
+      afternoonBn: "মহেশখালীর বিখ্যাত মিষ্টি পান ও স্থানীয় ফলের স্বাদ উপভোগ।",
+      eveningEn: "Watch traditional fishing crews mend their handmade nets along the salt marsh docks.",
+      eveningBn: "লবণ চাষ ও জেলেদের জাল বোনার দৃশ্য দেখা।",
+      corridor: "Maheshkhali Island",
+      vehicle: "Speedboat & Island Tomtom"
+    },
+    {
+      day: 4,
+      titleEn: "Nazirartek Artisanal Fish Settlement & Salt Fields",
+      titleBn: "নাজিরারটেক শুঁটকি মহাল ও লবণ মাঠ",
+      morningEn: "Visit Nazirartek, Asia's largest natural sun-drying fish village. Witness centuries of marine processing heritage.",
+      morningBn: "এশিয়া মহাদেশের বৃহত্তম শুঁটকি পল্লী নাজিরারটেক দর্শন।",
+      afternoonEn: "Explore the nearby white salt pans where seawater evaporates under the blazing coastal sun.",
+      afternoonBn: "উপকূলীয় সাদা লবণ মাঠের প্রাকৃতিক উৎপাদন দেখা।",
+      eveningEn: "Authentic dinner of spicy Loitta Shutki bhuna and hot steaming rice.",
+      eveningBn: "স্থানীয় হোটেল থেকে খাঁটি লইট্টা শুঁটকি ভুনা দিয়ে রাতের ভোজন।",
+      corridor: "Northern Coast (6 km)",
+      vehicle: "Tomtom (৳60-৳100)"
+    },
+    {
+      day: 5,
+      titleEn: "Local Markets & Archival Farewell",
+      titleBn: "স্থানীয় বাজার ও প্রস্থান",
+      morningEn: "Early morning visit to Fish Market at Fishery Ghat to see deep-sea trawlers unloading the morning harvest.",
+      morningBn: "ফিশারি ঘাটে গভীর সমুদ্রের ট্রলার থেকে তাজা মাছ নামানোর কর্মচাঞ্চল্য দেখা।",
+      afternoonEn: "Final market shopping for genuine dried fish, Burmese pickles, and handmade woven bags.",
+      afternoonBn: "আসল শুঁটকি ও বার্মিজ হস্তশিল্প কেনাকাটা।",
+      eveningEn: "Depart with rich cultural memories of southern Bangladesh.",
+      eveningBn: "অবিস্মরণীয় অভিজ্ঞতা নিয়ে বিদায়।",
+      corridor: "Fishery Ghat & Town",
+      vehicle: "Local Transit"
+    }
+  ]
+};
+
+function composeSteppedItinerary(days, vibe) {
+  FeaturesState.totalDays = days || FeaturesState.totalDays || 3;
+  FeaturesState.tripVibe = vibe || FeaturesState.tripVibe || 'relaxing';
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+
+  // 1. Update Duration Buttons
+  [2, 3, 5].forEach(d => {
+    const btn = document.getElementById(`btn-duration-${d}`);
+    if (btn) {
+      if (d === FeaturesState.totalDays) {
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition";
+      } else {
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white text-charcoal transition";
+      }
+    }
+  });
+
+  // 2. Update Vibe Buttons
+  ['relaxing', 'adventure', 'local'].forEach(v => {
+    const btn = document.getElementById(`btn-vibe-${v}`);
+    if (btn) {
+      if (v === FeaturesState.tripVibe) {
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition";
+      } else {
+        btn.className = "px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white text-charcoal transition";
+      }
+    }
+  });
+
+  // 3. Render Output
+  const output = document.getElementById('itinerary-stepped-output');
+  if (!output) return;
+
+  const planList = (STEPPED_ITINERARY_PLANS[FeaturesState.tripVibe] || STEPPED_ITINERARY_PLANS.relaxing).slice(0, FeaturesState.totalDays);
+
+  const daysHTML = planList.map((item, idx) => {
+    const title = lang === 'en' ? item.titleEn : item.titleBn;
+    const morning = lang === 'en' ? item.morningEn : item.morningBn;
+    const afternoon = lang === 'en' ? item.afternoonEn : item.afternoonBn;
+    const evening = lang === 'en' ? item.eveningEn : item.eveningBn;
+
+    return `
+      <div class="itinerary-day-card bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-6">
+        
+        <!-- Day Banner -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-stone-200">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider bg-charcoal text-white">
+              ${lang === 'en' ? `DAY 0${item.day}` : `দিন ০${item.day}`}
+            </span>
+            <h4 class="font-serif text-2xl text-charcoal font-normal">
+              ${title}
+            </h4>
+          </div>
+          <span class="text-xs font-mono text-stone-500 uppercase">
+            ${item.corridor}
+          </span>
+        </div>
+
+        <!-- Vertical Timeline Nodes -->
+        <div class="space-y-6 pl-2">
+          
+          <!-- Morning -->
+          <div class="timeline-item active-node">
+            <div class="timeline-node"></div>
+            <div class="space-y-1">
+              <span class="block text-xs font-mono uppercase tracking-wider text-terracotta-600 font-semibold">
+                ${lang === 'en' ? '07:30 – 11:30 • MORNING' : 'সকাল ০৭:৩০ – ১১:৩০'}
+              </span>
+              <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
+                ${morning}
+              </p>
+            </div>
+          </div>
+
+          <!-- Afternoon -->
+          <div class="timeline-item">
+            <div class="timeline-node"></div>
+            <div class="space-y-1">
+              <span class="block text-xs font-mono uppercase tracking-wider text-sage-700 font-semibold">
+                ${lang === 'en' ? '12:30 – 16:00 • AFTERNOON' : 'দুপুর ১২:৩০ – ১৬:০০'}
+              </span>
+              <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
+                ${afternoon}
+              </p>
+            </div>
+          </div>
+
+          <!-- Evening -->
+          <div class="timeline-item">
+            <div class="timeline-node"></div>
+            <div class="space-y-1">
+              <span class="block text-xs font-mono uppercase tracking-wider text-charcoal font-semibold">
+                ${lang === 'en' ? '16:30 – 21:00 • SUNSET & EVENING' : 'বিকেল ১৬:৩০ – রাত ২১:০০'}
+              </span>
+              <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
+                ${evening}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Transit & Logistics Footer -->
+        <div class="pt-4 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-stone-500">
+          <span>RECOMMENDED VEHICLE: ${item.vehicle}</span>
+          <span class="text-charcoal font-semibold">ALL SIGHTS VERIFIED ACTIVE</span>
+        </div>
+
+      </div>
+    `;
+  }).join('');
+
+  output.innerHTML = `
+    <div class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div>
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">
+            ${lang === 'en' ? `LIVE COMPILED TIMELINE (${FeaturesState.totalDays} DAYS)` : `সংকলিত রুট প্ল্যান (${FeaturesState.totalDays} দিন)`}
+          </span>
+          <span class="font-serif text-xl sm:text-2xl text-charcoal font-normal">
+            ${FeaturesState.tripVibe.toUpperCase()} RHYTHM
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="downloadItineraryPNG()"
+            class="px-4 py-2 rounded-full border border-stone-300 hover:border-charcoal text-xs font-mono uppercase tracking-wider text-charcoal transition bg-white"
+          >
+            Download PNG ➔
+          </button>
+          <button
+            type="button"
+            onclick="downloadItineraryPDF()"
+            class="px-4 py-2 rounded-full bg-charcoal hover:bg-black text-xs font-mono uppercase tracking-wider text-white transition"
+          >
+            Download PDF ➔
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6">
+        ${daysHTML}
+      </div>
+    </div>
+  `;
+}
+
+/* --------------------------------------------------------------------------
+ * 12. HOOK INTO GLOBAL RENDER & INITIALIZATION
  * -------------------------------------------------------------------------- */
 function renderInteractiveFeatures() {
   renderItineraryStudio();
@@ -3866,6 +4220,7 @@ function renderInteractiveFeatures() {
     initTouristMap();
   }
   renderMapMarkersAndFilters();
+  composeSteppedItinerary(FeaturesState.totalDays || 3, FeaturesState.tripVibe || 'relaxing');
 }
 
 if (document.readyState === 'loading') {

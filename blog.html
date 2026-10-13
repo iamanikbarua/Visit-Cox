@@ -19,11 +19,11 @@
     content="Read and publish travel stories, food guides, Marine Drive tips, and local insights on the Cox's Bazar Travel Blog."
   />
 
-  <!-- Google Fonts: Poppins (Primary Font for All Content) & Hind Siliguri (Bengali Script) -->
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
@@ -34,23 +34,39 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Poppins', 'Hind Siliguri', 'sans-serif'],
-            display: ['Poppins', 'Hind Siliguri', 'sans-serif'],
-            serif: ['Poppins', 'Hind Siliguri', 'serif'],
-            body: ['Poppins', 'Hind Siliguri', 'sans-serif']
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
-            ocean: {
-              950: '#072138',
-              900: '#0a2e4d',
-              800: '#0369a1',
-              600: '#0284c7',
-              400: '#38bdf8'
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
             },
-            sand: {
-              50: '#fdfbf7',
-              100: '#f5ebe0',
-              200: '#e8d5c4'
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5EDE7',
+              600: '#4A6B5D',
+              700: '#3D594D',
+              800: '#2E433A'
             }
           }
         }

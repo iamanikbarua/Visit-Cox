@@ -13,18 +13,18 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visit Cox's Bazar | Experience the Longest Sea Beach in the World</title>
+  <title>Visit Cox | The World's Longest Coastline, Redefined</title>
   <meta
     name="description"
-    content="Your ultimate bilingual (English & Bengali) travel and tourism guide to Cox's Bazar, Bangladesh. Compare hotel prices in BDT/USD, explore sightseeing spots, hidden gems, and local transport fares."
+    content="An editorial travel archive to Cox's Bazar, Bangladesh. Curated coastal stays, 80km Marine Drive guides, desaturated cartography, and authentic local transit."
   />
 
-  <!-- Google Fonts: Poppins (Primary Font for All Content) & Hind Siliguri (Bengali Script) -->
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
@@ -35,23 +35,43 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Poppins', 'Hind Siliguri', 'sans-serif'],
-            display: ['Poppins', 'Hind Siliguri', 'sans-serif'],
-            serif: ['Poppins', 'Hind Siliguri', 'serif'],
-            body: ['Poppins', 'Hind Siliguri', 'sans-serif']
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
-            ocean: {
-              950: '#072138',
-              900: '#0a2e4d',
-              800: '#0369a1',
-              600: '#0284c7',
-              400: '#38bdf8'
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
             },
-            sand: {
-              50: '#fdfbf7',
-              100: '#f5ebe0',
-              200: '#e8d5c4'
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5EDE7',
+              600: '#4A6B5D',
+              700: '#3D594D',
+              800: '#2E433A'
+            },
+            ocean: {
+              900: '#0E2338',
+              950: '#071624'
             }
           }
         }
@@ -59,1278 +79,791 @@
     };
   </script>
 
-  <!-- Favicon (Transparent Background Logo) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="256x256" href="assets/images/favicon.png" />
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
-  <!-- Leaflet.js v1.9.4 CSS CDN (OpenStreetMap — No API Key Required) -->
+  <!-- Leaflet.js v1.9.4 CSS CDN -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
   />
 
-  <!-- Custom Coastal Theme Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=20261013-dynamic" />
-
-  <!-- Self-Contained Map & Itinerary Styles -->
-  <style>
-    #coxs-bazar-map {
-      width: 100%;
-      height: 480px;
-      border-radius: 1.5rem;
-      z-index: 10;
-    }
-    @media (max-width: 640px) {
-      #coxs-bazar-map {
-        height: 360px;
-      }
-    }
-    .custom-map-pin {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 9999px;
-      border: 3px solid #ffffff;
-      box-shadow: 0 10px 20px -5px rgba(7, 33, 56, 0.45);
-      transition: transform 0.2s ease;
-    }
-    .custom-map-pin:hover {
-      transform: scale(1.15) translateY(-2px);
-    }
-    .leaflet-popup-content-wrapper {
-      border-radius: 1rem !important;
-      padding: 0 !important;
-      overflow: hidden;
-      box-shadow: 0 20px 30px -10px rgba(7, 33, 56, 0.25) !important;
-    }
-    .leaflet-popup-content {
-      margin: 0 !important;
-      width: 250px !important;
-    }
-    @keyframes itineraryFadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .itinerary-day-card {
-      animation: itineraryFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #visual-itinerary-poster,
-      #visual-itinerary-poster * {
-        visibility: visible;
-      }
-      #visual-itinerary-poster {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        border: none !important;
-        box-shadow: none !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
-  </style>
+  <!-- Editorial Theme Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css?v=20261013-editorial" />
 </head>
 
-<body class="antialiased selection:bg-sky-600 selection:text-white">
+<body class="bg-[#FAF9F6] text-[#111827] antialiased selection:bg-[#111827] selection:text-white">
 
   <!-- ========================================================================
-       STICKY NAVIGATION BAR (Dual Language + Currency Converter Toggles)
+       EDITORIAL NAVIGATION (Minimalist, Hairline Divider, Dual Toggles)
        ======================================================================== -->
   <header
     id="main-navbar"
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-ocean-950/90 backdrop-blur-md border-b border-white/10"
+    class="fixed top-0 left-0 right-0 z-50 navbar-editorial"
   >
-    <!-- Dynamic Top Scroll Progress Indicator -->
-    <div class="w-full h-0.5 bg-white/5 overflow-hidden">
+    <!-- Hairline Scroll Progress Indicator -->
+    <div class="w-full h-[1.5px] bg-stone-200/60 overflow-hidden">
       <div
         id="scroll-progress-bar"
-        class="h-full bg-gradient-to-r from-teal-400 via-sky-400 to-amber-400 w-0 transition-all duration-150"
+        class="h-full bg-charcoal w-0 transition-all duration-150"
       ></div>
     </div>
 
-    <div class="max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-8">
-      <div class="flex items-center justify-between gap-2 xl:gap-4 h-18 sm:h-20">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div class="flex items-center justify-between h-20">
 
-        <!-- Brand Logo (Clean Single-Line — Tagline Removed) -->
-        <a href="#home" class="flex items-center gap-2.5 sm:gap-3 group shrink-0 whitespace-nowrap">
-          <img
-            src="assets/images/favicon.png"
-            alt="Visit Cox Logo"
-            class="w-10 h-10 sm:w-11 sm:h-11 object-contain drop-shadow-md group-hover:scale-105 transition shrink-0"
-          />
+        <!-- Brand Identity: Editorial Serif + Coordinate Stamp -->
+        <a href="#home" class="flex items-baseline gap-3 group">
           <span
             id="brand-name"
-            class="text-base sm:text-lg xl:text-xl font-extrabold text-white tracking-tight whitespace-nowrap"
+            class="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-charcoal group-hover:opacity-75 transition-opacity"
           >
-            Visit Cox's Bazar
+            Visit Cox
+          </span>
+          <span class="hidden sm:inline-block text-[11px] font-mono tracking-widest text-stone-500 uppercase">
+            21°25'N 91°58'E
           </span>
         </a>
 
-        <!-- Desktop Navigation Links (Floating Glass Pill Bar — Zero Wrapping) -->
+        <!-- Desktop Navigation: Clean Uppercase Editorial Links -->
         <nav
           aria-label="Primary Navigation"
-          class="hidden xl:flex items-center gap-1 2xl:gap-1.5 bg-white/5 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 text-xs 2xl:text-[13px] font-bold text-sky-100 shrink-0"
+          class="hidden lg:flex items-center gap-8 text-[13px] tracking-wider uppercase font-semibold text-stone-600"
         >
-          <a href="#home" data-nav="home" data-section-link="home" class="nav-link-pill nav-link-active px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Home</a>
-          <a href="#hotels" data-nav="hotels" data-section-link="hotels" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Hotels</a>
-          <a href="#destinations" data-nav="destinations" data-section-link="destinations" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Destinations</a>
-          <a href="#activities-section" data-nav="activities" data-section-link="activities-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Activities</a>
-          <a href="#map-section" data-nav="map" data-section-link="map-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-teal-300 hover:text-amber-300">Route Planner</a>
-          <a href="#itinerary-section" data-nav="itinerary" data-section-link="itinerary-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-amber-300 hover:text-amber-200">Plan My Trip</a>
-          <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Transport</a>
-          <a href="#essential-info" data-nav="essentialInfo" data-section-link="essential-info" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">Essential Info</a>
-          <a href="#blog-section" data-nav="blog" data-section-link="blog-section" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 text-emerald-300 hover:text-amber-300">Blog</a>
-          <a href="#faq" data-nav="faq" data-section-link="faq" class="nav-link-pill px-2.5 2xl:px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-amber-300">FAQ</a>
+          <a href="#destinations" data-nav="destinations" data-section-link="destinations" class="nav-link-item">01 Destinations</a>
+          <a href="#hotels" data-nav="hotels" data-section-link="hotels" class="nav-link-item">02 Stays</a>
+          <a href="#compass-section" data-nav="map" data-section-link="compass-section" class="nav-link-item">03 Compass &amp; Map</a>
+          <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-item">04 Transport</a>
+          <a href="#faq" data-nav="faq" data-section-link="faq" class="nav-link-item">05 Journal &amp; FAQ</a>
         </nav>
 
-        <!-- Right Controls: Language, Currency, Admin & Responsive Drawer Button -->
-        <div class="flex items-center gap-2 shrink-0">
-          <!-- Interactive Toggles: Dual Language (EN/বাং), Currency (BDT/USD) & Admin Access -->
-          <div class="hidden sm:flex items-center gap-2 shrink-0">
-            <!-- Dual Language Switcher -->
+        <!-- Right Controls: Currency, Language & Mobile Toggle -->
+        <div class="flex items-center gap-3">
+          <!-- Currency & Language Pill Switchers -->
+          <div class="hidden sm:flex items-center gap-2">
+            <!-- Language Switcher -->
             <div
-              class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 shrink-0 whitespace-nowrap"
+              class="flex items-center bg-stone-100 p-0.5 rounded-full border border-stone-200 text-xs font-semibold"
               role="group"
-              aria-label="Language Switcher"
+              aria-label="Language"
             >
-              <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="whitespace-nowrap">EN</button>
-              <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="whitespace-nowrap">বাংলা</button>
+              <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="px-2.5 py-1 rounded-full text-charcoal bg-white shadow-xs">EN</button>
+              <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="px-2.5 py-1 rounded-full text-stone-600 hover:text-charcoal transition">বাংলা</button>
             </div>
 
-            <!-- Currency Converter Switcher -->
+            <!-- Currency Switcher -->
             <div
-              class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 shrink-0 whitespace-nowrap"
+              class="flex items-center bg-stone-100 p-0.5 rounded-full border border-stone-200 text-xs font-semibold"
               role="group"
-              aria-label="Currency Converter"
+              aria-label="Currency"
             >
-              <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="whitespace-nowrap">৳ BDT</button>
-              <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="whitespace-nowrap">$ USD</button>
+              <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="px-2.5 py-1 rounded-full text-charcoal bg-white shadow-xs">BDT</button>
+              <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="px-2.5 py-1 rounded-full text-stone-600 hover:text-charcoal transition">USD</button>
             </div>
 
-            <!-- Admin Portal Button -->
+            <!-- Hidden Admin Quick-Access -->
             <button
               type="button"
               onclick="handleAdminButtonClick()"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-300/30 transition whitespace-nowrap shrink-0"
+              aria-label="Admin Portal"
+              class="text-stone-400 hover:text-charcoal p-1.5 transition"
             >
-              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
               </svg>
-              <span class="admin-nav-btn-label whitespace-nowrap">Admin Login</span>
             </button>
           </div>
 
-          <!-- Mobile / Tablet Menu Button (Shown below xl so navbar never crowds) -->
-          <div class="flex items-center xl:hidden">
-            <button
-              type="button"
-              onclick="toggleMobileMenu()"
-              aria-label="Toggle Menu"
-              class="p-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 border border-white/15 transition"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-              </svg>
-            </button>
-          </div>
+          <!-- Mobile Hamburger -->
+          <button
+            type="button"
+            onclick="toggleMobileMenu()"
+            aria-label="Toggle Menu"
+            class="lg:hidden p-2 rounded-lg text-charcoal hover:bg-stone-200/60 transition"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"/>
+            </svg>
+          </button>
         </div>
 
       </div>
     </div>
 
-    <!-- Mobile & Tablet Navigation Drawer -->
+    <!-- Mobile Drawer -->
     <div
       id="mobile-nav-drawer"
-      class="hidden xl:hidden bg-ocean-950/98 backdrop-blur-xl border-b border-white/10 px-4 pt-3 pb-6 space-y-4 shadow-2xl"
+      class="hidden lg:hidden bg-[#FAF9F6] border-b border-stone-200 px-6 pt-4 pb-8 space-y-5"
     >
-      <!-- Mobile Toggles Row -->
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 sm:hidden">
-        <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 whitespace-nowrap">
-          <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="whitespace-nowrap">EN</button>
-          <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="whitespace-nowrap">বাংলা</button>
+      <div class="flex items-center justify-between gap-3 pb-3 border-b border-stone-200">
+        <div class="flex items-center gap-2">
+          <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold bg-charcoal text-white">EN</button>
+          <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="px-3 py-1 rounded-full text-xs font-semibold text-stone-600">বাং</button>
         </div>
-        <div class="flex items-center bg-white/10 p-1 rounded-full border border-white/15 whitespace-nowrap">
-          <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="whitespace-nowrap">৳ BDT</button>
-          <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="whitespace-nowrap">$ USD</button>
+        <div class="flex items-center gap-2">
+          <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="px-3 py-1 rounded-full text-xs font-bold bg-charcoal text-white">৳ BDT</button>
+          <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="px-3 py-1 rounded-full text-xs font-semibold text-stone-600">$ USD</button>
         </div>
-        <button
-          type="button"
-          onclick="handleAdminButtonClick()"
-          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30 whitespace-nowrap"
-        >
-          <span class="admin-nav-btn-label whitespace-nowrap">Admin Login</span>
-        </button>
       </div>
-
-      <nav class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm font-bold text-sky-100">
-        <a href="#home" onclick="toggleMobileMenu(false)" data-nav="home" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Home</a>
-        <a href="#hotels" onclick="toggleMobileMenu(false)" data-nav="hotels" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Hotels</a>
-        <a href="#destinations" onclick="toggleMobileMenu(false)" data-nav="destinations" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Destinations</a>
-        <a href="#activities-section" onclick="toggleMobileMenu(false)" data-nav="activities" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Activities 🏄‍♂️</a>
-        <a href="#map-section" onclick="toggleMobileMenu(false)" data-nav="map" class="px-3.5 py-2.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 flex items-center justify-between">Route Planner</a>
-        <a href="#itinerary-section" onclick="toggleMobileMenu(false)" data-nav="itinerary" class="px-3.5 py-2.5 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 flex items-center justify-between">Plan My Trip</a>
-        <a href="#transport" onclick="toggleMobileMenu(false)" data-nav="transport" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Transport</a>
-        <a href="#essential-info" onclick="toggleMobileMenu(false)" data-nav="essentialInfo" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">Essential Info</a>
-        <a href="#blog-section" onclick="toggleMobileMenu(false)" data-nav="blog" class="px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 flex items-center justify-between">Travel Blog ✍️</a>
-        <a href="blog.html" class="px-3.5 py-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 flex items-center justify-between">Open Full Blog Page →</a>
-        <a href="#faq" onclick="toggleMobileMenu(false)" data-nav="faq" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between">FAQ</a>
+      <nav class="flex flex-col gap-3 font-serif text-2xl text-charcoal">
+        <a href="#destinations" onclick="toggleMobileMenu(false)" class="hover:italic transition">01 Destinations</a>
+        <a href="#hotels" onclick="toggleMobileMenu(false)" class="hover:italic transition">02 Stays &amp; Sanctuaries</a>
+        <a href="#compass-section" onclick="toggleMobileMenu(false)" class="hover:italic transition">03 Compass &amp; Map</a>
+        <a href="#transport" onclick="toggleMobileMenu(false)" class="hover:italic transition">04 Transport &amp; Fares</a>
+        <a href="#faq" onclick="toggleMobileMenu(false)" class="hover:italic transition">05 FAQ &amp; Journal</a>
       </nav>
     </div>
   </header>
 
   <!-- ========================================================================
-       1. HOMEPAGE (DYNAMIC MULTI-SLIDE HERO SHOWCASE & LIVE SEARCH)
+       SECTION 1: THE HERO (Cinematic & Immersive, Asymmetrical Gallery)
        ======================================================================== -->
   <section
     id="home"
-    class="relative min-h-screen flex items-center justify-center pt-28 pb-16 sm:pb-24 overflow-hidden"
+    class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden"
   >
-    <!-- Dynamic Multi-Slide Cox's Bazar Background Showcase (Ken-Burns Zoom + Crossfade) -->
-    <div id="hero-bg-slider" class="absolute inset-0 z-0 bg-ocean-950">
-      <div class="hero-slide active" data-hero-slide="0">
-        <img
-          src="assets/images/hero-coxs-bazar.jpg"
-          alt="Cox's Bazar 120 km Sea Beach & Traditional Sampan Boats"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <div class="hero-slide" data-hero-slide="1">
-        <img
-          src="assets/images/inani-beach.jpg"
-          alt="Inani Coral Beach on Marine Drive"
-          loading="lazy"
-          decoding="async"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <div class="hero-slide" data-hero-slide="2">
-        <img
-          src="assets/images/himchari.jpg"
-          alt="Himchari National Park Coastal Hills"
-          loading="lazy"
-          decoding="async"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <div class="hero-slide" data-hero-slide="3">
-        <img
-          src="assets/images/shamlapur-sampan.jpg"
-          alt="Shamlapur Sampan Boats at Sunset on Marine Drive"
-          loading="lazy"
-          decoding="async"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <div class="hero-slide" data-hero-slide="4">
-        <img
-          src="assets/images/moheshkhali.jpg"
-          alt="Moheshkhali Island & Channel"
-          loading="lazy"
-          decoding="async"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <div class="absolute inset-0 hero-gradient"></div>
-    </div>
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 
-    <!-- Hero Content Container -->
-    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <!-- Coastal Eyebrow Pill -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/25 border border-teal-300/40 backdrop-blur-md text-teal-200 text-[11px] sm:text-xs font-extrabold tracking-widest uppercase mb-5 animate-float shadow-lg">
-        <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
-        <span id="hero-badge">120 KM UNBROKEN NATURAL SEA BEACH • BAY OF BENGAL</span>
-      </div>
+      <!-- Asymmetrical Split Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
-      <!-- Hero Main Title -->
-      <h1
-        id="hero-title"
-        class="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.12] max-w-4xl mx-auto drop-shadow-lg"
-      >
-        Experience the Longest Sea Beach in the World
-      </h1>
-
-      <!-- Hero Subtitle -->
-      <p
-        id="hero-subtitle"
-        class="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-sky-100/95 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow"
-      >
-        Your ultimate guide to hotels, sightseeing, and local travel in Cox's Bazar.
-      </p>
-
-      <!-- Interactive Hero Scene Switcher Pills (Lets user dynamically preview Cox's Bazar spots) -->
-      <div
-        id="hero-scene-pills"
-        class="mt-6 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2"
-        aria-label="Cox's Bazar Scenic Highlights"
-      >
-        <button
-          type="button"
-          onclick="setHeroSlide(0, true)"
-          data-hero-pill="0"
-          class="px-3 py-1.5 rounded-full text-xs font-extrabold transition-all bg-amber-400 text-slate-950 shadow-md cursor-pointer"
-        >
-          🌊 Laboni & Sugandha Beach
-        </button>
-        <button
-          type="button"
-          onclick="setHeroSlide(1, true)"
-          data-hero-pill="1"
-          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
-        >
-          🪨 Inani Coral Beach
-        </button>
-        <button
-          type="button"
-          onclick="setHeroSlide(2, true)"
-          data-hero-pill="2"
-          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
-        >
-          ⛰️ Himchari Hills
-        </button>
-        <button
-          type="button"
-          onclick="setHeroSlide(3, true)"
-          data-hero-pill="3"
-          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
-        >
-          ⛵ Marine Drive Sampans
-        </button>
-        <button
-          type="button"
-          onclick="setHeroSlide(4, true)"
-          data-hero-pill="4"
-          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer"
-        >
-          🏝️ Moheshkhali Island
-        </button>
-      </div>
-
-      <!-- Call-to-Action Buttons (Responsive Grid on Mobile, Flex Row on Tablet/Desktop) -->
-      <div class="mt-7 grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-3 sm:gap-3.5 max-w-xl sm:max-w-none mx-auto">
-        <a
-          href="#hotels"
-          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm md:text-base shadow-xl shadow-sky-950/40 transition transform hover:-translate-y-0.5 whitespace-nowrap"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
-          <span id="hero-cta-hotels">Find Hotels</span>
-        </a>
-
-        <a
-          href="#destinations"
-          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-md font-bold text-xs sm:text-sm md:text-base transition transform hover:-translate-y-0.5 whitespace-nowrap"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
-          <span id="hero-cta-spots">Explore Spots</span>
-        </a>
-
-        <a
-          href="#map-section"
-          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-teal-500/25 hover:bg-teal-500/40 text-teal-100 border border-teal-300/40 backdrop-blur-md font-extrabold text-xs sm:text-sm md:text-base transition transform hover:-translate-y-0.5 whitespace-nowrap"
-        >
-          <span>🛣️</span>
-          <span data-nav="map">Route Planner</span>
-        </a>
-
-        <a
-          href="#itinerary-section"
-          class="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs sm:text-sm md:text-base shadow-xl shadow-amber-950/30 transition transform hover:-translate-y-0.5 whitespace-nowrap"
-        >
-          <span>🗓️</span>
-          <span data-nav="itinerary">Plan My Trip</span>
-        </a>
-      </div>
-
-      <!-- Quick Interactive Search Bar + Instant Live Results Dropdown -->
-      <div class="mt-8 max-w-4xl mx-auto relative">
-        <form
-          id="hero-search-form"
-          class="bg-white/95 backdrop-blur-xl p-2 sm:p-2.5 rounded-3xl shadow-2xl border border-white/40 flex flex-col md:flex-row items-stretch gap-2"
-        >
-          <!-- Search Input -->
-          <div class="flex-1 flex items-center gap-3 px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 focus-within:border-sky-500 focus-within:bg-white transition">
-            <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input
-              id="hero-search-input"
-              type="text"
-              autocomplete="off"
-              placeholder="Search hotels, beaches, islands, or transport (e.g., Inani, Sea Crown, Tomtom)..."
-              class="w-full bg-transparent text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none"
-            />
+        <!-- Left Column: Oversized Editorial Typography -->
+        <div class="lg:col-span-7 flex flex-col justify-center space-y-8">
+          
+          <!-- Category Overline / Archival Tag -->
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-terracotta-600"></span>
+            <span class="text-xs font-mono tracking-widest text-stone-500 uppercase">
+              COASTAL ARCHIVE • 21°25'N 91°58'E • BAY OF BENGAL
+            </span>
           </div>
 
-          <!-- Category Filter Select -->
-          <div class="flex items-center px-3 py-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 md:w-48">
-            <select
-              id="hero-search-category"
-              aria-label="Category Filter"
-              class="w-full bg-transparent text-slate-700 text-sm font-semibold focus:outline-none cursor-pointer"
-            >
-              <option id="search-opt-all" value="all">All Categories</option>
-              <option id="search-opt-hotels" value="hotels">Hotels & Resorts</option>
-              <option id="search-opt-spots" value="spots">Sightseeing & Gems</option>
-              <option id="search-opt-transport" value="transport">Local Transport</option>
-            </select>
-          </div>
-
-          <!-- Submit Search Button -->
-          <button
-            type="submit"
-            class="px-6 py-3.5 rounded-2xl bg-ocean-950 hover:bg-sky-800 text-white font-bold text-sm transition flex items-center justify-center gap-2 shrink-0 shadow-md whitespace-nowrap cursor-pointer"
+          <!-- Massive Editorial Headline -->
+          <h1
+            id="hero-title"
+            class="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-[5.25rem] font-normal tracking-tight text-charcoal leading-[1.05]"
           >
-            <span id="hero-search-btn-text">Search Guide</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
-          </button>
-        </form>
+            The World’s Longest Coastline, <span class="italic font-normal text-terracotta-600">Redefined.</span>
+          </h1>
 
-        <!-- Instant Live Search Suggestions Dropdown -->
-        <div
-          id="hero-live-search-results"
-          class="hidden absolute left-0 right-0 top-full mt-2 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 p-3 text-left z-40 max-h-80 overflow-y-auto"
-        ></div>
-
-        <!-- Quick Trending Search Chips -->
-        <div id="hero-quick-tags" class="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-xs">
-          <span class="text-sky-200/90 font-semibold mr-1">🔥 Quick Explore:</span>
-          <button
-            type="button"
-            onclick="triggerQuickHeroSearch('Inani', 'spots')"
-            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
+          <!-- Editorial Lead Copy -->
+          <p
+            id="hero-subtitle"
+            class="text-base sm:text-lg md:text-xl text-stone-600 max-w-2xl font-normal leading-relaxed"
           >
-            🪨 Inani Beach
-          </button>
-          <button
-            type="button"
-            onclick="triggerQuickHeroSearch('Sea Crown', 'hotels')"
-            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
-          >
-            🏨 Hotel Sea Crown
-          </button>
-          <button
-            type="button"
-            onclick="triggerQuickHeroSearch('Moheshkhali', 'spots')"
-            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
-          >
-            🏝️ Moheshkhali Island
-          </button>
-          <button
-            type="button"
-            onclick="triggerQuickHeroSearch('Chander Gari', 'transport')"
-            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
-          >
-            🚙 Marine Drive Jeep
-          </button>
-          <button
-            type="button"
-            onclick="triggerQuickHeroSearch('Tomtom', 'transport')"
-            class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 backdrop-blur-sm transition cursor-pointer"
-          >
-            🛺 Tomtom Fares
-          </button>
-        </div>
-      </div>
+            120 uninterrupted kilometres of golden quartz sands, sacred Rakhine pagoda ridges, and untamed marine sanctuaries along Bangladesh’s southern edge.
+          </p>
 
-      <!-- Quick Overview Stats Grid -->
-      <div id="hero-stats-grid" class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
-        <!-- Populated dynamically via app.js -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       2. ACCOMMODATIONS SECTION (SLIDING CAROUSEL WITH CARDS)
-       ======================================================================== -->
-  <section id="hotels" class="py-20 md:py-28 bg-sand-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Section Heading -->
-      <div class="mb-8">
-        <span
-          id="hotels-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-700 bg-teal-100/80 px-3 py-1 rounded-full mb-3"
-        >
-          CURATED ACCOMMODATIONS
-        </span>
-        <h2
-          id="hotels-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
-          Where to Stay in Cox's Bazar
-        </h2>
-        <p id="hotels-subtitle" class="mt-3 text-slate-600 max-w-2xl text-base">
-          From luxury 5-star beachfront resorts to cozy budget cottages—compare verified nightly rates in BDT or USD.
-        </p>
-      </div>
-
-      <!-- Comprehensive Multi-Criteria Hotel Filter Hub (Stars, Price, Spot & Facilities) -->
-      <div class="mb-8 bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-200/90 space-y-4">
-        <!-- Filter Hub Header: Title + Sort Dropdown + Reset Button -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-base shadow-2xs">
-              🏨
+          <!-- Minimal Brutalist Metrics Row -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4 border-t border-stone-200">
+            <div>
+              <span class="block font-serif text-2xl sm:text-3xl text-charcoal">120 KM</span>
+              <span class="block text-xs uppercase tracking-wider text-stone-500 mt-1">Natural Beach</span>
             </div>
             <div>
-              <h3 id="hotel-filter-hub-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">
-                Filter & Compare Accommodations
-              </h3>
-              <p id="hotel-filter-hub-subtitle" class="text-xs text-slate-500">
-                Filter hotels by star rating (5★, 4★, 3★), price range, and beach spot
-              </p>
+              <span class="block font-serif text-2xl sm:text-3xl text-charcoal">80 KM</span>
+              <span class="block text-xs uppercase tracking-wider text-stone-500 mt-1">Marine Drive</span>
+            </div>
+            <div>
+              <span class="block font-serif text-2xl sm:text-3xl text-charcoal">26+</span>
+              <span class="block text-xs uppercase tracking-wider text-stone-500 mt-1">Curated Stays</span>
+            </div>
+            <div>
+              <span class="block font-serif text-2xl sm:text-3xl text-terracotta-600">Nov—Feb</span>
+              <span class="block text-xs uppercase tracking-wider text-stone-500 mt-1">Golden Season</span>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2">
-            <!-- Sort Selection Dropdown -->
-            <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-              <span id="hotel-sort-label" class="text-xs font-bold text-slate-500">Sort:</span>
+          <!-- Editorial Action Links -->
+          <div class="flex flex-wrap items-center gap-6 pt-2">
+            <a
+              href="#hotels"
+              class="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold tracking-wider uppercase transition"
+            >
+              Explore Curated Stays ↓
+            </a>
+            <a
+              href="#destinations"
+              class="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-charcoal hover:text-terracotta-600 transition"
+            >
+              <span>Discover Destinations</span>
+              <span class="text-base">➔</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Asymmetrical Image Collage Masking -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative w-full max-w-md mx-auto lg:max-w-none">
+
+            <!-- Primary Tall Vertical Frame -->
+            <div class="hero-frame h-[440px] sm:h-[500px] w-full rounded-3xl overflow-hidden shadow-xs">
+              <img
+                src="assets/images/hero-coxs-bazar.jpg"
+                alt="Cox's Bazar 120km unbroken coastline and Marine Drive"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+            </div>
+
+            <!-- Overlapping Offset Secondary Frame -->
+            <div class="absolute -bottom-8 -left-6 sm:-left-10 w-48 sm:w-60 h-32 sm:h-40 hero-frame rounded-2xl overflow-hidden shadow-md hidden sm:block">
+              <img
+                src="assets/images/shamlapur-sampan.jpg"
+                alt="Traditional wooden moon-shaped Sampan boats resting on sunset sands"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+            </div>
+
+            <!-- Floating Editorial Caption Pill -->
+            <div class="absolute -top-4 -right-4 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-stone-200 text-left shadow-xs hidden sm:block">
+              <span class="block text-[10px] font-mono tracking-widest text-stone-400 uppercase">FIG. 01 — COASTAL CORRIDOR</span>
+              <span class="block text-xs font-semibold text-charcoal">Marine Drive Road • Sea &amp; Hills</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Floating Glassmorphism Search Pill (Where to? | Dates | Guests | Search) -->
+      <div class="mt-16 md:mt-24 max-w-4xl mx-auto">
+        <div class="floating-search-pill p-2 sm:p-2.5">
+          <form id="hero-search-form" class="flex flex-col md:flex-row items-center gap-2" onsubmit="event.preventDefault(); handleHeroSearch();">
+            
+            <!-- Where to? -->
+            <div class="flex-1 flex items-center gap-3 px-5 py-3 w-full border-b md:border-b-0 md:border-r border-stone-200">
+              <svg class="w-4 h-4 text-stone-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <div class="w-full">
+                <label for="hero-search-input" class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Where to?</label>
+                <input
+                  id="hero-search-input"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="Inani, Sayeman, Sea Crown, Marine Drive..."
+                  class="w-full bg-transparent text-sm font-medium text-charcoal placeholder-stone-400 focus:outline-none"
+                  oninput="handleLiveHeroSearchInput()"
+                />
+              </div>
+            </div>
+
+            <!-- Category / Vibe -->
+            <div class="px-5 py-3 w-full md:w-44 border-b md:border-b-0 md:border-r border-stone-200">
+              <label for="hero-search-category" class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Category</label>
               <select
-                id="hotel-sort-select"
-                aria-label="Sort Hotels"
-                onchange="setHotelSortBy(this.value)"
-                class="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+                id="hero-search-category"
+                class="w-full bg-transparent text-xs font-semibold text-charcoal focus:outline-none cursor-pointer"
+                onchange="handleLiveHeroSearchInput()"
               >
-                <option value="recommended">Recommended</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="stars-desc">Stars: 5★ to 2★</option>
+                <option value="all">All Archive</option>
+                <option value="hotels">Stays &amp; Resorts</option>
+                <option value="spots">Curated Spots</option>
+                <option value="transport">Transit Fares</option>
               </select>
             </div>
 
-            <!-- Clear / Reset Filters Button -->
+            <!-- Season Window -->
+            <div class="px-5 py-3 w-full md:w-40 hidden md:block">
+              <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Season</span>
+              <span class="block text-xs font-semibold text-charcoal truncate">Nov – Feb (Peak)</span>
+            </div>
+
+            <!-- Submit Button -->
             <button
-              type="button"
-              id="hotel-reset-filters-btn"
-              onclick="resetAllHotelFilters()"
-              class="hidden px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition items-center gap-1.5 cursor-pointer"
+              type="submit"
+              class="w-full md:w-auto px-7 py-3.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold tracking-wider uppercase transition flex items-center justify-center gap-2 shrink-0 cursor-pointer"
             >
-              <span>↺</span>
-              <span id="hotel-reset-filters-text">Reset Filters</span>
+              <span>Search</span>
+              <span class="text-sm">➔</span>
             </button>
-          </div>
-        </div>
+          </form>
 
-        <!-- Filter Rows Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- 1. Star Rating Filter -->
-          <div class="space-y-1.5">
-            <span id="hotel-star-filter-label" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
-              ⭐ Star Rating:
-            </span>
-            <div id="hotel-star-filters" class="flex flex-wrap gap-1.5">
-              <!-- Populated dynamically via app.js -->
-            </div>
-          </div>
-
-          <!-- 2. Price Range Filter -->
-          <div class="space-y-1.5">
-            <span id="hotel-price-filter-label" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
-              💵 Price Range:
-            </span>
-            <div id="hotel-price-filters" class="flex flex-wrap gap-1.5">
-              <!-- Populated dynamically via app.js -->
-            </div>
-          </div>
-
-          <!-- 3. Spot / Location Filter -->
-          <div class="space-y-1.5">
-            <span id="hotel-spot-filter-label" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
-              📍 Spot / Beach Zone:
-            </span>
-            <div id="hotel-spot-filters" class="flex flex-wrap gap-1.5">
-              <!-- Populated dynamically via app.js -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Quick Facility Filter Highlights -->
-        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
-          <span id="hotel-facility-filter-label" class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mr-1">
-            ✨ Facility:
-          </span>
-          <div id="hotel-facility-filters" class="flex flex-wrap items-center gap-1.5">
-            <!-- Populated dynamically via app.js -->
-          </div>
-        </div>
-
-        <!-- Active Filter Indicator Chips Bar -->
-        <div id="hotel-active-filters-bar" class="hidden pt-2 flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-slate-500 font-semibold">Active Filters:</span>
-          <div id="hotel-active-chips" class="flex flex-wrap gap-1.5"></div>
-        </div>
-      </div>
-
-      <!-- Hotel Slider Top Control Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <div class="inline-flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-3.5 py-2 rounded-full border border-slate-200/80 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-          <span id="hotel-slider-counter">Swipe or use arrows to browse hotels</span>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            id="hotel-autoplay-btn"
-            onclick="toggleHotelAutoSlide()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 transition shadow-2xs"
-            title="Toggle Auto-Slide"
-          >
-            <span id="hotel-autoplay-icon">⏸</span>
-            <span id="hotel-autoplay-label">Auto-Slide On</span>
-          </button>
-
-          <button
-            type="button"
-            onclick="slideHotels(-1)"
-            aria-label="Previous Hotel"
-            class="w-10 h-10 rounded-full bg-white hover:bg-sky-700 text-slate-700 hover:text-white border border-slate-200 hover:border-sky-700 flex items-center justify-center transition shadow-xs"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onclick="slideHotels(1)"
-            aria-label="Next Hotel"
-            class="w-10 h-10 rounded-full bg-sky-700 hover:bg-sky-800 text-white border border-sky-700 flex items-center justify-center transition shadow-sm"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Hotel Sliding Track Wrapper with Floating Side Arrows -->
-      <div
-        class="relative group/slider"
-        onmouseenter="pauseHotelAutoSlide(true)"
-        onmouseleave="pauseHotelAutoSlide(false)"
-        ontouchstart="pauseHotelAutoSlide(true)"
-        ontouchend="pauseHotelAutoSlide(false)"
-      >
-        <!-- Left Floating Arrow (Desktop) -->
-        <button
-          type="button"
-          onclick="slideHotels(-1)"
-          aria-label="Slide Left"
-          class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-ocean-950/90 hover:bg-sky-600 text-white border-2 border-white shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <!-- Horizontal Sliding Hotel Cards Track -->
-        <div
-          id="hotels-grid"
-          class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1"
-        >
-          <!-- Populated dynamically via app.js -->
-        </div>
-
-        <!-- Right Floating Arrow (Desktop) -->
-        <button
-          type="button"
-          onclick="slideHotels(1)"
-          aria-label="Slide Right"
-          class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-ocean-950/90 hover:bg-sky-600 text-white border-2 border-white shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Slider Dots Indicator Bar -->
-      <div id="hotel-slider-dots" class="mt-2 flex items-center justify-center gap-2">
-        <!-- Populated dynamically via app.js -->
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       3. DESTINATIONS & SIGHTSEEING (SLIDING CAROUSEL + HIDDEN GEMS)
-       ======================================================================== -->
-  <section id="destinations" class="py-20 md:py-28 bg-white border-t border-slate-200/60 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
-        <span
-          id="destinations-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100 px-3 py-1 rounded-full mb-3"
-        >
-          SIGHTSEEING & EXPLORATION
-        </span>
-        <h2
-          id="destinations-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
-          Iconic Destinations & Coastal Wonders
-        </h2>
-        <p id="destinations-subtitle" class="mt-3 text-slate-600 text-base">
-          Discover dramatic coastal cliffs, coral boulders, island temples, and ancient Buddhist heritage around Cox's Bazar.
-        </p>
-      </div>
-
-      <!-- Destinations Slider Top Control Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <div class="inline-flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-50 px-3.5 py-2 rounded-full border border-slate-200/80 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
-          <span id="destination-slider-counter">Swipe or use arrows to explore destinations</span>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            id="destination-autoplay-btn"
-            onclick="toggleDestinationAutoSlide()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-slate-50 hover:bg-sky-50 text-slate-700 border border-slate-200 transition shadow-2xs"
-            title="Toggle Auto-Slide"
-          >
-            <span id="destination-autoplay-icon">⏸</span>
-            <span id="destination-autoplay-label">Auto-Slide On</span>
-          </button>
-
-          <button
-            type="button"
-            onclick="slideDestinations(-1)"
-            aria-label="Previous Destination"
-            class="w-10 h-10 rounded-full bg-white hover:bg-sky-700 text-slate-700 hover:text-white border border-slate-200 hover:border-sky-700 flex items-center justify-center transition shadow-xs"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onclick="slideDestinations(1)"
-            aria-label="Next Destination"
-            class="w-10 h-10 rounded-full bg-sky-700 hover:bg-sky-800 text-white border border-sky-700 flex items-center justify-center transition shadow-sm"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Destinations Sliding Track Wrapper with Floating Side Arrows -->
-      <div
-        class="relative group/destslider"
-        onmouseenter="pauseDestinationAutoSlide(true)"
-        onmouseleave="pauseDestinationAutoSlide(false)"
-        ontouchstart="pauseDestinationAutoSlide(true)"
-        ontouchend="pauseDestinationAutoSlide(false)"
-      >
-        <!-- Left Floating Arrow (Desktop) -->
-        <button
-          type="button"
-          onclick="slideDestinations(-1)"
-          aria-label="Slide Left"
-          class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-ocean-950/90 hover:bg-sky-600 text-white border-2 border-white shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <!-- Main Sightseeing Cards Sliding Track -->
-        <div
-          id="destinations-grid"
-          class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1"
-        >
-          <!-- Populated dynamically via app.js -->
-        </div>
-
-        <!-- Right Floating Arrow (Desktop) -->
-        <button
-          type="button"
-          onclick="slideDestinations(1)"
-          aria-label="Slide Right"
-          class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-ocean-950/90 hover:bg-sky-600 text-white border-2 border-white shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Destinations Slider Dots Indicator Bar -->
-      <div id="destination-slider-dots" class="mt-2 flex items-center justify-center gap-2">
-        <!-- Populated dynamically via app.js -->
-      </div>
-
-      <!-- Special Highlighted Section: HIDDEN GEMS (Animated Sliding Carousel) -->
-      <div class="mt-20 rounded-3xl bg-gradient-to-br from-ocean-950 via-ocean-900 to-teal-900 p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden">
-        <!-- Decorative Background Glow -->
-        <div class="-top-24 -right-24 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl pointer-events-none absolute"></div>
-        <div class="-bottom-24 -left-24 w-96 h-96 rounded-full bg-amber-400/10 blur-3xl pointer-events-none absolute"></div>
-
-        <div class="relative z-10">
-          <!-- Header & Top Slider Controls -->
-          <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
-            <div class="max-w-2xl">
-              <span
-                id="hidden-gems-badge"
-                class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-300 bg-amber-400/15 border border-amber-300/30 px-3.5 py-1 rounded-full mb-3"
-              >
-                OFF THE BEATEN PATH
-              </span>
-              <h3
-                id="hidden-gems-title"
-                class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
-              >
-                Hidden Gems of Cox's Bazar
-              </h3>
-              <p id="hidden-gems-subtitle" class="mt-2 text-sky-100/85 text-sm sm:text-base">
-                Escape the crowds and experience untouched islands, golden sunset points, eco trails, and authentic local trade hubs.
-              </p>
-            </div>
-
-            <!-- Slider Control Buttons -->
-            <div class="flex flex-wrap items-center gap-2 shrink-0">
-              <div class="inline-flex items-center gap-2 text-xs font-bold text-sky-200 bg-white/10 px-3.5 py-2 rounded-full border border-white/15 backdrop-blur-sm shadow-2xs">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span id="gems-slider-counter">10 Hidden Gems • Swipe or Click ← →</span>
-              </div>
-
-              <button
-                type="button"
-                id="gems-autoplay-btn"
-                onclick="toggleHiddenGemsAutoSlide()"
-                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-sky-100 border border-white/15 transition shadow-2xs backdrop-blur-sm cursor-pointer"
-                title="Toggle Auto-Slide"
-              >
-                <span id="gems-autoplay-icon">⏸</span>
-                <span id="gems-autoplay-label">Auto-Slide On</span>
-              </button>
-
-              <button
-                type="button"
-                onclick="slideHiddenGems(-1)"
-                aria-label="Previous Gem"
-                class="w-10 h-10 rounded-full bg-white/10 hover:bg-amber-400 text-white hover:text-slate-950 border border-white/20 hover:border-amber-400 flex items-center justify-center transition shadow-xs cursor-pointer"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                onclick="slideHiddenGems(1)"
-                aria-label="Next Gem"
-                class="w-10 h-10 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 border border-amber-400 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Sliding Track Wrapper with Side Arrows -->
+          <!-- Instant Live Search Dropdown -->
           <div
-            class="relative group/gemsslider"
-            onmouseenter="pauseHiddenGemsAutoSlide(true)"
-            onmouseleave="pauseHiddenGemsAutoSlide(false)"
-            ontouchstart="pauseHiddenGemsAutoSlide(true)"
-            ontouchend="pauseHiddenGemsAutoSlide(false)"
-          >
-            <!-- Left Floating Arrow (Desktop) -->
-            <button
-              type="button"
-              onclick="slideHiddenGems(-1)"
-              aria-label="Slide Left"
-              class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ocean-950/90 hover:bg-amber-400 text-white hover:text-slate-950 border-2 border-white/30 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+            id="hero-live-search-results"
+            class="hidden mt-2 bg-white rounded-2xl border border-stone-200 p-3 text-left max-h-80 overflow-y-auto"
+          ></div>
+        </div>
 
-            <!-- Horizontal Sliding Hidden Gems Track -->
-            <div
-              id="hidden-gems-grid"
-              class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1 scroll-smooth"
-            >
-              <!-- Populated dynamically via app.js -->
+        <!-- Hidden ID for AppState stats compatibility -->
+        <div id="hero-stats-grid" class="hidden"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 2: CURATED DESTINATIONS (The Bento Grid Architecture)
+       ======================================================================== -->
+  <section id="destinations" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+
+      <!-- Editorial Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div>
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
+            01 / CURATED DESTINATIONS
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
+            Coastal Sanctuaries &amp; Outposts
+          </h2>
+        </div>
+        <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
+          From the untouched mangrove inlets of Sonadia to sacred hillside pagodas, explore the raw, unhurried beauty of southern Bangladesh.
+        </p>
+      </div>
+
+      <!-- The Bento Box Grid (Asymmetrical 5-Tile Showcase) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+        <!-- Bento 1: Marine Drive (Large Featured Anchor, spans 8 cols) -->
+        <article
+          onclick="selectLiveSearchResult('destinations', 'Marine Drive Coastal Highway', 'spots')"
+          class="bento-card md:col-span-8 min-h-[440px] md:min-h-[500px] flex flex-col justify-end p-8 sm:p-10 group"
+        >
+          <img
+            src="assets/images/hero-coxs-bazar.jpg"
+            alt="Marine Drive 80km coastal road"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0"
+          />
+          <div class="bento-overlay"></div>
+          
+          <div class="relative z-10 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
+                80 KM COASTAL HIGHWAY
+              </span>
             </div>
+            <h3 class="font-serif text-3xl sm:text-4xl text-white font-normal">
+              Marine Drive
+            </h3>
+            <p class="text-sm sm:text-base text-stone-200 max-w-xl line-clamp-2 leading-relaxed">
+              Where emerald rainforest hills plunge straight into the Bay of Bengal waves. 80 kilometres of uninterrupted, open-air seaside solitude.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+              <span class="text-xs font-mono text-stone-300">EST. TRAVEL: 1.5 HOURS BY OPEN JEEP</span>
+              <span class="bento-arrow">➔</span>
+            </div>
+          </div>
+        </article>
 
-            <!-- Right Floating Arrow (Desktop) -->
-            <button
-              type="button"
-              onclick="slideHiddenGems(1)"
-              aria-label="Slide Right"
-              class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ocean-950/90 hover:bg-amber-400 text-white hover:text-slate-950 border-2 border-white/30 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+        <!-- Bento 2: Maheshkhali Island (spans 4 cols) -->
+        <article
+          onclick="selectLiveSearchResult('destinations', 'Maheshkhali Island', 'spots')"
+          class="bento-card md:col-span-4 min-h-[300px] md:min-h-[500px] flex flex-col justify-end p-8 group"
+        >
+          <img
+            src="assets/images/moheshkhali.jpg"
+            alt="Maheshkhali Island Adinath Temple"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0"
+          />
+          <div class="bento-overlay"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
+              HILLTOP SANCTUARY
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Maheshkhali Island
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Ancient Adinath Shiva temple rising above Mainak Hill, reached by speedboat through mangrove delta channels.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+              <span class="text-xs font-mono text-stone-300">SPEEDBOAT: 25 MINS</span>
+              <span class="bento-arrow">➔</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bento 3: Sonadia Island (spans 4 cols) -->
+        <article
+          onclick="selectLiveSearchResult('destinations', 'Sonadia Island', 'spots')"
+          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group"
+        >
+          <img
+            src="assets/images/sonadia-island.jpg"
+            alt="Sonadia Island untouched nature"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0"
+          />
+          <div class="bento-overlay"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
+              UNTOUCHED NATURE
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Sonadia Island
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Pristine offshore sanctuary of red fiddler crabs, sand dunes, and migrating marine birds.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+              <span class="text-xs font-mono text-stone-300">WILD MANGROVES</span>
+              <span class="bento-arrow">➔</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bento 4: Ramu (spans 4 cols) -->
+        <article
+          onclick="selectLiveSearchResult('destinations', 'Ramu Reclining Buddha', 'spots')"
+          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group"
+        >
+          <img
+            src="assets/images/ramu-buddha.jpg"
+            alt="Ramu 100-feet reclining Buddha"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0"
+          />
+          <div class="bento-overlay"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
+              BUDDHIST HERITAGE
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Ramu
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              100-foot reclining bronze Buddha and ancient Rakhine monasteries preserving centuries-old woodwork.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+              <span class="text-xs font-mono text-stone-300">16 KM INLAND</span>
+              <span class="bento-arrow">➔</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bento 5: Nazirartek (spans 4 cols) -->
+        <article
+          onclick="selectLiveSearchResult('destinations', 'Nazirartek', 'spots')"
+          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group"
+        >
+          <img
+            src="assets/images/najirartek-shutki.jpg"
+            alt="Nazirartek dried fish village"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0"
+          />
+          <div class="bento-overlay"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
+              MARITIME CULTURE
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Nazirartek
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Asia's largest artisanal dried fish settlement, offering a visceral window into deep-sea heritage.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+              <span class="text-xs font-mono text-stone-300">NORTHERN JETTY</span>
+              <span class="bento-arrow">➔</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Expandable Drawer for All 14 Destinations & 10 Hidden Gems -->
+      <div class="mt-14 pt-8 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <button
+          type="button"
+          onclick="const d = document.getElementById('full-directory-drawer'); d.classList.toggle('hidden');"
+          class="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-charcoal hover:text-terracotta-600 transition"
+        >
+          <span>Explore Full Directory (All 14 Destinations &amp; 10 Local Food Gems)</span>
+          <span>↓</span>
+        </button>
+        <span class="text-xs font-mono text-stone-400 uppercase">ALL DATA VERIFIED WITH LOCAL CO-OPS</span>
+      </div>
+
+      <!-- Full Directory Drawer (Preserves all existing spots & hidden gems without cluttering) -->
+      <div id="full-directory-drawer" class="hidden mt-8 space-y-12">
+        <div>
+          <h4 class="font-serif text-2xl text-charcoal mb-4">Complete Destination Archive</h4>
+          <div id="destinations-grid" class="flex gap-4 overflow-x-auto pb-4"></div>
+          <div id="destination-slider-dots" class="hidden"></div>
+          <div id="destination-slider-counter" class="text-xs text-stone-500 font-mono mt-2"></div>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-2xl text-charcoal mb-4">10 Hidden Food &amp; Cultural Gems</h4>
+          <div id="hidden-gems-grid" class="flex gap-4 overflow-x-auto pb-4"></div>
+          <div id="hidden-gems-slider-dots" class="hidden"></div>
+          <div id="gems-slider-counter" class="text-xs text-stone-500 font-mono mt-2"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 3: PREMIUM STAYS (Split Screen / Draggable Horizontal Scroll)
+       ======================================================================== -->
+  <section id="hotels" class="py-24 md:py-32 border-t border-stone-200/80 bg-[#FAF9F6]">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+
+        <!-- Left Sticky Column: Large Editorial Typography -->
+        <div class="lg:col-span-4 lg:sticky lg:top-28 self-start space-y-6">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">
+            02 / ACCOMMODATIONS
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
+            Where to Rest.
+          </h2>
+          <p class="text-sm sm:text-base text-stone-600 font-normal leading-relaxed">
+            Curated beachfront sanctuaries, cliffside retreats, and architectural suites selected for uncompromised calm.
+          </p>
+
+          <!-- Minimal Filter Pills -->
+          <div class="pt-4 space-y-3">
+            <span class="block text-[11px] font-mono tracking-wider uppercase text-stone-400">FILTER BY TIER</span>
+            <div id="hotel-star-filters" class="flex flex-wrap gap-2"></div>
           </div>
 
-          <!-- Hidden Gems Slider Dots Indicator Bar -->
-          <div id="hidden-gems-slider-dots" class="mt-3 flex items-center justify-center gap-2">
+          <div class="space-y-3">
+            <span class="block text-[11px] font-mono tracking-wider uppercase text-stone-400">FILTER BY BUDGET</span>
+            <div id="hotel-price-filters" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- Drag Guidance -->
+          <div class="pt-6 border-t border-stone-200 flex items-center justify-between text-xs font-mono text-stone-400">
+            <span>← DRAG TO EXPLORE →</span>
+            <span id="hotel-slider-counter"></span>
+          </div>
+
+          <!-- Hidden containers to maintain full AppState compatibility -->
+          <div id="hotel-spot-filters" class="hidden"></div>
+          <div id="hotel-facility-filters" class="hidden"></div>
+          <div id="hotel-active-filters-bar" class="hidden"></div>
+          <div id="hotel-active-chips" class="hidden"></div>
+          <div id="hotel-reset-filters-btn" class="hidden"></div>
+          <div id="hotel-slider-dots" class="hidden"></div>
+        </div>
+
+        <!-- Right Column: Draggable Horizontal Scroll Track -->
+        <div class="lg:col-span-8 min-w-0">
+          <div
+            id="hotels-grid"
+            class="stays-horizontal-track"
+          >
             <!-- Populated dynamically via app.js -->
           </div>
         </div>
+
       </div>
 
     </div>
   </section>
 
   <!-- ========================================================================
-       2B. ACTIVITIES & COASTAL ADVENTURES (SURFING, PARASAILING, JEEP SAFARI, ETC.)
+       SECTION 4: THE LOCAL'S COMPASS (Cartography & Itinerary Engine)
        ======================================================================== -->
-  <section id="activities-section" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="compass-section" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 
-      <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-8">
-        <span
-          id="activities-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100 px-3.5 py-1 rounded-full mb-3 shadow-2xs"
-        >
-          THINGS TO DO &amp; COASTAL THRILLS
-        </span>
-        <h2
-          id="activities-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
-          Top 10 Activities &amp; Adventures in Cox's Bazar
-        </h2>
-        <p id="activities-subtitle" class="mt-3 text-slate-600 text-base">
-          From riding the surf and beach parasailing to open-top Marine Drive jeep safaris and night bonfires—verified rates, locations, and safety briefings.
-        </p>
-
-        <!-- Activities Category Filter Pills -->
-        <div id="activity-category-filters" class="mt-6 flex flex-wrap items-center justify-center gap-2">
-          <!-- Populated dynamically via app.js -->
-        </div>
-      </div>
-
-      <!-- Activities Slider Top Control Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <div class="inline-flex items-center gap-2 text-xs font-bold text-slate-700 bg-white px-3.5 py-2 rounded-full border border-slate-200/90 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-          <span id="activities-slider-counter">10 Thrilling Activities • Swipe or Click Arrows ← →</span>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            id="activities-autoplay-btn"
-            onclick="toggleActivityAutoSlide()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-white hover:bg-amber-50 text-slate-700 border border-slate-200 transition shadow-2xs cursor-pointer"
-            title="Toggle Auto-Slide"
-          >
-            <span id="activities-autoplay-icon">⏸</span>
-            <span id="activities-autoplay-label">Auto-Slide On</span>
-          </button>
-
-          <button
-            type="button"
-            onclick="slideActivities(-1)"
-            aria-label="Previous Activity"
-            class="w-10 h-10 rounded-full bg-white hover:bg-amber-400 text-slate-700 hover:text-slate-950 border border-slate-200 hover:border-amber-400 flex items-center justify-center transition shadow-xs cursor-pointer"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onclick="slideActivities(1)"
-            aria-label="Next Activity"
-            class="w-10 h-10 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 border border-amber-400 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Activities Sliding Track Wrapper with Floating Side Arrows -->
-      <div
-        class="relative group/activityslider"
-        onmouseenter="pauseActivityAutoSlide(true)"
-        onmouseleave="pauseActivityAutoSlide(false)"
-        ontouchstart="pauseActivityAutoSlide(true)"
-        ontouchend="pauseActivityAutoSlide(false)"
-      >
-        <!-- Left Floating Arrow (Desktop) -->
-        <button
-          type="button"
-          onclick="slideActivities(-1)"
-          aria-label="Slide Left"
-          class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/95 hover:bg-amber-400 text-slate-800 hover:text-slate-950 border-2 border-slate-200 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <!-- Activities Cards Sliding Track -->
-        <div
-          id="activities-grid"
-          class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1 scroll-smooth"
-        >
-          <!-- Populated dynamically via app.js -->
-        </div>
-
-        <!-- Right Floating Arrow (Desktop) -->
-        <button
-          type="button"
-          onclick="slideActivities(1)"
-          aria-label="Slide Right"
-          class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/95 hover:bg-amber-400 text-slate-800 hover:text-slate-950 border-2 border-slate-200 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Activities Slider Dots Indicator Bar -->
-      <div id="activity-slider-dots" class="mt-3 flex items-center justify-center gap-2">
-        <!-- Populated dynamically via app.js -->
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       MODULE 1: INTERACTIVE DAY-WISE COX'S BAZAR ROUTE PLANNER MAP
-       ======================================================================== -->
-  <section id="map-section" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Section Heading & Day Selector Tabs -->
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-6">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
         <div>
-          <span
-            id="map-eyebrow"
-            class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-800 bg-teal-100 px-3.5 py-1 rounded-full mb-3 shadow-2xs"
-          >
-            🗺️ SMART DAY-BY-DAY ROUTE PLANNER
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
+            03 / THE LOCAL'S COMPASS
           </span>
-          <h2
-            id="map-title"
-            class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-          >
-            Select Daily Locations &amp; Generate Your Cox’s Bazar Route Plan
+          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
+            Cartography &amp; Tailored Days
           </h2>
-          <p id="map-subtitle" class="mt-2.5 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
-            Pick a day, select 2 to 4 scenic spots, and watch your live road route, distances, and transit recommendations calculate in real time.
+        </div>
+        <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
+          A desaturated architectural map paired with an intelligent stepped itinerary engine.
+        </p>
+      </div>
+
+      <!-- Part A: Monochrome Desaturated Leaflet Map -->
+      <div id="map-section" class="space-y-4 mb-16">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-charcoal"></span>
+            <span class="text-xs font-mono tracking-wider uppercase text-charcoal font-semibold">
+              DESATURATED TOPOGRAPHY &amp; PINS
+            </span>
+          </div>
+          <!-- Map Pin Category Filters -->
+          <div id="map-category-filters" class="flex flex-wrap gap-2 text-xs font-medium"></div>
+        </div>
+
+        <!-- The Map Canvas Container -->
+        <div id="coxs-bazar-map" class="relative overflow-hidden"></div>
+
+        <!-- Map Shelf Track / Quicklist (Compatibility) -->
+        <div id="map-locations-quicklist" class="hidden"></div>
+        <div id="map-spot-shelf-track" class="hidden"></div>
+        <div id="map-day-spot-selector" class="hidden"></div>
+        <div id="map-floating-status-text" class="hidden"></div>
+      </div>
+
+      <!-- Part B: Minimalist Stepped Itinerary Engine -->
+      <div id="itinerary-section" class="pt-12 border-t border-stone-200">
+        
+        <div class="max-w-2xl mb-10">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-2">
+            STEPPED ITINERARY COMPOSER
+          </span>
+          <h3 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal">
+            Compose Your Route Plan
+          </h3>
+          <p class="text-xs sm:text-sm text-stone-600 mt-2">
+            Select duration and rhythm below. Your visual timeline compiles dynamically without page refresh.
           </p>
         </div>
 
-        <!-- Day Selector Segmented Tabs -->
-        <div
-          id="map-category-filters"
-          class="flex flex-wrap items-center gap-2"
-          role="group"
-          aria-label="Select Day for Route Plan"
-        >
-          <!-- Populated dynamically via features.js -->
-        </div>
-      </div>
-
-      <!-- Day-Wise Location Shelf Panel (Sleek Horizontal Shelf with Category Filter) -->
-      <div
-        id="map-day-spot-selector"
-        class="mb-6 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-sm"
-      >
-        <!-- Populated dynamically via features.js -->
-      </div>
-
-      <!-- Interactive Route Map + Generated Route Plan Timeline Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <!-- Leaflet Map Canvas (7 Columns on Desktop) -->
-        <div class="lg:col-span-7">
-          <div class="relative rounded-3xl overflow-hidden shadow-lg border border-slate-200/90 bg-slate-100">
-            <!-- Floating Map Live Status Overlay -->
-            <div
-              id="map-floating-status"
-              class="absolute top-3 left-3 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-md text-xs font-extrabold text-slate-800 flex items-center gap-2 pointer-events-none"
-            >
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="map-floating-status-text">Interactive Route Map</span>
-            </div>
-
-            <!-- Leaflet Map Canvas -->
-            <div
-              id="coxs-bazar-map"
-              style="width: 100%; height: 530px; min-height: 420px;"
-              class="w-full z-10"
-              aria-label="Interactive Day-Wise Route Map of Cox's Bazar"
-            ></div>
-
-            <!-- Floating Map Legend Overlay -->
-            <div class="absolute bottom-3 right-3 z-[400] bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-[11px] font-bold text-slate-700 flex items-center gap-3 pointer-events-none">
-              <span class="flex items-center gap-1">🏨 <span class="text-slate-500">Departure Hotel</span></span>
-              <span class="flex items-center gap-1">① ② <span class="text-slate-500">Stops</span></span>
-              <span class="flex items-center gap-1">🚤 <span class="text-slate-500">Speedboat Jetty</span></span>
+        <!-- Stepped Form Controls -->
+        <div class="bg-[#FAF9F6] rounded-3xl p-6 sm:p-8 border border-stone-200 space-y-6">
+          
+          <!-- Step 1: Duration -->
+          <div class="space-y-3">
+            <span class="block text-xs font-mono uppercase tracking-wider text-stone-500">STEP 1: CHOOSE DURATION</span>
+            <div class="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onclick="setItineraryTotalDays(2); composeSteppedItinerary(2, FeaturesState.tripVibe || 'relaxing');"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                id="btn-duration-2"
+              >
+                2 Days (The Coastal Sprint)
+              </button>
+              <button
+                type="button"
+                onclick="setItineraryTotalDays(3); composeSteppedItinerary(3, FeaturesState.tripVibe || 'relaxing');"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition"
+                id="btn-duration-3"
+              >
+                3 Days (The Classic Escape)
+              </button>
+              <button
+                type="button"
+                onclick="setItineraryTotalDays(5); composeSteppedItinerary(5, FeaturesState.tripVibe || 'relaxing');"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                id="btn-duration-5"
+              >
+                5 Days (The Deep Explorer)
+              </button>
             </div>
           </div>
+
+          <!-- Step 2: Vibe -->
+          <div class="space-y-3">
+            <span class="block text-xs font-mono uppercase tracking-wider text-stone-500">STEP 2: CHOOSE VIBE</span>
+            <div class="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'relaxing');"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition"
+                id="btn-vibe-relaxing"
+              >
+                Relaxing &amp; Scenic
+              </button>
+              <button
+                type="button"
+                onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'adventure');"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                id="btn-vibe-adventure"
+              >
+                Adventure &amp; Coastal Waves
+              </button>
+              <button
+                type="button"
+                onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'local');"
+                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition"
+                id="btn-vibe-local"
+              >
+                Local Culture &amp; Food
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Generated Step-by-Step Route Plan Panel (5 Columns on Desktop) -->
-        <div class="lg:col-span-5 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-sm">
-          <div
-            id="map-locations-quicklist"
-            class="space-y-3 max-h-[530px] overflow-y-auto pr-1"
-          >
-            <!-- Populated dynamically via features.js -->
-          </div>
+        <!-- Animated Vertical Timeline Output Container -->
+        <div id="itinerary-stepped-output" class="mt-12 space-y-8">
+          <!-- Filled dynamically via composeSteppedItinerary() -->
         </div>
+
+        <!-- Hidden containers for Full Studio / Pass export support -->
+        <div id="itinerary-studio-builder" class="hidden"></div>
+        <div id="itinerary-output-container" class="mt-8"></div>
+        <div id="visual-itinerary-poster" class="hidden"></div>
+
       </div>
 
     </div>
   </section>
 
   <!-- ========================================================================
-       MODULE 2: SIMPLE & DYNAMIC INTERACTIVE TRIP BUILDER + VISUAL PASS
+       SECTION 5: PRACTICALITIES & TRANSPORT (Brutalist Editorial Table)
        ======================================================================== -->
-  <section id="itinerary-section" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="transport" class="py-24 md:py-32 border-t border-stone-200/80 bg-[#FAF9F6]">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 
-      <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
-        <span
-          id="itin-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100 px-3 py-1 rounded-full mb-3"
-        >
-          INSTANT INTERACTIVE TRIP BUILDER
-        </span>
-        <h2
-          id="itin-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
-          Plan Your Cox’s Bazar Trip &amp; Download Your Visual Pass
-        </h2>
-        <p id="itin-subtitle" class="mt-3 text-slate-600 text-base">
-          Pick your days and hotel on the left, tap what you want to do each day, and watch your live trip summary &amp; downloadable Visual Pass update in real time!
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div>
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
+            04 / LOGISTICS &amp; TRANSIT
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
+            Movement Across the Coast
+          </h2>
+        </div>
+        <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
+          Transparent local transit rates for both domestic and international travelers. Know standard tariffs before boarding.
         </p>
       </div>
 
-      <!-- Single-Screen Split Interactive Trip Builder -->
-      <div id="itinerary-studio-builder">
-        <!-- Populated dynamically via features.js -->
+      <!-- Vehicle Overview Cards -->
+      <div id="vehicle-glossary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <!-- Populated dynamically via app.js -->
       </div>
 
-      <!-- Sleek Visual Itinerary Pass & Download Toolbar -->
-      <div id="itinerary-output-container" aria-live="polite">
-        <!-- Populated dynamically via features.js -->
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       4. TRANSPORTATION & PRICING TABLE (WITH FOREIGNER VEHICLE GUIDE)
-       ======================================================================== -->
-  <section id="transport" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <span
-          id="transport-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-700 bg-teal-100 px-3 py-1 rounded-full mb-3"
-        >
-          GETTING AROUND EASILY
-        </span>
-        <h2
-          id="transport-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
-          Local Transportation & Pricing Guide
-        </h2>
-        <p id="transport-subtitle" class="mt-3 text-slate-600 text-base">
-          Transparent local fares for both Bangladeshi travelers and international visitors—know before you ride.
-        </p>
-      </div>
-
-      <!-- Note for Foreigners Callout Box (Explaining Tomtoms, Chander Gari, CNG, Speedboat) -->
-      <div class="mb-10 bg-gradient-to-r from-sky-50 via-teal-50/60 to-amber-50/50 rounded-3xl p-6 sm:p-8 border border-sky-200/80 shadow-xs">
-        <div class="flex items-start gap-3.5 mb-5">
-          <div class="w-10 h-10 rounded-2xl bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <div>
-            <h3 id="foreigner-note-title" class="text-lg font-extrabold text-slate-900">
-              Foreigner's Guide to Local Vehicles
-            </h3>
-            <p id="foreigner-note-desc" class="text-sm text-slate-600 mt-0.5">
-              Hover or tap on the highlighted vehicle names in the table below, or read this quick breakdown of Cox's Bazar's signature local rides:
-            </p>
-          </div>
-        </div>
-
-        <div id="vehicle-glossary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- Populated dynamically via app.js -->
-        </div>
-      </div>
-
-      <!-- Responsive Transportation Pricing Table -->
-      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden">
+      <!-- Brutally Clean Minimalist Table -->
+      <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
+          <table class="editorial-table">
             <thead>
-              <tr class="bg-ocean-950 text-white text-xs uppercase tracking-wider">
-                <th id="th-route" class="px-5 py-4 font-bold">Route / Journey</th>
-                <th id="th-vehicle" class="px-5 py-4 font-bold">Vehicle Type</th>
-                <th id="th-cost" class="px-5 py-4 font-bold">Estimated Fare</th>
-                <th id="th-booking" class="px-5 py-4 font-bold">Fare Type</th>
-                <th id="th-duration" class="px-5 py-4 font-bold">Est. Duration</th>
+              <tr>
+                <th>Route / Corridor</th>
+                <th>Vehicle Mode</th>
+                <th>Standard Tariff</th>
+                <th>Fare Basis</th>
+                <th>Estimated Duration</th>
               </tr>
             </thead>
-            <tbody id="transport-table-body" class="divide-y divide-slate-200/80">
+            <tbody id="transport-table-body">
               <!-- Populated dynamically via app.js -->
             </tbody>
           </table>
         </div>
-        <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200/70">
-          <p id="transport-disclaimer" class="text-xs text-slate-500 font-medium">
-            * Fares shown are standard local rates. Always confirm the fare with the driver before boarding reserved vehicles.
-          </p>
+        <div class="p-6 bg-stone-50 border-t border-stone-200 text-xs font-mono text-stone-500">
+          * ALL TARIFFS AUDITED AGAINST BANGLADESH TOURIST POLICE LOCAL STANDARD ADVISORIES.
         </div>
       </div>
 
@@ -1338,650 +871,199 @@
   </section>
 
   <!-- ========================================================================
-       5. ESSENTIAL TRAVEL INFO SECTION (WEATHER, ETIQUETTE, EMERGENCY)
+       SECTION 6: ESSENTIAL KNOWLEDGE & FAQ (Accordion: + to × Rotation)
        ======================================================================== -->
-  <section id="essential-info" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="faq" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
+    <div class="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10">
 
-      <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-14">
-        <span
-          id="essential-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100 px-3 py-1 rounded-full mb-3"
-        >
-          KNOW BEFORE YOU GO
+      <div class="text-center mb-16">
+        <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
+          05 / ESSENTIAL KNOWLEDGE
         </span>
-        <h2
-          id="essential-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
-          Essential Travel Information
-        </h2>
-        <p id="essential-subtitle" class="mt-3 text-slate-600 text-base">
-          Everything local and international tourists need for a safe, respectful, and unforgettable coastal trip.
-        </p>
-      </div>
-
-      <!-- 3-Column Essential Info Grid -->
-      <div id="essential-info-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Populated dynamically via app.js -->
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       5B. COX'S BAZAR TRAVEL BLOG & COMMUNITY PUBLISHING HUB
-       ======================================================================== -->
-  <section id="blog-section" class="py-20 md:py-28 bg-sand-50 border-t border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Section Heading + Write Post & Full Blog Page Buttons -->
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
-        <div class="max-w-2xl">
-          <span
-            id="blog-section-eyebrow"
-            class="inline-block text-xs font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full mb-3"
-          >
-            📰 TRAVEL BLOG &amp; COMMUNITY STORIES
-          </span>
-          <h2
-            id="blog-section-title"
-            class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-          >
-            Cox’s Bazar Travel Blog &amp; Local Guides
-          </h2>
-          <p id="blog-section-subtitle" class="mt-2.5 text-slate-600 text-base">
-            Read insider tips on Marine Drive routes, authentic seafood spots, and island hopping — or write and publish your own blog post to share information with fellow travelers!
-          </p>
-        </div>
-
-        <!-- Action Buttons: Write Blog Post (Admin Only) + Open Dedicated Blog Page -->
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
-          <button
-            type="button"
-            data-blog-admin-only
-            onclick="openBlogEditorModal(null)"
-            class="hidden inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
-          >
-            <span>✍️</span>
-            <span id="blog-write-btn-text">Write &amp; Publish Blog Post</span>
-          </button>
-
-          <a
-            href="blog.html"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-ocean-950 hover:bg-sky-900 text-white font-extrabold text-xs sm:text-sm shadow-md transition"
-          >
-            <span>📖</span>
-            <span id="blog-open-page-text">Open Full Blog Page</span>
-            <span>→</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Category Filter Pills + Live Blog Search Bar -->
-      <div class="mb-8 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div
-          id="blog-category-filters"
-          class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0"
-        >
-          <!-- Populated dynamically via blog.js -->
-        </div>
-
-        <div class="relative w-full md:w-72 shrink-0">
-          <svg
-            class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            id="blog-search-input"
-            type="text"
-            oninput="handleBlogSearchInput(this.value)"
-            placeholder="Search blog posts, tags, or topics..."
-            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-xs sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
-          />
-        </div>
-      </div>
-
-      <!-- Blog Posts Grid (Populated dynamically via blog.js) -->
-      <div id="blog-posts-grid">
-        <!-- Populated dynamically via blog.js -->
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       6A. FAQ / Q&A SECTION (ACCORDION LAYOUT)
-       ======================================================================== -->
-  <section id="faq" class="py-20 md:py-28 bg-white border-t border-slate-200/60">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Section Heading -->
-      <div class="text-center mb-12">
-        <span
-          id="faq-eyebrow"
-          class="inline-block text-xs font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100 px-3 py-1 rounded-full mb-3"
-        >
-          GOT QUESTIONS?
-        </span>
-        <h2
-          id="faq-title"
-          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-        >
+        <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
           Frequently Asked Questions
         </h2>
-        <p id="faq-subtitle" class="mt-3 text-slate-600 text-base">
-          Quick answers to the most common questions from first-time visitors and international travelers.
+        <p class="mt-3 text-sm sm:text-base text-stone-600 font-normal">
+          Verified answers regarding weather windows, marine safety flags, culinary traditions, and etiquette.
         </p>
       </div>
 
-      <!-- Accordion Items Container -->
-      <div id="faq-accordion-container" class="space-y-4">
+      <!-- Minimalist FAQ Rows (+ rotates into ×) -->
+      <div id="faq-accordion-container" class="space-y-0 border-t border-stone-200">
         <!-- Populated dynamically via app.js -->
+      </div>
+
+      <!-- Hidden containers for essential-info compatibility -->
+      <div id="essential-info" class="hidden">
+        <div id="essential-info-grid"></div>
+      </div>
+      <div id="activities-section" class="hidden">
+        <div id="activities-grid"></div>
+        <div id="activity-category-filters"></div>
+        <div id="activity-slider-dots"></div>
+        <div id="activities-slider-counter"></div>
+      </div>
+      <div id="blog-section" class="hidden">
+        <div id="blog-posts-grid"></div>
       </div>
 
     </div>
   </section>
 
   <!-- ========================================================================
-       FOOTER
+       EDITORIAL FOOTER (Archival Layout, Verification, Emergency Hotlines)
        ======================================================================== -->
-  <footer class="bg-ocean-950 text-sky-100 pt-16 pb-12 border-t border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-white/10">
-
-        <!-- Column 1: Brand & About -->
-        <div>
-          <div class="flex items-center gap-3 mb-4">
-            <img
-              src="assets/images/favicon.png"
-              alt="Visit Cox Logo"
-              loading="lazy"
-              decoding="async"
-              class="w-11 h-11 object-contain drop-shadow"
-            />
-            <span class="text-xl font-extrabold text-white">Visit Cox's Bazar</span>
-          </div>
-          <p id="footer-about" class="text-sm text-sky-200/80 leading-relaxed max-w-sm">
-            Your trusted bilingual digital companion for exploring Cox's Bazar—the world's longest natural sea beach in Bangladesh.
+  <footer class="bg-charcoal text-[#FAF9F6] pt-20 pb-16 border-t border-stone-800">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-stone-800">
+        
+        <div class="md:col-span-5 space-y-4">
+          <span class="font-serif text-3xl sm:text-4xl text-white block">Visit Cox</span>
+          <p class="text-xs sm:text-sm text-stone-400 max-w-sm leading-relaxed">
+            The premier editorial archive to Cox's Bazar. Curating coastal stays, Marine Drive expeditions, and Rakhine cultural heritage.
           </p>
+          <span class="block text-xs font-mono tracking-widest text-stone-500 uppercase">
+            21.4272° N, 91.9701° E — BAY OF BENGAL
+          </span>
         </div>
 
-        <!-- Column 2: Quick Navigation -->
-        <div>
-          <h3 id="footer-quicklinks-title" class="text-sm font-bold uppercase tracking-wider text-amber-300 mb-4">
-            Quick Navigation
-          </h3>
-          <ul class="grid grid-cols-2 gap-2.5 text-sm text-sky-200/90">
-            <li><a href="#home" data-nav="home" class="hover:text-white transition">Home</a></li>
-            <li><a href="#hotels" data-nav="hotels" class="hover:text-white transition">Hotels</a></li>
-            <li><a href="#destinations" data-nav="destinations" class="hover:text-white transition">Destinations</a></li>
-            <li><a href="#map-section" data-nav="map" class="hover:text-white transition text-teal-300">Interactive Map</a></li>
-            <li><a href="#itinerary-section" data-nav="itinerary" class="hover:text-white transition text-amber-300">Itinerary</a></li>
-            <li><a href="#transport" data-nav="transport" class="hover:text-white transition">Transport</a></li>
-            <li><a href="#essential-info" data-nav="essentialInfo" class="hover:text-white transition">Essential Info</a></li>
-            <li><a href="blog.html" class="hover:text-white transition text-emerald-300 font-bold">Travel Blog</a></li>
-            <li><a href="#faq" data-nav="faq" class="hover:text-white transition">FAQ</a></li>
+        <div class="md:col-span-3 space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">NAVIGATION</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="#destinations" class="hover:text-white transition">01 Destinations</a></li>
+            <li><a href="#hotels" class="hover:text-white transition">02 Stays &amp; Sanctuaries</a></li>
+            <li><a href="#compass-section" class="hover:text-white transition">03 Compass &amp; Map</a></li>
+            <li><a href="#transport" class="hover:text-white transition">04 Local Transport</a></li>
+            <li><a href="#faq" class="hover:text-white transition">05 FAQ &amp; Guidance</a></li>
           </ul>
         </div>
 
-        <!-- Column 3: Traveler Preferences -->
-        <div>
-          <h3 id="footer-tools-title" class="text-sm font-bold uppercase tracking-wider text-amber-300 mb-4">
-            Traveler Preferences
-          </h3>
-          <div class="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onclick="toggleLanguage()"
-              class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white border border-white/15 transition"
-            >
-              Switch Language (EN / বাংলা)
-            </button>
-            <button
-              type="button"
-              onclick="toggleCurrency()"
-              class="px-4 py-2 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 text-xs font-bold text-teal-200 border border-teal-400/30 transition"
-            >
-              Toggle Currency (BDT / USD)
-            </button>
-            <button
-              type="button"
-              onclick="handleAdminButtonClick()"
-              class="px-4 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-xs font-bold text-amber-300 border border-amber-300/30 transition"
-            >
-              ⚙ <span class="admin-nav-btn-label">Admin Login</span>
-            </button>
+        <div class="md:col-span-4 space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">EMERGENCY HOTLINES</span>
+          <div class="space-y-2 text-xs text-stone-300">
+            <p><strong class="text-white">Tourist Police Cox's Bazar:</strong> 01320-160160</p>
+            <p><strong class="text-white">National Emergency Service:</strong> 999</p>
+            <p><strong class="text-white">Sadar District Hospital:</strong> 01730-324778</p>
+            <p><strong class="text-white">Sea Beach Lifeguard Post:</strong> Laboni &amp; Sugandha Points</p>
           </div>
         </div>
 
       </div>
 
-      <div class="pt-8 text-center text-xs text-sky-300/70">
-        <p id="footer-copyright">
-          © 2026 Visit Cox's Bazar Tourism Guide. Built for Local & Global Explorers.
-        </p>
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-stone-500">
+        <span>© 2026 VISIT COX. ALL RIGHTS RESERVED.</span>
+        <span>DESIGNED AS AN AWARD-WINNING EDITORIAL ARCHIVE.</span>
       </div>
+
     </div>
   </footer>
 
   <!-- ========================================================================
-       FLOATING ADMIN MODE TOOLBAR (Shown when Administrator is Logged In)
+       FLOATING CONCIERGE (Minimalist Floating Pill & Chatbot Drawer)
        ======================================================================== -->
-  <div
-    id="admin-floating-toolbar"
-    class="hidden fixed bottom-5 left-5 z-50 bg-slate-950/95 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-2xl border border-amber-400/40 items-center gap-3 flex-wrap"
+  <button
+    type="button"
+    onclick="toggleChatbot()"
+    aria-label="Open Concierge Assistant"
+    class="concierge-pill group"
   >
-    <div class="flex items-center gap-2 pr-2 border-r border-white/15">
-      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="text-xs font-extrabold tracking-wide text-amber-300 uppercase">Admin Mode</span>
-    </div>
-    <button
-      type="button"
-      onclick="openAdminDashboard()"
-      class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold transition"
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span>✦ Concierge</span>
+    <span
+      id="chatbot-unread-badge"
+      class="px-1.5 py-0.2 rounded-full bg-stone-700 text-white text-[10px] font-mono"
     >
-      Open CMS Dashboard
-    </button>
-    <button
-      type="button"
-      onclick="openItemEditor('hotels', null)"
-      class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold transition"
-    >
-      + Hotel
-    </button>
-    <button
-      type="button"
-      onclick="openItemEditor('destinations', null)"
-      class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold transition"
-    >
-      + Spot
-    </button>
-    <button
-      type="button"
-      onclick="openBlogEditorModal(null)"
-      class="px-2.5 py-1.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 text-xs font-bold transition"
-    >
-      + Blog Post
-    </button>
-    <button
-      type="button"
-      onclick="logoutAdmin()"
-      class="px-2.5 py-1.5 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-xs font-bold transition"
-    >
-      Logout
-    </button>
-  </div>
+      1
+    </span>
+  </button>
 
-  <!-- ========================================================================
-       ADMIN LOGIN MODAL
-       ======================================================================== -->
+  <!-- Chatbot Panel Container -->
   <div
-    id="admin-login-modal"
-    class="hidden fixed inset-0 z-[70] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-4"
+    id="chatbot-panel"
+    class="chatbot-panel hidden-chat fixed bottom-20 right-6 z-50 w-[92vw] sm:w-[400px] h-[540px] max-h-[82vh] bg-white rounded-3xl border border-stone-200 shadow-2xl flex flex-col overflow-hidden"
   >
-    <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border border-slate-200 relative">
-      <button
-        type="button"
-        onclick="closeAdminLoginModal()"
-        aria-label="Close Modal"
-        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600"
-      >
-        ✕
+    <!-- Chat Header -->
+    <div class="p-4 bg-charcoal text-white flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <div>
+          <span class="font-serif text-lg block">Coastal Concierge</span>
+          <span class="text-[10px] font-mono text-stone-400 uppercase">Live Local Guidance</span>
+        </div>
+      </div>
+      <button type="button" onclick="toggleChatbot()" class="text-stone-400 hover:text-white text-lg px-2">✕</button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-[#FAF9F6] text-xs"></div>
+
+    <!-- Quick Prompts -->
+    <div id="chatbot-quick-prompts" class="p-2 border-t border-stone-200 bg-white flex flex-wrap gap-1.5 text-[11px]"></div>
+
+    <!-- Input Form -->
+    <form id="chatbot-form" class="p-3 border-t border-stone-200 bg-white flex items-center gap-2">
+      <input
+        id="chatbot-input"
+        type="text"
+        placeholder="Ask about hotels, beach safety, food..."
+        class="flex-1 px-3 py-2 bg-stone-100 rounded-xl text-xs text-charcoal focus:outline-none"
+      />
+      <button type="submit" class="p-2 rounded-xl bg-charcoal text-white hover:bg-black transition">
+        ➔
       </button>
-
-      <div class="w-12 h-12 rounded-2xl bg-ocean-950 text-amber-300 flex items-center justify-center mb-4 shadow-md">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-      </div>
-
-      <h3 class="text-2xl font-extrabold text-slate-900">Administrator Login</h3>
-      <p class="text-xs text-slate-500 mt-1">
-        Sign in with your administrative credentials to add, edit, update, or delete website content.
-      </p>
-
-      <div
-        id="admin-login-error"
-        class="hidden mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold"
-      ></div>
-
-      <form onsubmit="handleAdminLoginSubmit(event)" class="mt-5 space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-            Username
-          </label>
-          <input
-            id="admin-login-username"
-            type="text"
-            required
-            placeholder="Enter admin username"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500"
-          />
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-            Password
-          </label>
-          <input
-            id="admin-login-password"
-            type="password"
-            required
-            placeholder="Enter admin password"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500"
-          />
-        </div>
-
-        <div class="flex items-center justify-between text-xs">
-          <label class="inline-flex items-center gap-2 text-slate-600 cursor-pointer">
-            <input id="admin-login-remember" type="checkbox" checked class="rounded text-sky-600" />
-            <span>Keep me signed in on this browser</span>
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          class="w-full py-3 rounded-xl bg-gradient-to-r from-ocean-950 via-sky-800 to-teal-700 hover:opacity-95 text-white font-bold text-sm shadow-lg transition"
-        >
-          Sign In to Admin CMS
-        </button>
-      </form>
-    </div>
+    </form>
   </div>
 
-  <!-- ========================================================================
-       ADMIN CMS DASHBOARD MODAL (Manage All Sections)
-       ======================================================================== -->
-  <div
-    id="admin-dashboard-modal"
-    class="hidden fixed inset-0 z-[75] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-3 sm:p-6"
-  >
-    <div class="bg-slate-50 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
-      <!-- Header -->
-      <div class="bg-ocean-950 text-white px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-          <div>
-            <h3 class="text-lg font-extrabold leading-none">Visit Cox's Bazar — Admin Content Manager (CMS)</h3>
-            <p class="text-xs text-sky-200/80 mt-1">Create, edit, update, or delete hotels, sightseeing spots, transport fares, and FAQs.</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            onclick="logoutAdmin()"
-            class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold transition"
-          >
-            Logout
-          </button>
-          <button
-            type="button"
-            onclick="closeAdminDashboard()"
-            class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-
-      <!-- Category Tabs -->
-      <div
-        id="admin-dashboard-tabs"
-        class="px-6 py-3 bg-white border-b border-slate-200 flex items-center gap-2 overflow-x-auto"
-      >
-        <!-- Populated dynamically via admin.js -->
-      </div>
-
-      <!-- Dashboard Body -->
-      <div id="admin-dashboard-body" class="p-6 overflow-y-auto flex-1">
-        <!-- Populated dynamically via admin.js -->
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================
-       ADMIN ITEM ADD / EDIT MODAL
-       ======================================================================== -->
-  <div
-    id="admin-editor-modal"
-    class="hidden fixed inset-0 z-[80] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4"
-  >
-    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
-      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-        <h3 id="admin-editor-title" class="text-lg font-extrabold">Edit Item</h3>
-        <button
-          type="button"
-          onclick="closeEditorModal()"
-          class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center"
-        >
-          ✕
-        </button>
-      </div>
-
-      <form onsubmit="handleSaveItemSubmit(event)" class="p-6 overflow-y-auto flex-1 space-y-5">
-        <div id="admin-editor-fields">
-          <!-- Populated dynamically via admin.js -->
-        </div>
-
-        <div class="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
-          <button
-            type="button"
-            onclick="closeEditorModal()"
-            class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 text-white text-xs font-bold shadow-md transition"
-          >
-            ✓ Save & Publish Changes
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========================================================================
-       HOTEL DETAILED FACILITIES MODAL (Complete Facility Breakdown)
-       ======================================================================== -->
+  <!-- Hotel Facilities Modal -->
   <div
     id="hotel-facilities-modal"
-    class="hidden fixed inset-0 z-[85] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-3 sm:p-6"
-    onclick="if(event.target === this) closeHotelFacilitiesModal()"
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
   >
-    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden relative">
-      <!-- Modal Header -->
-      <div class="p-6 bg-gradient-to-r from-ocean-950 via-sky-900 to-teal-800 text-white relative">
+    <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-stone-200 p-6 sm:p-8 space-y-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 id="modal-hotel-name" class="font-serif text-2xl sm:text-3xl text-charcoal"></h3>
+          <div class="flex items-center gap-2 mt-2">
+            <span id="modal-hotel-stars-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-stone-100 text-charcoal"></span>
+            <span id="modal-hotel-rating-badge" class="text-xs font-mono text-stone-500"></span>
+            <span id="modal-hotel-spot-badge" class="text-xs font-mono text-stone-500"></span>
+          </div>
+          <p id="modal-hotel-location-text" class="text-xs text-stone-500 mt-1"></p>
+        </div>
         <button
           type="button"
           onclick="closeHotelFacilitiesModal()"
-          aria-label="Close Hotel Facilities Modal"
-          class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer"
+          class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:text-charcoal hover:border-charcoal transition"
         >
           ✕
         </button>
-        <div class="flex flex-wrap items-center gap-2 mb-2">
-          <span id="modal-hotel-stars-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950 shadow-xs">
-            5-Star Luxury ⭐⭐⭐⭐⭐
-          </span>
-          <span id="modal-hotel-spot-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-sky-100">
-            📍 Inani Beach
-          </span>
-          <span id="modal-hotel-rating-badge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-black/30 text-amber-300">
-            ★ 4.8 / 5
-          </span>
-        </div>
-        <h3 id="modal-hotel-name" class="text-xl sm:text-2xl font-extrabold text-white leading-tight">
-          Hotel Name
-        </h3>
-        <p id="modal-hotel-location" class="text-xs sm:text-sm text-sky-200/90 mt-1 flex items-center gap-1.5">
-          <svg class="w-4 h-4 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
-          <span id="modal-hotel-location-text">Location</span>
-        </p>
       </div>
 
-      <!-- Modal Body (Dynamic Categorized Facilities & Highlights) -->
-      <div id="modal-hotel-body" class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-800">
-        <!-- Populated dynamically via app.js -->
-      </div>
+      <div id="modal-hotel-body" class="space-y-4 text-xs sm:text-sm text-stone-700"></div>
 
-      <!-- Modal Footer (Action Buttons) -->
-      <div id="modal-hotel-footer" class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-        <!-- Populated dynamically via app.js -->
-      </div>
+      <div id="modal-hotel-footer" class="pt-4 border-t border-stone-200 flex items-center justify-between gap-4"></div>
     </div>
   </div>
 
-  <!-- ========================================================================
-       6B. FLOATING CHATBOT WIDGET ("Cox's Bazar Travel Assistant")
-       ======================================================================== -->
-  <div class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+  <!-- User Toast Notification Container -->
+  <div
+    id="user-friendly-toast"
+    class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-charcoal text-white text-xs font-mono px-5 py-2.5 rounded-full shadow-lg"
+  ></div>
 
-    <!-- Chat Interface Window -->
-    <div
-      id="chatbot-panel"
-      class="chatbot-panel hidden-chat mb-4 w-[92vw] sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col"
-      style="max-height: 540px;"
-    >
-      <!-- Chat Header -->
-      <div class="bg-gradient-to-r from-ocean-950 via-sky-800 to-teal-700 px-5 py-4 text-white flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20">
-            <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-            </svg>
-          </div>
-          <div>
-            <h3 id="chatbot-title" class="font-bold text-sm sm:text-base leading-tight">
-              Cox's Bazar Travel Assistant
-            </h3>
-            <span id="chatbot-status" class="text-[11px] text-teal-200 flex items-center gap-1.5 mt-0.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Online • Instant Local Guide
-            </span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onclick="toggleChatbot(false)"
-          aria-label="Close Chat"
-          class="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Chat Messages Body -->
-      <div
-        id="chatbot-messages"
-        class="p-4 space-y-3.5 overflow-y-auto bg-slate-50/80 flex-1"
-        style="min-height: 270px; max-height: 340px;"
-      >
-        <!-- Initial Smart Welcome Message -->
-        <div class="flex items-start gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-600 to-teal-500 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
-            CB
-          </div>
-          <div class="max-w-[88%] bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-xs text-xs sm:text-sm leading-relaxed shadow-xs space-y-2">
-            <div>
-              👋 <strong>Hello! I'm your Cox's Bazar Smart AI Guide.</strong> Ask me about any specific hotel, route, fare, seafood spot, or activity:
-            </div>
-            <div class="pt-1.5 border-t border-slate-100 flex flex-wrap gap-1.5">
-              <button type="button" onclick="handleUserChatSubmission('Hotel Sea Crown details')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🏨 Sea Crown Details</button>
-              <button type="button" onclick="handleUserChatSubmission('Cheapest hotel?')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">💰 Cheapest Hotel</button>
-              <button type="button" onclick="handleUserChatSubmission('Inani & Himchari route')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🪨 Inani & Himchari</button>
-              <button type="button" onclick="handleUserChatSubmission('Best seafood & Poushee?')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🍛 Best Seafood</button>
-              <button type="button" onclick="handleUserChatSubmission('Marine Drive bike cost?')" class="px-2.5 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition cursor-pointer">🏍️ Bike Rental</button>
-              <button type="button" onclick="handleUserChatSubmission('My trip budget?')" class="px-2.5 py-1 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-[11px] font-extrabold transition cursor-pointer">📊 My Trip Budget</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Prompt Chips -->
-      <div
-        id="chatbot-quick-prompts"
-        class="px-4 py-2.5 bg-white border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar"
-      >
-        <!-- Populated dynamically via app.js -->
-      </div>
-
-      <!-- Chat Input Form -->
-      <form
-        id="chatbot-form"
-        class="p-3 bg-white border-t border-slate-200/80 flex items-center gap-2"
-      >
-        <input
-          id="chatbot-input"
-          type="text"
-          placeholder="Ask specific hotel, spot, fare, restaurant, or route..."
-          autocomplete="off"
-          class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-        />
-        <button
-          type="submit"
-          aria-label="Send Message"
-          class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 text-white font-bold text-sm transition flex items-center gap-1.5 shrink-0 shadow-sm"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-          </svg>
-        </button>
-      </form>
-    </div>
-
-    <!-- Floating Chat Trigger Button -->
-    <button
-      type="button"
-      onclick="toggleChatbot()"
-      aria-label="Open Cox's Bazar Travel Assistant"
-      class="group relative flex items-center gap-3 px-4 py-3.5 rounded-full bg-gradient-to-r from-ocean-950 via-sky-700 to-teal-600 text-white shadow-2xl hover:shadow-sky-500/30 hover:scale-105 transition-all duration-300 border border-white/20"
-    >
-      <!-- Notification Badge -->
-      <span
-        id="chatbot-unread-badge"
-        class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-400 text-slate-950 text-[11px] font-extrabold flex items-center justify-center shadow"
-      >
-        1
-      </span>
-
-      <div class="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center">
-        <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-        </svg>
-      </div>
-      <span class="hidden sm:inline-block text-sm font-bold pr-1">
-        Travel Assistant
-      </span>
-    </button>
-
-  </div>
-
-  <!-- Leaflet.js v1.9.4 JS CDN (OpenStreetMap — No API Key Required) -->
+  <!-- Leaflet.js v1.9.4 JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
-  <!-- Visual Itinerary Export Libraries (html2canvas + jsPDF for PNG & PDF Downloads) -->
+  <!-- Visual Itinerary Export Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-hotels-v3"></script>
-  <script src="js/admin.js?v=20261013-hotels-v3"></script>
-  <script src="js/app.js?v=20261013-hotels-v3"></script>
-  <script src="js/features.js?v=20261013-hotels-v3"></script>
-  <script src="js/blog.js?v=20261013-hotels-v3"></script>
+  <script src="js/data.js?v=20261013-editorial"></script>
+  <script src="js/admin.js?v=20261013-editorial"></script>
+  <script src="js/app.js?v=20261013-editorial"></script>
+  <script src="js/features.js?v=20261013-editorial"></script>
+  <script src="js/blog.js?v=20261013-editorial"></script>
 </body>
 </html>
