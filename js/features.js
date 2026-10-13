@@ -25,7 +25,147 @@
 const COXS_BAZAR_CENTER = { lat: 21.4272, lng: 91.9702, zoom: 11 };
 
 const MAP_LOCATIONS = [
-  // HOTELS
+  // 5-STAR & 4-STAR LUXURY HOTELS
+  {
+    id: 'map-sayeman-beach-resort',
+    category: 'hotels',
+    lat: 21.4168,
+    lng: 91.9804,
+    name: {
+      en: 'Sayeman Beach Resort',
+      bn: 'সায়মন বিচ রিসোর্ট (Sayeman Beach Resort)'
+    },
+    categoryLabel: {
+      en: '5-Star Resort • Marine Drive / Kolatoli',
+      bn: '৫-তারকা রিসোর্ট • মেরিন ড্রাইভ / কলাতলী'
+    },
+    description: {
+      en: 'Premier 5-star oceanfront resort featuring iconic infinity pool, Tarboosh dining, and direct beach access.',
+      bn: 'কলাতলী মেরিন ড্রাইভে অবস্থিত প্রিমিয়ার ৫-তারকা রিসোর্ট ও ইনফিনিটি পুল।'
+    },
+    image: 'assets/images/hero-coxs-bazar.jpg',
+    targetSection: '#hotels'
+  },
+  {
+    id: 'map-sea-pearl-resort',
+    category: 'hotels',
+    lat: 21.2268,
+    lng: 92.0502,
+    name: {
+      en: 'Sea Pearl Beach Resort & Spa',
+      bn: 'সী পার্ল বিচ রিসোর্ট অ্যান্ড স্পা (Royal Tulip Sea Pearl)'
+    },
+    categoryLabel: {
+      en: '5-Star Resort • Inani Coral Beach',
+      bn: '৫-তারকা রিসোর্ট • ইনানী প্রবাল সৈকত'
+    },
+    description: {
+      en: '15-acre ultra-luxury 5-star beachfront resort at Inani Beach with private coral shores and giant water park.',
+      bn: 'ইনানী সৈকত সংলগ্ন ১৫ একরের সুবিশাল ৫-তারকা লাক্সারি বিচ রিসোর্ট ও ওয়াটার পার্ক।'
+    },
+    image: 'assets/images/inani-beach.jpg',
+    targetSection: '#hotels'
+  },
+  {
+    id: 'map-mermaid-beach-resort',
+    category: 'hotels',
+    lat: 21.328,
+    lng: 92.0315,
+    name: {
+      en: 'Mermaid Beach Resort',
+      bn: 'মারমেইড বিচ রিসোর্ট (Mermaid Beach Resort)'
+    },
+    categoryLabel: {
+      en: '5-Star Eco Resort • Pecharthal Beach',
+      bn: '৫-তারকা ইকো রিসোর্ট • পেঁচারদ্বীপ'
+    },
+    description: {
+      en: 'World-renowned 5-star eco-chic resort featuring private beaches, pool villas, and Mermaid Beach Cafe.',
+      bn: 'মেরিন ড্রাইভের পেঁচারদ্বীপে অবস্থিত বিশ্বখ্যাত ৫-তারকা ইকো-লাক্সারি রিসোর্ট ও প্রাইভেট বিচ।'
+    },
+    image: 'assets/images/shamlapur-sampan.jpg',
+    targetSection: '#hotels'
+  },
+  {
+    id: 'map-ocean-paradise-hotel',
+    category: 'hotels',
+    lat: 21.4195,
+    lng: 91.9822,
+    name: {
+      en: 'Ocean Paradise Hotel & Resort',
+      bn: 'ওশান প্যারাডাইস হোটেল অ্যান্ড রিসোর্ট'
+    },
+    categoryLabel: {
+      en: '5-Star Hotel • Kolatoli Road',
+      bn: '৫-তারকা হোটেল • কলাতলী রোড'
+    },
+    description: {
+      en: 'Premier 5-star hotel featuring a panoramic rooftop sky pool, Grand Buffet, and luxury wellness spa.',
+      bn: 'কলাতলী প্রধান সড়কে অবস্থিত ঐতিহ্যবাহী ৫-তারকা হোটেল, স্কাই পুল ও গ্র্যান্ড বুফে।'
+    },
+    image: 'assets/images/prime-park-hotel.jpg',
+    targetSection: '#hotels'
+  },
+  {
+    id: 'map-hotel-the-cox-today',
+    category: 'hotels',
+    lat: 21.4188,
+    lng: 91.9816,
+    name: {
+      en: 'Hotel The Cox Today',
+      bn: 'হোটেল দ্য কক্স টুডে (Hotel The Cox Today)'
+    },
+    categoryLabel: {
+      en: '5-Star Hotel • Kolatoli Zone',
+      bn: '৫-তারকা হোটেল • কলাতলী জোন'
+    },
+    description: {
+      en: '5-star ocean-view hotel with outdoor edge pool, seafood restaurants, and full wellness spa.',
+      bn: 'কলাতলী হোটেল মোটেল জোনের ৫-তারকা হোটেল, সুইমিং পুল ও স্পা।'
+    },
+    image: 'assets/images/hotel-sea-crown.jpg',
+    targetSection: '#hotels'
+  },
+  {
+    id: 'map-best-western-bay-watch',
+    category: 'hotels',
+    lat: 21.4175,
+    lng: 91.981,
+    name: {
+      en: 'Best Western Plus Heritage (Bay Watch)',
+      bn: 'বেস্ট ওয়েস্টার্ন প্লাস হেরিটেজ (বে ওয়াচ)'
+    },
+    categoryLabel: {
+      en: '4-Star Hotel • Kolatoli Beach',
+      bn: '৪-তারকা হোটেল • কলাতলী বিচ'
+    },
+    description: {
+      en: 'International 4-star hotel at Kolatoli Circle with rooftop sunset swimming pool and Barista cafe.',
+      bn: 'কলাতলী সার্কেলের ৪-তারকা আন্তর্জাতিক হোটেল, রুফটপ পুল ও বারিস্তা ক্যাফে।'
+    },
+    image: 'assets/images/hotel-kollol.jpg',
+    targetSection: '#hotels'
+  },
+  {
+    id: 'map-long-beach-hotel',
+    category: 'hotels',
+    lat: 21.4215,
+    lng: 91.9832,
+    name: {
+      en: 'Long Beach Hotel',
+      bn: 'লং বিচ হোটেল (Long Beach Hotel)'
+    },
+    categoryLabel: {
+      en: '4-Star Hotel • Kolatoli Road',
+      bn: '৪-তারকা হোটেল • কলাতলী রোড'
+    },
+    description: {
+      en: 'Premier 4-star hotel featuring an indoor heated swimming pool, Cozy Sizzle restaurant, and billiards lounge.',
+      bn: 'কলাতলীতে অবস্থিত ৪-তারকা হোটেল, ইনডোর হিটেড সুইমিং পুল ও কোজি সিজল রেস্টুরেন্ট।'
+    },
+    image: 'assets/images/prime-park-hotel.jpg',
+    targetSection: '#hotels'
+  },
   {
     id: 'map-hotel-sea-crown',
     category: 'hotels',
@@ -36,8 +176,8 @@ const MAP_LOCATIONS = [
       bn: 'হোটেল সী ক্রাউন (Hotel Sea Crown)'
     },
     categoryLabel: {
-      en: 'Hotel • Sugandha Beach',
-      bn: 'হোটেল • সুগন্ধা বিচ'
+      en: '3-Star Hotel • Sugandha Beach',
+      bn: '৩-তারকা হোটেল • সুগন্ধা বিচ'
     },
     description: {
       en: '3-star beachfront hotel on Marine Drive, Kola Toli New Beach with direct beach access and complimentary breakfast.',
@@ -56,8 +196,8 @@ const MAP_LOCATIONS = [
       bn: 'প্রাইম পার্ক হোটেল (Prime Park Hotel)'
     },
     categoryLabel: {
-      en: 'Hotel • Kalatali Road',
-      bn: 'হোটেল • কলাতলী রোড'
+      en: '3-Star Hotel • Kalatali Road',
+      bn: '৩-তারকা হোটেল • কলাতলী রোড'
     },
     description: {
       en: 'Located at Plot 58, Block C, Hotel Motel Zone near Kalatali Beach, featuring a panoramic rooftop restaurant and hill views.',

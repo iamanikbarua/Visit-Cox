@@ -548,29 +548,120 @@
   <section id="hotels" class="py-20 md:py-28 bg-sand-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <!-- Section Heading & Location Filters -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
-        <div>
-          <span
-            id="hotels-eyebrow"
-            class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-700 bg-teal-100/80 px-3 py-1 rounded-full mb-3"
-          >
-            CURATED ACCOMMODATIONS
-          </span>
-          <h2
-            id="hotels-title"
-            class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
-          >
-            Where to Stay in Cox's Bazar
-          </h2>
-          <p id="hotels-subtitle" class="mt-3 text-slate-600 max-w-2xl text-base">
-            From beachfront family hotels to serene eco-park cottages—compare verified nightly rates in BDT or USD.
-          </p>
+      <!-- Section Heading -->
+      <div class="mb-8">
+        <span
+          id="hotels-eyebrow"
+          class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-700 bg-teal-100/80 px-3 py-1 rounded-full mb-3"
+        >
+          CURATED ACCOMMODATIONS
+        </span>
+        <h2
+          id="hotels-title"
+          class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+        >
+          Where to Stay in Cox's Bazar
+        </h2>
+        <p id="hotels-subtitle" class="mt-3 text-slate-600 max-w-2xl text-base">
+          From luxury 5-star beachfront resorts to cozy budget cottages—compare verified nightly rates in BDT or USD.
+        </p>
+      </div>
+
+      <!-- Comprehensive Multi-Criteria Hotel Filter Hub (Stars, Price, Spot & Facilities) -->
+      <div class="mb-8 bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-200/90 space-y-4">
+        <!-- Filter Hub Header: Title + Sort Dropdown + Reset Button -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-base shadow-2xs">
+              🏨
+            </div>
+            <div>
+              <h3 id="hotel-filter-hub-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">
+                Filter & Compare Accommodations
+              </h3>
+              <p id="hotel-filter-hub-subtitle" class="text-xs text-slate-500">
+                Filter hotels by star rating (5★, 4★, 3★), price range, and beach spot
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Sort Selection Dropdown -->
+            <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+              <span id="hotel-sort-label" class="text-xs font-bold text-slate-500">Sort:</span>
+              <select
+                id="hotel-sort-select"
+                aria-label="Sort Hotels"
+                onchange="setHotelSortBy(this.value)"
+                class="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+              >
+                <option value="recommended">Recommended</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="stars-desc">Stars: 5★ to 2★</option>
+              </select>
+            </div>
+
+            <!-- Clear / Reset Filters Button -->
+            <button
+              type="button"
+              id="hotel-reset-filters-btn"
+              onclick="resetAllHotelFilters()"
+              class="hidden px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition items-center gap-1.5 cursor-pointer"
+            >
+              <span>↺</span>
+              <span id="hotel-reset-filters-text">Reset Filters</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Location Filter Pills -->
-        <div id="hotel-location-filters" class="flex flex-wrap items-center gap-2">
-          <!-- Populated dynamically via app.js -->
+        <!-- Filter Rows Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 1. Star Rating Filter -->
+          <div class="space-y-1.5">
+            <span id="hotel-star-filter-label" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
+              ⭐ Star Rating:
+            </span>
+            <div id="hotel-star-filters" class="flex flex-wrap gap-1.5">
+              <!-- Populated dynamically via app.js -->
+            </div>
+          </div>
+
+          <!-- 2. Price Range Filter -->
+          <div class="space-y-1.5">
+            <span id="hotel-price-filter-label" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
+              💵 Price Range:
+            </span>
+            <div id="hotel-price-filters" class="flex flex-wrap gap-1.5">
+              <!-- Populated dynamically via app.js -->
+            </div>
+          </div>
+
+          <!-- 3. Spot / Location Filter -->
+          <div class="space-y-1.5">
+            <span id="hotel-spot-filter-label" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
+              📍 Spot / Beach Zone:
+            </span>
+            <div id="hotel-spot-filters" class="flex flex-wrap gap-1.5">
+              <!-- Populated dynamically via app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Quick Facility Filter Highlights -->
+        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+          <span id="hotel-facility-filter-label" class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mr-1">
+            ✨ Facility:
+          </span>
+          <div id="hotel-facility-filters" class="flex flex-wrap items-center gap-1.5">
+            <!-- Populated dynamically via app.js -->
+          </div>
+        </div>
+
+        <!-- Active Filter Indicator Chips Bar -->
+        <div id="hotel-active-filters-bar" class="hidden pt-2 flex flex-wrap items-center gap-2 text-xs">
+          <span class="text-slate-500 font-semibold">Active Filters:</span>
+          <div id="hotel-active-chips" class="flex flex-wrap gap-1.5"></div>
         </div>
       </div>
 
@@ -1448,6 +1539,60 @@
   </div>
 
   <!-- ========================================================================
+       HOTEL DETAILED FACILITIES MODAL (Complete Facility Breakdown)
+       ======================================================================== -->
+  <div
+    id="hotel-facilities-modal"
+    class="hidden fixed inset-0 z-[85] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-3 sm:p-6"
+    onclick="if(event.target === this) closeHotelFacilitiesModal()"
+  >
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden relative">
+      <!-- Modal Header -->
+      <div class="p-6 bg-gradient-to-r from-ocean-950 via-sky-900 to-teal-800 text-white relative">
+        <button
+          type="button"
+          onclick="closeHotelFacilitiesModal()"
+          aria-label="Close Hotel Facilities Modal"
+          class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer"
+        >
+          ✕
+        </button>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span id="modal-hotel-stars-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950 shadow-xs">
+            5-Star Luxury ⭐⭐⭐⭐⭐
+          </span>
+          <span id="modal-hotel-spot-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-sky-100">
+            📍 Inani Beach
+          </span>
+          <span id="modal-hotel-rating-badge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-black/30 text-amber-300">
+            ★ 4.8 / 5
+          </span>
+        </div>
+        <h3 id="modal-hotel-name" class="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+          Hotel Name
+        </h3>
+        <p id="modal-hotel-location" class="text-xs sm:text-sm text-sky-200/90 mt-1 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span id="modal-hotel-location-text">Location</span>
+        </p>
+      </div>
+
+      <!-- Modal Body (Dynamic Categorized Facilities & Highlights) -->
+      <div id="modal-hotel-body" class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-800">
+        <!-- Populated dynamically via app.js -->
+      </div>
+
+      <!-- Modal Footer (Action Buttons) -->
+      <div id="modal-hotel-footer" class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <!-- Populated dynamically via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
        6B. FLOATING CHATBOT WIDGET ("Cox's Bazar Travel Assistant")
        ======================================================================== -->
   <div class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
@@ -1583,10 +1728,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-blog2"></script>
-  <script src="js/admin.js?v=20261013-blog2"></script>
-  <script src="js/app.js?v=20261013-blog2"></script>
-  <script src="js/features.js?v=20261013-blog2"></script>
-  <script src="js/blog.js?v=20261013-blog2"></script>
+  <script src="js/data.js?v=20261013-hotels-v3"></script>
+  <script src="js/admin.js?v=20261013-hotels-v3"></script>
+  <script src="js/app.js?v=20261013-hotels-v3"></script>
+  <script src="js/features.js?v=20261013-hotels-v3"></script>
+  <script src="js/blog.js?v=20261013-hotels-v3"></script>
 </body>
 </html>

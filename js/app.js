@@ -15,7 +15,12 @@
 const AppState = {
   lang: CONFIG.defaultLang,       // 'en' | 'bn'
   currency: CONFIG.defaultCurrency, // 'BDT' | 'USD'
-  hotelFilter: 'ALL',
+  hotelFilter: 'ALL',            // Legacy spot filter alias
+  hotelStarFilter: 'ALL',        // 'ALL' | 5 | 4 | 3 | 2
+  hotelPriceFilter: 'ALL',       // 'ALL' | 'budget' | 'mid' | 'luxury'
+  hotelSpotFilter: 'ALL',        // 'ALL' | 'kolatoli' | 'inani' | 'pecharthal' | 'sugandha' | 'laboni'
+  hotelFacilityFilter: 'ALL',    // 'ALL' | 'pool' | 'beachfront' | 'breakfast' | 'spa' | 'gym'
+  hotelSortBy: 'recommended',    // 'recommended' | 'price-asc' | 'price-desc' | 'stars-desc'
   searchQuery: '',
   searchCategory: 'all',
   activeFaqId: 'faq-1',
@@ -191,10 +196,30 @@ function renderStaticText() {
       .join('');
   }
 
-  // Section Headers
+  // Section Headers & Hotel Filter Hub
   setText('hotels-eyebrow', t.hotelsSection.eyebrow);
   setText('hotels-title', t.hotelsSection.title);
   setText('hotels-subtitle', t.hotelsSection.subtitle);
+  setText('hotel-filter-hub-title', AppState.lang === 'bn' ? 'হোটেল ফিল্টার ও তুলনা' : 'Filter & Compare Accommodations');
+  setText('hotel-filter-hub-subtitle', AppState.lang === 'bn' ? 'স্টার রেটিং (৫★, ৪★, ৩★), ভাড়া রেঞ্জ ও বিচ স্পট অনুযায়ী ফিল্টার করুন' : 'Filter hotels by star rating (5★, 4★, 3★), price range, and beach spot');
+  setText('hotel-sort-label', t.hotelsSection.sortByLabel + ':');
+  setText('hotel-star-filter-label', '⭐ ' + t.hotelsSection.filterStarLabel + ':');
+  setText('hotel-price-filter-label', '💵 ' + t.hotelsSection.filterPriceLabel + ':');
+  setText('hotel-spot-filter-label', '📍 ' + t.hotelsSection.filterSpotLabel + ':');
+  setText('hotel-facility-filter-label', '✨ ' + t.hotelsSection.filterFacilityLabel + ':');
+  setText('hotel-reset-filters-text', t.hotelsSection.resetFilters);
+
+  const sortSelect = document.getElementById('hotel-sort-select');
+  if (sortSelect) {
+    const optRec = sortSelect.querySelector('option[value="recommended"]');
+    const optLow = sortSelect.querySelector('option[value="price-asc"]');
+    const optHigh = sortSelect.querySelector('option[value="price-desc"]');
+    const optStars = sortSelect.querySelector('option[value="stars-desc"]');
+    if (optRec) optRec.textContent = t.hotelsSection.sortRecommended;
+    if (optLow) optLow.textContent = t.hotelsSection.sortPriceLow;
+    if (optHigh) optHigh.textContent = t.hotelsSection.sortPriceHigh;
+    if (optStars) optStars.textContent = t.hotelsSection.sortStarsHigh;
+  }
 
   setText('destinations-eyebrow', t.destinationsSection.eyebrow);
   setText('destinations-title', t.destinationsSection.title);
@@ -250,89 +275,319 @@ let hotelAutoSlideEnabled = true;
 let hotelSliderHoverPaused = false;
 let hotelScrollListenerAttached = false;
 
+function getFilteredHotels() {
+  const q = AppState.searchQuery.trim().toLowerCase();
+  const searchAppliesToHotels = !q || AppState.searchCategory === 'all' || AppState.searchCategory === 'hotels';
+
+  let list = HOTELS_DATA.filter(hotel => {
+    // 1. Star Rating Filter
+    if (AppState.hotelStarFilter !== 'ALL' && hotel.stars !== Number(AppState.hotelStarFilter)) {
+      return false;
+    }
+
+    // 2. Price Range Filter
+    if (AppState.hotelPriceFilter !== 'ALL') {
+      if (AppState.hotelPriceFilter === 'budget') {
+        // Less than 3,000 BDT
+        if (hotel.minBDT >= 3000) return false;
+      } else if (AppState.hotelPriceFilter === 'mid') {
+        // 3,000 to 7,000 BDT
+        if (hotel.minBDT > 7000 || hotel.maxBDT < 3000) return false;
+      } else if (AppState.hotelPriceFilter === 'luxury') {
+        // 7,000+ BDT
+        if (hotel.minBDT < 7000 && hotel.maxBDT < 9000) return false;
+      }
+    }
+
+    // 3. Spot / Location Filter
+    const activeSpot = AppState.hotelSpotFilter !== 'ALL' ? AppState.hotelSpotFilter : AppState.hotelFilter;
+    if (activeSpot !== 'ALL' && hotel.locationKey !== activeSpot) {
+      return false;
+    }
+
+    // 4. Quick Facility Filter
+    if (AppState.hotelFacilityFilter !== 'ALL') {
+      const allFacilityText = [
+        ...(hotel.facilities?.en || []),
+        ...(hotel.facilities?.bn || []),
+        ...(hotel.amenities?.en || []),
+        ...(hotel.amenities?.bn || [])
+      ].join(' ').toLowerCase();
+
+      if (AppState.hotelFacilityFilter === 'pool') {
+        if (!allFacilityText.includes('pool') && !allFacilityText.includes('পুল')) return false;
+      } else if (AppState.hotelFacilityFilter === 'beachfront') {
+        if (!allFacilityText.includes('beach') && !allFacilityText.includes('সৈকত') && !allFacilityText.includes('beachfront')) return false;
+      } else if (AppState.hotelFacilityFilter === 'breakfast') {
+        if (!allFacilityText.includes('breakfast') && !allFacilityText.includes('নাস্তা') && !allFacilityText.includes('buffet') && !allFacilityText.includes('বুফে')) return false;
+      } else if (AppState.hotelFacilityFilter === 'spa') {
+        if (!allFacilityText.includes('spa') && !allFacilityText.includes('jacuzzi') && !allFacilityText.includes('স্পা') && !allFacilityText.includes('জ্যাকুজি') && !allFacilityText.includes('sauna')) return false;
+      } else if (AppState.hotelFacilityFilter === 'gym') {
+        if (!allFacilityText.includes('gym') && !allFacilityText.includes('fitness') && !allFacilityText.includes('ফিটনেস') && !allFacilityText.includes('জিম')) return false;
+      }
+    }
+
+    // 5. Search Query
+    if (q && searchAppliesToHotels) {
+      const searchFields = [
+        hotel.name.en,
+        hotel.name.bn,
+        hotel.location.en,
+        hotel.location.bn,
+        hotel.spotName?.en || '',
+        hotel.spotName?.bn || '',
+        ...(hotel.amenities?.en || []),
+        ...(hotel.amenities?.bn || []),
+        ...(hotel.facilities?.en || []),
+        ...(hotel.facilities?.bn || [])
+      ].join(' ').toLowerCase();
+
+      if (!searchFields.includes(q)) return false;
+    }
+
+    return true;
+  });
+
+  // Sorting
+  if (AppState.hotelSortBy === 'price-asc') {
+    list.sort((a, b) => a.minBDT - b.minBDT);
+  } else if (AppState.hotelSortBy === 'price-desc') {
+    list.sort((a, b) => b.minBDT - a.minBDT);
+  } else if (AppState.hotelSortBy === 'stars-desc') {
+    list.sort((a, b) => (b.stars || 0) - (a.stars || 0) || b.minBDT - a.minBDT);
+  }
+
+  return list;
+}
+
 function renderHotels() {
   const t = UI_TEXT[AppState.lang].hotelsSection;
-  const filterContainer = document.getElementById('hotel-location-filters');
   const gridContainer = document.getElementById('hotels-grid');
   const dotsContainer = document.getElementById('hotel-slider-dots');
   const counterEl = document.getElementById('hotel-slider-counter');
   if (!gridContainer) return;
 
-  // Build unique location filters
-  const uniqueLocations = ['ALL', ...new Set(HOTELS_DATA.map(h => h.locationKey))];
+  const isBn = AppState.lang === 'bn';
 
-  if (filterContainer) {
-    filterContainer.innerHTML = uniqueLocations
-      .map(locKey => {
-        const isActive = AppState.hotelFilter === locKey;
-        let label = t.filterAll;
-        if (locKey !== 'ALL') {
-          const sample = HOTELS_DATA.find(h => h.locationKey === locKey);
-          label = sample ? sample.location[AppState.lang] : locKey;
-        }
-        return `
-          <button
-            onclick="setHotelFilter('${locKey}')"
-            class="px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-              isActive
-                ? 'bg-sky-700 text-white shadow-md shadow-sky-900/20'
-                : 'bg-white text-slate-700 hover:bg-sky-50 border border-slate-200'
-            }">
-            ${label}
-          </button>
-        `;
-      })
-      .join('');
+  // 1. Render Star Filters
+  const starContainer = document.getElementById('hotel-star-filters');
+  if (starContainer) {
+    const starOptions = [
+      { val: 'ALL', labelEn: 'All Stars', labelBn: 'সব রেটিং' },
+      { val: 5, labelEn: '5★ Luxury ⭐⭐⭐⭐⭐', labelBn: '৫★ লাক্সারি (৫টি)' },
+      { val: 4, labelEn: '4★ Premium ⭐⭐⭐⭐', labelBn: '৪★ প্রিমিয়াম (২টি)' },
+      { val: 3, labelEn: '3★ Standard ⭐⭐⭐', labelBn: '৩★ স্ট্যান্ডার্ড (৪টি)' },
+      { val: 2, labelEn: '2★ Eco ⭐⭐', labelBn: '২★ ইকো (১টি)' }
+    ];
+    starContainer.innerHTML = starOptions.map(opt => {
+      const isActive = String(AppState.hotelStarFilter) === String(opt.val);
+      const label = isBn ? opt.labelBn : opt.labelEn;
+      return `
+        <button
+          type="button"
+          onclick="setHotelStarFilter(${opt.val === 'ALL' ? "'ALL'" : opt.val})"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            isActive
+              ? 'bg-amber-400 text-slate-950 shadow-xs ring-2 ring-amber-400/40'
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
+          }"
+        >
+          ${label}
+        </button>
+      `;
+    }).join('');
   }
 
-  // Filter hotels by location & search query
-  const q = AppState.searchQuery.trim().toLowerCase();
-  const filteredHotels = HOTELS_DATA.filter(hotel => {
-    const matchesLocation = AppState.hotelFilter === 'ALL' || hotel.locationKey === AppState.hotelFilter;
-    if (!q || (AppState.searchCategory !== 'all' && AppState.searchCategory !== 'hotels')) {
-      return matchesLocation;
-    }
-    const haystack = `${hotel.name.en} ${hotel.name.bn} ${hotel.location.en} ${hotel.location.bn} ${hotel.amenities.en.join(' ')} ${hotel.amenities.bn.join(' ')}`.toLowerCase();
-    return matchesLocation && haystack.includes(q);
-  });
+  // 2. Render Price Filters
+  const priceContainer = document.getElementById('hotel-price-filters');
+  if (priceContainer) {
+    const priceOptions = [
+      { val: 'ALL', labelEn: 'All Prices', labelBn: 'সব ভাড়া' },
+      { val: 'budget', labelEn: 'Budget (< ৳3,000 / < $25)', labelBn: 'বাজেট (< ৩,০০০)' },
+      { val: 'mid', labelEn: 'Mid-Range (৳3k-৳7k / $25-$60)', labelBn: 'মিড-রেঞ্জ (৩-৭ হাজার)' },
+      { val: 'luxury', labelEn: 'Luxury (৳7k+ / > $60)', labelBn: 'লাক্সারি (৭ হাজার+)' }
+    ];
+    priceContainer.innerHTML = priceOptions.map(opt => {
+      const isActive = AppState.hotelPriceFilter === opt.val;
+      const label = isBn ? opt.labelBn : opt.labelEn;
+      return `
+        <button
+          type="button"
+          onclick="setHotelPriceFilter('${opt.val}')"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            isActive
+              ? 'bg-sky-700 text-white shadow-xs ring-2 ring-sky-600/40'
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
+          }"
+        >
+          ${label}
+        </button>
+      `;
+    }).join('');
+  }
 
+  // 3. Render Spot Filters
+  const spotContainer = document.getElementById('hotel-spot-filters') || document.getElementById('hotel-location-filters');
+  if (spotContainer) {
+    const spotOptions = [
+      { key: 'ALL', nameEn: 'All Spots', nameBn: 'সব স্পট' },
+      { key: 'kolatoli', nameEn: 'Kolatoli Beach & Road', nameBn: 'কলাতলী বিচ ও রোড' },
+      { key: 'inani', nameEn: 'Inani Beach (Coral)', nameBn: 'ইনানী প্রবাল সৈকত' },
+      { key: 'pecharthal', nameEn: 'Pecharthal (Marine Dr.)', nameBn: 'পেঁচারদ্বীপ (মেরিন ড্রাইভ)' },
+      { key: 'sugandha', nameEn: 'Sugandha Beach', nameBn: 'সুগন্ধা সৈকত' },
+      { key: 'laboni', nameEn: 'Laboni Beach', nameBn: 'লাবণী সৈকত' }
+    ];
+    const currentSpot = AppState.hotelSpotFilter !== 'ALL' ? AppState.hotelSpotFilter : AppState.hotelFilter;
+    spotContainer.innerHTML = spotOptions.map(opt => {
+      const isActive = currentSpot === opt.key;
+      const label = isBn ? opt.nameBn : opt.nameEn;
+      return `
+        <button
+          type="button"
+          onclick="setHotelSpotFilter('${opt.key}')"
+          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            isActive
+              ? 'bg-teal-700 text-white shadow-xs ring-2 ring-teal-600/40'
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
+          }"
+        >
+          ${label}
+        </button>
+      `;
+    }).join('');
+  }
+
+  // 4. Render Facility Highlights Filters
+  const facContainer = document.getElementById('hotel-facility-filters');
+  if (facContainer) {
+    const facOptions = [
+      { key: 'ALL', icon: '✨', labelEn: 'All Amenities', labelBn: 'সব সুবিধা' },
+      { key: 'pool', icon: '🏊', labelEn: 'Swimming Pool', labelBn: 'সুইমিং পুল' },
+      { key: 'beachfront', icon: '🌊', labelEn: 'Beachfront Access', labelBn: 'সৈকত সংলগ্ন' },
+      { key: 'breakfast', icon: '🍳', labelEn: 'Free Breakfast', labelBn: 'বুফে ব্রেকফাস্ট' },
+      { key: 'spa', icon: '💆', labelEn: 'Spa & Sauna', labelBn: 'স্পা ও সনা' },
+      { key: 'gym', icon: '🏋️', labelEn: 'Fitness Gym', labelBn: 'ফিটনেস জিম' }
+    ];
+    facContainer.innerHTML = facOptions.map(opt => {
+      const isActive = AppState.hotelFacilityFilter === opt.key;
+      const label = isBn ? opt.labelBn : opt.labelEn;
+      return `
+        <button
+          type="button"
+          onclick="setHotelFacilityFilter('${opt.key}')"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            isActive
+              ? 'bg-ocean-950 text-white shadow-xs ring-2 ring-ocean-900/40'
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
+          }"
+        >
+          <span>${opt.icon}</span>
+          <span>${label}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  // 5. Active Filters bar & Reset Button
+  const resetBtn = document.getElementById('hotel-reset-filters-btn');
+  const activeBar = document.getElementById('hotel-active-filters-bar');
+  const activeChips = document.getElementById('hotel-active-chips');
+  const sortSelect = document.getElementById('hotel-sort-select');
+
+  if (sortSelect) sortSelect.value = AppState.hotelSortBy;
+
+  const hasActiveFilters =
+    AppState.hotelStarFilter !== 'ALL' ||
+    AppState.hotelPriceFilter !== 'ALL' ||
+    AppState.hotelSpotFilter !== 'ALL' ||
+    AppState.hotelFilter !== 'ALL' ||
+    AppState.hotelFacilityFilter !== 'ALL' ||
+    AppState.hotelSortBy !== 'recommended';
+
+  if (resetBtn) {
+    if (hasActiveFilters) {
+      resetBtn.classList.remove('hidden');
+      resetBtn.classList.add('inline-flex');
+    } else {
+      resetBtn.classList.add('hidden');
+      resetBtn.classList.remove('inline-flex');
+    }
+  }
+
+  if (activeBar && activeChips) {
+    if (hasActiveFilters) {
+      activeBar.classList.remove('hidden');
+      let chipsHtml = '';
+      if (AppState.hotelStarFilter !== 'ALL') {
+        chipsHtml += `<button type="button" onclick="setHotelStarFilter('ALL')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 font-extrabold border border-amber-300">⭐ ${AppState.hotelStarFilter}★ ✕</button>`;
+      }
+      if (AppState.hotelPriceFilter !== 'ALL') {
+        const pLabel = AppState.hotelPriceFilter === 'budget' ? 'Budget' : AppState.hotelPriceFilter === 'mid' ? 'Mid-Range' : 'Luxury';
+        chipsHtml += `<button type="button" onclick="setHotelPriceFilter('ALL')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-sky-100 hover:bg-sky-200 text-sky-950 font-extrabold border border-sky-300">💵 ${pLabel} ✕</button>`;
+      }
+      const activeSpotKey = AppState.hotelSpotFilter !== 'ALL' ? AppState.hotelSpotFilter : AppState.hotelFilter;
+      if (activeSpotKey !== 'ALL') {
+        chipsHtml += `<button type="button" onclick="setHotelSpotFilter('ALL')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-teal-100 hover:bg-teal-200 text-teal-950 font-extrabold border border-teal-300">📍 ${activeSpotKey} ✕</button>`;
+      }
+      if (AppState.hotelFacilityFilter !== 'ALL') {
+        chipsHtml += `<button type="button" onclick="setHotelFacilityFilter('ALL')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold">✨ ${AppState.hotelFacilityFilter} ✕</button>`;
+      }
+      if (AppState.hotelSortBy !== 'recommended') {
+        chipsHtml += `<button type="button" onclick="setHotelSortBy('recommended')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-950 font-extrabold border border-indigo-300">🔃 ${AppState.hotelSortBy} ✕</button>`;
+      }
+      activeChips.innerHTML = chipsHtml;
+    } else {
+      activeBar.classList.add('hidden');
+      activeChips.innerHTML = '';
+    }
+  }
+
+  // Get filtered and sorted hotels
+  const filteredHotels = getFilteredHotels();
   updateHotelAutoSlideUI();
 
   if (filteredHotels.length === 0) {
     gridContainer.innerHTML = `
       <div class="w-full bg-white rounded-3xl p-10 text-center border border-slate-200">
-        <p class="text-slate-600 font-medium">${
-          AppState.lang === 'en'
-            ? 'No hotels match your current search filter. Try resetting filters.'
-            : 'আপনার অনুসন্ধানের সাথে কোনো হোটেল মেলেনি। ফিল্টার রিসেট করে আবার চেষ্টা করুন।'
+        <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center text-2xl font-bold">
+          🏨
+        </div>
+        <h4 class="text-lg font-bold text-slate-800">${
+          isBn ? 'কোনো হোটেল পাওয়া যায়নি' : 'No Hotels Match Your Criteria'
+        }</h4>
+        <p class="text-slate-600 font-medium text-sm mt-1 max-w-md mx-auto">${
+          isBn
+            ? 'আপনার নির্বাচিত ফিল্টার বা অনুসন্ধানের সাথে কোনো হোটেল মেলেনি। ফিল্টার রিসেট করে আবার চেষ্টা করুন।'
+            : 'No accommodations match your active star rating, price, or spot filters. Try resetting to view all options.'
         }</p>
-        <button onclick="resetSearchAndFilters()" class="mt-4 px-5 py-2.5 bg-sky-600 text-white rounded-xl text-sm font-semibold hover:bg-sky-700 transition">
-          ${AppState.lang === 'en' ? 'Show All Hotels' : 'সব হোটেল দেখুন'}
+        <button onclick="resetAllHotelFilters()" class="mt-4 px-6 py-2.5 bg-sky-700 hover:bg-sky-800 text-white rounded-xl text-sm font-bold shadow transition cursor-pointer">
+          ${isBn ? 'সব হোটেল দেখুন (ফিল্টার রিসেট)' : 'Reset Filters & Show All Hotels'}
         </button>
       </div>
     `;
     if (dotsContainer) dotsContainer.innerHTML = '';
     if (counterEl) {
-      counterEl.textContent = AppState.lang === 'en' ? '0 Hotels Found' : '০টি হোটেল পাওয়া গেছে';
+      counterEl.textContent = isBn ? '০টি হোটেল পাওয়া গেছে' : '0 Hotels Found';
     }
     return;
   }
 
   if (counterEl) {
-    counterEl.textContent =
-      AppState.lang === 'en'
-        ? `Showing ${filteredHotels.length} Verified Hotels • Swipe or Click Arrows ← →`
-        : `${formatNumber(filteredHotels.length, 'bn')}টি ভেরিফাইড হোটেল • বামে-ডানে স্লাইড করুন ← →`;
+    const starTxt = AppState.hotelStarFilter !== 'ALL' ? ` [${AppState.hotelStarFilter}★]` : '';
+    counterEl.textContent = isBn
+      ? `${formatNumber(filteredHotels.length, 'bn')}টি ভেরিফাইড হোটেল${starTxt} • মোট ১২টির মধ্যে • বামে-ডানে স্লাইড করুন ← →`
+      : `Showing ${filteredHotels.length} of ${HOTELS_DATA.length} Hotels${starTxt} • Swipe or Click Arrows ← →`;
   }
 
   gridContainer.innerHTML = filteredHotels
     .map((hotel, idx) => {
       const priceText = formatPriceRange(hotel.minBDT, hotel.maxBDT);
       const amenitiesList = hotel.amenities[AppState.lang]
+        .slice(0, 4)
         .map(
           item => `
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-sky-50 text-sky-800 border border-sky-100">
-            <svg class="w-3.5 h-3.5 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-800 border border-sky-100">
+            <svg class="w-3 h-3 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
             </svg>
             ${item}
@@ -340,6 +595,10 @@ function renderHotels() {
         `
         )
         .join('');
+
+      const starStars = '★'.repeat(hotel.stars || 3);
+      const starLabel = hotel.starLabel ? hotel.starLabel[AppState.lang] : `${hotel.stars}-Star`;
+      const spotName = hotel.spotName ? hotel.spotName[AppState.lang] : hotel.location[AppState.lang];
 
       return `
         <article
@@ -355,15 +614,17 @@ function renderHotels() {
                 loading="lazy"
                 class="card-img w-full h-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-slate-950/20"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-slate-950/30"></div>
 
-              <!-- Top Badge -->
-              <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-600/95 text-white backdrop-blur-sm shadow">
-                ${hotel.badge[AppState.lang]}
-              </span>
+              <!-- Top Left: Star Rating Badge -->
+              <div class="absolute top-3.5 left-3.5 flex items-center gap-1.5">
+                <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-ocean-950/90 text-amber-300 border border-amber-300/30 backdrop-blur-sm shadow-sm">
+                  ${starStars} ${hotel.stars}★
+                </span>
+              </div>
 
-              <!-- Star Rating -->
-              <div class="absolute top-4 right-4 flex items-center gap-1 bg-slate-900/80 backdrop-blur-sm text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold">
+              <!-- Top Right: User Review Rating -->
+              <div class="absolute top-3.5 right-3.5 flex items-center gap-1 bg-slate-900/85 backdrop-blur-sm text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold border border-white/10 shadow-sm">
                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
@@ -371,29 +632,44 @@ function renderHotels() {
               </div>
 
               <!-- Location Pill & Admin Controls on Image Bottom -->
-              <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white gap-2">
-                <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-black/45 backdrop-blur-sm px-3 py-1 rounded-full">
+              <div class="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between text-white gap-2">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full truncate">
                   <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
-                  ${hotel.location[AppState.lang]}
+                  <span class="truncate">${spotName}</span>
                 </span>
                 ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hotels', hotel.id) : ''}
               </div>
             </div>
 
             <!-- Card Body -->
-            <div class="p-6">
+            <div class="p-5 sm:p-6">
               <div class="flex items-start justify-between gap-2">
-                <h3 class="text-xl font-bold text-slate-900 leading-snug">${hotel.name[AppState.lang]}</h3>
+                <div>
+                  <div class="inline-block px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide bg-teal-50 text-teal-800 border border-teal-200/80 mb-1">
+                    ${starLabel}
+                  </div>
+                  <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">${hotel.name[AppState.lang]}</h3>
+                </div>
               </div>
-              <p class="text-slate-600 text-sm mt-2 leading-relaxed">${hotel.description[AppState.lang]}</p>
+              <p class="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed line-clamp-3">${hotel.description[AppState.lang]}</p>
 
-              <!-- Amenities -->
-              <div class="mt-4">
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">${t.amenitiesLabel}</p>
-                <div class="flex flex-wrap gap-2">
+              <!-- Key Amenities Preview & View Facilities Button -->
+              <div class="mt-4 pt-3 border-t border-slate-100">
+                <div class="flex items-center justify-between mb-2">
+                  <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">${t.amenitiesLabel}</p>
+                  <button
+                    type="button"
+                    onclick="openHotelFacilitiesModal('${hotel.id}')"
+                    class="inline-flex items-center gap-1 text-xs font-extrabold text-teal-700 hover:text-teal-900 hover:underline cursor-pointer"
+                  >
+                    <span>✨ ${isBn ? 'সুবিধাসমূহ' : 'Facilities Details'}</span>
+                    <span>→</span>
+                  </button>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
                   ${amenitiesList}
                 </div>
               </div>
@@ -419,38 +695,42 @@ function renderHotels() {
             </div>
           </div>
 
-          <!-- Card Footer with Dynamic Price & CTA -->
-          <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+          <!-- Card Footer with Dynamic Price & CTAs -->
+          <div class="px-5 sm:px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span class="block text-xs text-slate-500 font-medium">${
-                AppState.lang === 'en' ? 'Estimated Rate' : 'আনুমানিক ভাড়া'
+              <span class="block text-[11px] text-slate-500 font-medium">${
+                isBn ? 'আনুমানিক ভাড়া' : 'Estimated Rate'
               }</span>
-              <span class="text-lg font-extrabold text-sky-800">${priceText}</span>
+              <span class="text-base sm:text-lg font-extrabold text-sky-800">${priceText}</span>
               <span class="text-xs text-slate-500 font-medium">${t.perNight}</span>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
               <button
                 type="button"
                 onclick="if(typeof selectItineraryHotel==='function') selectItineraryHotel('${hotel.id}', true)"
-                class="px-3.5 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs ${
+                class="px-3 py-2 rounded-xl text-xs font-extrabold transition shadow-xs cursor-pointer ${
                   typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
                     ? 'bg-emerald-600 text-white'
                     : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
                 }">
                 ${
                   typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
-                    ? AppState.lang === 'en'
-                      ? '✓ In My Trip'
-                      : '✓ প্ল্যানে আছে'
-                    : AppState.lang === 'en'
-                    ? '+ Pick for Trip'
-                    : '+ প্ল্যানে নিন'
+                    ? (isBn ? '✓ প্ল্যানে আছে' : '✓ In Trip')
+                    : (isBn ? '+ ট্রিপে নিন' : '+ Pick')
                 }
               </button>
               <button
                 type="button"
+                onclick="openHotelFacilitiesModal('${hotel.id}')"
+                class="px-2.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 text-xs font-bold transition shadow-2xs shrink-0 cursor-pointer"
+                title="${isBn ? 'সুবিধাসমূহ দেখুন' : 'View Facilities'}"
+              >
+                ✨
+              </button>
+              <button
+                type="button"
                 onclick="openHotelInquiry('${hotel.id}')"
-                class="px-3.5 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold tracking-wide transition shadow-sm shrink-0">
+                class="px-3 py-2 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold tracking-wide transition shadow-sm shrink-0 cursor-pointer">
                 ${t.inquireBtn}
               </button>
             </div>
@@ -596,12 +876,235 @@ function updateHotelAutoSlideUI() {
   }
 }
 
-function setHotelFilter(locationKey) {
-  AppState.hotelFilter = locationKey;
+function setHotelStarFilter(starVal) {
+  AppState.hotelStarFilter = starVal === AppState.hotelStarFilter ? 'ALL' : starVal;
   hotelSliderActiveIndex = 0;
   renderHotels();
   const track = document.getElementById('hotels-grid');
   if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+function setHotelPriceFilter(priceVal) {
+  AppState.hotelPriceFilter = priceVal === AppState.hotelPriceFilter ? 'ALL' : priceVal;
+  hotelSliderActiveIndex = 0;
+  renderHotels();
+  const track = document.getElementById('hotels-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+function setHotelSpotFilter(spotVal) {
+  AppState.hotelSpotFilter = spotVal === AppState.hotelSpotFilter ? 'ALL' : spotVal;
+  AppState.hotelFilter = AppState.hotelSpotFilter;
+  hotelSliderActiveIndex = 0;
+  renderHotels();
+  const track = document.getElementById('hotels-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+function setHotelFilter(locationKey) {
+  setHotelSpotFilter(locationKey);
+}
+
+function setHotelFacilityFilter(facVal) {
+  AppState.hotelFacilityFilter = facVal === AppState.hotelFacilityFilter ? 'ALL' : facVal;
+  hotelSliderActiveIndex = 0;
+  renderHotels();
+  const track = document.getElementById('hotels-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+function setHotelSortBy(sortVal) {
+  AppState.hotelSortBy = sortVal;
+  hotelSliderActiveIndex = 0;
+  renderHotels();
+  const track = document.getElementById('hotels-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+function resetAllHotelFilters() {
+  AppState.hotelStarFilter = 'ALL';
+  AppState.hotelPriceFilter = 'ALL';
+  AppState.hotelSpotFilter = 'ALL';
+  AppState.hotelFilter = 'ALL';
+  AppState.hotelFacilityFilter = 'ALL';
+  AppState.hotelSortBy = 'recommended';
+  hotelSliderActiveIndex = 0;
+  renderHotels();
+  const track = document.getElementById('hotels-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+function openHotelFacilitiesModal(hotelId) {
+  const hotel = HOTELS_DATA.find(h => h.id === hotelId);
+  if (!hotel) return;
+
+  const modal = document.getElementById('hotel-facilities-modal');
+  const nameEl = document.getElementById('modal-hotel-name');
+  const starsBadge = document.getElementById('modal-hotel-stars-badge');
+  const spotBadge = document.getElementById('modal-hotel-spot-badge');
+  const ratingBadge = document.getElementById('modal-hotel-rating-badge');
+  const locationText = document.getElementById('modal-hotel-location-text');
+  const bodyEl = document.getElementById('modal-hotel-body');
+  const footerEl = document.getElementById('modal-hotel-footer');
+  if (!modal || !bodyEl) return;
+
+  const isBn = AppState.lang === 'bn';
+  const priceFormatted = formatPriceRange(hotel.minBDT, hotel.maxBDT);
+  const starStars = '★'.repeat(hotel.stars || 3);
+  const starLabel = hotel.starLabel ? hotel.starLabel[AppState.lang] : `${hotel.stars}-Star`;
+  const spotName = hotel.spotName ? hotel.spotName[AppState.lang] : hotel.location[AppState.lang];
+
+  if (nameEl) nameEl.textContent = hotel.name[AppState.lang];
+  if (starsBadge) starsBadge.textContent = `${starStars} ${starLabel}`;
+  if (spotBadge) spotBadge.textContent = `📍 ${spotName}`;
+  if (ratingBadge) ratingBadge.textContent = `★ ${hotel.rating} / 5.0`;
+  if (locationText) locationText.textContent = hotel.location[AppState.lang];
+
+  // Facilities list
+  const facilitiesList =
+    hotel.facilities && hotel.facilities[AppState.lang] && hotel.facilities[AppState.lang].length
+      ? hotel.facilities[AppState.lang]
+      : hotel.amenities[AppState.lang] || [];
+
+  const facilitiesHtml = facilitiesList
+    .map(
+      fac => `
+      <div class="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 hover:bg-sky-50/50 border border-slate-200/80 transition">
+        <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+          ✓
+        </span>
+        <span class="text-xs sm:text-sm font-medium text-slate-800 leading-snug">
+          ${fac}
+        </span>
+      </div>
+    `
+    )
+    .join('');
+
+  const keyAmenitiesHtml = (hotel.amenities[AppState.lang] || [])
+    .map(
+      a => `
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-800 border border-sky-200">
+        <span class="text-teal-600">★</span> ${a}
+      </span>
+    `
+    )
+    .join('');
+
+  bodyEl.innerHTML = `
+    <!-- Rates & Overview Card -->
+    <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-50 via-teal-50/60 to-amber-50/40 border border-sky-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+      <div>
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-sky-900">${isBn ? 'আনুমানিক রেট / প্রতি রাত' : 'Estimated Nightly Rate'}</span>
+        <div class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5 tracking-tight">${priceFormatted}</div>
+        <p class="text-[11px] text-slate-500 mt-1">${isBn ? '* মৌসুমি চাহিদা ও রুম ক্যাটাগরি অনুযায়ী ভাড়া কম-বেশি হতে পারে' : '* Rates vary by room category, sea-facing view, and high/low seasons'}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          onclick="if(typeof selectItineraryHotel==='function') { selectItineraryHotel('${hotel.id}', true); closeHotelFacilitiesModal(); }"
+          class="px-4 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs cursor-pointer ${
+            typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
+              ? 'bg-emerald-600 text-white'
+              : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+          }">
+          ${
+            typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
+              ? (isBn ? '✓ প্ল্যানে সংরক্ষিত' : '✓ In My Trip Plan')
+              : (isBn ? '+ আমার ট্রিপে নিন' : '+ Add to Trip Plan')
+          }
+        </button>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+        ${isBn ? 'হোটেল পরিচিতি' : 'Property Overview'}
+      </h4>
+      <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200/70">
+        ${hotel.description[AppState.lang]}
+      </p>
+    </div>
+
+    <!-- Key Amenities Badges -->
+    <div>
+      <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+        ${isBn ? 'মূল সুবিধাসমূহ' : 'Key Amenities'}
+      </h4>
+      <div class="flex flex-wrap gap-1.5">
+        ${keyAmenitiesHtml}
+      </div>
+    </div>
+
+    <!-- Verified Detailed Facilities List -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-teal-800">
+          ✨ ${isBn ? 'পূর্ণাঙ্গ সুযোগ-সুবিধা ও গেস্ট সার্ভিস' : 'Verified Facilities & Guest Services'}
+        </h4>
+        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+          ${facilitiesList.length} ${isBn ? 'টি সুবিধা' : 'Verified Features'}
+        </span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        ${facilitiesHtml}
+      </div>
+    </div>
+  `;
+
+  if (footerEl) {
+    footerEl.innerHTML = `
+      <div class="flex flex-wrap items-center gap-2">
+        ${
+          hotel.phone
+            ? `<a href="tel:${hotel.phone.replace(/\s+/g, '')}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition shadow-xs">
+                <span>☎</span>
+                <span>${isBn ? 'হটলাইনে কল' : 'Call'} ${hotel.phone}</span>
+              </a>`
+            : ''
+        }
+        ${
+          hotel.sourceUrl
+            ? `<a href="${hotel.sourceUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-300 transition">
+                <span>🌐 ${isBn ? 'অফিশিয়াল সাইট' : 'Official Site'}</span>
+                <span>↗</span>
+              </a>`
+            : ''
+        }
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          onclick="closeHotelFacilitiesModal(); openHotelInquiry('${hotel.id}');"
+          class="px-4 py-2 rounded-xl bg-ocean-950 hover:bg-sky-800 text-white text-xs font-bold transition shadow-sm cursor-pointer"
+        >
+          💬 ${isBn ? 'সহকারীর কাছে জানুন' : 'Ask AI Assistant'}
+        </button>
+        <button
+          type="button"
+          onclick="closeHotelFacilitiesModal()"
+          class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold transition cursor-pointer"
+        >
+          ${isBn ? 'বন্ধ করুন' : 'Close'}
+        </button>
+      </div>
+    `;
+  }
+
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHotelFacilitiesModal() {
+  const modal = document.getElementById('hotel-facilities-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
 }
 
 function openHotelInquiry(hotelId) {
@@ -1400,6 +1903,12 @@ function resetSearchAndFilters() {
   AppState.searchQuery = '';
   AppState.searchCategory = 'all';
   AppState.hotelFilter = 'ALL';
+  AppState.hotelStarFilter = 'ALL';
+  AppState.hotelPriceFilter = 'ALL';
+  AppState.hotelSpotFilter = 'ALL';
+  AppState.hotelFacilityFilter = 'ALL';
+  AppState.hotelSortBy = 'recommended';
+  hotelSliderActiveIndex = 0;
   const input = document.getElementById('hero-search-input');
   const select = document.getElementById('hero-search-category');
   if (input) input.value = '';
@@ -2505,4 +3014,11 @@ document.addEventListener('DOMContentLoaded', () => {
       handleUserChatSubmission();
     });
   }
+
+  // Keyboard shortcut: ESC closes open modal
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeHotelFacilitiesModal();
+    }
+  });
 });
