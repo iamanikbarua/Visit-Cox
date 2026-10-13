@@ -1000,7 +1000,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section Heading -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
+      <div class="text-center max-w-3xl mx-auto mb-8">
         <span
           id="activities-eyebrow"
           class="inline-block text-xs font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100 px-3.5 py-1 rounded-full mb-3 shadow-2xs"
@@ -1023,8 +1023,92 @@
         </div>
       </div>
 
-      <!-- Activities Grid -->
-      <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <!-- Activities Slider Top Control Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div class="inline-flex items-center gap-2 text-xs font-bold text-slate-700 bg-white px-3.5 py-2 rounded-full border border-slate-200/90 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+          <span id="activities-slider-counter">10 Thrilling Activities • Swipe or Click Arrows ← →</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="activities-autoplay-btn"
+            onclick="toggleActivityAutoSlide()"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-white hover:bg-amber-50 text-slate-700 border border-slate-200 transition shadow-2xs cursor-pointer"
+            title="Toggle Auto-Slide"
+          >
+            <span id="activities-autoplay-icon">⏸</span>
+            <span id="activities-autoplay-label">Auto-Slide On</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="slideActivities(-1)"
+            aria-label="Previous Activity"
+            class="w-10 h-10 rounded-full bg-white hover:bg-amber-400 text-slate-700 hover:text-slate-950 border border-slate-200 hover:border-amber-400 flex items-center justify-center transition shadow-xs cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            onclick="slideActivities(1)"
+            aria-label="Next Activity"
+            class="w-10 h-10 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 border border-amber-400 flex items-center justify-center transition shadow-sm cursor-pointer font-bold"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Activities Sliding Track Wrapper with Floating Side Arrows -->
+      <div
+        class="relative group/activityslider"
+        onmouseenter="pauseActivityAutoSlide(true)"
+        onmouseleave="pauseActivityAutoSlide(false)"
+        ontouchstart="pauseActivityAutoSlide(true)"
+        ontouchend="pauseActivityAutoSlide(false)"
+      >
+        <!-- Left Floating Arrow (Desktop) -->
+        <button
+          type="button"
+          onclick="slideActivities(-1)"
+          aria-label="Slide Left"
+          class="hidden md:flex absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/95 hover:bg-amber-400 text-slate-800 hover:text-slate-950 border-2 border-slate-200 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Activities Cards Sliding Track -->
+        <div
+          id="activities-grid"
+          class="hotel-slider-track flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory pt-2 pb-6 px-1 scroll-smooth"
+        >
+          <!-- Populated dynamically via app.js -->
+        </div>
+
+        <!-- Right Floating Arrow (Desktop) -->
+        <button
+          type="button"
+          onclick="slideActivities(1)"
+          aria-label="Slide Right"
+          class="hidden md:flex absolute -right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/95 hover:bg-amber-400 text-slate-800 hover:text-slate-950 border-2 border-slate-200 hover:border-amber-400 shadow-xl items-center justify-center transition transform hover:scale-110 cursor-pointer"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Activities Slider Dots Indicator Bar -->
+      <div id="activity-slider-dots" class="mt-3 flex items-center justify-center gap-2">
         <!-- Populated dynamically via app.js -->
       </div>
 

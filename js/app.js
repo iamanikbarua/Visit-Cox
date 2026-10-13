@@ -245,6 +245,9 @@ function renderStaticText() {
     setText('activities-eyebrow', t.activitiesSection.eyebrow);
     setText('activities-title', t.activitiesSection.title);
     setText('activities-subtitle', t.activitiesSection.subtitle);
+    if (typeof updateActivityAutoSlideUI === 'function') {
+      updateActivityAutoSlideUI();
+    }
   }
 
   setText('transport-eyebrow', t.transportSection.eyebrow);
@@ -1605,11 +1608,19 @@ function updateHiddenGemsAutoSlideUI() {
 }
 
 /* --------------------------------------------------------------------------
- * SECTION 3C: ACTIVITIES & COASTAL ADVENTURES RENDERER
+ * SECTION 3C: ACTIVITIES & COASTAL ADVENTURES RENDERER (SLIDING CAROUSEL)
  * -------------------------------------------------------------------------- */
+let activitySliderActiveIndex = 0;
+let activityAutoSlideTimer = null;
+let activityAutoSlideEnabled = true;
+let activitySliderHoverPaused = false;
+let activityScrollListenerAttached = false;
+
 function renderActivities() {
   const container = document.getElementById('activities-grid');
   const filtersContainer = document.getElementById('activity-category-filters');
+  const dotsContainer = document.getElementById('activity-slider-dots');
+  const counterEl = document.getElementById('activities-slider-counter');
   if (!container) return;
 
   const t = UI_TEXT[AppState.lang].activitiesSection || {
@@ -1668,9 +1679,11 @@ function renderActivities() {
     return true;
   });
 
+  updateActivityAutoSlideUI();
+
   if (activities.length === 0) {
     container.innerHTML = `
-      <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
+      <div class="w-full bg-white rounded-3xl p-10 text-center border border-slate-200">
         <p class="text-slate-600 font-medium">${
           AppState.lang === 'en'
             ? 'No activities match the selected filter.'
@@ -1681,11 +1694,22 @@ function renderActivities() {
         </button>
       </div>
     `;
+    if (dotsContainer) dotsContainer.innerHTML = '';
+    if (counterEl) {
+      counterEl.textContent = AppState.lang === 'en' ? '0 Activities Found' : '০টি অ্যাক্টিভিটি পাওয়া গেছে';
+    }
     return;
   }
 
+  if (counterEl) {
+    counterEl.textContent =
+      AppState.lang === 'en'
+        ? `Showing ${activities.length} Thrilling Activities • Swipe or Click Arrows ← →`
+        : `${formatNumber(activities.length, 'bn')}টি রোমাঞ্চকর অ্যাক্টিভিটি • স্লাইড করুন ← →`;
+  }
+
   container.innerHTML = activities
-    .map(act => {
+    .map((act, idx) => {
       const priceText = formatPriceRange(act.priceBDT, act.priceMaxBDT);
       const badgeText = act.badge ? act.badge[AppState.lang] : '';
       const nameText = act.name[AppState.lang];
@@ -1697,7 +1721,10 @@ function renderActivities() {
       const includedList = act.included ? act.included[AppState.lang] : [];
 
       return `
-        <article class="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+        <article
+          data-activity-slide-index="${idx}"
+          class="coastal-card group shrink-0 snap-start w-[88%] sm:w-[350px] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+        >
           <div class="relative h-56 overflow-hidden bg-slate-900">
             <img
               src="${act.image}"
@@ -1779,14 +1806,14 @@ function renderActivities() {
               <button
                 type="button"
                 onclick="inquireAboutActivity('${act.id}')"
-                class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-2xs text-center"
+                class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-2xs text-center cursor-pointer"
               >
                 ${AppState.lang === 'en' ? '💬 Inquire with AI Guide' : '💬 গাইডের পরামর্শ নিন'}
               </button>
               <button
                 type="button"
                 onclick="addActivityToTrip('${act.id}')"
-                class="py-2.5 px-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition shadow-2xs shrink-0"
+                class="py-2.5 px-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition shadow-2xs shrink-0 cursor-pointer"
                 title="${t.addToTrip}"
               >
                 ${t.addToTrip}
@@ -1797,11 +1824,147 @@ function renderActivities() {
       `;
     })
     .join('');
+
+  renderActivitySliderDots(activities.length);
+  initActivitySliderEvents();
+  startActivityAutoSlide();
+}
+
+function renderActivitySliderDots(totalSlides) {
+  const dotsContainer = document.getElementById('activity-slider-dots');
+  if (!dotsContainer) return;
+
+  if (totalSlides <= 1) {
+    dotsContainer.innerHTML = '';
+    return;
+  }
+
+  dotsContainer.innerHTML = Array.from({ length: totalSlides })
+    .map((_, idx) => {
+      const isActive = idx === activitySliderActiveIndex;
+      return `
+        <button
+          type="button"
+          onclick="slideToActivityIndex(${idx})"
+          aria-label="Go to activity slide ${idx + 1}"
+          class="h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+            isActive ? 'w-8 bg-amber-500 shadow-xs' : 'w-2.5 bg-slate-300 hover:bg-amber-400'
+          }"
+        ></button>
+      `;
+    })
+    .join('');
+}
+
+function slideActivities(direction) {
+  const track = document.getElementById('activities-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('article[data-activity-slide-index]');
+  if (!slides.length) return;
+
+  const firstCard = slides[0];
+  const gap = 24; // gap-6 = 24px
+  const stepWidth = firstCard.offsetWidth + gap;
+  const maxScrollLeft = track.scrollWidth - track.clientWidth;
+
+  if (direction > 0) {
+    if (track.scrollLeft >= maxScrollLeft - 20) {
+      track.scrollTo({ left: 0, behavior: 'smooth' });
+      activitySliderActiveIndex = 0;
+    } else {
+      track.scrollBy({ left: stepWidth, behavior: 'smooth' });
+      activitySliderActiveIndex = Math.min(slides.length - 1, activitySliderActiveIndex + 1);
+    }
+  } else {
+    if (track.scrollLeft <= 20) {
+      track.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+      activitySliderActiveIndex = slides.length - 1;
+    } else {
+      track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
+      activitySliderActiveIndex = Math.max(0, activitySliderActiveIndex - 1);
+    }
+  }
+
+  renderActivitySliderDots(slides.length);
+}
+
+function slideToActivityIndex(index) {
+  const track = document.getElementById('activities-grid');
+  if (!track) return;
+  const slides = track.querySelectorAll('article[data-activity-slide-index]');
+  if (!slides[index]) return;
+
+  const targetLeft = slides[index].offsetLeft - track.offsetLeft;
+  track.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  activitySliderActiveIndex = index;
+  renderActivitySliderDots(slides.length);
+}
+
+function initActivitySliderEvents() {
+  const track = document.getElementById('activities-grid');
+  if (!track || activityScrollListenerAttached) return;
+  activityScrollListenerAttached = true;
+
+  track.addEventListener(
+    'scroll',
+    () => {
+      const slides = track.querySelectorAll('article[data-activity-slide-index]');
+      if (!slides.length) return;
+      const firstCard = slides[0];
+      const stepWidth = firstCard.offsetWidth + 24;
+      const currentIdx = Math.min(
+        slides.length - 1,
+        Math.max(0, Math.round(track.scrollLeft / stepWidth))
+      );
+      if (currentIdx !== activitySliderActiveIndex) {
+        activitySliderActiveIndex = currentIdx;
+        renderActivitySliderDots(slides.length);
+      }
+    },
+    { passive: true }
+  );
+}
+
+function startActivityAutoSlide() {
+  if (activityAutoSlideTimer) {
+    clearInterval(activityAutoSlideTimer);
+  }
+  activityAutoSlideTimer = setInterval(() => {
+    if (!activityAutoSlideEnabled || activitySliderHoverPaused) return;
+    slideActivities(1);
+  }, 4500);
+}
+
+function toggleActivityAutoSlide() {
+  activityAutoSlideEnabled = !activityAutoSlideEnabled;
+  updateActivityAutoSlideUI();
+}
+
+function pauseActivityAutoSlide(isPaused) {
+  activitySliderHoverPaused = Boolean(isPaused);
+}
+
+function updateActivityAutoSlideUI() {
+  const iconEl = document.getElementById('activities-autoplay-icon');
+  const labelEl = document.getElementById('activities-autoplay-label');
+  if (iconEl) {
+    iconEl.textContent = activityAutoSlideEnabled ? '⏸' : '▶';
+  }
+  if (labelEl) {
+    if (AppState.lang === 'bn') {
+      labelEl.textContent = activityAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
+    } else {
+      labelEl.textContent = activityAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
+    }
+  }
 }
 
 function setActivityFilter(cat) {
   AppState.activityFilter = cat;
+  activitySliderActiveIndex = 0;
   renderActivities();
+  const track = document.getElementById('activities-grid');
+  if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
 function inquireAboutActivity(actId) {
@@ -2154,6 +2317,7 @@ function selectLiveSearchResult(sectionId, query, category) {
 
   renderHotels();
   renderDestinations();
+  renderActivities();
   renderTransport();
 
   document.getElementById('hero-live-search-results')?.classList.add('hidden');
@@ -2172,6 +2336,7 @@ function handleLiveHeroSearchInput() {
       AppState.searchQuery = '';
       renderHotels();
       renderDestinations();
+      renderActivities();
       renderTransport();
     }
     return;
@@ -2193,14 +2358,23 @@ function handleLiveHeroSearchInput() {
         s.name.bn.toLowerCase().includes(q) ||
         (s.vibe && s.vibe.en.toLowerCase().includes(q))
     )
-    .slice(0, 4);
+    .slice(0, 3);
+
+  const matchedActivities = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : [])
+    .filter(
+      a =>
+        a.name.en.toLowerCase().includes(q) ||
+        a.name.bn.toLowerCase().includes(q) ||
+        a.location.en.toLowerCase().includes(q)
+    )
+    .slice(0, 3);
 
   const matchedTransport = TRANSPORT_DATA.filter(
     tr =>
       tr.route.en.toLowerCase().includes(q) ||
       tr.vehicleName.en.toLowerCase().includes(q) ||
       tr.route.bn.toLowerCase().includes(q)
-  ).slice(0, 3);
+  ).slice(0, 2);
 
   const itemsHTML = [];
 
@@ -2240,6 +2414,26 @@ function handleLiveHeroSearchInput() {
           </div>
         </div>
         <span class="text-xs font-bold text-sky-700 shrink-0">Explore →</span>
+      </button>
+    `);
+  });
+
+  matchedActivities.forEach(act => {
+    const safeName = act.name.en.replace(/'/g, "\\'");
+    itemsHTML.push(`
+      <button
+        type="button"
+        onclick="selectLiveSearchResult('activities-section', '${safeName}', 'spots')"
+        class="w-full p-2.5 rounded-xl hover:bg-amber-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
+      >
+        <div class="flex items-center gap-2.5 min-w-0">
+          <img src="${act.image}" alt="${act.name[lang]}" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          <div class="min-w-0">
+            <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-700">🏄 ${lang === 'en' ? 'Coastal Activity' : 'রোমাঞ্চকর অ্যাক্টিভিটি'}</span>
+            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${act.name[lang]}</span>
+          </div>
+        </div>
+        <span class="text-xs font-extrabold text-amber-800 shrink-0">${formatPriceRange(act.priceBDT, act.priceMaxBDT)}</span>
       </button>
     `);
   });
@@ -2284,6 +2478,7 @@ function handleHeroSearch(e) {
 
   renderHotels();
   renderDestinations();
+  renderActivities();
   renderTransport();
 
   // Scroll smoothly to target section based on category or query
@@ -2297,6 +2492,8 @@ function handleHeroSearch(e) {
     const q = AppState.searchQuery.toLowerCase();
     if (q.includes('tomtom') || q.includes('chander') || q.includes('cng') || q.includes('speedboat')) {
       document.getElementById('transport')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (q.includes('surf') || q.includes('parasail') || q.includes('horse') || q.includes('safari') || q.includes('camp') || q.includes('kayak') || q.includes('quad')) {
+      document.getElementById('activities-section')?.scrollIntoView({ behavior: 'smooth' });
     } else if (q.includes('inani') || q.includes('himchari') || q.includes('moheshkhali') || q.includes('ramu') || q.includes('sonadia') || q.includes('radiant')) {
       document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' });
     } else {
@@ -2314,7 +2511,11 @@ function resetSearchAndFilters() {
   AppState.hotelSpotFilter = 'ALL';
   AppState.hotelFacilityFilter = 'ALL';
   AppState.hotelSortBy = 'recommended';
+  AppState.activityFilter = 'all';
   hotelSliderActiveIndex = 0;
+  destinationSliderActiveIndex = 0;
+  activitySliderActiveIndex = 0;
+  hiddenGemsSliderActiveIndex = 0;
   const input = document.getElementById('hero-search-input');
   const select = document.getElementById('hero-search-category');
   if (input) input.value = '';
