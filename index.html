@@ -1126,9 +1126,9 @@
         <div>
           <span
             id="map-eyebrow"
-            class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-700 bg-teal-100 px-3 py-1 rounded-full mb-3"
+            class="inline-block text-xs font-extrabold uppercase tracking-widest text-teal-800 bg-teal-100 px-3.5 py-1 rounded-full mb-3 shadow-2xs"
           >
-            SMART DAY-WISE ROUTE GENERATOR
+            🗺️ SMART DAY-BY-DAY ROUTE PLANNER
           </span>
           <h2
             id="map-title"
@@ -1136,12 +1136,12 @@
           >
             Select Daily Locations &amp; Generate Your Cox’s Bazar Route Plan
           </h2>
-          <p id="map-subtitle" class="mt-2.5 text-slate-600 max-w-2xl text-base">
-            Pick a day, tap the places you want to visit, and the system automatically generates an optimized step-by-step travel route inside Cox’s Bazar with distances, travel times, and local vehicles.
+          <p id="map-subtitle" class="mt-2.5 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+            Pick a day, select 2 to 4 scenic spots, and watch your live road route, distances, and transit recommendations calculate in real time.
           </p>
         </div>
 
-        <!-- Day Selector Tabs & Optimize Button -->
+        <!-- Day Selector Segmented Tabs -->
         <div
           id="map-category-filters"
           class="flex flex-wrap items-center gap-2"
@@ -1152,10 +1152,10 @@
         </div>
       </div>
 
-      <!-- Day-Wise Location Selector Panel (User clicks spots to visit on the active day) -->
+      <!-- Day-Wise Location Shelf Panel (Sleek Horizontal Shelf with Category Filter) -->
       <div
         id="map-day-spot-selector"
-        class="mb-6 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-xs"
+        class="mb-6 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-sm"
       >
         <!-- Populated dynamically via features.js -->
       </div>
@@ -1164,19 +1164,38 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <!-- Leaflet Map Canvas (7 Columns on Desktop) -->
         <div class="lg:col-span-7">
-          <div
-            id="coxs-bazar-map"
-            style="width: 100%; height: 520px; min-height: 400px;"
-            class="w-full rounded-3xl shadow-lg border border-slate-200 z-10"
-            aria-label="Interactive Day-Wise Route Map of Cox's Bazar"
-          ></div>
+          <div class="relative rounded-3xl overflow-hidden shadow-lg border border-slate-200/90 bg-slate-100">
+            <!-- Floating Map Live Status Overlay -->
+            <div
+              id="map-floating-status"
+              class="absolute top-3 left-3 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-md text-xs font-extrabold text-slate-800 flex items-center gap-2 pointer-events-none"
+            >
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="map-floating-status-text">Interactive Route Map</span>
+            </div>
+
+            <!-- Leaflet Map Canvas -->
+            <div
+              id="coxs-bazar-map"
+              style="width: 100%; height: 530px; min-height: 420px;"
+              class="w-full z-10"
+              aria-label="Interactive Day-Wise Route Map of Cox's Bazar"
+            ></div>
+
+            <!-- Floating Map Legend Overlay -->
+            <div class="absolute bottom-3 right-3 z-[400] bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-[11px] font-bold text-slate-700 flex items-center gap-3 pointer-events-none">
+              <span class="flex items-center gap-1">🏨 <span class="text-slate-500">Departure Hotel</span></span>
+              <span class="flex items-center gap-1">① ② <span class="text-slate-500">Stops</span></span>
+              <span class="flex items-center gap-1">🚤 <span class="text-slate-500">Speedboat Jetty</span></span>
+            </div>
+          </div>
         </div>
 
         <!-- Generated Step-by-Step Route Plan Panel (5 Columns on Desktop) -->
         <div class="lg:col-span-5 bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-sm">
           <div
             id="map-locations-quicklist"
-            class="space-y-3 max-h-[500px] overflow-y-auto pr-1"
+            class="space-y-3 max-h-[530px] overflow-y-auto pr-1"
           >
             <!-- Populated dynamically via features.js -->
           </div>

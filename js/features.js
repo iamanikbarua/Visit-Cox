@@ -923,6 +923,7 @@ const FeaturesState = {
   totalDays: 5,
   activeDayTab: 1,
   selectedHotelId: 'hotel-sea-crown',
+  activeSpotShelfCorridor: 'all',
   daysPlan: getDefault5DayPlan()
 };
 
@@ -1005,6 +1006,27 @@ const SPOT_ROUTE_METADATA = {
     corridorLabel: { en: 'Main Beachfront', bn: 'প্রধান সৈকত' },
     orderWeight: 10
   },
+  'laboni-beach': {
+    lat: 21.4280,
+    lng: 91.9710,
+    corridor: 'beach_town',
+    corridorLabel: { en: 'Laboni Point • Main Beach', bn: 'লাবণী পয়েন্ট • প্রধান সৈকত' },
+    orderWeight: 8
+  },
+  'sugandha-beach': {
+    lat: 21.4210,
+    lng: 91.9755,
+    corridor: 'beach_town',
+    corridorLabel: { en: 'Sugandha Point • Market & Beach', bn: 'সুগন্ধা পয়েন্ট • বাজার ও বিচ' },
+    orderWeight: 12
+  },
+  'kolatoli-beach': {
+    lat: 21.4110,
+    lng: 91.9830,
+    corridor: 'beach_town',
+    corridorLabel: { en: 'Kolatoli Beach • Hotel Zone', bn: 'কলাতলী বিচ • হোটেল মোটেল জোন' },
+    orderWeight: 14
+  },
   'radiant-fish-world': {
     lat: 21.4302,
     lng: 91.9735,
@@ -1026,12 +1048,26 @@ const SPOT_ROUTE_METADATA = {
     corridorLabel: { en: 'Marine Drive • 18 km South', bn: 'মেরিন ড্রাইভ • ১৮ কিমি দক্ষিণে' },
     orderWeight: 35
   },
+  'marine-drive': {
+    lat: 21.3100,
+    lng: 92.0350,
+    corridor: 'marine_drive',
+    corridorLabel: { en: 'Marine Drive Coastal Highway', bn: 'মেরিন ড্রাইভ সমুদ্র সড়ক' },
+    orderWeight: 42
+  },
   'inani-beach': {
     lat: 21.2291,
     lng: 92.0475,
     corridor: 'marine_drive',
     corridorLabel: { en: 'Marine Drive • 32 km South', bn: 'মেরিন ড্রাইভ • ৩২ কিমি দক্ষিণে' },
     orderWeight: 50
+  },
+  'patuartek-beach': {
+    lat: 21.1980,
+    lng: 92.0620,
+    corridor: 'marine_drive',
+    corridorLabel: { en: 'Patuartek Beach • 38 km South', bn: 'পাটুয়ারটেক বিচ • ৩৮ কিমি দক্ষিণে' },
+    orderWeight: 58
   },
   'shamlapur-sunset-point': {
     lat: 21.0825,
@@ -1063,12 +1099,34 @@ const SPOT_ROUTE_METADATA = {
     requiresBoat: true,
     orderWeight: 88
   },
+  'kutubdia-island': {
+    lat: 21.8150,
+    lng: 91.8540,
+    corridor: 'island_estuary',
+    corridorLabel: { en: 'Kutubdia Island & Lighthouse', bn: 'কুতুবদিয়া দ্বীপ ও বাতিঘর' },
+    requiresBoat: true,
+    orderWeight: 89
+  },
   '100-feet-buddha-ramu': {
     lat: 21.4325,
     lng: 92.1008,
     corridor: 'ramu_east',
     corridorLabel: { en: 'Ramu Highway • 16 km East', bn: 'রামু মহাসড়ক • ১৬ কিমি পূর্বে' },
-    orderWeight: 95
+    orderWeight: 93
+  },
+  'ramu-buddhist-temple': {
+    lat: 21.4340,
+    lng: 92.1020,
+    corridor: 'ramu_east',
+    corridorLabel: { en: 'Ramu Monasteries • 16 km East', bn: 'রামু সীমা বিহার • ১৬ কিমি' },
+    orderWeight: 94
+  },
+  'dulahazra-safari-park': {
+    lat: 21.6580,
+    lng: 92.0720,
+    corridor: 'ramu_east',
+    corridorLabel: { en: 'Chakaria Highway • 48 km North', bn: 'ডুলাহাজারা সাফারি পার্ক • ৪৮ কিমি' },
+    orderWeight: 98
   }
 };
 
@@ -1081,7 +1139,12 @@ const SPOT_ID_ALIASES = {
   'gem-najirartek': 'najirartek-dried-fish-hub',
   'gem-sonadia': 'sonadia-island',
   'gem-kolatoli-eco': 'kolatoli-eco-park',
-  'spot-ramu-buddha': '100-feet-buddha-ramu'
+  'spot-ramu-buddha': '100-feet-buddha-ramu',
+  'spot-ramu': 'ramu-buddhist-temple',
+  'spot-patuartek': 'patuartek-beach',
+  'spot-laboni': 'laboni-beach',
+  'spot-sugandha': 'sugandha-beach',
+  'spot-kolatoli': 'kolatoli-beach'
 };
 
 function normalizeSpotId(id) {
@@ -1227,6 +1290,30 @@ function buildDayRouteData(dayObj, lang) {
     prevMeta = meta;
   });
 
+  // Calculate estimated total local fare range
+  let minFareSum = 0;
+  let maxFareSum = 0;
+  stops.forEach(st => {
+    if (st.requiresBoat) {
+      minFareSum += 120;
+      maxFareSum += 180;
+    } else if (st.legKm > 25) {
+      minFareSum += 600;
+      maxFareSum += 1200;
+    } else if (st.legKm > 10) {
+      minFareSum += 250;
+      maxFareSum += 450;
+    } else {
+      minFareSum += 25;
+      maxFareSum += 60;
+    }
+  });
+
+  const fareEstimateRange =
+    stops.length === 0
+      ? (lang === 'en' ? '0 BDT' : '০ টাকা')
+      : `৳${minFareSum} - ৳${maxFareSum}`;
+
   return {
     hotel: {
       id: selectedHotel.id,
@@ -1239,7 +1326,8 @@ function buildDayRouteData(dayObj, lang) {
     stops,
     polylinePoints,
     totalKm: +totalKm.toFixed(1),
-    totalMinutes
+    totalMinutes,
+    fareEstimateRange
   };
 }
 
@@ -1391,6 +1479,49 @@ function clearDayRouteSpots(dayNum) {
   renderMapMarkersAndFilters();
 }
 
+function applyRoutePreset(dayNum, presetKey) {
+  const dayObj = FeaturesState.daysPlan.find(d => d.dayNumber === dayNum);
+  if (!dayObj) return;
+
+  const presets = {
+    'marine-drive': ['himchari-national-park', 'inani-beach', 'shamlapur-sunset-point'],
+    'beach-town': ['spot-laboni-sugandha', 'radiant-fish-world', 'kolatoli-eco-park'],
+    'islands': ['moheshkhali-island', 'sonadia-island', 'najirartek-dried-fish-hub'],
+    'heritage': ['100-feet-buddha-ramu', 'spot-laboni-sugandha']
+  };
+
+  const selectedSpots = presets[presetKey] || presets['marine-drive'];
+  dayObj.spots = [...selectedSpots];
+
+  const lang = typeof AppState !== 'undefined' ? AppState.lang : 'en';
+  const presetNames = {
+    'marine-drive': lang === 'en' ? 'South Marine Drive Safari' : 'মেরিন ড্রাইভ সাফারি',
+    'beach-town': lang === 'en' ? 'Main Beach & Town Life' : 'প্রধান সৈকত ও শহর দর্শন',
+    'islands': lang === 'en' ? 'Island Hopping Adventure' : 'দ্বীপ ভ্রমণ অ্যাডভেঞ্চার',
+    'heritage': lang === 'en' ? 'Ramu Buddhist Heritage' : 'রামু ঐতিহ্য ও বৌদ্ধ বিহার'
+  };
+
+  showUserToast(
+    lang === 'en'
+      ? `Applied "${presetNames[presetKey] || presetKey}" preset to Day ${dayNum}!`
+      : `দিন ${dayNum}-এ "${presetNames[presetKey] || presetKey}" রুট সেট করা হয়েছে!`
+  );
+
+  renderItineraryStudio();
+  renderMapMarkersAndFilters();
+}
+
+function setSpotShelfCorridor(corridorKey) {
+  FeaturesState.activeSpotShelfCorridor = corridorKey;
+  renderMapMarkersAndFilters();
+}
+
+function scrollSpotShelf(direction) {
+  const track = document.getElementById('map-spot-shelf-track');
+  if (!track) return;
+  track.scrollBy({ left: direction * 280, behavior: 'smooth' });
+}
+
 function focusMapLocation(spotOrHotelId) {
   if (!FeaturesState.mapInstance || !FeaturesState.markerLayerGroup) return;
   const normId = normalizeSpotId(spotOrHotelId);
@@ -1507,10 +1638,21 @@ function renderMapMarkersAndFilters() {
     `;
   }
 
-  // 2. RENDER INTERACTIVE LOCATION PICKER FOR ACTIVE DAY
-  const allSpots = getUnifiedWebsiteSpots();
+  // 2. RENDER INTERACTIVE LOCATION PICKER FOR ACTIVE DAY (SLEEK HORIZONTAL SHELF)
+  const allSpotsRaw = getUnifiedWebsiteSpots();
+  const seenSpotIds = new Set();
+  const allSpots = [];
+  for (const sp of allSpotsRaw) {
+    const norm = normalizeSpotId(sp.id);
+    if (!seenSpotIds.has(norm)) {
+      seenSpotIds.add(norm);
+      allSpots.push(sp);
+    }
+  }
+
   const hotelsList = typeof HOTELS_DATA !== 'undefined' ? HOTELS_DATA : [];
   const activeDayColor = DAY_ROUTE_COLORS[(activeDayNum - 1) % DAY_ROUTE_COLORS.length];
+  const activeCorridor = FeaturesState.activeSpotShelfCorridor || 'all';
 
   if (selectorPanel) {
     const hotelOptionsHTML = hotelsList
@@ -1523,7 +1665,51 @@ function renderMapMarkersAndFilters() {
       )
       .join('');
 
-    const spotCardsHTML = allSpots
+    const corridorFilters = [
+      { key: 'all', label: { en: 'All Places', bn: 'সকল স্থান' }, icon: '✨' },
+      { key: 'beach_town', label: { en: 'Town Beaches', bn: 'প্রধান সৈকত' }, icon: '🏖️' },
+      { key: 'marine_drive', label: { en: 'Marine Drive & Hills', bn: 'মেরিন ড্রাইভ' }, icon: '🛣️' },
+      { key: 'island_estuary', label: { en: 'Islands & Estuary', bn: 'দ্বীপ ও মোহনা' }, icon: '🏝️' },
+      { key: 'ramu_east', label: { en: 'Heritage & Temples', bn: 'ঐতিহ্য ও বিহার' }, icon: '🛕' }
+    ];
+
+    const corridorPillsHTML = corridorFilters
+      .map(cf => {
+        const isActive = activeCorridor === cf.key;
+        const count =
+          cf.key === 'all'
+            ? allSpots.length
+            : allSpots.filter(s => {
+                const meta = SPOT_ROUTE_METADATA[normalizeSpotId(s.id)];
+                return meta && meta.corridor === cf.key;
+              }).length;
+
+        return `
+          <button
+            type="button"
+            onclick="setSpotShelfCorridor('${cf.key}')"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap ${
+              isActive
+                ? 'bg-ocean-950 text-white shadow-xs'
+                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+            }"
+          >
+            <span>${cf.icon}</span>
+            <span>${cf.label[lang]}</span>
+            <span class="text-[10px] opacity-75">(${count})</span>
+          </button>
+        `;
+      })
+      .join('');
+
+    // Filter spots by active corridor
+    const displayedSpots = allSpots.filter(spot => {
+      if (activeCorridor === 'all') return true;
+      const meta = SPOT_ROUTE_METADATA[normalizeSpotId(spot.id)];
+      return meta && meta.corridor === activeCorridor;
+    });
+
+    const spotCardsHTML = displayedSpots
       .map(spot => {
         const normId = normalizeSpotId(spot.id);
         const stopIndex = activeDayObj ? activeDayObj.spots.indexOf(normId) : -1;
@@ -1532,30 +1718,33 @@ function renderMapMarkersAndFilters() {
         const corridorText = meta ? meta.corridorLabel[lang] : '';
 
         return `
-          <button
-            type="button"
+          <div
             onclick="toggleMapRouteSpot(${activeDayNum}, '${normId}')"
-            class="text-left p-2.5 rounded-2xl border-2 transition-all flex items-center gap-2.5 cursor-pointer group ${
+            class="group relative flex flex-col justify-between p-2.5 rounded-2xl border-2 transition-all cursor-pointer w-[220px] sm:w-[240px] shrink-0 snap-start bg-white select-none ${
               isPicked
-                ? 'bg-teal-50/90 border-teal-600 shadow-xs'
-                : 'bg-slate-50/70 hover:bg-sky-50/60 border-slate-200/80 hover:border-sky-300'
+                ? 'border-teal-500 bg-teal-50/50 shadow-xs ring-2 ring-teal-400/20'
+                : 'border-slate-200/90 hover:border-sky-300 hover:shadow-xs'
             }"
           >
-            <div class="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
-              <img src="${spot.image}" alt="${spot.name[lang]}" class="w-full h-full object-cover" />
-              ${
-                isPicked
-                  ? `<span class="absolute inset-0 bg-teal-900/65 text-white font-extrabold text-xs flex items-center justify-center">
-                      #${stopIndex + 1}
-                    </span>`
-                  : ''
-              }
-            </div>
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center justify-between gap-1">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider ${
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-slate-100">
+                <img
+                  src="${spot.image}"
+                  alt="${spot.name[lang]}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                ${
+                  isPicked
+                    ? `<span class="absolute inset-0 bg-teal-900/75 text-white font-black text-xs flex items-center justify-center">
+                        #${stopIndex + 1}
+                      </span>`
+                    : ''
+                }
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="block text-[9px] font-black uppercase tracking-wider ${
                   isPicked ? 'text-teal-700' : 'text-slate-400'
-                }">
+                } truncate">
                   ${
                     isPicked
                       ? lang === 'en'
@@ -1564,68 +1753,140 @@ function renderMapMarkersAndFilters() {
                       : corridorText
                   }
                 </span>
+                <h4 class="font-extrabold text-xs text-slate-900 group-hover:text-ocean-900 leading-snug line-clamp-1">
+                  ${spot.name[lang]}
+                </h4>
               </div>
-              <p class="font-bold text-xs text-slate-900 leading-snug line-clamp-1 group-hover:text-sky-700">
-                ${spot.name[lang]}
-              </p>
             </div>
-          </button>
+
+            <div class="flex items-center justify-between gap-1.5 pt-1.5 border-t border-slate-100">
+              <span class="text-[10px] font-semibold text-slate-500 truncate">
+                ${corridorText || (lang === 'en' ? 'Scenic Spot' : 'দর্শনীয় স্থান')}
+              </span>
+              <button
+                type="button"
+                class="px-2 py-0.5 rounded-lg text-[10px] font-black transition pointer-events-none ${
+                  isPicked
+                    ? 'bg-teal-600 text-white'
+                    : 'bg-slate-100 text-slate-700 group-hover:bg-sky-100 group-hover:text-sky-900'
+                }"
+              >
+                ${isPicked ? (lang === 'en' ? 'Added' : 'যুক্ত') : (lang === 'en' ? '+ Add' : '+ যোগ')}
+              </button>
+            </div>
+          </div>
         `;
       })
       .join('');
 
     selectorPanel.innerHTML = `
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-slate-100">
+      <!-- Shelf Dock Header: Day Badge, Hotel, Presets, Auto-Optimize -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 mb-3 border-b border-slate-100">
         <div class="flex flex-wrap items-center gap-2">
           <span
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold text-white"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black text-white shadow-2xs"
             style="background:${activeDayColor};"
           >
-            🗓️ ${lang === 'en' ? `Planning Day ${activeDayNum} Route` : `দিন ${activeDayNum}-এর রুট প্ল্যান`}
+            🗓️ ${lang === 'en' ? `Day ${activeDayNum} Route Planner` : `দিন ${activeDayNum}-এর রুট প্ল্যান`}
           </span>
-          <span class="text-xs sm:text-sm font-bold text-slate-700">
+          <span class="text-xs font-semibold text-slate-500 hidden sm:inline">
             ${
               lang === 'en'
-                ? 'Tap locations below in the order you want to visit (or click Auto-Optimize):'
-                : 'যেসব স্থান ঘুরতে চান সেগুলোতে ক্লিক করুন (অথবা অটো-অপ্টিমাইজ বাটনে চাপুন):'
+                ? 'Tap spots from the shelf below to automatically map your road route:'
+                : 'রোড রুট ও সময় দেখতে নিচের শেলফ থেকে স্থান সিলেক্ট করুন:'
             }
           </span>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <!-- Base Hotel Start Point Selector -->
-          <div class="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
-            <span class="text-[11px] font-extrabold text-slate-500 uppercase">
-              ${lang === 'en' ? 'Start Base:' : 'শুরু (হোটেল):'}
+          <!-- Starting Hotel Dropdown -->
+          <div class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200/70 transition px-2.5 py-1.5 rounded-xl border border-slate-200">
+            <span class="text-[10px] font-black uppercase text-slate-500">
+              🏨 ${lang === 'en' ? 'Start:' : 'বেস:'}
             </span>
             <select
               aria-label="Select Starting Hotel"
               onchange="selectItineraryHotel(this.value, false)"
-              class="bg-transparent text-xs font-extrabold text-ocean-950 focus:outline-none cursor-pointer"
+              class="bg-transparent text-xs font-extrabold text-ocean-950 focus:outline-none cursor-pointer max-w-[150px] sm:max-w-none"
             >
               ${hotelOptionsHTML}
             </select>
           </div>
 
+          <!-- 1-Click Route Presets Dropdown -->
+          <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-xl">
+            <span class="text-[10px] font-black uppercase text-amber-900">
+              ✨ ${lang === 'en' ? 'Preset:' : 'প্রিসেট:'}
+            </span>
+            <select
+              aria-label="1-Click Route Presets"
+              onchange="if(this.value){ applyRoutePreset(${activeDayNum}, this.value); this.selectedIndex=0; }"
+              class="bg-transparent text-xs font-extrabold text-amber-950 focus:outline-none cursor-pointer"
+            >
+              <option value="">${lang === 'en' ? '⚡ 1-Click Presets...' : '⚡ ১-ক্লিক প্রিসেট...'}</option>
+              <option value="marine-drive">🌊 ${lang === 'en' ? 'South Marine Drive' : 'মেরিন ড্রাইভ সাফারি'}</option>
+              <option value="beach-town">🏖️ ${lang === 'en' ? 'Town Beaches & Walk' : 'প্রধান সৈকত ও শহর'}</option>
+              <option value="islands">🏝️ ${lang === 'en' ? 'Island Hopping' : 'মহেশখালী-সোনাদিয়া'}</option>
+              <option value="heritage">🛕 ${lang === 'en' ? 'Ramu Heritage' : 'রামু ঐতিহ্য ও বিহার'}</option>
+            </select>
+          </div>
+
+          <!-- Auto-Optimize Button -->
           <button
             type="button"
             onclick="optimizeDayRouteOrder(${activeDayNum})"
-            class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-amber-400 hover:bg-amber-300 text-slate-950 transition cursor-pointer shadow-2xs"
+            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black bg-amber-400 hover:bg-amber-300 text-slate-950 transition cursor-pointer shadow-2xs"
+            title="${lang === 'en' ? 'Sort spots logically by travel distance' : 'দূরত্ব অনুযায়ী স্পট সাজান'}"
           >
-            ⚡ ${lang === 'en' ? 'Auto-Optimize Route' : 'অটো-অপ্টিমাইজ রুট'}
+            <span>⚡</span>
+            <span>${lang === 'en' ? 'Auto-Sort' : 'অটো-সর্ট'}</span>
           </button>
 
+          <!-- Reset Day Button -->
           <button
             type="button"
             onclick="clearDayRouteSpots(${activeDayNum})"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition cursor-pointer"
+            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 border border-slate-200 hover:border-rose-200 transition cursor-pointer"
+            title="${lang === 'en' ? 'Clear all spots for this day' : 'সব স্পট সরান'}"
           >
-            ↺ ${lang === 'en' ? 'Clear Day' : 'রিসেট'}
+            <span>↺</span>
+            <span>${lang === 'en' ? 'Reset' : 'রিসেট'}</span>
           </button>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
+      <!-- Corridor Filter Pills Bar + Horizontal Shelf Navigation -->
+      <div class="flex items-center justify-between gap-2 mb-2.5">
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none flex-1">
+          ${corridorPillsHTML}
+        </div>
+
+        <div class="hidden sm:flex items-center gap-1 shrink-0 ml-2">
+          <button
+            type="button"
+            onclick="scrollSpotShelf(-1)"
+            class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs cursor-pointer"
+            title="${lang === 'en' ? 'Scroll Left' : 'বামে স্ক্রোল'}"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onclick="scrollSpotShelf(1)"
+            class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs cursor-pointer"
+            title="${lang === 'en' ? 'Scroll Right' : 'ডানে স্ক্রোল'}"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal Carousel Shelf Track -->
+      <div
+        id="map-spot-shelf-track"
+        class="flex items-stretch gap-3 overflow-x-auto pb-1.5 pt-0.5 scroll-smooth snap-x snap-mandatory"
+        style="scrollbar-width: thin;"
+      >
         ${spotCardsHTML}
       </div>
     `;
@@ -1775,6 +2036,27 @@ function renderMapMarkersAndFilters() {
     FeaturesState.mapInstance.setView(bounds[0], 13);
   }
 
+  // Update Floating Status Overlay on Leaflet Map
+  const floatingStatusEl = document.getElementById('map-floating-status-text');
+  if (floatingStatusEl) {
+    if (isAllDaysMode) {
+      floatingStatusEl.textContent =
+        lang === 'en'
+          ? `All Days Overview (${FeaturesState.totalDays} Days)`
+          : `সব দিনের রুট ওভারভিউ (${FeaturesState.totalDays} দিন)`;
+    } else if (activeRoute.stops.length > 0) {
+      floatingStatusEl.textContent =
+        lang === 'en'
+          ? `Day ${activeDayNum}: ${activeRoute.stops.length} Stops • ${activeRoute.totalKm} km • ~${formatDurationMinutes(activeRoute.totalMinutes, lang)}`
+          : `দিন ${activeDayNum}: ${activeRoute.stops.length}টি স্পট • ${activeRoute.totalKm} কিমি • ~${formatDurationMinutes(activeRoute.totalMinutes, lang)}`;
+    } else {
+      floatingStatusEl.textContent =
+        lang === 'en'
+          ? `Day ${activeDayNum}: Tap spots in the shelf to create route`
+          : `দিন ${activeDayNum}: রুট তৈরি করতে উপরের স্পট যোগ করুন`;
+    }
+  }
+
   // 4. RENDER RIGHT SIDEBAR: GENERATED ROUTE PLAN TIMELINE
   if (!routeTimelineEl) return;
 
@@ -1831,34 +2113,54 @@ function renderMapMarkersAndFilters() {
   const stopsTimelineHTML =
     activeRoute.stops.length === 0
       ? `
-        <div class="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center">
-          <p class="text-sm font-bold text-slate-700">
+        <div class="p-5 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center">
+          <div class="w-10 h-10 mx-auto rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-lg mb-2">🗺️</div>
+          <h4 class="font-extrabold text-sm text-slate-800">
+            ${lang === 'en' ? `Day ${activeDayNum} has no locations yet` : `দিন ${activeDayNum}-এ কোনো স্থান যুক্ত করা হয়নি`}
+          </h4>
+          <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
             ${
               lang === 'en'
-                ? `No stops selected for Day ${activeDayNum} yet.`
-                : `দিন ${activeDayNum}-এর জন্য এখনো কোনো স্পট সিলেক্ট করা হয়নি।`
+                ? 'Tap any card in the shelf above, or pick a 1-click route below:'
+                : 'উপরের শেলফ থেকে স্থান বেছে নিন অথবা নিচের রেডি রুট ক্লিক করুন:'
             }
           </p>
-          <p class="text-xs text-slate-500 mt-1">
-            ${
-              lang === 'en'
-                ? 'Tap any Cox’s Bazar location card above the map to generate your route!'
-                : 'রুট তৈরি করতে ম্যাপের উপরের যেকোনো দর্শনীয় স্থানে ক্লিক করুন!'
-            }
-          </p>
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-3.5">
+            <button
+              type="button"
+              onclick="applyRoutePreset(${activeDayNum}, 'marine-drive')"
+              class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 text-xs font-bold text-slate-800 shadow-2xs hover:bg-amber-50 cursor-pointer"
+            >
+              🌊 ${lang === 'en' ? 'Marine Drive Safari' : 'মেরিন ড্রাইভ সাফারি'}
+            </button>
+            <button
+              type="button"
+              onclick="applyRoutePreset(${activeDayNum}, 'beach-town')"
+              class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 text-xs font-bold text-slate-800 shadow-2xs hover:bg-amber-50 cursor-pointer"
+            >
+              🏖️ ${lang === 'en' ? 'Town Beaches' : 'প্রধান সৈকত ও শহর'}
+            </button>
+            <button
+              type="button"
+              onclick="applyRoutePreset(${activeDayNum}, 'islands')"
+              class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 text-xs font-bold text-slate-800 shadow-2xs hover:bg-amber-50 cursor-pointer"
+            >
+              🏝️ ${lang === 'en' ? 'Island Hopping' : 'দ্বীপ ভ্রমণ'}
+            </button>
+          </div>
         </div>
       `
       : activeRoute.stops
           .map(
             (st, idx) => `
           <!-- Leg Connector Pill -->
-          <div class="pl-5 py-1 flex items-center gap-2 text-[11px] font-bold text-teal-800">
-            <div class="w-0.5 h-6 bg-teal-400 rounded-full"></div>
-            <div class="bg-teal-50 border border-teal-200/80 px-2.5 py-1 rounded-xl flex flex-wrap items-center gap-1.5">
+          <div class="pl-4 py-1 flex items-center gap-2 text-[11px] font-bold text-teal-900">
+            <div class="w-0.5 h-6 rounded-full" style="background:${activeDayColor};"></div>
+            <div class="bg-teal-50/80 border border-teal-200/80 px-2.5 py-1 rounded-xl flex flex-wrap items-center gap-1.5 shadow-2xs">
               <span>↓ <strong>${st.legKm} km</strong></span>
-              <span>•</span>
+              <span class="text-slate-400">•</span>
               <span>~${st.legMinutes} ${lang === 'en' ? 'mins' : 'মিনিট'}</span>
-              <span>•</span>
+              <span class="text-slate-400">•</span>
               <span class="text-slate-700">${st.vehicle}</span>
             </div>
           </div>
@@ -1870,17 +2172,17 @@ function renderMapMarkersAndFilters() {
               class="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer"
             >
               <span
-                class="w-7 h-7 rounded-full text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs"
+                class="w-7 h-7 rounded-full text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs"
                 style="background:${activeDayColor};"
               >
                 ${st.stopNumber}
               </span>
               <img src="${st.image}" alt="${st.name}" class="w-11 h-11 rounded-xl object-cover shrink-0 bg-slate-200" />
               <div class="min-w-0 flex-1">
-                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                <span class="block text-[10px] font-black uppercase tracking-wider text-slate-400 truncate">
                   ${st.corridorLabel}
                 </span>
-                <h5 class="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug">
+                <h5 class="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug truncate">
                   ${st.name}
                 </h5>
               </div>
@@ -1893,7 +2195,7 @@ function renderMapMarkersAndFilters() {
                 onclick="moveMapRouteSpot(${activeDayNum}, ${idx}, -1)"
                 ${idx === 0 ? 'disabled' : ''}
                 title="${lang === 'en' ? 'Move Up' : 'উপরে নিন'}"
-                class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-sky-50 text-xs font-extrabold disabled:opacity-30 cursor-pointer"
+                class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-sky-50 text-xs font-black disabled:opacity-25 cursor-pointer"
               >
                 ↑
               </button>
@@ -1902,7 +2204,7 @@ function renderMapMarkersAndFilters() {
                 onclick="moveMapRouteSpot(${activeDayNum}, ${idx}, 1)"
                 ${idx === activeRoute.stops.length - 1 ? 'disabled' : ''}
                 title="${lang === 'en' ? 'Move Down' : 'নিচে নিন'}"
-                class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-sky-50 text-xs font-extrabold disabled:opacity-30 cursor-pointer"
+                class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-sky-50 text-xs font-black disabled:opacity-25 cursor-pointer"
               >
                 ↓
               </button>
@@ -1910,7 +2212,7 @@ function renderMapMarkersAndFilters() {
                 type="button"
                 onclick="toggleMapRouteSpot(${activeDayNum}, '${st.spotId}')"
                 title="${lang === 'en' ? 'Remove Stop' : 'সরিয়ে ফেলুন'}"
-                class="w-7 h-7 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 text-xs font-extrabold cursor-pointer"
+                class="w-7 h-7 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 text-xs font-black cursor-pointer"
               >
                 ✕
               </button>
@@ -1924,7 +2226,10 @@ function renderMapMarkersAndFilters() {
     <!-- Route Summary Header Card -->
     <div class="bg-gradient-to-r from-ocean-950 via-ocean-900 to-teal-900 text-white rounded-2xl p-4 shadow-sm">
       <div class="flex items-center justify-between gap-2">
-        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-slate-950">
+        <span
+          class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-950"
+          style="background:${activeDayColor};"
+        >
           ${lang === 'en' ? `DAY ${activeDayNum} ROUTE PLAN` : `দিন ${activeDayNum}-এর রুট প্ল্যান`}
         </span>
         <span class="text-xs font-bold text-teal-200">
@@ -1932,19 +2237,27 @@ function renderMapMarkersAndFilters() {
         </span>
       </div>
 
-      <div class="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-white/15">
+      <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-white/15 text-center sm:text-left">
         <div>
-          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80">
-            ${lang === 'en' ? 'Total Route Distance' : 'মোট দূরত্ব'}
+          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80 font-bold">
+            ${lang === 'en' ? 'Distance' : 'দূরত্ব'}
           </span>
-          <span class="text-lg font-extrabold text-amber-300">${activeRoute.totalKm} km</span>
+          <span class="text-base sm:text-lg font-black text-amber-300">${activeRoute.totalKm} km</span>
         </div>
         <div>
-          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80">
-            ${lang === 'en' ? 'Est. Transit Time' : 'আনুমানিক যাতায়াত সময়'}
+          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80 font-bold">
+            ${lang === 'en' ? 'Transit' : 'যাতায়াত'}
           </span>
-          <span class="text-lg font-extrabold text-teal-300">
+          <span class="text-base sm:text-lg font-black text-teal-300">
             ~${formatDurationMinutes(activeRoute.totalMinutes, lang)}
+          </span>
+        </div>
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-sky-200/80 font-bold">
+            ${lang === 'en' ? 'Est. Fare' : 'ভাড়া'}
+          </span>
+          <span class="text-xs sm:text-sm font-black text-emerald-300 leading-tight block mt-0.5">
+            ${activeRoute.fareEstimateRange}
           </span>
         </div>
       </div>
@@ -1953,20 +2266,25 @@ function renderMapMarkersAndFilters() {
     <!-- Starting Base Hotel Card -->
     <div
       onclick="focusMapLocation('${activeRoute.hotel.id}')"
-      class="p-3 rounded-2xl bg-amber-50/80 border border-amber-300/80 flex items-center gap-3 cursor-pointer hover:bg-amber-50 transition"
+      class="p-3 rounded-2xl bg-amber-50/90 border border-amber-300/80 flex items-center justify-between gap-2.5 cursor-pointer hover:bg-amber-100/70 transition shadow-2xs"
     >
-      <span class="w-8 h-8 rounded-full bg-ocean-950 text-amber-300 font-extrabold text-sm flex items-center justify-center shrink-0 border-2 border-amber-400">
-        🏨
-      </span>
-      <div class="min-w-0 flex-1">
-        <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-800">
-          ${lang === 'en' ? 'START POINT • BASE HOTEL' : 'যাত্রা শুরু • বেস হোটেল'}
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="w-8 h-8 rounded-full bg-ocean-950 text-amber-300 font-extrabold text-sm flex items-center justify-center shrink-0 border-2 border-amber-400">
+          🏨
         </span>
-        <h5 class="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug">
-          ${activeRoute.hotel.name}
-        </h5>
-        <p class="text-[11px] text-slate-500">${activeRoute.hotel.zone}</p>
+        <div class="min-w-0 flex-1">
+          <span class="block text-[10px] font-black uppercase tracking-wider text-amber-800">
+            ${lang === 'en' ? 'START POINT • BASE HOTEL' : 'যাত্রা শুরু • বেস হোটেল'}
+          </span>
+          <h5 class="font-black text-slate-900 text-xs sm:text-sm leading-snug truncate">
+            ${activeRoute.hotel.name}
+          </h5>
+          <p class="text-[11px] text-slate-500 truncate">${activeRoute.hotel.zone}</p>
+        </div>
       </div>
+      <span class="text-[11px] font-extrabold text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-lg shrink-0">
+        📍 ${lang === 'en' ? 'Map' : 'ম্যাপ'}
+      </span>
     </div>
 
     <!-- Step-by-Step Stops & Legs -->
