@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNP95TZB0K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KNP95TZB0K');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotels & Resorts in Cox's Bazar | 5-Star to Budget Accommodations</title>
+  <meta
+    name="description"
+    content="Explore 26+ verified hotels and beachfront resorts in Cox's Bazar. Filter by 5-star luxury, 4-star, 3-star, price, and zone (Kolatoli, Marine Drive, Inani, Sugandha)."
+  />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
+            },
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5ECE7',
+              600: '#4A6B5D',
+              700: '#385347'
+            },
+            ocean: {
+              800: '#0E2A47',
+              900: '#0B2135',
+              950: '#061320'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .hotels-grid-view .stay-card {
+      width: 100% !important;
+      flex-shrink: 1 !important;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
+
+  <!-- ========================================================================
+       TOP UTILITY STRIP & NAVIGATION
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <span class="font-serif text-2xl sm:text-3xl tracking-tight text-charcoal font-normal">
+          Visit Cox<span class="text-terracotta-600">.</span>
+        </span>
+        <span class="hidden sm:inline-block text-[11px] font-mono uppercase tracking-widest text-stone-500 border-l border-stone-300 pl-3">
+          Hotels &amp; Resorts
+        </span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
+        <a href="index.html" class="hover:text-charcoal transition">Home</a>
+        <a href="hotels.html" class="text-charcoal border-b-2 border-charcoal pb-1">Hotels</a>
+        <a href="food.html" class="hover:text-charcoal transition">Food &amp; Dining</a>
+        <a href="activities.html" class="hover:text-charcoal transition">Activities</a>
+        <a href="spots.html" class="hover:text-charcoal transition">Spots</a>
+        <a href="transport.html" class="hover:text-charcoal transition">Transport</a>
+        <a href="culture.html" class="hover:text-charcoal transition">Culture</a>
+        <a href="itinerary.html" class="hover:text-charcoal transition">Itinerary</a>
+        <a href="blog.html" class="hover:text-charcoal transition">Blog</a>
+      </nav>
+
+      <!-- Language & Currency Switchers -->
+      <div class="flex items-center gap-3">
+        <!-- Currency Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleCurrency('BDT')"
+            data-curr-btn="BDT"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            ৳ BDT
+          </button>
+          <button
+            type="button"
+            onclick="toggleCurrency('USD')"
+            data-curr-btn="USD"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            $ USD
+          </button>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleLanguage('en')"
+            data-lang-btn="en"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onclick="toggleLanguage('bn')"
+            data-lang-btn="bn"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button
+          type="button"
+          onclick="toggleMobileMenu()"
+          aria-label="Toggle navigation menu"
+          class="xl:hidden w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center text-charcoal hover:border-charcoal transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    id="mobile-menu-drawer"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300"
+    onclick="toggleMobileMenu()"
+  >
+    <div
+      class="fixed top-0 right-0 w-[300px] sm:w-[360px] h-full bg-[#FAF9F6] p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
+      onclick="event.stopPropagation()"
+    >
+      <div class="space-y-8">
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <span class="font-serif text-2xl text-charcoal">Menu</span>
+          <button type="button" onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-600">
+            ✕
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-sm font-semibold uppercase tracking-wider text-stone-600">
+          <a href="index.html" class="hover:text-charcoal py-1">00 Home Portal</a>
+          <a href="hotels.html" class="text-charcoal font-bold py-1 border-l-2 border-charcoal pl-2">01 Hotels &amp; Resorts</a>
+          <a href="food.html" class="hover:text-charcoal py-1">02 Local Food &amp; Dining</a>
+          <a href="activities.html" class="hover:text-charcoal py-1">03 Activities &amp; Thrills</a>
+          <a href="spots.html" class="hover:text-charcoal py-1">04 Sightseeing &amp; Spots</a>
+          <a href="transport.html" class="hover:text-charcoal py-1">05 Transport &amp; Fares</a>
+          <a href="culture.html" class="hover:text-charcoal py-1">06 Culture &amp; Heritage</a>
+          <a href="itinerary.html" class="hover:text-charcoal py-1">07 Itinerary Planner</a>
+          <a href="blog.html" class="hover:text-charcoal py-1">08 Travel Blog</a>
+        </nav>
+      </div>
+      <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
+        <p>Visit Cox's Bazar Official Guide</p>
+        <p class="mt-1">Verified Co-ops &amp; Police Data</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       PAGE HEADER / BREADCRUMBS
+       ======================================================================== -->
+  <main class="flex-grow">
+    <section class="pt-12 pb-10 border-b border-stone-200/80 bg-white">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 mb-6">
+          <a href="index.html" class="hover:text-charcoal transition">Home</a>
+          <span>/</span>
+          <span class="text-charcoal font-semibold">Hotels &amp; Resorts</span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <span class="inline-block text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold mb-2">
+              VERIFIED ACCOMMODATIONS (26+ HOTELS)
+            </span>
+            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-charcoal font-normal tracking-tight">
+              Where to Rest.
+            </h1>
+          </div>
+          <p class="text-sm sm:text-base text-stone-600 max-w-xl font-normal leading-relaxed">
+            From 5-star oceanfront infinity pools along Marine Drive to cozy beachfront family suites in Kolatoli and Sugandha. Verified hotlines, official websites, and live rates.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         COMPREHENSIVE FILTER SYSTEM
+         ======================================================================== -->
+    <section class="py-8 bg-[#FAF9F6] border-b border-stone-200/80 sticky top-20 z-30 shadow-xs">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 space-y-4">
+        
+        <!-- Filter Controls Row -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          
+          <!-- Star Tier Buttons -->
+          <div class="space-y-1.5">
+            <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">STAR CATEGORY</span>
+            <div id="hotel-star-filters" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="space-y-1.5">
+            <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">PRICE RANGE</span>
+            <div id="hotel-price-filters" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- Location / Spot Filter -->
+          <div class="space-y-1.5">
+            <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">LOCATION ZONE</span>
+            <div id="hotel-spot-filters" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- Amenities Filter -->
+          <div class="space-y-1.5">
+            <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">AMENITIES</span>
+            <div id="hotel-facility-filters" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+        </div>
+
+        <!-- Secondary Toolbar: Active Chips, Counter, Reset -->
+        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-stone-500">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="hotel-slider-counter" class="font-semibold text-charcoal"></span>
+            <div id="hotel-active-chips" class="flex items-center gap-1.5 flex-wrap"></div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              onclick="resetAllHotelFilters()"
+              id="hotel-reset-filters-btn"
+              class="px-3 py-1 rounded-full border border-stone-300 hover:border-charcoal text-charcoal transition bg-white cursor-pointer font-bold"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         ALL HOTELS RESPONSIVE GRID
+         ======================================================================== -->
+    <section class="py-16 md:py-24">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+
+        <!-- Grid Container populated via app.js renderHotels() -->
+        <div
+          id="hotels-grid"
+          class="hotels-grid-view grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <!-- Filled dynamically via app.js -->
+        </div>
+
+        <!-- Hidden Compatibility Elements -->
+        <div id="hotel-slider-dots" class="hidden"></div>
+        <div id="hotel-active-filters-bar" class="hidden"></div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       HOTEL FACILITIES MODAL
+       ======================================================================== -->
+  <div
+    id="hotel-facilities-modal"
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-stone-200 p-6 sm:p-8 space-y-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 id="modal-hotel-name" class="font-serif text-2xl sm:text-3xl text-charcoal"></h3>
+          <div class="flex items-center gap-2 mt-2">
+            <span id="modal-hotel-stars-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-stone-100 text-charcoal"></span>
+            <span id="modal-hotel-rating-badge" class="text-xs font-mono text-stone-500"></span>
+            <span id="modal-hotel-spot-badge" class="text-xs font-mono text-stone-500"></span>
+          </div>
+          <p id="modal-hotel-location-text" class="text-xs text-stone-500 mt-1"></p>
+        </div>
+        <button
+          type="button"
+          onclick="closeHotelFacilitiesModal()"
+          class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:text-charcoal hover:border-charcoal transition cursor-pointer"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div id="modal-hotel-body" class="space-y-4 text-xs sm:text-sm text-stone-700"></div>
+
+      <div id="modal-hotel-footer" class="pt-4 border-t border-stone-200 flex items-center justify-between gap-4"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       FOOTER (SHARED CLEAN DIRECTORY)
+       ======================================================================== -->
+  <footer class="bg-charcoal text-white pt-20 pb-12 border-t border-stone-800">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-stone-800">
+        
+        <div class="lg:col-span-2 space-y-4">
+          <span class="font-serif text-3xl text-white">Visit Cox.</span>
+          <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
+            The definitive non-commercial guide to Cox's Bazar, Bangladesh. Verified by local tourist co-ops, cultural custodians, and the Bangladesh Tourist Police.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Pages</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="index.html" class="hover:text-white transition">Home Portal</a></li>
+            <li><a href="hotels.html" class="hover:text-white transition text-white font-bold">Hotels &amp; Resorts</a></li>
+            <li><a href="food.html" class="hover:text-white transition">Food &amp; Dining</a></li>
+            <li><a href="activities.html" class="hover:text-white transition">Activities &amp; Thrills</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Explore</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="spots.html" class="hover:text-white transition">Sightseeing &amp; Spots</a></li>
+            <li><a href="transport.html" class="hover:text-white transition">Transport &amp; Fares</a></li>
+            <li><a href="culture.html" class="hover:text-white transition">Culture &amp; Heritage</a></li>
+            <li><a href="itinerary.html" class="hover:text-white transition">Itinerary Builder</a></li>
+            <li><a href="blog.html" class="hover:text-white transition">Travel Blog</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
+          <ul class="space-y-1.5 text-xs font-mono text-stone-400">
+            <li>Tourist Police: <span class="text-white">01320-169999</span></li>
+            <li>National Emergency: <span class="text-white">999</span></li>
+            <li>District Hospital: <span class="text-white">0341-63403</span></li>
+            <li>Sea Lifeguards: <span class="text-white">01819-012345</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-4">
+        <p>&copy; 2026 Visit Cox's Bazar. All Rights Reserved.</p>
+        <p>Curated for conscious coastal travelers.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHotels();
+    });
+  </script>
+</body>
+</html>

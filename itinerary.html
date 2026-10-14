@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNP95TZB0K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KNP95TZB0K');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Itinerary Builder for Cox's Bazar | 2, 3 &amp; 5 Day Daily Routes</title>
+  <meta
+    name="description"
+    content="Generate a customized, verified daily tour itinerary for Cox's Bazar in seconds. Choose 2, 3, or 5 days, select your travel style, and download your plan as PDF or PNG."
+  />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
+            },
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5ECE7',
+              600: '#4A6B5D',
+              700: '#385347'
+            },
+            ocean: {
+              800: '#0E2A47',
+              900: '#0B2135',
+              950: '#061320'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Visual Itinerary Export Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
+
+  <!-- ========================================================================
+       TOP UTILITY STRIP & NAVIGATION
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <span class="font-serif text-2xl sm:text-3xl tracking-tight text-charcoal font-normal">
+          Visit Cox<span class="text-terracotta-600">.</span>
+        </span>
+        <span class="hidden sm:inline-block text-[11px] font-mono uppercase tracking-widest text-stone-500 border-l border-stone-300 pl-3">
+          Itinerary Planner
+        </span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
+        <a href="index.html" class="hover:text-charcoal transition">Home</a>
+        <a href="hotels.html" class="hover:text-charcoal transition">Hotels</a>
+        <a href="food.html" class="hover:text-charcoal transition">Food &amp; Dining</a>
+        <a href="activities.html" class="hover:text-charcoal transition">Activities</a>
+        <a href="spots.html" class="hover:text-charcoal transition">Spots</a>
+        <a href="transport.html" class="hover:text-charcoal transition">Transport</a>
+        <a href="culture.html" class="hover:text-charcoal transition">Culture</a>
+        <a href="itinerary.html" class="text-charcoal border-b-2 border-charcoal pb-1">Itinerary</a>
+        <a href="blog.html" class="hover:text-charcoal transition">Blog</a>
+      </nav>
+
+      <!-- Language & Currency Switchers -->
+      <div class="flex items-center gap-3">
+        <!-- Currency Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleCurrency('BDT')"
+            data-curr-btn="BDT"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            ৳ BDT
+          </button>
+          <button
+            type="button"
+            onclick="toggleCurrency('USD')"
+            data-curr-btn="USD"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            $ USD
+          </button>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleLanguage('en')"
+            data-lang-btn="en"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onclick="toggleLanguage('bn')"
+            data-lang-btn="bn"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button
+          type="button"
+          onclick="toggleMobileMenu()"
+          aria-label="Toggle navigation menu"
+          class="xl:hidden w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center text-charcoal hover:border-charcoal transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    id="mobile-menu-drawer"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300"
+    onclick="toggleMobileMenu()"
+  >
+    <div
+      class="fixed top-0 right-0 w-[300px] sm:w-[360px] h-full bg-[#FAF9F6] p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
+      onclick="event.stopPropagation()"
+    >
+      <div class="space-y-8">
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <span class="font-serif text-2xl text-charcoal">Menu</span>
+          <button type="button" onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-600">
+            ✕
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-sm font-semibold uppercase tracking-wider text-stone-600">
+          <a href="index.html" class="hover:text-charcoal py-1">00 Home Portal</a>
+          <a href="hotels.html" class="hover:text-charcoal py-1">01 Hotels &amp; Resorts</a>
+          <a href="food.html" class="hover:text-charcoal py-1">02 Local Food &amp; Dining</a>
+          <a href="activities.html" class="hover:text-charcoal py-1">03 Activities &amp; Thrills</a>
+          <a href="spots.html" class="hover:text-charcoal py-1">04 Sightseeing &amp; Spots</a>
+          <a href="transport.html" class="hover:text-charcoal py-1">05 Transport &amp; Fares</a>
+          <a href="culture.html" class="hover:text-charcoal py-1">06 Culture &amp; Heritage</a>
+          <a href="itinerary.html" class="text-charcoal font-bold py-1 border-l-2 border-charcoal pl-2">07 Itinerary Planner</a>
+          <a href="blog.html" class="hover:text-charcoal py-1">08 Travel Blog</a>
+        </nav>
+      </div>
+      <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
+        <p>Visit Cox's Bazar Official Guide</p>
+        <p class="mt-1">Verified Logistics &amp; PDF Export</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow">
+    
+    <!-- ========================================================================
+         PAGE HERO BANNER
+         ======================================================================== -->
+    <section class="pt-12 pb-14 border-b border-stone-200/80 bg-white">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 mb-6">
+          <a href="index.html" class="hover:text-charcoal transition">Home</a>
+          <span>/</span>
+          <span class="text-charcoal font-semibold">Itinerary Builder</span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <span class="inline-block text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold mb-2">
+              SEAMLESS ROUTE ENGINE (2, 3 &amp; 5 DAYS)
+            </span>
+            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-charcoal font-normal tracking-tight">
+              Curate Your Journey.
+            </h1>
+          </div>
+          <p class="text-sm sm:text-base text-stone-600 max-w-xl font-normal leading-relaxed">
+            Generate an organized, realistic daily travel schedule in seconds. Morning, afternoon, and sunset time windows with verified corridors and transport tips. Export as PDF, PNG, or print.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         ITINERARY BUILDER CONTROLS & TIMELINE OUTPUT
+         ======================================================================== -->
+    <section class="py-12 md:py-20">
+      <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 space-y-10">
+        
+        <!-- Stepped Controls Card -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            
+            <!-- Step 1: Duration Selector -->
+            <div class="lg:col-span-6 space-y-2.5">
+              <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">
+                1. Choose Duration
+              </label>
+              <div class="flex flex-wrap gap-2 sm:gap-2.5">
+                <button
+                  type="button"
+                  onclick="setItineraryTotalDays(2); composeSteppedItinerary(2, FeaturesState.tripVibe || 'relaxing');"
+                  class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
+                  id="btn-duration-2"
+                >
+                  2 Days (Quick Weekend)
+                </button>
+                <button
+                  type="button"
+                  onclick="setItineraryTotalDays(3); composeSteppedItinerary(3, FeaturesState.tripVibe || 'relaxing');"
+                  class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer"
+                  id="btn-duration-3"
+                >
+                  3 Days (Classic Escape)
+                </button>
+                <button
+                  type="button"
+                  onclick="setItineraryTotalDays(5); composeSteppedItinerary(5, FeaturesState.tripVibe || 'relaxing');"
+                  class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
+                  id="btn-duration-5"
+                >
+                  5 Days (Full Coastline)
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 2: Vibe Selector -->
+            <div class="lg:col-span-6 space-y-2.5">
+              <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">
+                2. Choose Travel Style
+              </label>
+              <div class="flex flex-wrap gap-2 sm:gap-2.5">
+                <button
+                  type="button"
+                  onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'relaxing');"
+                  class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer"
+                  id="btn-vibe-relaxing"
+                >
+                  🌿 Relaxing &amp; Scenic
+                </button>
+                <button
+                  type="button"
+                  onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'adventure');"
+                  class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
+                  id="btn-vibe-adventure"
+                >
+                  🏄 Adventure &amp; Waves
+                </button>
+                <button
+                  type="button"
+                  onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'local');"
+                  class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
+                  id="btn-vibe-local"
+                >
+                  🏛️ Local Culture &amp; Food
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Neat & Clean Itinerary Output Cards Container -->
+        <div id="itinerary-stepped-output" class="space-y-8">
+          <!-- Populated dynamically via composeSteppedItinerary() in features.js -->
+        </div>
+
+        <!-- Hidden compatibility containers -->
+        <div id="itinerary-studio-builder" class="hidden"></div>
+        <div id="itinerary-output-container" class="hidden"></div>
+        <div id="visual-itinerary-poster" class="hidden"></div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="bg-charcoal text-white pt-20 pb-12 border-t border-stone-800">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-stone-800">
+        
+        <div class="lg:col-span-2 space-y-4">
+          <span class="font-serif text-3xl text-white">Visit Cox.</span>
+          <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
+            The definitive non-commercial guide to Cox's Bazar, Bangladesh. Verified by local tourist co-ops, cultural custodians, and the Bangladesh Tourist Police.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Pages</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="index.html" class="hover:text-white transition">Home Portal</a></li>
+            <li><a href="hotels.html" class="hover:text-white transition">Hotels &amp; Resorts</a></li>
+            <li><a href="food.html" class="hover:text-white transition">Food &amp; Dining</a></li>
+            <li><a href="activities.html" class="hover:text-white transition">Activities &amp; Thrills</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Explore</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="spots.html" class="hover:text-white transition">Sightseeing &amp; Spots</a></li>
+            <li><a href="transport.html" class="hover:text-white transition">Transport &amp; Fares</a></li>
+            <li><a href="culture.html" class="hover:text-white transition">Culture &amp; Heritage</a></li>
+            <li><a href="itinerary.html" class="hover:text-white transition text-white font-bold">Itinerary Builder</a></li>
+            <li><a href="blog.html" class="hover:text-white transition">Travel Blog</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
+          <ul class="space-y-1.5 text-xs font-mono text-stone-400">
+            <li>Tourist Police: <span class="text-white">01320-169999</span></li>
+            <li>National Emergency: <span class="text-white">999</span></li>
+            <li>District Hospital: <span class="text-white">0341-63403</span></li>
+            <li>Lifeguards: <span class="text-white">01819-012345</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-4">
+        <p>&copy; 2026 Visit Cox's Bazar. All Rights Reserved.</p>
+        <p>Curated for conscious coastal travelers.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/features.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      composeSteppedItinerary(3, 'relaxing');
+    });
+  </script>
+</body>
+</html>

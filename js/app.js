@@ -13,8 +13,8 @@
  */
 
 const AppState = {
-  lang: CONFIG.defaultLang,       // 'en' | 'bn'
-  currency: CONFIG.defaultCurrency, // 'BDT' | 'USD'
+  lang: (typeof localStorage !== 'undefined' && localStorage.getItem('visit_cox_lang')) || CONFIG.defaultLang,
+  currency: (typeof localStorage !== 'undefined' && localStorage.getItem('visit_cox_currency')) || CONFIG.defaultCurrency,
   hotelFilter: 'ALL',            // Legacy spot filter alias
   hotelStarFilter: 'ALL',        // 'ALL' | 5 | 4 | 3 | 2
   hotelPriceFilter: 'ALL',       // 'ALL' | 'budget' | 'mid' | 'luxury'
@@ -74,12 +74,18 @@ function formatPriceRange(minBDT, maxBDT) {
  * -------------------------------------------------------------------------- */
 function toggleLanguage(targetLang) {
   AppState.lang = targetLang || (AppState.lang === 'en' ? 'bn' : 'en');
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('visit_cox_lang', AppState.lang);
+  }
   document.documentElement.lang = AppState.lang;
   renderAll();
 }
 
 function toggleCurrency(targetCurr) {
   AppState.currency = targetCurr || (AppState.currency === 'BDT' ? 'USD' : 'BDT');
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('visit_cox_currency', AppState.currency);
+  }
   renderAll();
 }
 

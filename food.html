@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNP95TZB0K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KNP95TZB0K');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Food & Dining Guide in Cox's Bazar | Best Lunch & Dinner Spots</title>
+  <meta
+    name="description"
+    content="The definitive Cox's Bazar dining guide: where to have the best lunch and dinner, legendary 30+ bhartas at Poushee, live beach fish fry at Sugandha, and beachfront cafes."
+  />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
+            },
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5ECE7',
+              600: '#4A6B5D',
+              700: '#385347'
+            },
+            ocean: {
+              800: '#0E2A47',
+              900: '#0B2135',
+              950: '#061320'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
+
+  <!-- ========================================================================
+       TOP UTILITY STRIP & NAVIGATION
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <span class="font-serif text-2xl sm:text-3xl tracking-tight text-charcoal font-normal">
+          Visit Cox<span class="text-terracotta-600">.</span>
+        </span>
+        <span class="hidden sm:inline-block text-[11px] font-mono uppercase tracking-widest text-stone-500 border-l border-stone-300 pl-3">
+          Food &amp; Dining
+        </span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
+        <a href="index.html" class="hover:text-charcoal transition">Home</a>
+        <a href="hotels.html" class="hover:text-charcoal transition">Hotels</a>
+        <a href="food.html" class="text-charcoal border-b-2 border-charcoal pb-1">Food &amp; Dining</a>
+        <a href="activities.html" class="hover:text-charcoal transition">Activities</a>
+        <a href="spots.html" class="hover:text-charcoal transition">Spots</a>
+        <a href="transport.html" class="hover:text-charcoal transition">Transport</a>
+        <a href="culture.html" class="hover:text-charcoal transition">Culture</a>
+        <a href="itinerary.html" class="hover:text-charcoal transition">Itinerary</a>
+        <a href="blog.html" class="hover:text-charcoal transition">Blog</a>
+      </nav>
+
+      <!-- Language & Currency Switchers -->
+      <div class="flex items-center gap-3">
+        <!-- Currency Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleCurrency('BDT')"
+            data-curr-btn="BDT"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            ৳ BDT
+          </button>
+          <button
+            type="button"
+            onclick="toggleCurrency('USD')"
+            data-curr-btn="USD"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            $ USD
+          </button>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleLanguage('en')"
+            data-lang-btn="en"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onclick="toggleLanguage('bn')"
+            data-lang-btn="bn"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button
+          type="button"
+          onclick="toggleMobileMenu()"
+          aria-label="Toggle navigation menu"
+          class="xl:hidden w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center text-charcoal hover:border-charcoal transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    id="mobile-menu-drawer"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300"
+    onclick="toggleMobileMenu()"
+  >
+    <div
+      class="fixed top-0 right-0 w-[300px] sm:w-[360px] h-full bg-[#FAF9F6] p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
+      onclick="event.stopPropagation()"
+    >
+      <div class="space-y-8">
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <span class="font-serif text-2xl text-charcoal">Menu</span>
+          <button type="button" onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-600">
+            ✕
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-sm font-semibold uppercase tracking-wider text-stone-600">
+          <a href="index.html" class="hover:text-charcoal py-1">00 Home Portal</a>
+          <a href="hotels.html" class="hover:text-charcoal py-1">01 Hotels &amp; Resorts</a>
+          <a href="food.html" class="text-charcoal font-bold py-1 border-l-2 border-charcoal pl-2">02 Local Food &amp; Dining</a>
+          <a href="activities.html" class="hover:text-charcoal py-1">03 Activities &amp; Thrills</a>
+          <a href="spots.html" class="hover:text-charcoal py-1">04 Sightseeing &amp; Spots</a>
+          <a href="transport.html" class="hover:text-charcoal py-1">05 Transport &amp; Fares</a>
+          <a href="culture.html" class="hover:text-charcoal py-1">06 Culture &amp; Heritage</a>
+          <a href="itinerary.html" class="hover:text-charcoal py-1">07 Itinerary Planner</a>
+          <a href="blog.html" class="hover:text-charcoal py-1">08 Travel Blog</a>
+        </nav>
+      </div>
+      <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
+        <p>Visit Cox's Bazar Official Guide</p>
+        <p class="mt-1">Verified Dining &amp; Local Co-ops</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow">
+    
+    <!-- ========================================================================
+         PAGE HERO BANNER
+         ======================================================================== -->
+    <section class="pt-12 pb-14 border-b border-stone-200/80 bg-white">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 mb-6">
+          <a href="index.html" class="hover:text-charcoal transition">Home</a>
+          <span>/</span>
+          <span class="text-charcoal font-semibold">Local Food &amp; Dining</span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <span class="inline-block text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold mb-2">
+              COASTAL GASTRONOMY &amp; LOCAL TASTES
+            </span>
+            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-charcoal font-normal tracking-tight">
+              The Coastal Kitchen.
+            </h1>
+          </div>
+          <p class="text-sm sm:text-base text-stone-600 max-w-xl font-normal leading-relaxed">
+            Where to have legendary lunch spreads of 30+ bhartas, open-air charcoal seafood fry on the beach at sunset, and candle-lit dining along Marine Drive.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 1: BEST PLACES FOR LUNCH (THE ICONIC DAYTIME SPREADS)
+         ======================================================================== -->
+    <section class="py-16 md:py-24 border-b border-stone-200/80">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 space-y-12">
+        
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm">
+              ☀️
+            </span>
+            <span class="text-xs font-mono uppercase tracking-widest text-stone-400">PART 01 // 12:00 – 16:00</span>
+          </div>
+          <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal tracking-tight">
+            Best Places to Have Lunch in Cox's Bazar
+          </h2>
+          <p class="text-sm text-stone-600 max-w-2xl mt-1">
+            Authentic Bangladeshi coastal meals served with steaming Chinigura rice, hot lentils, and fresh catches brought from morning fishing trawlers.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Card 1: Poushee Restaurant -->
+          <article class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-xs flex flex-col justify-between hover:border-charcoal transition space-y-6">
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-terracotta-50 text-terracotta-700 font-bold border border-terracotta-100">
+                    LEGENDARY FAVORITE
+                  </span>
+                  <h3 class="font-serif text-2xl text-charcoal mt-2">Poushee Restaurant</h3>
+                  <p class="text-xs font-mono text-stone-500">📍 Jhautola Main Road • Town Center</p>
+                </div>
+                <span class="text-xl">🍛</span>
+              </div>
+              <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                The most renowned traditional eatery in Cox's Bazar. Famous for its rotating spread of over 30 freshly prepared bhartas—including Loitta shutki, tiger prawn, roasted eggplant, and tender banana flower.
+              </p>
+              <div class="space-y-2 pt-2 border-t border-stone-100">
+                <span class="block text-[11px] font-mono uppercase text-stone-400 font-semibold">Must-Try Specialties</span>
+                <div class="flex flex-wrap gap-1.5 text-xs text-stone-700">
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Loitta Fry</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Mezbani Beef</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Chingri Bharta</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Coral Curry</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-mono">
+              <span class="text-stone-500">Average: <strong class="text-charcoal font-bold">৳350 – ৳600</strong> ($3–$5)</span>
+              <span class="text-emerald-700 font-bold">Always Packed • Arrive by 1:15 PM</span>
+            </div>
+          </article>
+
+          <!-- Card 2: Jhaubon Restaurant -->
+          <article class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-xs flex flex-col justify-between hover:border-charcoal transition space-y-6">
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-ocean-800 text-white font-bold">
+                    HERITAGE SEAFOOD
+                  </span>
+                  <h3 class="font-serif text-2xl text-charcoal mt-2">Jhaubon Restaurant</h3>
+                  <p class="text-xs font-mono text-stone-500">📍 Sugandha Point / Kolatoli Road</p>
+                </div>
+                <span class="text-xl">🐟</span>
+              </div>
+              <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                Beloved by seafood connoisseurs for homestyle coastal curries, crispy whole Rupchanda fish, and spiced duck bhuna. Known for generous portions and genuine local recipes since the early 1990s.
+              </p>
+              <div class="space-y-2 pt-2 border-t border-stone-100">
+                <span class="block text-[11px] font-mono uppercase text-stone-400 font-semibold">Must-Try Specialties</span>
+                <div class="flex flex-wrap gap-1.5 text-xs text-stone-700">
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Fried Rupchanda</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Coastal Duck Bhuna</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Crab Masala</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Fish Kofta</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-mono">
+              <span class="text-stone-500">Average: <strong class="text-charcoal font-bold">৳400 – ৳750</strong> ($3.5–$6)</span>
+              <span class="text-stone-600">Direct Sugandha Beach Access</span>
+            </div>
+          </article>
+
+          <!-- Card 3: Niribili Restaurant -->
+          <article class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-xs flex flex-col justify-between hover:border-charcoal transition space-y-6">
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-stone-100 text-charcoal font-bold">
+                    CLASSIC CHITTAGONG
+                  </span>
+                  <h3 class="font-serif text-2xl text-charcoal mt-2">Niribili Restaurant</h3>
+                  <p class="text-xs font-mono text-stone-500">📍 Main Road / Jhautola</p>
+                </div>
+                <span class="text-xl">🍲</span>
+              </div>
+              <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                A quiet, authentic culinary institution frequented by locals. Offers rich coastal beef curries, hilsha fish cooked in mustard paste (Shorishe Ilish), and freshly crushed dry fish bhartas.
+              </p>
+              <div class="space-y-2 pt-2 border-t border-stone-100">
+                <span class="block text-[11px] font-mono uppercase text-stone-400 font-semibold">Must-Try Specialties</span>
+                <div class="flex flex-wrap gap-1.5 text-xs text-stone-700">
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Shorishe Ilish</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Churi Shutki</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Traditional Dal</span>
+                  <span class="px-2 py-0.5 rounded bg-stone-100">Beef Kala Bhuna</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-mono">
+              <span class="text-stone-500">Average: <strong class="text-charcoal font-bold">৳300 – ৳550</strong> ($2.5–$4.5)</span>
+              <span class="text-stone-600">Peaceful family seating</span>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 2: BEST PLACES FOR DINNER & SUNSET (VIBRANT SEAFOOD & AMBIANCE)
+         ======================================================================== -->
+    <section class="py-16 md:py-24 bg-white border-b border-stone-200/80">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 space-y-12">
+        
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-full bg-ocean-950 text-white flex items-center justify-center font-bold text-sm">
+              🌙
+            </span>
+            <span class="text-xs font-mono uppercase tracking-widest text-stone-400">PART 02 // 17:30 – 23:00</span>
+          </div>
+          <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal tracking-tight">
+            Best Places to Have Dinner in Cox's Bazar
+          </h2>
+          <p class="text-sm text-stone-600 max-w-2xl mt-1">
+            From smoky live open-air fish fry markets on Sugandha beach to candle-lit oceanfront cabanas along Marine Drive.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          
+          <!-- Dinner 1: Sugandha Live Fish Fry Market -->
+          <article class="bg-[#FAF9F6] rounded-3xl p-6 border border-stone-200/90 shadow-xs flex flex-col justify-between space-y-5 hover:border-charcoal transition">
+            <div class="space-y-3">
+              <span class="text-xs font-mono uppercase px-2.5 py-1 rounded-full bg-terracotta-600 text-white font-bold inline-block">
+                BEACHFRONT LIVE FRY
+              </span>
+              <h3 class="font-serif text-2xl text-charcoal">Sugandha Live Fish Fry</h3>
+              <p class="text-xs font-mono text-stone-500">📍 Directly on Sugandha Beach</p>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                As dusk falls, dozens of stalls light up along the sands. Choose your own raw tuna, squid, crab, coral, or lobster on ice, negotiate the rate, and have it grilled over live coals right before your eyes.
+              </p>
+              <div class="pt-2 text-[11px] font-mono text-terracotta-700">
+                ✨ Tip: Agree on the price per piece before cooking!
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-xs font-mono">
+              <span>Avg: <strong>৳400–৳1,000</strong></span>
+              <span class="text-stone-500">Open till 11:30 PM</span>
+            </div>
+          </article>
+
+          <!-- Dinner 2: Mermaid Beach Cafe -->
+          <article class="bg-[#FAF9F6] rounded-3xl p-6 border border-stone-200/90 shadow-xs flex flex-col justify-between space-y-5 hover:border-charcoal transition">
+            <div class="space-y-3">
+              <span class="text-xs font-mono uppercase px-2.5 py-1 rounded-full bg-ocean-950 text-white font-bold inline-block">
+                ROMANTIC COASTAL
+              </span>
+              <h3 class="font-serif text-2xl text-charcoal">Mermaid Beach Cafe</h3>
+              <p class="text-xs font-mono text-stone-500">📍 Pechar Dwip • Marine Drive</p>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                Internationally renowned eco-chic beach retreat. Enjoy candlelit bamboo tables set on private sands, wood-fired seafood platters, fresh juices, and ocean breezes under the stars.
+              </p>
+              <div class="pt-2 text-[11px] font-mono text-ocean-800">
+                ✨ Signature: Jumbo Grilled Prawns &amp; Mocktails
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-xs font-mono">
+              <span>Avg: <strong>৳1,200–৳2,500</strong></span>
+              <span class="text-stone-500">Reserve Sunset Table</span>
+            </div>
+          </article>
+
+          <!-- Dinner 3: Handi Restaurant -->
+          <article class="bg-[#FAF9F6] rounded-3xl p-6 border border-stone-200/90 shadow-xs flex flex-col justify-between space-y-5 hover:border-charcoal transition">
+            <div class="space-y-3">
+              <span class="text-xs font-mono uppercase px-2.5 py-1 rounded-full bg-stone-200 text-charcoal font-bold inline-block">
+                BIRYANI &amp; TANDOOR
+              </span>
+              <h3 class="font-serif text-2xl text-charcoal">Handi Restaurant</h3>
+              <p class="text-xs font-mono text-stone-500">📍 Kolatoli Circle • Hotel Motel Zone</p>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                The top spot for rich Mughlai and Hyderabadi Dum Biryani, chicken reshmi kebabs, and garlic naan. Ideal when you crave hearty, non-seafood comfort food after a long day in the waves.
+              </p>
+              <div class="pt-2 text-[11px] font-mono text-stone-700">
+                ✨ Signature: Handi Dum Biryani &amp; Boti Kebab
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-xs font-mono">
+              <span>Avg: <strong>৳450–৳850</strong></span>
+              <span class="text-stone-500">Great for Families</span>
+            </div>
+          </article>
+
+          <!-- Dinner 4: Salt Bistro & Ocean Cafe -->
+          <article class="bg-[#FAF9F6] rounded-3xl p-6 border border-stone-200/90 shadow-xs flex flex-col justify-between space-y-5 hover:border-charcoal transition">
+            <div class="space-y-3">
+              <span class="text-xs font-mono uppercase px-2.5 py-1 rounded-full bg-sage-600 text-white font-bold inline-block">
+                ARTISAN COFFEE &amp; GRILL
+              </span>
+              <h3 class="font-serif text-2xl text-charcoal">Salt Bistro &amp; Cafe</h3>
+              <p class="text-xs font-mono text-stone-500">📍 Kolatoli Beach Road</p>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                Chic European-inspired bistro offering specialty single-origin coffees, pasta marinara, coastal chicken steaks, and decadent cheesecakes with unobstructed sunset balcony views.
+              </p>
+              <div class="pt-2 text-[11px] font-mono text-sage-700">
+                ✨ Signature: Seafood Pasta &amp; Sunset Cold Brew
+              </div>
+            </div>
+            <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-xs font-mono">
+              <span>Avg: <strong>৳600–৳1,100</strong></span>
+              <span class="text-stone-500">Sunset Balcony Seating</span>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 3: 10 MUST-TRY LOCAL DELICACIES (THE COASTAL BUCKET LIST)
+         ======================================================================== -->
+    <section class="py-16 md:py-24 border-b border-stone-200/80">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 space-y-12">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-stone-400 block mb-2">
+              FOOD BUCKET LIST
+            </span>
+            <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal tracking-tight">
+              10 Signature Dishes You Must Taste
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-stone-600 max-w-md">
+            Do not leave Cox's Bazar without sampling these authentic coastal delicacies prepared with generations-old Bay of Bengal recipes.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🐟</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Crispy Loitta Fry</h4>
+            <p class="text-xs text-stone-600">Soft, melt-in-mouth Bombay duck fish coated in a crispy turmeric and garlic batter.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🐠</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Whole Rupchanda Fry</h4>
+            <p class="text-xs text-stone-600">Silver pomfret scored with knife slits, spiced with coastal red chilies and shallow-fried golden.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🍲</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Koral Fish Curry</h4>
+            <p class="text-xs text-stone-600">Barramundi (Coral) steaks slow-simmered in thick tomato, onion, and cumin coastal gravy.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🦀</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Spicy Crab Bhuna</h4>
+            <p class="text-xs text-stone-600">Fresh sea crabs cooked with crushed green chilies, coriander, and coastal garam masala.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🥣</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Loitta Shutki Bharta</h4>
+            <p class="text-xs text-stone-600">Sun-dried fish roasted, shredded, and mashed with roasted garlic, onions, and mustard oil.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🥩</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Chittagong Mezbani Beef</h4>
+            <p class="text-xs text-stone-600">Tender beef braised with mustard seeds, fenugreek, and aromatic spices in giant copper pots.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🦆</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Coastal Duck Bhuna</h4>
+            <p class="text-xs text-stone-600">Haasher Mangsho simmered with thick coconut paste and peppercorns—rich, warming, and hearty.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🍜</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Rakhine Rice Noodles</h4>
+            <p class="text-xs text-stone-600">Handmade rice vermicelli tossed with crushed peanuts, fish flakes, and fresh mountain herbs.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🍃</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Moheshkhali Sweet Paan</h4>
+            <p class="text-xs text-stone-600">Famed aromatic betel leaves grown on Mainak Hill, wrapped with fragrant sweet spices and betel nuts.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-2xl">🥥</span>
+            <h4 class="font-serif text-lg text-charcoal font-bold">Beach Green Coconut</h4>
+            <p class="text-xs text-stone-600">Sweet, mineral-rich local coconut water sliced open fresh directly beside the rolling surf.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 4: TRAVELER DINING TIPS & FAIR PRICING GUIDE
+         ======================================================================== -->
+    <section class="py-16 md:py-20 bg-white">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        
+        <div class="bg-[#FAF9F6] rounded-3xl p-8 sm:p-12 border border-stone-200 space-y-8">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold block mb-1">
+              INSIDER GUIDANCE
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-charcoal">
+              Tips for Eating Well &amp; Safely in Cox's Bazar
+            </h3>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs sm:text-sm text-stone-700">
+            <div class="space-y-2">
+              <strong class="block text-charcoal font-bold text-sm">1. Selecting Fresh Fish</strong>
+              <p class="leading-relaxed">
+                When picking fish at Sugandha live stalls, ensure the eyes are crystal clear (not cloudy), the flesh springs back when pressed, and the gills underneath are bright crimson.
+              </p>
+            </div>
+            <div class="space-y-2">
+              <strong class="block text-charcoal font-bold text-sm">2. Clarifying Spice Levels</strong>
+              <p class="leading-relaxed">
+                Coastal curries and bhartas can be fiery hot. If you prefer milder food, tell your server clearly: <em>"Jhaal kom deben"</em> (Please make it less spicy).
+              </p>
+            </div>
+            <div class="space-y-2">
+              <strong class="block text-charcoal font-bold text-sm">3. Transparent Billing</strong>
+              <p class="leading-relaxed">
+                Traditional rice restaurants charge separately for rice, lentils, and each plate of bharta (৳30–৳60 each). At beach fry stalls, confirm the total cooking fee before frying starts.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="bg-charcoal text-white pt-20 pb-12 border-t border-stone-800">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-stone-800">
+        
+        <div class="lg:col-span-2 space-y-4">
+          <span class="font-serif text-3xl text-white">Visit Cox.</span>
+          <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
+            The definitive non-commercial guide to Cox's Bazar, Bangladesh. Verified by local tourist co-ops, culinary heritage custodians, and the Bangladesh Tourist Police.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Pages</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="index.html" class="hover:text-white transition">Home Portal</a></li>
+            <li><a href="hotels.html" class="hover:text-white transition">Hotels &amp; Resorts</a></li>
+            <li><a href="food.html" class="hover:text-white transition text-white font-bold">Food &amp; Dining</a></li>
+            <li><a href="activities.html" class="hover:text-white transition">Activities &amp; Thrills</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Explore</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="spots.html" class="hover:text-white transition">Sightseeing &amp; Spots</a></li>
+            <li><a href="transport.html" class="hover:text-white transition">Transport &amp; Fares</a></li>
+            <li><a href="culture.html" class="hover:text-white transition">Culture &amp; Heritage</a></li>
+            <li><a href="itinerary.html" class="hover:text-white transition">Itinerary Builder</a></li>
+            <li><a href="blog.html" class="hover:text-white transition">Travel Blog</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
+          <ul class="space-y-1.5 text-xs font-mono text-stone-400">
+            <li>Tourist Police: <span class="text-white">01320-169999</span></li>
+            <li>National Emergency: <span class="text-white">999</span></li>
+            <li>District Hospital: <span class="text-white">0341-63403</span></li>
+            <li>Food Safety Hotline: <span class="text-white">16122</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-4">
+        <p>&copy; 2026 Visit Cox's Bazar. All Rights Reserved.</p>
+        <p>Curated for conscious coastal travelers.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

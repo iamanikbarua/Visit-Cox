@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNP95TZB0K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KNP95TZB0K');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Transportation & Fare Guide in Cox's Bazar | Budgeting & Tariffs</title>
+  <meta
+    name="description"
+    content="Official local transportation tariffs and budgeting guide for Cox's Bazar: Tomtom, CNG, Chander Gari, speedboats, and rental cars. Interactive fare calculator to prevent overcharging."
+  />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
+            },
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5ECE7',
+              600: '#4A6B5D',
+              700: '#385347'
+            },
+            ocean: {
+              800: '#0E2A47',
+              900: '#0B2135',
+              950: '#061320'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
+
+  <!-- ========================================================================
+       TOP UTILITY STRIP & NAVIGATION
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <span class="font-serif text-2xl sm:text-3xl tracking-tight text-charcoal font-normal">
+          Visit Cox<span class="text-terracotta-600">.</span>
+        </span>
+        <span class="hidden sm:inline-block text-[11px] font-mono uppercase tracking-widest text-stone-500 border-l border-stone-300 pl-3">
+          Transport &amp; Tariffs
+        </span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
+        <a href="index.html" class="hover:text-charcoal transition">Home</a>
+        <a href="hotels.html" class="hover:text-charcoal transition">Hotels</a>
+        <a href="food.html" class="hover:text-charcoal transition">Food &amp; Dining</a>
+        <a href="activities.html" class="hover:text-charcoal transition">Activities</a>
+        <a href="spots.html" class="hover:text-charcoal transition">Spots</a>
+        <a href="transport.html" class="text-charcoal border-b-2 border-charcoal pb-1">Transport</a>
+        <a href="culture.html" class="hover:text-charcoal transition">Culture</a>
+        <a href="itinerary.html" class="hover:text-charcoal transition">Itinerary</a>
+        <a href="blog.html" class="hover:text-charcoal transition">Blog</a>
+      </nav>
+
+      <!-- Language & Currency Switchers -->
+      <div class="flex items-center gap-3">
+        <!-- Currency Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleCurrency('BDT')"
+            data-curr-btn="BDT"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            ৳ BDT
+          </button>
+          <button
+            type="button"
+            onclick="toggleCurrency('USD')"
+            data-curr-btn="USD"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            $ USD
+          </button>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleLanguage('en')"
+            data-lang-btn="en"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onclick="toggleLanguage('bn')"
+            data-lang-btn="bn"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button
+          type="button"
+          onclick="toggleMobileMenu()"
+          aria-label="Toggle navigation menu"
+          class="xl:hidden w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center text-charcoal hover:border-charcoal transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    id="mobile-menu-drawer"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300"
+    onclick="toggleMobileMenu()"
+  >
+    <div
+      class="fixed top-0 right-0 w-[300px] sm:w-[360px] h-full bg-[#FAF9F6] p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
+      onclick="event.stopPropagation()"
+    >
+      <div class="space-y-8">
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <span class="font-serif text-2xl text-charcoal">Menu</span>
+          <button type="button" onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-600">
+            ✕
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-sm font-semibold uppercase tracking-wider text-stone-600">
+          <a href="index.html" class="hover:text-charcoal py-1">00 Home Portal</a>
+          <a href="hotels.html" class="hover:text-charcoal py-1">01 Hotels &amp; Resorts</a>
+          <a href="food.html" class="hover:text-charcoal py-1">02 Local Food &amp; Dining</a>
+          <a href="activities.html" class="hover:text-charcoal py-1">03 Activities &amp; Thrills</a>
+          <a href="spots.html" class="hover:text-charcoal py-1">04 Sightseeing &amp; Spots</a>
+          <a href="transport.html" class="text-charcoal font-bold py-1 border-l-2 border-charcoal pl-2">05 Transport &amp; Fares</a>
+          <a href="culture.html" class="hover:text-charcoal py-1">06 Culture &amp; Heritage</a>
+          <a href="itinerary.html" class="hover:text-charcoal py-1">07 Itinerary Planner</a>
+          <a href="blog.html" class="hover:text-charcoal py-1">08 Travel Blog</a>
+        </nav>
+      </div>
+      <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
+        <p>Visit Cox's Bazar Official Guide</p>
+        <p class="mt-1">Verified Transport Co-op Rates</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow">
+    
+    <!-- ========================================================================
+         PAGE HERO BANNER
+         ======================================================================== -->
+    <section class="pt-12 pb-14 border-b border-stone-200/80 bg-white">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 mb-6">
+          <a href="index.html" class="hover:text-charcoal transition">Home</a>
+          <span>/</span>
+          <span class="text-charcoal font-semibold">Transport &amp; Budgeting</span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <span class="inline-block text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold mb-2">
+              LOCAL TRANSIT &amp; FARE GUIDE
+            </span>
+            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-charcoal font-normal tracking-tight">
+              Movement Across the Coast.
+            </h1>
+          </div>
+          <p class="text-sm sm:text-base text-stone-600 max-w-xl font-normal leading-relaxed">
+            Transparent local transport tariffs for domestic and international travelers. Know standard rates for Tomtoms, CNGs, Chander Gari jeeps, and speedboats before you board.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 1: VEHICLE GLOSSARY CARDS
+         ======================================================================== -->
+    <section class="py-12 border-b border-stone-200/80 bg-[#FAF9F6]">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 space-y-6">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-stone-400">VEHICLE GUIDE</span>
+          <h2 class="font-serif text-2xl sm:text-3xl text-charcoal">Understanding Local Rides</h2>
+        </div>
+
+        <div id="vehicle-glossary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 2: INTERACTIVE FARE CALCULATOR & BUDGET ESTIMATOR
+         ======================================================================== -->
+    <section class="py-16 md:py-20 bg-white border-b border-stone-200/80">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        
+        <div class="bg-[#FAF9F6] rounded-3xl p-8 sm:p-12 border border-stone-200 space-y-8">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold block mb-1">
+              BUDGET ESTIMATOR
+            </span>
+            <h3 class="font-serif text-3xl sm:text-4xl text-charcoal">
+              Instant Fare &amp; Route Calculator
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-600 mt-1 max-w-xl">
+              Select your origin, destination, and travel party size to immediately view the recommended vehicle, fair expected fare, and duration.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Origin -->
+            <div class="space-y-2">
+              <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">Pick-up Location</label>
+              <select id="calc-origin" class="w-full px-4 py-3 bg-white rounded-2xl border border-stone-300 text-xs sm:text-sm text-charcoal font-medium focus:outline-hidden focus:border-charcoal" onchange="runFareCalculation()">
+                <option value="kolatoli">Kolatoli Hotel Zone</option>
+                <option value="sugandha">Sugandha Beach</option>
+                <option value="airport">Cox's Bazar Airport (CXB)</option>
+                <option value="railway">Iconic Oyster Railway Station</option>
+              </select>
+            </div>
+
+            <!-- Destination -->
+            <div class="space-y-2">
+              <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">Destination Spot</label>
+              <select id="calc-destination" class="w-full px-4 py-3 bg-white rounded-2xl border border-stone-300 text-xs sm:text-sm text-charcoal font-medium focus:outline-hidden focus:border-charcoal" onchange="runFareCalculation()">
+                <option value="himchari">Himchari National Park (18 km)</option>
+                <option value="inani">Inani Coral Beach (32 km)</option>
+                <option value="shamlapur">Shamlapur Fishing Village (45 km)</option>
+                <option value="moheshkhali">Kasturi Ghat (for Moheshkhali Boat)</option>
+                <option value="ramu">Ramu 100-Ft Buddha (16 km)</option>
+                <option value="sugandha">Sugandha / Laboni Town Center</option>
+              </select>
+            </div>
+
+            <!-- Party Size -->
+            <div class="space-y-2">
+              <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">Travel Party Size</label>
+              <select id="calc-party" class="w-full px-4 py-3 bg-white rounded-2xl border border-stone-300 text-xs sm:text-sm text-charcoal font-medium focus:outline-hidden focus:border-charcoal" onchange="runFareCalculation()">
+                <option value="solo">1–2 Persons (Solo / Couple)</option>
+                <option value="small">3–4 Persons (Family / Small Group)</option>
+                <option value="group">5–14 Persons (Group Safari)</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Calculator Output Card -->
+          <div id="calc-result" class="p-6 rounded-2xl bg-white border border-stone-200/90 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-1">
+              <span class="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700 font-bold" id="calc-vehicle-badge">
+                RECOMMENDED: RESERVED CNG
+              </span>
+              <h4 class="font-serif text-2xl text-charcoal font-bold" id="calc-fare-text">
+                ৳400 – ৳600 ($3.5 – $5 USD)
+              </h4>
+              <p class="text-xs text-stone-500 font-mono" id="calc-meta-text">
+                ⏱ ~35–45 mins • Roundtrip waiting rate should be agreed beforehand
+              </p>
+            </div>
+            <div class="text-xs text-stone-600 bg-stone-50 p-4 rounded-xl border border-stone-200 max-w-sm">
+              <strong class="block text-charcoal font-bold mb-1">💡 Bargaining Tip:</strong>
+              <span id="calc-tip-text">Always confirm whether the driver will wait while you tour the spot. ৳100–৳200 extra is standard for 2 hours waiting.</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 3: OFFICIAL ROUTE & TARIFF TABLE
+         ======================================================================== -->
+    <section class="py-16 md:py-24">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 space-y-8">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-stone-400">FAIR PRICING DIRECTORY</span>
+            <h2 class="font-serif text-3xl sm:text-4xl text-charcoal">Standard Journey Tariffs</h2>
+          </div>
+          <span class="text-xs font-mono text-stone-500 uppercase">ALL RATES VERIFIED WITH DISTRICT DRIVERS CO-OP</span>
+        </div>
+
+        <div class="overflow-x-auto bg-white rounded-3xl border border-stone-200 shadow-xs">
+          <table class="editorial-table">
+            <thead>
+              <tr class="border-b border-stone-200 bg-stone-50/70 text-[11px] font-mono uppercase tracking-wider text-stone-500">
+                <th class="py-4 px-6 text-left">Route / Journey</th>
+                <th class="py-4 px-6 text-left">Vehicle Type</th>
+                <th class="py-4 px-6 text-left">Standard Fare</th>
+                <th class="py-4 px-6 text-left">Fare Type</th>
+                <th class="py-4 px-6 text-left">Est. Duration</th>
+              </tr>
+            </thead>
+            <tbody id="transport-table-body" class="divide-y divide-stone-100">
+              <!-- Populated dynamically via app.js renderTransport() -->
+            </tbody>
+          </table>
+        </div>
+
+        <p class="text-xs font-mono text-stone-400">
+          * Rates reflect standard daytime tariffs along Kolatoli, Laboni, Sugandha, Kasturi Ghat, and Marine Drive. Night runs after 10:00 PM may carry a 20–30% surcharge.
+        </p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="bg-charcoal text-white pt-20 pb-12 border-t border-stone-800">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-stone-800">
+        
+        <div class="lg:col-span-2 space-y-4">
+          <span class="font-serif text-3xl text-white">Visit Cox.</span>
+          <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
+            The definitive non-commercial guide to Cox's Bazar, Bangladesh. Verified by local tourist co-ops, transit drivers unions, and the Bangladesh Tourist Police.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Pages</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="index.html" class="hover:text-white transition">Home Portal</a></li>
+            <li><a href="hotels.html" class="hover:text-white transition">Hotels &amp; Resorts</a></li>
+            <li><a href="food.html" class="hover:text-white transition">Food &amp; Dining</a></li>
+            <li><a href="activities.html" class="hover:text-white transition">Activities &amp; Thrills</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Explore</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="spots.html" class="hover:text-white transition">Sightseeing &amp; Spots</a></li>
+            <li><a href="transport.html" class="hover:text-white transition text-white font-bold">Transport &amp; Fares</a></li>
+            <li><a href="culture.html" class="hover:text-white transition">Culture &amp; Heritage</a></li>
+            <li><a href="itinerary.html" class="hover:text-white transition">Itinerary Builder</a></li>
+            <li><a href="blog.html" class="hover:text-white transition">Travel Blog</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
+          <ul class="space-y-1.5 text-xs font-mono text-stone-400">
+            <li>Tourist Police: <span class="text-white">01320-169999</span></li>
+            <li>Traffic Control: <span class="text-white">0341-62288</span></li>
+            <li>National Emergency: <span class="text-white">999</span></li>
+            <li>Railway Helpline: <span class="text-white">131</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-4">
+        <p>&copy; 2026 Visit Cox's Bazar. All Rights Reserved.</p>
+        <p>Curated for conscious coastal travelers.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function runFareCalculation() {
+      const orig = document.getElementById('calc-origin').value;
+      const dest = document.getElementById('calc-destination').value;
+      const party = document.getElementById('calc-party').value;
+
+      const badge = document.getElementById('calc-vehicle-badge');
+      const fare = document.getElementById('calc-fare-text');
+      const meta = document.getElementById('calc-meta-text');
+      const tip = document.getElementById('calc-tip-text');
+
+      if (dest === 'sugandha') {
+        badge.textContent = 'RECOMMENDED: SHARED TOMTOM (EASY-BIKE)';
+        fare.textContent = '৳20 – ৳30 per person ($0.25 USD)';
+        meta.textContent = '⏱ ~10 mins • Wave down any green Tomtom on the road';
+        tip.textContent = 'Shared Tomtoms run continuously along Kolatoli and Main Road. No reservation needed.';
+      } else if (dest === 'himchari') {
+        if (party === 'group') {
+          badge.textContent = 'RECOMMENDED: OPEN 4x4 CHANDER GARI';
+          fare.textContent = '৳1,800 – ৳2,500 roundtrip ($15–$20 USD)';
+          meta.textContent = '⏱ ~35 mins each way • 10–14 seats';
+          tip.textContent = 'Chander Gari provides open breeze and hillside vistas. Reserve from Kolatoli Circle.';
+        } else {
+          badge.textContent = 'RECOMMENDED: RESERVED CNG AUTO-RICKSHAW';
+          fare.textContent = '৳400 – ৳600 roundtrip ($3.5–$5 USD)';
+          meta.textContent = '⏱ ~30 mins each way • Includes 1.5 hr waiting';
+          tip.textContent = 'Confirm roundtrip with the driver before getting in so you are not stranded for a ride back.';
+        }
+      } else if (dest === 'inani') {
+        if (party === 'group') {
+          badge.textContent = 'RECOMMENDED: CHANDER GARI SAFARI';
+          fare.textContent = '৳2,800 – ৳3,800 roundtrip ($24–$32 USD)';
+          meta.textContent = '⏱ ~1 hr each way • 32 km down Marine Drive';
+          tip.textContent = 'Driver will stop at Himchari waterfall and Inani coral beach. Best sunset ride back.';
+        } else {
+          badge.textContent = 'RECOMMENDED: RESERVED CNG OR AC CAR';
+          fare.textContent = '৳800 – ৳1,200 roundtrip ($7–$10 USD)';
+          meta.textContent = '⏱ ~50 mins each way • 32 km along ocean';
+          tip.textContent = 'Make sure to tell the driver you want the Marine Drive route, which is scenic and smooth.';
+        }
+      } else if (dest === 'moheshkhali') {
+        badge.textContent = 'RECOMMENDED: TOMTOM TO GHAT + SPEEDBOAT';
+        fare.textContent = '৳50 to Ghat + ৳90 Boat Ticket ($1.20 USD)';
+        meta.textContent = '⏱ 15m to 6 No. Ghat + 35m boat crossing';
+        tip.textContent = 'Take lifejackets at 6th Ghat jetty. Boats run until 5:00 PM; head back before dusk.';
+      } else if (dest === 'ramu') {
+        badge.textContent = 'RECOMMENDED: RESERVED CNG AUTO-RICKSHAW';
+        fare.textContent = '৳500 – ৳800 roundtrip ($4.5–$7 USD)';
+        meta.textContent = '⏱ ~40 mins each way • 16 km inland';
+        tip.textContent = 'Reserve the CNG to wait for 2 hours while you explore the 100-ft Buddha and Lanka Khyang.';
+      } else {
+        badge.textContent = 'RECOMMENDED: RESERVED CHANDER GARI';
+        fare.textContent = '৳3,500 – ৳4,500 full day ($30–$38 USD)';
+        meta.textContent = '⏱ ~1.5 hrs each way • 45 km south';
+        tip.textContent = 'Ideal for visiting traditional wooden Sampans and isolated quiet beaches.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTransport();
+      runFareCalculation();
+    });
+  </script>
+</body>
+</html>

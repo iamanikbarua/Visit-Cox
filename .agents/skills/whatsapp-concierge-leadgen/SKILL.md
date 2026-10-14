@@ -1,0 +1,50 @@
+---
+name: whatsapp-concierge-leadgen
+description: >-
+  Templates and payload formatting for generating high-converting WhatsApp
+  click-to-chat booking inquiries and concierge lead capture.
+---
+
+# WhatsApp Concierge & Lead Generation Skill 📲💬
+
+Use this skill to convert customized website itineraries and hotel inquiries into structured, high-converting WhatsApp booking messages.
+
+---
+
+## 1. Deep Link Architecture
+Direct click-to-chat URL format:
+```text
+https://wa.me/<HOTLINE_NUMBER>?text=<URL_ENCODED_MESSAGE>
+```
+* Default Hotline Number: `8801800000000` (Configure with official Visit Cox concierge line).
+
+---
+
+## 2. Structured WhatsApp Message Template
+
+### Template: Customized Itinerary Booking Request
+```text
+🌊 *VISIT COX — TRIP BOOKING INQUIRY*
+━━━━━━━━━━━━━━━━━━━━
+👤 *Traveler Name:* {travelerName}
+👥 *Group Size:* {guestsCount} Persons
+📅 *Duration:* {daysCount} Days
+🏨 *Preferred Hotel:* {hotelName}
+🏍️ *Transport Mode:* {transportMode}
+💰 *Estimated Budget:* {totalBudgetBDT} ({totalBudgetUSD})
+
+📍 *Planned Highlights:*
+{dayByDaySpotsList}
+
+✨ _I customized this trip on Visit-Cox.com and would like to confirm availability and package discounts._
+━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## 3. High-Converting Call-to-Action (CTA) Button Rules
+1. Position the WhatsApp CTA directly below the calculated total budget.
+2. Label in Bengali: `"WhatsApp-এ বুকিং সহায়তা নিন 💬"` or `"১-ক্লিকে ট্যুর বুক করুন"`
+3. Include trust indicators next to the button:
+   * 🛡️ *"১০০% নিরাপদ ও ভেরিফাইড পার্টনার্স"*
+   * ⚡ *"তাৎক্ষণিক উত্তর ও ফ্রি ট্রিপ গাইড"*

@@ -13,13 +13,13 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visit Cox | The World's Longest Coastline, Redefined</title>
+  <title>Visit Cox | The Authoritative Travel Guide to Cox's Bazar</title>
   <meta
     name="description"
-    content="An editorial travel archive to Cox's Bazar, Bangladesh. Curated coastal stays, 80km Marine Drive guides, desaturated cartography, and authentic local transit."
+    content="The definitive travel guide to Cox's Bazar, Bangladesh. Dedicated portals for curated hotels, authentic local food, coastal activities, sightseeing spots, transit fares, culture, and custom itineraries."
   />
 
-  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
+  <!-- Google Fonts: Newsreader (Editorial Serif), Plus Jakarta Sans & Hind Siliguri (Bengali) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
@@ -85,17 +85,17 @@
   <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
   <!-- Editorial Theme Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=20261013-editorial" />
+  <link rel="stylesheet" href="css/styles.css?v=20261014-editorial" />
 </head>
 
-<body class="bg-[#FAF9F6] text-[#111827] antialiased selection:bg-[#111827] selection:text-white">
+<body class="bg-[#FAF9F6] text-[#111827] antialiased selection:bg-[#111827] selection:text-white flex flex-col min-h-screen">
 
   <!-- ========================================================================
        EDITORIAL NAVIGATION (Minimalist, Hairline Divider, Dual Toggles)
        ======================================================================== -->
   <header
     id="main-navbar"
-    class="fixed top-0 left-0 right-0 z-50 navbar-editorial"
+    class="fixed top-0 left-0 right-0 z-50 navbar-editorial bg-[#FAF9F6]/95 backdrop-blur-md border-b border-stone-200/80 transition-all"
   >
     <!-- Hairline Scroll Progress Indicator -->
     <div class="w-full h-[1.5px] bg-stone-200/60 overflow-hidden">
@@ -109,28 +109,32 @@
       <div class="flex items-center justify-between h-20">
 
         <!-- Brand Identity: Editorial Serif + Coordinate Stamp -->
-        <a href="#home" class="flex items-baseline gap-3 group">
+        <a href="index.html" class="flex items-baseline gap-3 group">
           <span
             id="brand-name"
             class="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-charcoal group-hover:opacity-75 transition-opacity"
           >
-            Visit Cox
+            Visit Cox<span class="text-terracotta-600">.</span>
           </span>
           <span class="hidden sm:inline-block text-[11px] font-mono tracking-widest text-stone-500 uppercase">
             21°25'N 91°58'E
           </span>
         </a>
 
-        <!-- Desktop Navigation: Clean Uppercase Editorial Links -->
+        <!-- Desktop Navigation: Multi-Page Topic Links -->
         <nav
           aria-label="Primary Navigation"
-          class="hidden lg:flex items-center gap-8 text-[13px] tracking-wider uppercase font-semibold text-stone-600"
+          class="hidden xl:flex items-center gap-6 text-[12px] tracking-wider uppercase font-semibold text-stone-600"
         >
-          <a href="#destinations" data-nav="destinations" data-section-link="destinations" class="nav-link-item">01 Destinations</a>
-          <a href="#hotels" data-nav="hotels" data-section-link="hotels" class="nav-link-item">02 Stays</a>
-          <a href="#itinerary-section" data-nav="itinerary" data-section-link="itinerary-section" class="nav-link-item">03 Itinerary</a>
-          <a href="#transport" data-nav="transport" data-section-link="transport" class="nav-link-item">04 Transport</a>
-          <a href="#faq" data-nav="faq" data-section-link="faq" class="nav-link-item">05 Journal &amp; FAQ</a>
+          <a href="index.html" class="text-charcoal border-b-2 border-charcoal pb-1">Home</a>
+          <a href="hotels.html" class="hover:text-charcoal transition">Hotels</a>
+          <a href="food.html" class="hover:text-charcoal transition">Food &amp; Dining</a>
+          <a href="activities.html" class="hover:text-charcoal transition">Activities</a>
+          <a href="spots.html" class="hover:text-charcoal transition">Spots</a>
+          <a href="transport.html" class="hover:text-charcoal transition">Transport</a>
+          <a href="culture.html" class="hover:text-charcoal transition">Culture</a>
+          <a href="itinerary.html" class="hover:text-charcoal transition">Itinerary</a>
+          <a href="blog.html" class="hover:text-charcoal transition">Blog</a>
         </nav>
 
         <!-- Right Controls: Currency, Language & Mobile Toggle -->
@@ -153,11 +157,11 @@
               role="group"
               aria-label="Currency"
             >
-              <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="px-2.5 py-1 rounded-full text-charcoal bg-white shadow-xs">BDT</button>
-              <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="px-2.5 py-1 rounded-full text-stone-600 hover:text-charcoal transition">USD</button>
+              <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="px-2.5 py-1 rounded-full text-charcoal bg-white shadow-xs">৳ BDT</button>
+              <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="px-2.5 py-1 rounded-full text-stone-600 hover:text-charcoal transition">$ USD</button>
             </div>
 
-            <!-- Hidden Admin Quick-Access -->
+            <!-- Admin Quick-Access -->
             <button
               type="button"
               onclick="handleAdminButtonClick()"
@@ -175,7 +179,7 @@
             type="button"
             onclick="toggleMobileMenu()"
             aria-label="Toggle Menu"
-            class="lg:hidden p-2 rounded-lg text-charcoal hover:bg-stone-200/60 transition"
+            class="xl:hidden p-2 rounded-lg text-charcoal hover:bg-stone-200/60 transition"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"/>
@@ -189,12 +193,12 @@
     <!-- Mobile Drawer -->
     <div
       id="mobile-nav-drawer"
-      class="hidden lg:hidden bg-[#FAF9F6] border-b border-stone-200 px-6 pt-4 pb-8 space-y-5"
+      class="hidden xl:hidden bg-[#FAF9F6] border-b border-stone-200 px-6 pt-4 pb-8 space-y-5"
     >
       <div class="flex items-center justify-between gap-3 pb-3 border-b border-stone-200">
         <div class="flex items-center gap-2">
           <button type="button" data-lang-btn="en" onclick="toggleLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold bg-charcoal text-white">EN</button>
-          <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="px-3 py-1 rounded-full text-xs font-semibold text-stone-600">বাং</button>
+          <button type="button" data-lang-btn="bn" onclick="toggleLanguage('bn')" class="px-3 py-1 rounded-full text-xs font-semibold text-stone-600">বাংলা</button>
         </div>
         <div class="flex items-center gap-2">
           <button type="button" data-curr-btn="BDT" onclick="toggleCurrency('BDT')" class="px-3 py-1 rounded-full text-xs font-bold bg-charcoal text-white">৳ BDT</button>
@@ -202,21 +206,25 @@
         </div>
       </div>
       <nav class="flex flex-col gap-3 font-serif text-2xl text-charcoal">
-        <a href="#destinations" onclick="toggleMobileMenu(false)" class="hover:italic transition">01 Destinations</a>
-        <a href="#hotels" onclick="toggleMobileMenu(false)" class="hover:italic transition">02 Stays &amp; Sanctuaries</a>
-        <a href="#itinerary-section" onclick="toggleMobileMenu(false)" class="hover:italic transition">03 Itinerary Planner</a>
-        <a href="#transport" onclick="toggleMobileMenu(false)" class="hover:italic transition">04 Transport &amp; Fares</a>
-        <a href="#faq" onclick="toggleMobileMenu(false)" class="hover:italic transition">05 FAQ &amp; Journal</a>
+        <a href="index.html" onclick="toggleMobileMenu(false)" class="text-terracotta-600">Home</a>
+        <a href="hotels.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">01 Hotels &amp; Resorts</a>
+        <a href="food.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">02 Food &amp; Dining</a>
+        <a href="activities.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">03 Activities &amp; Thrills</a>
+        <a href="spots.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">04 Sightseeing Spots</a>
+        <a href="transport.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">05 Transport &amp; Fares</a>
+        <a href="culture.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">06 Culture &amp; Heritage</a>
+        <a href="itinerary.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">07 Tour Itinerary</a>
+        <a href="blog.html" onclick="toggleMobileMenu(false)" class="hover:italic transition">08 Travel Blog</a>
       </nav>
     </div>
   </header>
 
   <!-- ========================================================================
-       SECTION 1: THE HERO (Cinematic & Immersive, Asymmetrical Gallery)
+       SECTION 1: HERO (Cinematic, Clean & Uncluttered Portal Gateway)
        ======================================================================== -->
   <section
     id="home"
-    class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden"
+    class="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden"
   >
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 
@@ -226,11 +234,11 @@
         <!-- Left Column: Oversized Editorial Typography -->
         <div class="lg:col-span-7 flex flex-col justify-center space-y-8">
           
-          <!-- Category Overline / Archival Tag -->
+          <!-- Archival Tag -->
           <div class="flex items-center gap-3">
-            <span class="w-2 h-2 rounded-full bg-terracotta-600"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-terracotta-600"></span>
             <span class="text-xs font-mono tracking-widest text-stone-500 uppercase">
-              COASTAL ARCHIVE • 21°25'N 91°58'E • BAY OF BENGAL
+              THE AUTHORITATIVE COASTAL ARCHIVE • BAY OF BENGAL
             </span>
           </div>
 
@@ -247,14 +255,14 @@
             id="hero-subtitle"
             class="text-base sm:text-lg md:text-xl text-stone-600 max-w-2xl font-normal leading-relaxed"
           >
-            120 uninterrupted kilometres of golden quartz sands, sacred Rakhine pagoda ridges, and untamed marine sanctuaries along Bangladesh’s southern edge.
+            Welcome to the complete, dedicated traveler's guide to Cox’s Bazar. Every category is thoughtfully organized into its own dedicated space—from hand-selected beachfront stays to authentic local dining, activities, transparent transit fares, and custom itineraries.
           </p>
 
           <!-- Minimal Brutalist Metrics Row -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4 border-t border-stone-200">
             <div>
               <span class="block font-serif text-2xl sm:text-3xl text-charcoal">120 KM</span>
-              <span class="block text-xs uppercase tracking-wider text-stone-500 mt-1">Natural Beach</span>
+              <span class="block text-xs uppercase tracking-wider text-stone-500 mt-1">Natural Coast</span>
             </div>
             <div>
               <span class="block font-serif text-2xl sm:text-3xl text-charcoal">80 KM</span>
@@ -270,20 +278,20 @@
             </div>
           </div>
 
-          <!-- Editorial Action Links -->
-          <div class="flex flex-wrap items-center gap-6 pt-2">
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
             <a
-              href="#hotels"
-              class="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold tracking-wider uppercase transition"
+              href="#portal-categories"
+              class="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold tracking-wider uppercase transition shadow-xs"
             >
-              Explore Curated Stays ↓
+              Explore 7 Travel Topics ↓
             </a>
             <a
-              href="#destinations"
-              class="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-charcoal hover:text-terracotta-600 transition"
+              href="itinerary.html"
+              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-stone-300 hover:border-charcoal bg-white text-xs font-semibold tracking-wider uppercase text-charcoal transition"
             >
-              <span>Discover Destinations</span>
-              <span class="text-base">➔</span>
+              <span>Build Tour Plan</span>
+              <span class="text-sm">➔</span>
             </a>
           </div>
 
@@ -294,7 +302,7 @@
           <div class="relative w-full max-w-md mx-auto lg:max-w-none">
 
             <!-- Primary Tall Vertical Frame -->
-            <div class="hero-frame h-[440px] sm:h-[500px] w-full rounded-3xl overflow-hidden shadow-xs">
+            <div class="hero-frame h-[440px] sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-xs border border-stone-200/60">
               <img
                 src="assets/images/hero-coxs-bazar.jpg"
                 alt="Cox's Bazar 120km unbroken coastline and Marine Drive"
@@ -306,7 +314,7 @@
             </div>
 
             <!-- Overlapping Offset Secondary Frame -->
-            <div class="absolute -bottom-8 -left-6 sm:-left-10 w-48 sm:w-60 h-32 sm:h-40 hero-frame rounded-2xl overflow-hidden shadow-md hidden sm:block">
+            <div class="absolute -bottom-8 -left-6 sm:-left-10 w-48 sm:w-60 h-32 sm:h-40 hero-frame rounded-2xl overflow-hidden shadow-md hidden sm:block border-2 border-white">
               <img
                 src="assets/images/shamlapur-sampan.jpg"
                 alt="Traditional wooden moon-shaped Sampan boats resting on sunset sands"
@@ -327,12 +335,12 @@
 
       </div>
 
-      <!-- Floating Glassmorphism Search Pill (Where to? | Dates | Guests | Search) -->
-      <div class="mt-16 md:mt-24 max-w-4xl mx-auto">
-        <div class="floating-search-pill p-2 sm:p-2.5">
+      <!-- Quick Search Pill (Where to? | Category Router) -->
+      <div class="mt-14 md:mt-20 max-w-4xl mx-auto">
+        <div class="floating-search-pill p-2 sm:p-2.5 bg-white/90 backdrop-blur-md rounded-3xl border border-stone-200 shadow-sm">
           <form id="hero-search-form" class="flex flex-col md:flex-row items-center gap-2" onsubmit="event.preventDefault(); handleHeroSearch();">
             
-            <!-- Where to? -->
+            <!-- Search Query Input -->
             <div class="flex-1 flex items-center gap-3 px-5 py-3 w-full border-b md:border-b-0 md:border-r border-stone-200">
               <svg class="w-4 h-4 text-stone-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -343,32 +351,32 @@
                   id="hero-search-input"
                   type="text"
                   autocomplete="off"
-                  placeholder="Inani, Sayeman, Sea Crown, Marine Drive..."
+                  placeholder="Inani, Sayeman, Seafood, Surfing, Chander Gari..."
                   class="w-full bg-transparent text-sm font-medium text-charcoal placeholder-stone-400 focus:outline-none"
                   oninput="handleLiveHeroSearchInput()"
                 />
               </div>
             </div>
 
-            <!-- Category / Vibe -->
-            <div class="px-5 py-3 w-full md:w-44 border-b md:border-b-0 md:border-r border-stone-200">
-              <label for="hero-search-category" class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Category</label>
+            <!-- Category Selector -->
+            <div class="px-5 py-3 w-full md:w-52 border-b md:border-b-0 md:border-r border-stone-200">
+              <label for="hero-search-category" class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Jump to Category</label>
               <select
                 id="hero-search-category"
                 class="w-full bg-transparent text-xs font-semibold text-charcoal focus:outline-none cursor-pointer"
                 onchange="handleLiveHeroSearchInput()"
               >
                 <option value="all">All Archive</option>
-                <option value="hotels">Stays &amp; Resorts</option>
-                <option value="spots">Curated Spots</option>
-                <option value="transport">Transit Fares</option>
+                <option value="hotels">🏨 Hotels &amp; Resorts</option>
+                <option value="spots">📍 Sightseeing Spots</option>
+                <option value="transport">🛺 Transit Fares</option>
               </select>
             </div>
 
-            <!-- Season Window -->
+            <!-- Season Window Pill -->
             <div class="px-5 py-3 w-full md:w-40 hidden md:block">
-              <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Season</span>
-              <span class="block text-xs font-semibold text-charcoal truncate">Nov – Feb (Peak)</span>
+              <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">Golden Window</span>
+              <span class="block text-xs font-semibold text-charcoal truncate">Nov – Feb (Calm Sea)</span>
             </div>
 
             <!-- Submit Button -->
@@ -396,474 +404,505 @@
   </section>
 
   <!-- ========================================================================
-       SECTION 2: CURATED DESTINATIONS (The Bento Grid Architecture)
+       SECTION 2: THE 7 DEDICATED TRAVEL PORTALS (Clean Gateway Bento Grid)
+       Solves the "overflow on home page" issue: clear, organized entry points.
        ======================================================================== -->
-  <section id="destinations" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
+  <section id="portal-categories" class="py-20 md:py-28 border-t border-stone-200/80 bg-white">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 
-      <!-- Editorial Section Header -->
+      <!-- Section Header -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
         <div>
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
-            01 / CURATED DESTINATIONS
+            EXPLORE COX'S BAZAR BY CATEGORY
           </span>
           <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
-            Coastal Sanctuaries &amp; Outposts
+            Every Travel Need, Organized.
           </h2>
         </div>
         <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
-          From the untouched mangrove inlets of Sonadia to sacred hillside pagodas, explore the raw, unhurried beauty of southern Bangladesh.
+          Each aspect of your Cox's Bazar journey has its own dedicated portal—uncluttered, informative, and verified with local guides.
         </p>
       </div>
 
-      <!-- The Bento Box Grid (Asymmetrical 5-Tile Showcase) -->
+      <!-- The 7 Portal Bento Cards -->
       <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-        <!-- Bento 1: Marine Drive (Large Featured Anchor, spans 8 cols) -->
-        <article
-          onclick="selectLiveSearchResult('destinations', 'Marine Drive Coastal Highway', 'spots')"
-          class="bento-card md:col-span-8 min-h-[440px] md:min-h-[500px] flex flex-col justify-end p-8 sm:p-10 group"
+        <!-- 1. HOTELS & RESORTS (Featured Bento, spans 7 cols) -->
+        <a
+          href="hotels.html"
+          class="bento-card md:col-span-7 min-h-[380px] md:min-h-[420px] flex flex-col justify-end p-8 sm:p-10 group relative rounded-3xl overflow-hidden border border-stone-200"
         >
           <img
-            src="assets/images/hero-coxs-bazar.jpg"
-            alt="Marine Drive 80km coastal road"
+            src="assets/images/hotel-sea-crown.jpg"
+            alt="Hotels and Resorts in Cox's Bazar"
             loading="lazy"
             decoding="async"
-            class="bento-img absolute inset-0"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div class="bento-overlay"></div>
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
           
           <div class="relative z-10 space-y-3">
             <div class="flex items-center gap-2">
               <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
-                80 KM COASTAL HIGHWAY
+                26+ CURATED STAYS
+              </span>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-emerald-500/80 text-white">
+                5★ • 4★ • 3★ • BUDGET
               </span>
             </div>
             <h3 class="font-serif text-3xl sm:text-4xl text-white font-normal">
-              Marine Drive
+              Hotels &amp; Coastal Sanctuaries
             </h3>
-            <p class="text-sm sm:text-base text-stone-200 max-w-xl line-clamp-2 leading-relaxed">
-              Where emerald rainforest hills plunge straight into the Bay of Bengal waves. 80 kilometres of uninterrupted, open-air seaside solitude.
+            <p class="text-sm text-stone-200 max-w-lg line-clamp-2 leading-relaxed">
+              Explore beachfront luxury at Sayeman and Royal Tulip, quiet eco-villas at Mermaid Beach Resort, and verified budget havens with transparent room pricing.
             </p>
-            <div class="pt-2 flex items-center justify-between">
-              <span class="text-xs font-mono text-stone-300">EST. TRAVEL: 1.5 HOURS BY OPEN JEEP</span>
-              <span class="bento-arrow">➔</span>
+            <div class="pt-3 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">FILTER BY ZONE, STARS &amp; BUDGET</span>
+              <span class="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                Browse Directory ➔
+              </span>
             </div>
           </div>
-        </article>
+        </a>
 
-        <!-- Bento 2: Maheshkhali Island (spans 4 cols) -->
-        <article
-          onclick="selectLiveSearchResult('destinations', 'Maheshkhali Island', 'spots')"
-          class="bento-card md:col-span-4 min-h-[300px] md:min-h-[500px] flex flex-col justify-end p-8 group"
-        >
-          <img
-            src="assets/images/moheshkhali.jpg"
-            alt="Maheshkhali Island Adinath Temple"
-            loading="lazy"
-            decoding="async"
-            class="bento-img absolute inset-0"
-          />
-          <div class="bento-overlay"></div>
-
-          <div class="relative z-10 space-y-2">
-            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
-              HILLTOP SANCTUARY
-            </span>
-            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
-              Maheshkhali Island
-            </h3>
-            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
-              Ancient Adinath Shiva temple rising above Mainak Hill, reached by speedboat through mangrove delta channels.
-            </p>
-            <div class="pt-2 flex items-center justify-between">
-              <span class="text-xs font-mono text-stone-300">SPEEDBOAT: 25 MINS</span>
-              <span class="bento-arrow">➔</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Bento 3: Sonadia Island (spans 4 cols) -->
-        <article
-          onclick="selectLiveSearchResult('destinations', 'Sonadia Island', 'spots')"
-          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group"
-        >
-          <img
-            src="assets/images/sonadia-island.jpg"
-            alt="Sonadia Island untouched nature"
-            loading="lazy"
-            decoding="async"
-            class="bento-img absolute inset-0"
-          />
-          <div class="bento-overlay"></div>
-
-          <div class="relative z-10 space-y-2">
-            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
-              UNTOUCHED NATURE
-            </span>
-            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
-              Sonadia Island
-            </h3>
-            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
-              Pristine offshore sanctuary of red fiddler crabs, sand dunes, and migrating marine birds.
-            </p>
-            <div class="pt-2 flex items-center justify-between">
-              <span class="text-xs font-mono text-stone-300">WILD MANGROVES</span>
-              <span class="bento-arrow">➔</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Bento 4: Ramu (spans 4 cols) -->
-        <article
-          onclick="selectLiveSearchResult('destinations', 'Ramu Reclining Buddha', 'spots')"
-          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group"
-        >
-          <img
-            src="assets/images/ramu-buddha.jpg"
-            alt="Ramu 100-feet reclining Buddha"
-            loading="lazy"
-            decoding="async"
-            class="bento-img absolute inset-0"
-          />
-          <div class="bento-overlay"></div>
-
-          <div class="relative z-10 space-y-2">
-            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
-              BUDDHIST HERITAGE
-            </span>
-            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
-              Ramu
-            </h3>
-            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
-              100-foot reclining bronze Buddha and ancient Rakhine monasteries preserving centuries-old woodwork.
-            </p>
-            <div class="pt-2 flex items-center justify-between">
-              <span class="text-xs font-mono text-stone-300">16 KM INLAND</span>
-              <span class="bento-arrow">➔</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Bento 5: Nazirartek (spans 4 cols) -->
-        <article
-          onclick="selectLiveSearchResult('destinations', 'Nazirartek', 'spots')"
-          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group"
+        <!-- 2. LOCAL FOOD & DINING (spans 5 cols) -->
+        <a
+          href="food.html"
+          class="bento-card md:col-span-5 min-h-[380px] md:min-h-[420px] flex flex-col justify-end p-8 group relative rounded-3xl overflow-hidden border border-stone-200"
         >
           <img
             src="assets/images/najirartek-shutki.jpg"
-            alt="Nazirartek dried fish village"
+            alt="Authentic Cox's Bazar seafood and local dining"
             loading="lazy"
             decoding="async"
-            class="bento-img absolute inset-0"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div class="bento-overlay"></div>
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
 
-          <div class="relative z-10 space-y-2">
-            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-white/20 text-white backdrop-blur-md">
-              MARITIME CULTURE
+          <div class="relative z-10 space-y-3">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-amber-500/80 text-white backdrop-blur-md">
+              CULINARY GUIDE
             </span>
             <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
-              Nazirartek
+              Local Food &amp; Best Dining
             </h3>
             <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
-              Asia's largest artisanal dried fish settlement, offering a visceral window into deep-sea heritage.
+              Where to have lunch (Poushee, Jhaubon, Niribili with 15+ bhortas), sunset dinners at Sugandha live fish stalls, and signature Mustard Rupchanda.
             </p>
-            <div class="pt-2 flex items-center justify-between">
-              <span class="text-xs font-mono text-stone-300">NORTHERN JETTY</span>
-              <span class="bento-arrow">➔</span>
+            <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">LUNCH &amp; DINNER RECOMMENDATIONS</span>
+              <span class="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                View Food Guide ➔
+              </span>
             </div>
           </div>
-        </article>
+        </a>
 
-      </div>
-
-      <!-- Expandable Drawer for All 14 Destinations & 10 Hidden Gems -->
-      <div class="mt-14 pt-8 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <button
-          type="button"
-          onclick="const d = document.getElementById('full-directory-drawer'); d.classList.toggle('hidden');"
-          class="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-charcoal hover:text-terracotta-600 transition"
+        <!-- 3. ACTIVITIES & THRILLS (spans 4 cols) -->
+        <a
+          href="activities.html"
+          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group relative rounded-3xl overflow-hidden border border-stone-200"
         >
-          <span>Explore Full Directory (All 14 Destinations &amp; 10 Local Food Gems)</span>
-          <span>↓</span>
-        </button>
-        <span class="text-xs font-mono text-stone-400 uppercase">ALL DATA VERIFIED WITH LOCAL CO-OPS</span>
-      </div>
+          <img
+            src="assets/images/hero-coxs-bazar.jpg"
+            alt="Surfing at Kalatoli Beach"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
 
-      <!-- Full Directory Drawer (Preserves all existing spots & hidden gems without cluttering) -->
-      <div id="full-directory-drawer" class="hidden mt-8 space-y-12">
-        <div>
-          <h4 class="font-serif text-2xl text-charcoal mb-4">Complete Destination Archive</h4>
-          <div id="destinations-grid" class="flex gap-4 overflow-x-auto pb-4"></div>
-          <div id="destination-slider-dots" class="hidden"></div>
-          <div id="destination-slider-counter" class="text-xs text-stone-500 font-mono mt-2"></div>
-        </div>
-
-        <div>
-          <h4 class="font-serif text-2xl text-charcoal mb-4">10 Hidden Food &amp; Cultural Gems</h4>
-          <div id="hidden-gems-grid" class="flex gap-4 overflow-x-auto pb-4"></div>
-          <div id="hidden-gems-slider-dots" class="hidden"></div>
-          <div id="gems-slider-counter" class="text-xs text-stone-500 font-mono mt-2"></div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       SECTION 3: PREMIUM STAYS (Split Screen / Draggable Horizontal Scroll)
-       ======================================================================== -->
-  <section id="hotels" class="py-24 md:py-32 border-t border-stone-200/80 bg-[#FAF9F6]">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-
-        <!-- Left Sticky Column: Large Editorial Typography -->
-        <div class="lg:col-span-4 lg:sticky lg:top-28 self-start space-y-6">
-          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">
-            02 / ACCOMMODATIONS
-          </span>
-          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
-            Where to Rest.
-          </h2>
-          <p class="text-sm sm:text-base text-stone-600 font-normal leading-relaxed">
-            Curated beachfront sanctuaries, cliffside retreats, and architectural suites selected for uncompromised calm.
-          </p>
-
-          <!-- Minimal Filter Pills -->
-          <div class="pt-4 space-y-3">
-            <span class="block text-[11px] font-mono tracking-wider uppercase text-stone-400">FILTER BY TIER</span>
-            <div id="hotel-star-filters" class="flex flex-wrap gap-2"></div>
-          </div>
-
-          <div class="space-y-3">
-            <span class="block text-[11px] font-mono tracking-wider uppercase text-stone-400">FILTER BY BUDGET</span>
-            <div id="hotel-price-filters" class="flex flex-wrap gap-2"></div>
-          </div>
-
-          <!-- Drag Guidance -->
-          <div class="pt-6 border-t border-stone-200 flex items-center justify-between text-xs font-mono text-stone-400">
-            <span>← DRAG TO EXPLORE →</span>
-            <span id="hotel-slider-counter"></span>
-          </div>
-
-          <!-- Hidden containers to maintain full AppState compatibility -->
-          <div id="hotel-spot-filters" class="hidden"></div>
-          <div id="hotel-facility-filters" class="hidden"></div>
-          <div id="hotel-active-filters-bar" class="hidden"></div>
-          <div id="hotel-active-chips" class="hidden"></div>
-          <div id="hotel-reset-filters-btn" class="hidden"></div>
-          <div id="hotel-slider-dots" class="hidden"></div>
-        </div>
-
-        <!-- Right Column: Draggable Horizontal Scroll Track -->
-        <div class="lg:col-span-8 min-w-0">
-          <div
-            id="hotels-grid"
-            class="stays-horizontal-track"
-          >
-            <!-- Populated dynamically via app.js -->
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       SECTION 3: SIMPLE ITINERARY BUILDER (Neat, Clean & Clutter-Free)
-       ======================================================================== -->
-  <section id="itinerary-section" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
-            03 / ITINERARY PLANNER
-          </span>
-          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
-            Curate Your Daily Journey
-          </h2>
-        </div>
-        <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
-          Select your duration and travel rhythm. Get an immediate, neat, and clutter-free plan for morning, afternoon, and evening in Cox's Bazar.
-        </p>
-      </div>
-
-      <!-- Simple & Clean Stepped Controls -->
-      <div class="bg-[#FAF9F6] rounded-3xl p-6 sm:p-8 border border-stone-200 space-y-6">
-        
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          
-          <!-- Step 1: Duration Selector -->
-          <div class="lg:col-span-6 space-y-2.5">
-            <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">
-              1. Choose Duration
-            </label>
-            <div class="flex flex-wrap gap-2 sm:gap-2.5">
-              <button
-                type="button"
-                onclick="setItineraryTotalDays(2); composeSteppedItinerary(2, FeaturesState.tripVibe || 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
-                id="btn-duration-2"
-              >
-                2 Days (Quick Weekend)
-              </button>
-              <button
-                type="button"
-                onclick="setItineraryTotalDays(3); composeSteppedItinerary(3, FeaturesState.tripVibe || 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer"
-                id="btn-duration-3"
-              >
-                3 Days (Classic Escape)
-              </button>
-              <button
-                type="button"
-                onclick="setItineraryTotalDays(5); composeSteppedItinerary(5, FeaturesState.tripVibe || 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
-                id="btn-duration-5"
-              >
-                5 Days (Full Coastline)
-              </button>
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-sky-500/80 text-white backdrop-blur-md">
+              10 VERIFIED ACTIVITIES
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Activities &amp; Thrills
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Kalatoli beach surfing, Himchari parasailing, ATV quad bikes, open Chander Gari safaris, and beach camping with verified rates.
+            </p>
+            <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">PRICES &amp; SAFETY</span>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
             </div>
           </div>
+        </a>
 
-          <!-- Step 2: Vibe Selector -->
-          <div class="lg:col-span-6 space-y-2.5">
-            <label class="block text-xs font-mono uppercase tracking-wider text-stone-500">
-              2. Choose Travel Style
-            </label>
-            <div class="flex flex-wrap gap-2 sm:gap-2.5">
-              <button
-                type="button"
-                onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'relaxing');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-charcoal bg-charcoal text-white transition cursor-pointer"
-                id="btn-vibe-relaxing"
-              >
-                🌿 Relaxing &amp; Scenic
-              </button>
-              <button
-                type="button"
-                onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'adventure');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
-                id="btn-vibe-adventure"
-              >
-                🏄 Adventure &amp; Waves
-              </button>
-              <button
-                type="button"
-                onclick="composeSteppedItinerary(FeaturesState.totalDays || 3, 'local');"
-                class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal bg-white transition cursor-pointer"
-                id="btn-vibe-local"
-              >
-                🏛️ Local Culture &amp; Food
-              </button>
+        <!-- 4. LOCAL SPOTS TO VISIT (spans 4 cols) -->
+        <a
+          href="spots.html"
+          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group relative rounded-3xl overflow-hidden border border-stone-200"
+        >
+          <img
+            src="assets/images/inani-beach.jpg"
+            alt="Inani Coral Beach and Marine Drive"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-teal-500/80 text-white backdrop-blur-md">
+              14 SPOTS + 10 GEMS
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Sightseeing &amp; Spots
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              80km Marine Drive, Inani coral reefs, Sonadia untouched island, and Maheshkhali ancient Shiva temple.
+            </p>
+            <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">FULL ARCHIVE</span>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
             </div>
           </div>
+        </a>
 
-        </div>
+        <!-- 5. TRANSPORTATION & FARES (spans 4 cols) -->
+        <a
+          href="transport.html"
+          class="bento-card md:col-span-4 min-h-[340px] flex flex-col justify-end p-8 group relative rounded-3xl overflow-hidden border border-stone-200"
+        >
+          <img
+            src="assets/images/himchari.jpg"
+            alt="Chander Gari open jeep safari on Marine Drive"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-indigo-500/80 text-white backdrop-blur-md">
+              TRANSIT &amp; BUDGETING
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Local Transport Costs
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Transparent fare guides for Tomtom battery rickshaws, CNGs, Chander Gari day charters, plus a trip fare calculator.
+            </p>
+            <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">CALCULATOR INCLUDED</span>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 6. CULTURE & HERITAGE (spans 6 cols) -->
+        <a
+          href="culture.html"
+          class="bento-card md:col-span-6 min-h-[340px] flex flex-col justify-end p-8 group relative rounded-3xl overflow-hidden border border-stone-200"
+        >
+          <img
+            src="assets/images/ramu-buddha.jpg"
+            alt="Ramu 100-foot reclining Buddha"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-rose-500/80 text-white backdrop-blur-md">
+              HERITAGE &amp; CULTURE
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Rakhine Heritage &amp; Traditions
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Explore the Ramu 100-ft Reclining Buddha, wooden moon-shaped Sampan boatbuilders, ancient monasteries, and respectful traveler etiquette.
+            </p>
+            <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">TEMPLES, PAGODAS &amp; CRAFT</span>
+              <span class="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                Read Guide ➔
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 7. CUSTOM TOUR ITINERARY BUILDER (spans 6 cols) -->
+        <a
+          href="itinerary.html"
+          class="bento-card md:col-span-6 min-h-[340px] flex flex-col justify-end p-8 group relative rounded-3xl overflow-hidden border border-stone-200"
+        >
+          <img
+            src="assets/images/hero-coxs-bazar.jpg"
+            alt="Tour Itinerary Builder for Cox's Bazar"
+            loading="lazy"
+            decoding="async"
+            class="bento-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="bento-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+
+          <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-purple-500/80 text-white backdrop-blur-md">
+              INTERACTIVE PLANNER
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
+              Tour Itinerary Generator
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
+              Design a neat, daily schedule for 2, 3, or 5 days tailored to your vibe (Relaxing, Adventure, or Local Culture) with 1-click PDF and PNG export.
+            </p>
+            <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
+              <span class="text-stone-300 font-mono text-[11px]">INSTANT SCHEDULE &amp; EXPORT</span>
+              <span class="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                Generate Plan ➔
+              </span>
+            </div>
+          </div>
+        </a>
 
       </div>
-
-      <!-- Neat & Clean Itinerary Output Cards Container -->
-      <div id="itinerary-stepped-output" class="mt-10 space-y-8">
-        <!-- Populated dynamically via composeSteppedItinerary() -->
-      </div>
-
-      <!-- Hidden compatibility containers -->
-      <div id="map-section" class="hidden">
-        <div id="map-category-filters"></div>
-        <div id="coxs-bazar-map"></div>
-        <div id="map-locations-quicklist"></div>
-        <div id="map-spot-shelf-track"></div>
-        <div id="map-day-spot-selector"></div>
-        <div id="map-floating-status-text"></div>
-      </div>
-      <div id="itinerary-studio-builder" class="hidden"></div>
-      <div id="itinerary-output-container" class="hidden"></div>
-      <div id="visual-itinerary-poster" class="hidden"></div>
 
     </div>
   </section>
 
   <!-- ========================================================================
-       SECTION 5: PRACTICALITIES & TRANSPORT (Brutalist Editorial Table)
+       SECTION 3: CURATED SNAPSHOT: 3 UNMISSABLE EXPERIENCES
        ======================================================================== -->
-  <section id="transport" class="py-24 md:py-32 border-t border-stone-200/80 bg-[#FAF9F6]">
+  <section class="py-20 md:py-28 border-t border-stone-200/80 bg-[#FAF9F6]">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
         <div>
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
-            04 / LOGISTICS &amp; TRANSIT
+            EDITOR'S SELECTION
           </span>
           <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
-            Movement Across the Coast
+            The Three Signature Experiences
           </h2>
         </div>
         <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
-          Transparent local transit rates for both domestic and international travelers. Know standard tariffs before boarding.
+          If you only have 48 hours in Cox's Bazar, these three moments capture the soul of the southern coast.
         </p>
       </div>
 
-      <!-- Vehicle Overview Cards -->
-      <div id="vehicle-glossary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        <!-- Populated dynamically via app.js -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Experience 1 -->
+        <article class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-stone-100">
+              <img
+                src="assets/images/shamlapur-sampan.jpg"
+                alt="80km Marine Drive Sunrise Expedition"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <span class="inline-block text-[10px] font-mono tracking-widest uppercase text-terracotta-600">
+              01 / COASTAL EXPEDITION
+            </span>
+            <h3 class="font-serif text-2xl text-charcoal">
+              80km Marine Drive in an Open Jeep
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              Hire an open Chander Gari at early sunrise. Drive past Himchari waterfalls, Inani coral reefs, and Shamlapur fishing hamlets with the sea breeze rushing past.
+            </p>
+          </div>
+          <a
+            href="spots.html#marine-drive"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-terracotta-600 transition"
+          >
+            <span>Read Spot Guide</span>
+            <span>➔</span>
+          </a>
+        </article>
 
-      <!-- Brutally Clean Minimalist Table -->
-      <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-xs">
-        <div class="overflow-x-auto">
-          <table class="editorial-table">
-            <thead>
-              <tr>
-                <th>Route / Corridor</th>
-                <th>Vehicle Mode</th>
-                <th>Standard Tariff</th>
-                <th>Fare Basis</th>
-                <th>Estimated Duration</th>
-              </tr>
-            </thead>
-            <tbody id="transport-table-body">
-              <!-- Populated dynamically via app.js -->
-            </tbody>
-          </table>
-        </div>
-        <div class="p-6 bg-stone-50 border-t border-stone-200 text-xs font-mono text-stone-500">
-          * ALL TARIFFS AUDITED AGAINST BANGLADESH TOURIST POLICE LOCAL STANDARD ADVISORIES.
-        </div>
+        <!-- Experience 2 -->
+        <article class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-stone-100">
+              <img
+                src="assets/images/najirartek-shutki.jpg"
+                alt="15-Bhorta Platter and Fresh Coral Fish"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <span class="inline-block text-[10px] font-mono tracking-widest uppercase text-terracotta-600">
+              02 / CULINARY TRADITION
+            </span>
+            <h3 class="font-serif text-2xl text-charcoal">
+              15-Bhorta Feast at Poushee
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              A rite of passage in Cox's Bazar. Steaming hot rice accompanied by shutki, chitol, eggplant, mustard shrimp, and crispy loitta fry straight from the kitchen.
+            </p>
+          </div>
+          <a
+            href="food.html#lunch-spots"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-terracotta-600 transition"
+          >
+            <span>View Food Guide</span>
+            <span>➔</span>
+          </a>
+        </article>
+
+        <!-- Experience 3 -->
+        <article class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-stone-100">
+              <img
+                src="assets/images/hero-coxs-bazar.jpg"
+                alt="Kalatoli Beach Break Surfing"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <span class="inline-block text-[10px] font-mono tracking-widest uppercase text-terracotta-600">
+              03 / OCEAN ADVENTURE
+            </span>
+            <h3 class="font-serif text-2xl text-charcoal">
+              Kalatoli Wave Surfing Class
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              Cox's Bazar is Bangladesh's surf capital. Join a 90-minute beginner session with certified local surfers, rental foam board, and safety lifesaver included.
+            </p>
+          </div>
+          <a
+            href="activities.html#surfing"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-terracotta-600 transition"
+          >
+            <span>Activity Details</span>
+            <span>➔</span>
+          </a>
+        </article>
+
       </div>
 
     </div>
   </section>
 
   <!-- ========================================================================
-       SECTION 6: ESSENTIAL KNOWLEDGE & FAQ (Accordion: + to × Rotation)
+       SECTION 4: TRAVELER ESSENTIAL BRIEFING & SAFETY
        ======================================================================== -->
-  <section id="faq" class="py-24 md:py-32 border-t border-stone-200/80 bg-white">
+  <section class="py-20 md:py-28 border-t border-stone-200/80 bg-white">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-5 space-y-6">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">
+            TRAVELER BRIEFING
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl text-charcoal font-normal tracking-tight">
+            Seasons, Safety &amp; Etiquette
+          </h2>
+          <p class="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">
+            Whether you are visiting for the first time or returning, knowing seasonal weather patterns and beach safety rules ensures an unforgettable coastal trip.
+          </p>
+
+          <div class="space-y-3 pt-2">
+            <div class="p-4 rounded-2xl bg-[#FAF9F6] border border-stone-200">
+              <strong class="block text-xs font-mono uppercase tracking-wider text-charcoal">Nov — Feb (Golden Season)</strong>
+              <p class="text-xs text-stone-600 mt-1">Calm, turquoise sea, pleasant 22°C–28°C weather, perfect for Marine Drive drives and boat rides to Maheshkhali.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-[#FAF9F6] border border-stone-200">
+              <strong class="block text-xs font-mono uppercase tracking-wider text-charcoal">Jun — Aug (Monsoon Drama)</strong>
+              <p class="text-xs text-stone-600 mt-1">Huge rolling waves, dramatic skies, and 50% hotel discounts. Swimming is strictly prohibited during red flags.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-[#FAF9F6] rounded-3xl p-6 sm:p-10 border border-stone-200 space-y-8">
+          <div>
+            <h3 class="font-serif text-2xl text-charcoal mb-4">Official Beach Safety Guidelines</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="bg-white p-4 rounded-2xl border border-stone-200 text-xs">
+                <span class="block font-bold text-emerald-700 mb-1">🟢 Green Flag</span>
+                <span>Calm water; safe swimming within 50 meters of the marked lifeguard post.</span>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-stone-200 text-xs">
+                <span class="block font-bold text-amber-700 mb-1">🟡 Yellow Flag</span>
+                <span>Moderate swell &amp; riptides. Exercise extreme caution; stay knee-deep.</span>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-stone-200 text-xs">
+                <span class="block font-bold text-rose-700 mb-1">🔴 Red Flag</span>
+                <span>Danger. High tide undertow. Absolutely no swimming permitted by police.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-stone-200">
+            <h4 class="font-serif text-xl text-charcoal mb-3">24/7 Verified Emergency Contacts</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 bg-white rounded-xl border border-stone-200">
+                <strong class="text-charcoal block">Tourist Police Cox's Bazar:</strong>
+                <a href="tel:01320160160" class="text-terracotta-600 font-mono font-semibold">01320-160160</a>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-stone-200">
+                <strong class="text-charcoal block">National Emergency Service:</strong>
+                <a href="tel:999" class="text-terracotta-600 font-mono font-semibold">999 (Toll Free)</a>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-stone-200">
+                <strong class="text-charcoal block">Sadar 250-Bed Hospital:</strong>
+                <a href="tel:01730324778" class="text-terracotta-600 font-mono font-semibold">01730-324778</a>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-stone-200">
+                <strong class="text-charcoal block">Sea Lifeguard Stations:</strong>
+                <span class="text-stone-600">Laboni &amp; Sugandha Points</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 5: ESSENTIAL KNOWLEDGE & FAQ (Accordion: + to × Rotation)
+       ======================================================================== -->
+  <section id="faq" class="py-20 md:py-28 border-t border-stone-200/80 bg-white">
     <div class="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10">
 
       <div class="text-center mb-16">
         <span class="block text-xs font-mono uppercase tracking-widest text-stone-400 mb-3">
-          05 / ESSENTIAL KNOWLEDGE
+          FREQUENTLY ASKED QUESTIONS
         </span>
         <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal font-normal tracking-tight">
-          Frequently Asked Questions
+          Practical Travel Guidance
         </h2>
         <p class="mt-3 text-sm sm:text-base text-stone-600 font-normal">
-          Verified answers regarding weather windows, marine safety flags, culinary traditions, and etiquette.
+          Direct answers regarding safety, transport, local cuisine, and the best seasons to visit.
         </p>
       </div>
 
-      <!-- Minimalist FAQ Rows (+ rotates into ×) -->
+      <!-- FAQ Accordion -->
       <div id="faq-accordion-container" class="space-y-0 border-t border-stone-200">
         <!-- Populated dynamically via app.js -->
       </div>
 
-      <!-- Hidden containers for essential-info compatibility -->
+      <!-- Hidden compatibility containers so app.js and features.js work seamlessly -->
+      <div id="destinations-grid" class="hidden"></div>
+      <div id="destination-slider-dots" class="hidden"></div>
+      <div id="destination-slider-counter" class="hidden"></div>
+      <div id="hidden-gems-grid" class="hidden"></div>
+      <div id="hidden-gems-slider-dots" class="hidden"></div>
+      <div id="gems-slider-counter" class="hidden"></div>
+      <div id="hotels-grid" class="hidden"></div>
+      <div id="hotel-star-filters" class="hidden"></div>
+      <div id="hotel-price-filters" class="hidden"></div>
+      <div id="hotel-spot-filters" class="hidden"></div>
+      <div id="hotel-facility-filters" class="hidden"></div>
+      <div id="hotel-active-filters-bar" class="hidden"></div>
+      <div id="hotel-active-chips" class="hidden"></div>
+      <div id="hotel-reset-filters-btn" class="hidden"></div>
+      <div id="hotel-slider-dots" class="hidden"></div>
+      <div id="hotel-slider-counter" class="hidden"></div>
+      <div id="transport-table-body" class="hidden"></div>
+      <div id="vehicle-glossary-cards" class="hidden"></div>
       <div id="essential-info" class="hidden">
         <div id="essential-info-grid"></div>
       </div>
@@ -876,12 +915,17 @@
       <div id="blog-section" class="hidden">
         <div id="blog-posts-grid"></div>
       </div>
+      <div id="itinerary-stepped-output" class="hidden"></div>
+      <div id="itinerary-output-container" class="hidden"></div>
+      <div id="itinerary-studio-builder" class="hidden"></div>
+      <div id="visual-itinerary-poster" class="hidden"></div>
+      <div id="map-section" class="hidden"></div>
 
     </div>
   </section>
 
   <!-- ========================================================================
-       EDITORIAL FOOTER (Archival Layout, Verification, Emergency Hotlines)
+       EDITORIAL FOOTER (Archival Layout, Verification, Multi-Page S在那)
        ======================================================================== -->
   <footer class="bg-charcoal text-[#FAF9F6] pt-20 pb-16 border-t border-stone-800">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -889,9 +933,9 @@
       <div class="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-stone-800">
         
         <div class="md:col-span-5 space-y-4">
-          <span class="font-serif text-3xl sm:text-4xl text-white block">Visit Cox</span>
+          <span class="font-serif text-3xl sm:text-4xl text-white block">Visit Cox<span class="text-terracotta-500">.</span></span>
           <p class="text-xs sm:text-sm text-stone-400 max-w-sm leading-relaxed">
-            The premier editorial archive to Cox's Bazar. Curating coastal stays, Marine Drive expeditions, and Rakhine cultural heritage.
+            The premier editorial travel archive to Cox's Bazar, Bangladesh. Dedicated portals for hotels, authentic dining, coastal activities, sightseeing, transparent transit, and custom itineraries.
           </p>
           <span class="block text-xs font-mono tracking-widest text-stone-500 uppercase">
             21.4272° N, 91.9701° E — BAY OF BENGAL
@@ -899,23 +943,26 @@
         </div>
 
         <div class="md:col-span-3 space-y-3">
-          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">NAVIGATION</span>
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">DEDICATED PORTALS</span>
           <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
-            <li><a href="#destinations" class="hover:text-white transition">01 Destinations</a></li>
-            <li><a href="#hotels" class="hover:text-white transition">02 Stays &amp; Sanctuaries</a></li>
-            <li><a href="#itinerary-section" class="hover:text-white transition">03 Itinerary Planner</a></li>
-            <li><a href="#transport" class="hover:text-white transition">04 Local Transport</a></li>
-            <li><a href="#faq" class="hover:text-white transition">05 FAQ &amp; Guidance</a></li>
+            <li><a href="hotels.html" class="hover:text-white transition">01 Hotels &amp; Resorts</a></li>
+            <li><a href="food.html" class="hover:text-white transition">02 Food &amp; Dining Guide</a></li>
+            <li><a href="activities.html" class="hover:text-white transition">03 Activities &amp; Thrills</a></li>
+            <li><a href="spots.html" class="hover:text-white transition">04 Sightseeing Spots</a></li>
+            <li><a href="transport.html" class="hover:text-white transition">05 Local Transport &amp; Fares</a></li>
+            <li><a href="culture.html" class="hover:text-white transition">06 Culture &amp; Heritage</a></li>
+            <li><a href="itinerary.html" class="hover:text-white transition">07 Tour Itinerary Planner</a></li>
+            <li><a href="blog.html" class="hover:text-white transition">08 Travel Blog</a></li>
           </ul>
         </div>
 
         <div class="md:col-span-4 space-y-3">
-          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">EMERGENCY HOTLINES</span>
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">24/7 TOURIST SAFETY</span>
           <div class="space-y-2 text-xs text-stone-300">
             <p><strong class="text-white">Tourist Police Cox's Bazar:</strong> 01320-160160</p>
             <p><strong class="text-white">National Emergency Service:</strong> 999</p>
             <p><strong class="text-white">Sadar District Hospital:</strong> 01730-324778</p>
-            <p><strong class="text-white">Sea Beach Lifeguard Post:</strong> Laboni &amp; Sugandha Points</p>
+            <p><strong class="text-white">Sea Beach Lifeguards:</strong> Laboni &amp; Sugandha Points</p>
           </div>
         </div>
 
@@ -923,14 +970,14 @@
 
       <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-stone-500">
         <span>© 2026 VISIT COX. ALL RIGHTS RESERVED.</span>
-        <span>DESIGNED AS AN AWARD-WINNING EDITORIAL ARCHIVE.</span>
+        <span>A DEDICATED MULTI-PAGE TRAVEL ARCHIVE.</span>
       </div>
 
     </div>
   </footer>
 
   <!-- ========================================================================
-       FLOATING CONCIERGE (Minimalist Floating Pill & Chatbot Drawer)
+       FLOATING CONCIERGE (Chatbot Drawer)
        ======================================================================== -->
   <button
     type="button"
@@ -976,7 +1023,7 @@
       <input
         id="chatbot-input"
         type="text"
-        placeholder="Ask about hotels, beach safety, food..."
+        placeholder="Ask about hotels, best food, transport..."
         class="flex-1 px-3 py-2 bg-stone-100 rounded-xl text-xs text-charcoal focus:outline-none"
       />
       <button type="submit" class="p-2 rounded-xl bg-charcoal text-white hover:bg-black transition">
@@ -985,7 +1032,7 @@
     </form>
   </div>
 
-  <!-- Hotel Facilities Modal -->
+  <!-- Hotel Facilities Modal (for direct searches) -->
   <div
     id="hotel-facilities-modal"
     class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
@@ -1022,15 +1069,11 @@
     class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-charcoal text-white text-xs font-mono px-5 py-2.5 rounded-full shadow-lg"
   ></div>
 
-  <!-- Visual Itinerary Export Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261013-editorial"></script>
-  <script src="js/admin.js?v=20261013-editorial"></script>
-  <script src="js/app.js?v=20261013-editorial"></script>
-  <script src="js/features.js?v=20261013-editorial"></script>
-  <script src="js/blog.js?v=20261013-editorial"></script>
+  <script src="js/data.js?v=20261014-editorial"></script>
+  <script src="js/admin.js?v=20261014-editorial"></script>
+  <script src="js/app.js?v=20261014-editorial"></script>
+  <script src="js/features.js?v=20261014-editorial"></script>
+  <script src="js/blog.js?v=20261014-editorial"></script>
 </body>
 </html>
