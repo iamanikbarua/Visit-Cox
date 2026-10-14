@@ -1,0 +1,109 @@
+{
+  "component": "MakeMyPlanner",
+  "version": "2.0.0",
+  "theme": {
+    "primary": "#111827",
+    "accent": "#C86446",
+    "accentHover": "#A84C32",
+    "background": "#FAF9F6",
+    "cardBg": "#FFFFFF",
+    "stoneBorder": "#E7E5E0",
+    "sageBadge": "#4A6B5D"
+  },
+  "parameters": [
+    {
+      "id": "duration",
+      "label": "Trip Duration",
+      "type": "stepper_with_presets",
+      "presets": [2, 3, 5],
+      "min": 1,
+      "max": 10,
+      "default": 3,
+      "unit": "Days"
+    },
+    {
+      "id": "travelers",
+      "label": "Travelers & Group Composition",
+      "type": "dual_stepper",
+      "fields": {
+        "adults": { "min": 1, "max": 20, "default": 2, "label": "Adults (12+ yrs)" },
+        "children": { "min": 0, "max": 10, "default": 0, "label": "Children (<12 yrs)" }
+      }
+    },
+    {
+      "id": "vacationVibe",
+      "label": "Vacation Type & Vibe",
+      "type": "visual_cards",
+      "options": [
+        { "id": "relaxing", "icon": "🌿", "title": "Relaxing & Scenic", "desc": "Sunset walks, beach cafes & quiet ocean breeze" },
+        { "id": "adventure", "icon": "🏄", "title": "Adventure & Waves", "desc": "Parasailing, Jet Ski, speedboats & Marine Drive" },
+        { "id": "romantic", "icon": "💖", "title": "Couple & Romantic", "desc": "Secluded coral beach, candlelight seafood & luxury resort" },
+        { "id": "family", "icon": "👨‍👩‍👧‍👦", "title": "Family & Kids", "desc": "Safe shallow beach, Radiant Fish World aquarium & parks" },
+        { "id": "foodie", "icon": "🍤", "title": "Seafood & Foodie", "desc": "Live night fish BBQ, authentic shutki bhorta & Poushee" },
+        { "id": "culture", "icon": "🏛️", "title": "Culture & Heritage", "desc": "Moheshkhali Adinath temple, Ramu Pagoda & tribal weaves" }
+      ],
+      "default": "relaxing"
+    },
+    {
+      "id": "budgetTier",
+      "label": "Budget Tier",
+      "type": "segmented_pills",
+      "options": [
+        { "id": "backpacker", "name": "Backpacker / Economy", "rangeBDT": "৳1,500 – ৳2,500 / day", "badge": "Smart Saver" },
+        { "id": "comfort", "name": "Comfort / Standard", "rangeBDT": "৳3,500 – ৳5,500 / day", "badge": "Most Popular", "recommended": true },
+        { "id": "luxury", "name": "Luxury / Premium", "rangeBDT": "৳8,000 – ৳18,000+ / day", "badge": "5-Star Resorts" }
+      ],
+      "default": "comfort"
+    },
+    {
+      "id": "preferredPlace",
+      "label": "Preferred Base / Area",
+      "type": "dropdown_with_pills",
+      "options": [
+        { "id": "any", "name": "✨ Smart Recommendation (Best Balance)" },
+        { "id": "kolatoli", "name": "🌊 Kolatoli / Sugandha (Bustling & Central)" },
+        { "id": "inani", "name": "🪸 Marine Drive / Inani (Quiet Coral Beach)" },
+        { "id": "laboni", "name": "🌅 Laboni Point (Heritage Beach & Market)" }
+      ],
+      "default": "any"
+    },
+    {
+      "id": "hotelType",
+      "label": "Hotel Category",
+      "type": "chips",
+      "options": [
+        { "id": "any", "name": "Best Value for Budget" },
+        { "id": "5star", "name": "5★ Luxury Resort (Sayeman, Sea Pearl)" },
+        { "id": "comfort34", "name": "3-4★ Oceanview Hotel (Sea Crown, Prime Park)" },
+        { "id": "ecolodge", "name": "Eco Beach Cottage (Mermaid)" },
+        { "id": "budget_guesthouse", "name": "Economy Guest House (Clean & AC)" }
+      ],
+      "default": "any"
+    },
+    {
+      "id": "activityPreferences",
+      "label": "Activity Priorities (Select all that apply)",
+      "type": "multi_chips",
+      "options": [
+        { "id": "marine_drive", "name": "🚗 Marine Drive 80km Ride", "default": true },
+        { "id": "inani_coral", "name": "🪸 Inani Coral Reef Walking", "default": true },
+        { "id": "parasailing", "name": "🪂 Beach Parasailing", "costBDT": 1500 },
+        { "id": "jetski", "name": "🌊 Jet Ski 10-Min Wave Thrill", "costBDT": 1000 },
+        { "id": "moheshkhali", "name": "🚤 Moheshkhali Speedboat & Temple", "costBDT": 350 },
+        { "id": "fish_world", "name": "🐠 Radiant Fish World Aquarium", "costBDT": 350 },
+        { "id": "night_bbq", "name": "🍤 Sugandha Live Fish BBQ Dinner", "costBDT": 800 },
+        { "id": "himchari_hill", "name": "🌿 Himchari Hilltop Viewpoint", "costBDT": 50 }
+      ]
+    }
+  ],
+  "liveBudgetWidget": {
+    "sticky": true,
+    "position": "bottom_or_top",
+    "display": ["totalBDT", "totalUSD", "perPersonBDT", "perPersonUSD", "itemizedPills"]
+  },
+  "exportOutputs": [
+    { "type": "png", "aspectRatio": "boarding_pass", "resolution": "2x", "library": "html2canvas" },
+    { "type": "pdf", "library": "jspdf" },
+    { "type": "whatsapp", "action": "direct_booking_lead" }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TouristDestination",
+      "name": "Cox's Bazar",
+      "description": "World's longest unbroken natural sea beach, spanning 120km along the Bay of Bengal in Bangladesh.",
+      "touristType": ["Beach Tourism", "Adventure", "Eco Tourism", "Cultural Heritage"],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 21.4272,
+        "longitude": 91.9702
+      }
+    },
+    {
+      "@type": "Trip",
+      "name": "Custom Cox's Bazar Daily Tour & Budget Planner",
+      "description": "Interactive, verified custom tour planner with real-time approximate budget calculation, hotel and dining recommendations, and downloadable travel passes.",
+      "itinerary": [
+        {
+          "@type": "Day",
+          "name": "Day 1: Arrival & Sugandha Sunset Seafood BBQ",
+          "description": "Hotel check-in at Kolatoli, authentic seafood lunch at Poushee, Sugandha beach sunset, and live charcoal fish grill."
+        },
+        {
+          "@type": "Day",
+          "name": "Day 2: Marine Drive, Himchari Viewpoint & Inani Coral Reef",
+          "description": "80km scenic highway ride, Himchari hilltop panorama, Inani coral beach walk, beachfront parasailing, and Mermaid twilight cafe."
+        },
+        {
+          "@type": "Day",
+          "name": "Day 3: Moheshkhali Island Speedboat & Adinath Shrine",
+          "description": "Speedboat sea crossing, ancient Adinath temple, Buddhist golden pagodas, and Barmis souvenir market shopping."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much does a 3-day trip to Cox's Bazar cost for 2 people?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A standard comfortable 3-day trip for 2 people typically costs between ৳18,000 and ৳22,000 BDT ($150 - $185 USD), covering an AC sea-facing room, authentic seafood feasts, local transit, and activities."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the fair transit fare from Kolatoli to Inani Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The verified anti-scam reserve fare for a CNG auto-rickshaw from Kolatoli or Town Central to Inani Beach along Marine Drive is ৳500 to ৳600 BDT. Do not pay inflated rates of ৳1,000+."
+          }
+        }
+      ]
+    }
+  ]
+}
