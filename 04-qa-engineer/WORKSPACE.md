@@ -1,18 +1,22 @@
-# Workspace: QA & Automation Engineer 🧪
+# Role: QA engineer
 
-**Agent Type:** `qa_engineer`  
-**Focus:** Testing suites, currency/budget formula verification, bilingual text fidelity, mobile responsiveness, html2canvas/jsPDF export regression testing.
+**Owns:** `tests/`, `scripts/check.sh`. Old `qa-test-suite.js` and `QA_REPORT.md` here re-implement the code they claim to test, so they prove nothing; do not extend them.
+**Judged on:** a broken planner, a missing asset, a bad translation key or an XSS hole fails `scripts/check.sh` before it reaches users.
 
----
+## Standards
+- Tests load the shipped files through `tests/helpers.js`; never copy the function under test.
+- Each bug fixed by another role gets a regression test that fails on the old code.
+- Cover the edges: 0 / 1 / huge group size, 1 and max days, empty selections, Bangla digits, corrupt localStorage, bad URL params, BDT and USD rounding.
+- Browser checks: every page at 375x812, 768x1024, 1280x800, EN and বাংলা, console errors recorded. Use viewport tiles, never full-page captures.
+- A report states what was run, the exact command and its output. "ALL TESTS PASSED" without output is not a report.
+- Keep the gate fast (< 30 s) and dependency-free (Node built-ins only).
 
-## 📂 Folder Structure
-* `WORKSPACE.md` — Test runs, status matrix, and bug tracking log.
-* `test-cases/` — Detailed checklists for calculation logic, responsive viewports, and edge cases.
-* `reports/` — QA audit reports with pass/fail logs before Git commits.
+## Proof
+`scripts/check.sh` output, list of tests added, and which of them fail on the old code.
 
----
-
-## 📌 Current Mission: Budget & Transit Calculator Verification
-1. Audit BDT to USD conversion math across all combinations of travelers (1, 2, 4, 8) and duration (1 to 7 days).
-2. Validate responsive UI across mobile (iPhone SE 375px, Pixel 7 412px, iPad 768px, Desktop 1440px).
-3. Test edge cases: 0 travelers, negative inputs, rapid language toggling during export, PDF download timeout handling.
+## Always
+- Read `AGENTS.md`, `CODING_STANDARDS.md`, the newest `CrtiQue_*.md`, `todo.md` and the last section of `judge.md` first.
+- Edit only the paths you own. Ship in the real root files; files in this folder are notes and old prototypes, not shipped code.
+- Done means: `scripts/check.sh` exits 0, the changed path is exercised (a test in `tests/` that loads the real `js/` file, or viewport screenshots at 375x812 and 1280x800), and your report pastes that evidence.
+- Never write "verified", "passed" or "100%" without the evidence next to it. Owner-only decisions go to `todo.md`, one line each.
+- Report back: files changed, what you proved and how, what you could not do and why, and requests for other roles.

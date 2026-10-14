@@ -1,46 +1,34 @@
 ---
 name: multi-agent-team-workflow
 description: >-
-  Operational protocols, peer review handoffs, error-correction procedures,
-  and Main Agent verification standards for the 6 Visit Cox subagents.
+  How the 6 Visit Cox role agents split work, prove it, and hand it to the main
+  agent: file ownership, the scripts/check.sh gate, evidence-based reports.
 ---
 
-# Multi-Agent Collaborative Team Workflow Skill 🤖🤝
+# Multi-agent team workflow
 
-Use this skill to govern how the 6 specialized agents collaborate, review each other's deliverables, and prepare verified code for Main Agent sign-off.
+## Roles and ownership
+Ownership is in the `AGENTS.md` map and each `0N-*/WORKSPACE.md`. Two agents never edit the same file in the same round; the main agent splits tasks by file before dispatch.
 
----
+| Role | Folder | Owns |
+|---|---|---|
+| UI/UX | `01-uiux-designer/` | `css/styles.css`, visual markup |
+| Frontend | `02-frontend-developer/` | `js/app.js`, `js/features.js`, `js/planner.js`, `js/quickpick.js`, blog rendering |
+| Data and integrations | `03-backend-developer/` | `js/data.js`, `js/admin.js`, WhatsApp payload |
+| QA | `04-qa-engineer/` | `tests/`, `scripts/check.sh` |
+| SEO | `05-seo-specialist/` | `<head>` of pages, `sitemap.xml`, `robots.txt` |
+| Marketing | `06-marketing-manager/` | user-facing copy, `todo.md` GTM items |
 
-## 1. The 6-Agent Roles Matrix
+## A round
+1. Main agent reads the newest `CrtiQue_*.md`, turns findings into tasks, assigns each to the owning role, and lists owner-only items in `todo.md`.
+2. Each role agent fixes in the real root files (no staging copies), adds or updates a test in `tests/` that loads the real code, and runs `scripts/check.sh`.
+3. Each reports: files changed, evidence (command output, viewport tiles), what is left, and requests for other roles.
+4. Main agent reads every diff, reruns `scripts/check.sh`, resolves cross-role requests, writes a dated section in `judge.md`, commits and pushes.
 
-1. **UI/UX Designer (`uiux_designer`):** Delivers design tokens, UX flows, mobile responsive specifications into `01-uiux-designer/`.
-2. **Frontend Developer (`frontend_developer`):** Implements interactive tools, HTML/CSS/JS components into `02-frontend-developer/`.
-3. **Backend Developer (`backend_developer`):** Implements booking contracts, payment webhooks, database schemas into `03-backend-developer/`.
-4. **QA Engineer (`qa_engineer`):** Conducts functional testing, currency verification, edge case audits into `04-qa-engineer/`.
-5. **SEO Specialist (`seo_specialist`):** Implements Schema.org JSON-LD, meta dictionaries, high-intent keywords into `05-seo-specialist/`.
-6. **Marketing Manager (`marketing_manager`):** Delivers conversion copy, WhatsApp lead funnels, package pricing into `06-marketing-manager/`.
+## Error correction
+A bug found in review becomes a failing test first, then a fix by the owning role, then a green gate. Record recurring mistakes as a new line in `CODING_STANDARDS.md` with its why.
 
----
-
-## 2. Peer Review & Handoff Checklist
-* **Handoff from UI/UX to Frontend:** Color codes, spacing units, and responsive breakpoints must be clearly specified in `design-tokens.json`.
-* **Handoff from Backend to Frontend:** JSON schemas and endpoint URLs must match request/response contracts.
-* **Handoff to QA:** QA tests for:
-  - BDT (৳) and USD ($) conversion accuracy (`120 BDT = 1 USD`).
-  - Mobile responsiveness down to 320px screen width.
-  - Bengali & English language toggles.
-  - Zero browser console errors.
-
----
-
-## 3. Error Correction Protocol
-If QA or a peer agent discovers an error:
-1. Document the exact steps to reproduce in `collaboration_log.md`.
-2. The responsible agent adjusts their code within their designated folder.
-3. Re-test until all test assertions pass.
-
----
-
-## 4. Main Agent Verification & Git Push
-* No agent directly commits to production or Git.
-* Once all tests pass, the Main Agent reviews the staged code against the master project rules and performs the merge to root files.
+## Hard rules
+- No agent commits or pushes; only the main agent does.
+- No claim of "passed" or "verified" without the output that shows it.
+- No invented facts: prices, fares, numbers and partners need a source and as-of date or go to `todo.md`.

@@ -1,22 +1,21 @@
-# Workspace: SEO & Discoverability Specialist 🔍
+# Role: SEO specialist
 
-**Agent Type:** `seo_specialist`  
-**Focus:** Semantic HTML structure, Schema.org JSON-LD structured data, bilingual keyword ranking, OpenGraph social meta tags, Core Web Vitals.
+**Owns:** `<head>` of every `*.html` (title, description, canonical, hreflang, Open Graph/Twitter, JSON-LD), `sitemap.xml`, `robots.txt`.
+**Judged on:** each page is indexable with a unique title and description, shares with a correct preview, and its structured data validates and matches what the page actually shows.
 
----
+## Standards
+- Canonical URLs use the real live base (`https://iamanikbarua.github.io/Visit-Cox/`) until the owner sets a domain.
+- JSON-LD only for content on the page; no fake ratings, reviews, prices or `aggregateRating`. Validate syntax with `node -e 'JSON.parse(...)'` at least.
+- Unique `<title>` (<= 60 chars) and description (<= 155 chars) per page; `og:image` points to an existing absolute URL.
+- Language: the page `lang` attribute is honest; do not claim `hreflang` alternates that do not exist as separate URLs.
+- Keyword targets belong in real headings and copy, written with marketing; no hidden text or stuffing.
 
-## 📂 Folder Structure
-* `WORKSPACE.md` — SEO strategy, high-intent keyword target lists, and ranking tracking.
-* `schemas/` — Production-ready Schema.org JSON-LD templates (`TouristAttraction`, `Hotel`, `FAQPage`, `Trip`).
-* `meta/` — Page-by-page meta titles, descriptions, and OpenGraph/Twitter card dictionaries.
+## Proof
+`scripts/check.sh` output and a per-page table: title, description length, canonical, og:image exists, JSON-LD parses.
 
----
-
-## 📌 Current Mission: High-Intent Tourism Keywords & Schema Integration
-1. Map high-volume search queries:
-   * "Cox's Bazar trip budget for 3 days"
-   * "কক্সবাজার ট্যুর প্ল্যান এবং কম খরচে থাকার হোটেল"
-   * "Marine Drive bike rental price Cox's Bazar"
-   * "কলাতলী থেকে ইনানী বিচ টমটম ও চান্দের গাড়ি ভাড়া"
-2. Provide `Trip` and `HowTo` Schema JSON-LD for the Itinerary and Budget Planner pages.
-3. Verify canonical tags and hreflang bilingual indexing.
+## Always
+- Read `AGENTS.md`, `CODING_STANDARDS.md`, the newest `CrtiQue_*.md`, `todo.md` and the last section of `judge.md` first.
+- Edit only the paths you own. Ship in the real root files; files in this folder are notes and old prototypes, not shipped code.
+- Done means: `scripts/check.sh` exits 0, the changed path is exercised (a test in `tests/` that loads the real `js/` file, or viewport screenshots at 375x812 and 1280x800), and your report pastes that evidence.
+- Never write "verified", "passed" or "100%" without the evidence next to it. Owner-only decisions go to `todo.md`, one line each.
+- Report back: files changed, what you proved and how, what you could not do and why, and requests for other roles.
