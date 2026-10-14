@@ -13,6 +13,28 @@ function stub() {
   });
 }
 
+// A fake element that keeps value/textContent/innerHTML/classList/style; anything else is a stub.
+function element(id) {
+  const classes = new Set();
+  const real = {
+    id, value: '', textContent: '', innerHTML: '', style: {}, dataset: {}, children: [],
+    classList: { add: (...c) => c.forEach((x) => classes.add(x)), remove: (...c) => c.forEach((x) => classes.delete(x)), toggle: (c, on) => ((on ?? !classes.has(c)) ? classes.add(c) : classes.delete(c)), contains: (c) => classes.has(c) },
+    listeners: {}, addEventListener(t, f) { (this.listeners[t] ||= []).push(f); },
+  };
+  return new Proxy(real, { get: (t, k) => (k in t ? t[k] : stub()), set: (t, k, v) => ((t[k] = v), true) });
+}
+
+// document.getElementById(id) returns the same fake element per id; other document calls are stubs.
+function fakeDocument() {
+  const els = new Map();
+  const doc = {
+    getElementById: (id) => (els.has(id) || els.set(id, element(id)), els.get(id)),
+    querySelectorAll: () => [],
+    elements: els,
+  };
+  return new Proxy(doc, { get: (t, k) => (k in t ? t[k] : stub()) });
+}
+
 function memoryStorage() {
   const m = new Map();
   return {
@@ -24,11 +46,13 @@ function memoryStorage() {
 }
 
 // load(['data.js', 'planner.js']) -> evaluate('EXPR') reads any top-level const/let/function.
-function load(files, { storage = memoryStorage() } = {}) {
+// Options: storage, search ('?days=3'), dom (true = fakeDocument with real element objects).
+function load(files, { storage = memoryStorage(), search = '', dom = false } = {}) {
   const ctx = {
     console, setTimeout: () => 0, clearTimeout() {}, setInterval: () => 0, clearInterval() {},
     localStorage: storage, sessionStorage: memoryStorage(),
-    document: stub(), navigator: { language: 'en', userAgent: 'node' }, location: { search: '', hash: '', href: 'http://localhost/', pathname: '/' },
+    document: dom ? fakeDocument() : stub(), navigator: { language: 'en', userAgent: 'node' },
+    location: { search, hash: '', href: 'http://localhost/' + search, pathname: '/' },
     URLSearchParams, URL, Intl, encodeURIComponent, decodeURIComponent,
   };
   ctx.window = ctx;

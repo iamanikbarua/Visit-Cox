@@ -1,12 +1,16 @@
 /**
- * ============================================================================
- * Visit Cox's Bazar - Centralized Authentic Data & Bilingual Content Store
- * ============================================================================
- * All hotel addresses, hotlines, sightseeing facts, emergency numbers, and
- * original photographs have been verified against official hotel portals,
- * Bangladesh Tourist Police / Ministry of Health directories, and Wikimedia
- * Commons archival photography.
+ * Visit Cox's Bazar - content and bilingual strings.
+ * Prices, fares and hotel phones are approximate and mostly unsourced: an item
+ * counts as checked only when it carries `source` and `asOf`. Items marked
+ * `approx: true` have not been confirmed with the business.
  */
+
+// Rendered by app.js, planner.js and page footers. Confirm by phone before relying on them.
+const EMERGENCY_CONTACTS = [
+  { id: 'national', name: { en: 'National Emergency (police, fire, ambulance)', bn: 'জাতীয় জরুরি সেবা (পুলিশ, ফায়ার, অ্যাম্বুলেন্স)' }, number: '999', tel: '999', source: 'https://999.gov.bd', asOf: '2026-10-15' },
+  { id: 'tourist-police', name: { en: 'Tourist Police helpline (24/7)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (২৪/৭)' }, number: '01320-222222', tel: '+8801320222222', source: 'https://bangladeshmonitor.com.bd/en/bangladesh-tourist-police-launches-247-helpline-for-travellers', asOf: '2026-10-15', needsOwnerConfirm: true },
+];
+const SITE_CONTACT = { whatsapp: null }; // null = no real number yet; UI must hide WhatsApp CTAs
 
 const CONFIG = {
   exchangeRateUSD: 120, // 1 USD = 120 BDT
@@ -50,15 +54,15 @@ const UI_TEXT = {
       ]
     },
     hotelsSection: {
-      eyebrow: "VERIFIED ACCOMMODATIONS",
+      eyebrow: "ACCOMMODATIONS",
       title: "Where to Stay in Cox's Bazar",
-      subtitle: "Authentic hotel listings with verified addresses, official hotlines, original photography, and live rates in BDT or USD.",
+      subtitle: "Hotel listings with addresses, hotel phone numbers and approximate nightly rates in BDT or USD. Confirm rates with the hotel before booking.",
       filterAll: "All Locations",
       perNight: "/ night",
       amenitiesLabel: "Key Amenities",
       inquireBtn: "Check Availability",
       locationLabel: "Location",
-      sourceLabel: "Official Website",
+      sourceLabel: "Hotel website",
       filterStarLabel: "Star Rating",
       filterPriceLabel: "Price Range",
       filterSpotLabel: "Spot / Zone",
@@ -86,7 +90,7 @@ const UI_TEXT = {
       subtitle: "Explore Cox's Bazar's protected national parks, coral-boulder shores, island temples, and ancient Rakhine & Buddhist heritage with original photography.",
       vibeLabel: "The Vibe",
       directionsLabel: "Directions",
-      sourceLabel: "Verified Source",
+      sourceLabel: "Source",
       hiddenGemsBadge: "LOCAL FOOD & AUTHENTIC CULTURE",
       hiddenGemsTitle: "10 Hidden Gems: Local Food & Cultural Heritage",
       hiddenGemsSubtitle: "Taste legendary Loitta fry, 30+ bhartas at Poushee, live seafood grilling at Sugandha, and visit Rakhine handloom weavers and traditional salt pans."
@@ -94,7 +98,7 @@ const UI_TEXT = {
     activitiesSection: {
       eyebrow: "THINGS TO DO & COASTAL THRILLS",
       title: "Top 10 Activities in Cox's Bazar",
-      subtitle: "From riding the surf and beach parasailing to open-top Marine Drive jeep safaris and night bonfires—verified rates, locations, and safety briefings.",
+      subtitle: "From riding the surf and beach parasailing to open-top Marine Drive jeep safaris and night bonfires—approximate rates, locations, and safety briefings.",
       filterAll: "All Activities",
       filterWater: "Water Sports",
       filterBeach: "Beach & Riding",
@@ -108,7 +112,7 @@ const UI_TEXT = {
     transportSection: {
       eyebrow: "LOCAL TRANSIT & FARES",
       title: "Local Transportation & Pricing Guide",
-      subtitle: "Verified local fares for both Bangladeshi travelers and international visitors—know the standard rate before you ride.",
+      subtitle: "Approximate local fares for Bangladeshi and international visitors—know the usual rate before you ride.",
       foreignerNoteTitle: "Foreigner's Guide to Local Vehicles",
       foreignerNoteDesc: "Hover or tap on the highlighted vehicle names in the table below, or read this quick breakdown of Cox's Bazar's signature local rides:",
       tableHeaders: {
@@ -121,9 +125,9 @@ const UI_TEXT = {
       rateDisclaimer: "* Fares shown are standard local rates along Kalatali, Laboni, Sugandha, Kasturi Ghat, and Marine Drive. Confirm reserved fares before boarding."
     },
     essentialSection: {
-      eyebrow: "VERIFIED TRAVELER BRIEFING",
+      eyebrow: "TRAVELER BRIEFING",
       title: "Essential Travel Information",
-      subtitle: "Official climate guidance, local cultural etiquette, and verified government emergency hotlines for Cox's Bazar.",
+      subtitle: "Climate guidance, local etiquette, and emergency numbers for Cox's Bazar.",
       weather: {
         title: "Weather & Best Time to Visit",
         peakTitle: "Nov – Feb (Peak Winter Season)",
@@ -155,23 +159,21 @@ const UI_TEXT = {
         ]
       },
       emergency: {
-        title: "Official 24/7 Emergency Contacts",
-        subtitle: "Verified Bangladesh Government, Tourist Police & Hospital hotlines:",
+        title: "24/7 Emergency Contacts",
+        subtitle: "Save these before you travel. Numbers from published sources, last checked 2026-10-15:",
         contacts: [
-          { name: "National Emergency Service", number: "999", note: "24/7 Toll-Free Police, Fire & Ambulance (Bangladesh Govt.)" },
-          { name: "Tourist Police Cox's Bazar (Control Room)", number: "+880 1320-160000", note: "Laboni Point Helpdesk (Alt: +880 1769-690732)" },
-          { name: "250-Bed District Sadar Hospital", number: "+880 1730-324770", note: "Govt. Emergency Medical Care (Alt: +880 1701-248199)" },
-          { name: "Tourist Police SP Office & Sea Safe", number: "+880 1320-158995", note: "Cox's Bazar Region SP & CIPRB Beach Lifeguard Rescue" }
+          { name: "National Emergency Service", number: "999", note: "24/7 toll-free police, fire and ambulance" },
+          { name: "Tourist Police helpline", number: "01320-222222", note: "24/7 national helpline (reported Sep 2023, Bangladesh Monitor)" }
         ]
       }
     },
     faqSection: {
       eyebrow: "GOT QUESTIONS?",
       title: "Frequently Asked Questions",
-      subtitle: "Quick, verified answers to the most common questions from domestic and international travelers."
+      subtitle: "Quick answers to the most common questions from domestic and international travelers."
     },
     chatbot: {
-      title: "Cox's Bazar Smart AI Guide",
+      title: "Cox's Bazar Quick Guide",
       status: "Online • Specific Local Prices, Routes & Contacts",
       welcome: "Hello! Ask me anything specific—like 'Sea Crown phone & price', 'Cheapest hotel', 'How to reach Ramu or Inani', 'Best seafood at Poushee', 'Marine Drive bike rental', or 'My trip budget'!",
       inputPlaceholder: "Ask specific hotel, spot, fare, restaurant, or route...",
@@ -187,10 +189,10 @@ const UI_TEXT = {
       ]
     },
     footer: {
-      about: "Your trusted bilingual digital companion for exploring Cox's Bazar—featuring verified hotel contacts, original Wikimedia & official photography, and transparent local fares.",
+      about: "A bilingual guide to Cox's Bazar: hotel contacts, Wikimedia photography, and approximate local fares.",
       quickLinks: "Quick Navigation",
-      travelerTools: "Traveler & Admin Controls",
-      copyright: "© 2026 Visit Cox's Bazar Tourism Guide. Authentic Data & Original Photography."
+      travelerTools: "Traveler Controls",
+      copyright: "© 2026 Visit Cox's Bazar Tourism Guide."
     }
   },
 
@@ -226,15 +228,15 @@ const UI_TEXT = {
       ]
     },
     hotelsSection: {
-      eyebrow: "প্রামাণ্য আবাসন তালিকা",
+      eyebrow: "আবাসন তালিকা",
       title: "কক্সবাজারে কোথায় থাকবেন",
-      subtitle: "সঠিক ঠিকানা, অফিশিয়াল হটলাইন নাম্বার, আসল ছবি এবং টাকা (BDT) বা ডলারে (USD) প্রতি রাতের ভাড়া তুলনা করুন।",
+      subtitle: "ঠিকানা, হোটেলের ফোন নাম্বার এবং টাকা (BDT) বা ডলারে (USD) প্রতি রাতের আনুমানিক ভাড়া। বুকিংয়ের আগে হোটেলের সাথে ভাড়া নিশ্চিত করুন।",
       filterAll: "সব এলাকা",
       perNight: "/ প্রতি রাত",
       amenitiesLabel: "প্রধান সুবিধাসমূহ",
       inquireBtn: "বুকিং তথ্য দেখুন",
       locationLabel: "অবস্থান",
-      sourceLabel: "অফিশিয়াল ওয়েবসাইট",
+      sourceLabel: "হোটেলের ওয়েবসাইট",
       filterStarLabel: "স্টার রেটিং",
       filterPriceLabel: "ভাড়া রেঞ্জ",
       filterSpotLabel: "স্পট / বিচ এলাকা",
@@ -257,7 +259,7 @@ const UI_TEXT = {
       closeModal: "বন্ধ করুন"
     },
     destinationsSection: {
-      eyebrow: "প্রামাণ্য ভ্রমণ নির্দেশিকা",
+      eyebrow: "ভ্রমণ নির্দেশিকা",
       title: "জনপ্রিয় দর্শনীয় স্থান ও উপকূলীয় সৌন্দর্য",
       subtitle: "কক্সবাজারের সংরক্ষিত জাতীয় উদ্যান, প্রবাল পাথরের সৈকত, মহেশখালীর আদিনাথ মন্দির এবং রামুর প্রাচীন বৌদ্ধ ঐতিহ্য আসল ছবিসহ দেখুন।",
       vibeLabel: "পরিবেশ ও আমেজ",
@@ -298,8 +300,8 @@ const UI_TEXT = {
     },
     essentialSection: {
       eyebrow: "ভ্রমণের পূর্বে করণীয়",
-      title: "প্রয়োজনীয় ভ্রমণ তথ্য ও সরকারি জরুরি নাম্বার",
-      subtitle: "নিরাপদ ও স্বাচ্ছন্দ্যপূর্ণ কক্সবাজার ভ্রমণের জন্য আবহাওয়া, সংস্কৃতি ও ভেরিফাইড সরকারি হটলাইন নাম্বারসমূহ।",
+      title: "প্রয়োজনীয় ভ্রমণ তথ্য ও জরুরি নাম্বার",
+      subtitle: "নিরাপদ ও স্বাচ্ছন্দ্যপূর্ণ কক্সবাজার ভ্রমণের জন্য আবহাওয়া, সংস্কৃতি ও জরুরি নাম্বারসমূহ।",
       weather: {
         title: "আবহাওয়া ও ভ্রমণের সেরা সময়",
         peakTitle: "নভেম্বর – ফেব্রুয়ারি (শীতকাল - সেরা সময়)",
@@ -331,23 +333,21 @@ const UI_TEXT = {
         ]
       },
       emergency: {
-        title: "২৪/৭ সরকারি জরুরি যোগাযোগ নাম্বার",
-        subtitle: "ভেরিফাইড ট্যুরিস্ট পুলিশ, হাসপাতাল ও জরুরি সেবা হটলাইন:",
+        title: "২৪/৭ জরুরি যোগাযোগ নাম্বার",
+        subtitle: "ভ্রমণের আগে নাম্বারগুলো সেভ করে রাখুন। প্রকাশিত সূত্র থেকে নেওয়া, সর্বশেষ যাচাই ২০২৬-১০-১৫:",
         contacts: [
           { name: "জাতীয় জরুরি সেবা (টোল-ফ্রি)", number: "999", note: "২৪/৭ পুলিশ, ফায়ার সার্ভিস ও অ্যাম্বুলেন্স" },
-          { name: "ট্যুরিস্ট পুলিশ কক্সবাজার (কন্ট্রোল রুম)", number: "+880 1320-160000", note: "লাবণী পয়েন্ট হেল্পডেস্ক (বিকল্প: +880 1769-690732)" },
-          { name: "২৫০ শয্যা জেলা সদর হাসপাতাল, কক্সবাজার", number: "+880 1730-324770", note: "সরকারি জরুরি বিভাগ (বিকল্প: +880 1701-248199)" },
-          { name: "ট্যুরিস্ট পুলিশ এসপি অফিস ও সি-সেফ", number: "+880 1320-158995", note: "কক্সবাজার রিজিয়ন ও সিআইপিআরবি লাইফগার্ড রেসকিউ" }
+          { name: "ট্যুরিস্ট পুলিশ হেল্পলাইন", number: "01320-222222", note: "২৪/৭ জাতীয় হেল্পলাইন (সেপ্টেম্বর ২০২৩, বাংলাদেশ মনিটর)" }
         ]
       }
     },
     faqSection: {
       eyebrow: "সচরাচর জিজ্ঞাসিত প্রশ্ন",
       title: "পর্যটকদের সাধারণ প্রশ্নোত্তর (FAQ)",
-      subtitle: "কক্সবাজার ভ্রমণ সম্পর্কে দেশি ও বিদেশি পর্যটকদের সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্নের প্রামাণ্য উত্তর।"
+      subtitle: "কক্সবাজার ভ্রমণ সম্পর্কে দেশি ও বিদেশি পর্যটকদের সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্নের সংক্ষিপ্ত উত্তর।"
     },
     chatbot: {
-      title: "Cox's Bazar Smart AI Guide",
+      title: "Cox's Bazar Quick Guide",
       status: "অনলাইন • সুনির্দিষ্ট ভাড়া, রুট ও হোটেল তথ্য",
       welcome: "স্বাগতম! আমাকে যেকোনো নির্দিষ্ট প্রশ্ন করুন—যেমন: 'সী ক্রাউন হোটেলের ভাড়া ও ফোন', 'সবচেয়ে কম দামের হোটেল', 'ইনানী বা রামু কীভাবে যাব', 'পৌষী রেস্তোরাঁর খাবার খরচ', 'মেরিন ড্রাইভে বাইক ভাড়া', বা 'আমার ট্রিপ বাজেট কত'!",
       inputPlaceholder: "নির্দিষ্ট হোটেল, স্পট, ভাড়া, খাবার বা রুট সম্পর্কে লিখুন...",
@@ -359,20 +359,20 @@ const UI_TEXT = {
         "পৌষী ও সেরা সি-ফুড কোথায়?",
         "মেরিন ড্রাইভে বাইক ভাড়া?",
         "আমার ট্রিপ বাজেট কত?",
-        "জরুরি পুলিশ ও হাসপাতাল নাম্বার"
+        "জরুরি পুলিশ নাম্বার"
       ]
     },
     footer: {
-      about: "বিশ্বের দীর্ঘতম প্রাকৃতিক সমুদ্র সৈকত কক্সবাজার ভ্রমণের প্রামাণ্য ডিজিটাল গাইড—ভেরিফাইড হোটেল তথ্য, আসল আলোকচিত্র ও সঠিক ভাড়ার তালিকা।",
+      about: "বিশ্বের দীর্ঘতম সমুদ্র সৈকতগুলোর একটি, কক্সবাজার ভ্রমণের দ্বিভাষিক গাইড—হোটেল তথ্য, উইকিমিডিয়া আলোকচিত্র ও আনুমানিক ভাড়ার তালিকা।",
       quickLinks: "দ্রুত লিংকসমূহ",
-      travelerTools: "ভ্রমণকারী ও অ্যাডমিন সেটিংস",
-      copyright: "© ২০২৬ ভিজিট কক্সবাজার ট্যুরিজম গাইড। প্রামাণ্য তথ্য ও আসল আলোকচিত্র দ্বারা সমৃদ্ধ।"
+      travelerTools: "ভ্রমণকারী সেটিংস",
+      copyright: "© ২০২৬ ভিজিট কক্সবাজার ট্যুরিজম গাইড।"
     }
   }
 };
 
 /* --------------------------------------------------------------------------
- * 2. ACCOMMODATIONS DATA (5 Verified Hotels with Official Photos & Contacts)
+ * 2. ACCOMMODATIONS DATA (prices approximate; see approx/asOf on each hotel)
  * -------------------------------------------------------------------------- */
 let HOTELS_DATA = [
   {
@@ -397,6 +397,8 @@ let HOTELS_DATA = [
     },
     minBDT: 9500,
     maxBDT: 24000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.8",
     badge: {
       en: "5-Star Iconic Beachfront",
@@ -459,6 +461,8 @@ let HOTELS_DATA = [
     },
     minBDT: 11000,
     maxBDT: 32000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.8",
     badge: {
       en: "5-Star Ultra Luxury Inani",
@@ -521,6 +525,8 @@ let HOTELS_DATA = [
     },
     minBDT: 10500,
     maxBDT: 28000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.7",
     badge: {
       en: "5-Star Eco-Chic Beach Resort",
@@ -581,6 +587,8 @@ let HOTELS_DATA = [
     },
     minBDT: 7500,
     maxBDT: 18000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.7",
     badge: {
       en: "5-Star Suites & Sky Pool",
@@ -641,6 +649,8 @@ let HOTELS_DATA = [
     },
     minBDT: 7000,
     maxBDT: 17000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.6",
     badge: {
       en: "5-Star Ocean View Luxury",
@@ -680,8 +690,8 @@ let HOTELS_DATA = [
   {
     id: "best-western-bay-watch",
     name: {
-      en: "Best Western Plus Heritage (Bay Watch)",
-      bn: "বেস্ট ওয়েস্টার্ন প্লাস হেরিটেজ (বে ওয়াচ - Bay Watch)"
+      en: "Best Western Plus Heritage",
+      bn: "বেস্ট ওয়েস্টার্ন প্লাস হেরিটেজ"
     },
     stars: 4,
     starLabel: {
@@ -699,6 +709,8 @@ let HOTELS_DATA = [
     },
     minBDT: 5500,
     maxBDT: 13000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.6",
     badge: {
       en: "4-Star International Hotel",
@@ -759,6 +771,8 @@ let HOTELS_DATA = [
     },
     minBDT: 5000,
     maxBDT: 12000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.5",
     badge: {
       en: "4-Star Heated Pool & Spa",
@@ -817,6 +831,8 @@ let HOTELS_DATA = [
     },
     minBDT: 2500,
     maxBDT: 4500,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.6",
     badge: {
       en: "3-Star Beachfront",
@@ -843,7 +859,7 @@ let HOTELS_DATA = [
       ]
     },
     description: {
-      en: "Official 3-star beachfront property right on Marine Drive at Kola Toli New Beach (Sugandha zone). Features direct beach access, complimentary buffet breakfast, and ocean-facing suites. Hotline: +880 1817-089420.",
+      en: "3-star beachfront property right on Marine Drive at Kola Toli New Beach (Sugandha zone). Features direct beach access, complimentary buffet breakfast, and ocean-facing suites. Hotline: +880 1817-089420.",
       bn: "মেরিন ড্রাইভের কলাতলী নিউ বিচ (সুগন্ধা জোন) সংলগ্ন ৩-তারকা হোটেল। সরাসরি সমুদ্র সৈকতে নামার সুবিধা, কমপ্লিমেন্টারি ব্রেকফাস্ট এবং পরিবারের জন্য অনন্য। হটলাইন: +880 1817-089420।"
     },
     phone: "+880 1817-089420",
@@ -873,6 +889,8 @@ let HOTELS_DATA = [
     },
     minBDT: 2000,
     maxBDT: 4000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.5",
     badge: {
       en: "3-Star Pool & Laboni Point",
@@ -929,6 +947,8 @@ let HOTELS_DATA = [
     },
     minBDT: 1800,
     maxBDT: 3500,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.4",
     badge: {
       en: "3-Star Rooftop & Hill Views",
@@ -985,6 +1005,8 @@ let HOTELS_DATA = [
     },
     minBDT: 2000,
     maxBDT: 3500,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.4",
     badge: {
       en: "3-Star Business Class",
@@ -1041,6 +1063,8 @@ let HOTELS_DATA = [
     },
     minBDT: 5500,
     maxBDT: 13500,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.6",
     badge: {
       en: "4-Star Iconic Beach Resort",
@@ -1078,122 +1102,6 @@ let HOTELS_DATA = [
     image: "assets/images/hotel-sea-crown.jpg"
   },
   {
-    id: "neeshorgo-hotel-resort",
-    name: {
-      en: "Neeshorgo Hotel & Resort",
-      bn: "নিসর্গ হোটেল অ্যান্ড রিসোর্ট (Neeshorgo Hotel & Resort)"
-    },
-    stars: 4,
-    starLabel: {
-      en: "4-Star Premium",
-      bn: "৪-তারকা প্রিমিয়াম"
-    },
-    locationKey: "kolatoli",
-    spotName: {
-      en: "Marine Drive / South Kolatoli",
-      bn: "মেরিন ড্রাইভ / দক্ষিণ কলাতলী"
-    },
-    location: {
-      en: "Plot 492, Marine Drive Road, South Kolatoli, Cox's Bazar",
-      bn: "প্লট ৪৯২, মেরিন ড্রাইভ রোড, দক্ষিণ কলাতলী, কক্সবাজার"
-    },
-    minBDT: 4800,
-    maxBDT: 11500,
-    rating: "4.6",
-    badge: {
-      en: "4-Star 360° Ocean Panorama",
-      bn: "৪-তারকা ৩৬০° ওশান প্যানোরামা"
-    },
-    amenities: {
-      en: ["360° Ocean Rooftop", "Infinity Sunset Pool", "Ocean View Balcony", "Cafe Paa", "Airport Shuttle"],
-      bn: ["৩৬০° ওশান ভিউ রুফটপ", "ইনফিনিটি সানসেট পুল", "সি-ভিউ ব্যালকনি", "ক্যাফে পা", "এয়ারপোর্ট শাটল"]
-    },
-    facilities: {
-      en: [
-        "Signature glass-walled rooftop restaurant with 360-degree Bay of Bengal views",
-        "Rooftop sunset infinity swimming pool overlooking the hills and ocean",
-        "Private panoramic sea-view balconies in premier deluxe rooms",
-        "Complimentary grand breakfast buffet & airport transfer",
-        "Direct access to scenic Marine Drive coastal boulevard",
-        "24-hour dedicated travel desk and prompt room service"
-      ],
-      bn: [
-        "বঙ্গোপসাগরের ৩৬০ ডিগ্রি দৃশ্যসহ সিগনেচার কাচের ঘেরা রুফটপ রেস্তোরাঁ",
-        "পাহাড় ও সমুদ্রের দৃশ্য সমৃদ্ধ রুফটপ সানসেট ইনফিনিটি সুইমিং পুল",
-        "প্রিমিয়ার ডিলাক্স রুমে ব্যক্তিগত প্যানোরামিক সি-ভিউ ব্যালকনি",
-        "কমপ্লিমেন্টারি গ্র্যান্ড বুফে ব্রেকফাস্ট ও ফ্রি বিমানবন্দর শাটল",
-        "মেরিন ড্রাইভ মনোরম উপকূলীয় সড়কের প্রবেশমুখেই অবস্থিত",
-        "২৪ ঘণ্টা সার্বক্ষণিক ট্রাভেল ডেস্ক ও দ্রুত রুম সার্ভিস"
-      ]
-    },
-    description: {
-      en: "Perched along scenic Marine Drive at South Kolatoli, Neeshorgo offers an iconic 360-degree glass rooftop restaurant, a rooftop sunset pool, private ocean-view balconies, and premium comfort. Hotline: +880 1755-666870.",
-      bn: "দক্ষিণ কলাতলী মেরিন ড্রাইভে অবস্থিত প্রিমিয়াম ৪-তারকা হোটেল। বিখ্যাত ৩৬০ ডিগ্রি রুফটপ ভিউ রেস্টুরেন্ট, রুফটপ পুল ও সি-ভিউ ব্যালকনি সমৃদ্ধ। হটলাইন: +880 1755-666870।"
-    },
-    phone: "+880 1755-666870",
-    sourceUrl: "https://neeshorgohotel.com",
-    sourceName: "neeshorgohotel.com",
-    image: "assets/images/hero-coxs-bazar.jpg"
-  },
-  {
-    id: "grace-cox-smart-hotel",
-    name: {
-      en: "Grace Cox Smart Hotel",
-      bn: "গ্রেস কক্স স্মার্ট হোটেল (Grace Cox Smart Hotel)"
-    },
-    stars: 4,
-    starLabel: {
-      en: "4-Star Smart Hotel",
-      bn: "৪-তারকা স্মার্ট হোটেল"
-    },
-    locationKey: "kolatoli",
-    spotName: {
-      en: "Kolatoli Beach Road",
-      bn: "কলাতলী বিচ রোড"
-    },
-    location: {
-      en: "Plot 20, Block C, Hotel Motel Zone, Kolatoli, Cox's Bazar",
-      bn: "প্লট ২০, ব্লক সি, হোটেল মোটেল জোন, কলাতলী, কক্সবাজার"
-    },
-    minBDT: 5200,
-    maxBDT: 12000,
-    rating: "4.7",
-    badge: {
-      en: "4-Star Smart Automated Hotel",
-      bn: "৪-তারকা স্মার্ট অটোমেটেড হোটেল"
-    },
-    amenities: {
-      en: ["Smart Touch Automation", "Indoor Heated Plunge Pool", "Sky Lounge BBQ", "Modern Gym", "Free Buffet Breakfast"],
-      bn: ["স্মার্ট টাচ অটোমেশন", "ইনডোর হিটেড প্লাঞ্জ পুল", "স্কাই লাউঞ্জ বারবিকিউ", "মডার্ন জিম", "ফ্রি বুফে ব্রেকফাস্ট"]
-    },
-    facilities: {
-      en: [
-        "First IoT-powered smart hotel in Cox's Bazar with touch & app-controlled room automation",
-        "All-weather indoor heated swimming plunge pool & Jacuzzi",
-        "Rooftop open-air Sky Lounge with live barbecue and ocean breeze",
-        "High-tech fitness studio with cardiovascular equipment",
-        "Ultra-high-speed fiber Wi-Fi throughout all rooms and suites",
-        "Complimentary international buffet breakfast & airport transfer"
-      ],
-      bn: [
-        "কক্সবাজারের প্রথম আইওটি-চালিত স্মার্ট হোটেল (টাচ ও অ্যাপ নিয়ন্ত্রিত রুম)",
-        "সকল ঋতুতে ব্যবহারোপযোগী ইনডোর হিটেড সুইমিং প্লাঞ্জ পুল ও জ্যাকুজি",
-        "রুফটপ স্কাই লাউঞ্জ (লাইভ বারবিকিউ ও সমুদ্রের মৃদু বাতাস)",
-        "আধুনিক কার্ডিও যন্ত্রপাতি সমৃদ্ধ হাই-টেক ফিটনেস স্টুডিও",
-        "সকল রুম ও স্যুটে আল্ট্রা হাই-স্পিড ফাইবার ওয়াই-ফাই",
-        "কমপ্লিমেন্টারি আন্তর্জাতিক বুফে ব্রেকফাস্ট ও বিমানবন্দর পিক-ড্রপ"
-      ]
-    },
-    description: {
-      en: "Cox's Bazar's premier smart-tech hotel situated in Kolatoli. Boasts IoT-automated suites, an all-weather indoor heated pool, rooftop Sky Lounge BBQ, and state-of-the-art hospitality. Hotline: +880 1700-707788.",
-      bn: "কলাতলীতে অবস্থিত কক্সবাজারের প্রথম স্মার্ট-টেক হোটেল। অত্যাধুনিক আইওটি অটোমেশন রুম, ইনডোর হিটেড সুইমিং পুল, রুফটপ স্কাই লাউঞ্জ ও প্রিমিয়াম সেবা। হটলাইন: +880 1700-707788।"
-    },
-    phone: "+880 1700-707788",
-    sourceUrl: "https://gracecoxhotel.com",
-    sourceName: "gracecoxhotel.com",
-    image: "assets/images/prime-park-hotel.jpg"
-  },
-  {
     id: "mermaid-eco-resort",
     name: {
       en: "Mermaid Eco Resort",
@@ -1215,6 +1123,8 @@ let HOTELS_DATA = [
     },
     minBDT: 6000,
     maxBDT: 14000,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.7",
     badge: {
       en: "4-Star Tidal Canal Eco Resort",
@@ -1273,6 +1183,8 @@ let HOTELS_DATA = [
     },
     minBDT: 4500,
     maxBDT: 10500,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.5",
     badge: {
       en: "4-Star Private Beach Walkway",
@@ -1331,6 +1243,8 @@ let HOTELS_DATA = [
     },
     minBDT: 1800,
     maxBDT: 3600,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.3",
     badge: {
       en: "3-Star Government Parjatan Motel",
@@ -1387,6 +1301,8 @@ let HOTELS_DATA = [
     },
     minBDT: 2800,
     maxBDT: 5500,
+    approx: true, // unsourced range, not a quoted rate
+    asOf: "2026-10-15", // date this range was last reviewed, not confirmed with the hotel
     rating: "4.5",
     badge: {
       en: "3-Star Boutique Comfort",
@@ -1420,460 +1336,12 @@ let HOTELS_DATA = [
     sourceUrl: "https://windyterrace.com",
     sourceName: "windyterrace.com",
     image: "assets/images/prime-park-hotel.jpg"
-  },
-  {
-    id: "hotel-sea-palace",
-    name: {
-      en: "Hotel Sea Palace",
-      bn: "হোটেল সী প্যালেস (Hotel Sea Palace Limited)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Standard",
-      bn: "৩-তারকা স্ট্যান্ডার্ড"
-    },
-    locationKey: "kolatoli",
-    spotName: {
-      en: "Kolatoli Road",
-      bn: "কলাতলী রোড"
-    },
-    location: {
-      en: "Kalatali Road (Near Kolatoli Circle), Cox's Bazar",
-      bn: "কলাতলী রোড (কলাতলী সার্কেলের কাছে), কক্সবাজার"
-    },
-    minBDT: 2200,
-    maxBDT: 5000,
-    rating: "4.3",
-    badge: {
-      en: "3-Star Mega Hotel Complex",
-      bn: "৩-তারকা মেগা হোটেল কমপ্লেক্স"
-    },
-    amenities: {
-      en: ["Outdoor Swimming Pool", "In-House Shopping Arcade", "Multiple Restaurants", "Conference Center", "Large Parking"],
-      bn: ["আউটডোর সুইমিং পুল", "নিজস্ব শপিং মার্কেট", "একাধিক রেস্তোরাঁ", "কনফারেন্স সেন্টার", "বিশাল পার্কিং"]
-    },
-    facilities: {
-      en: [
-        "Massive multi-building hotel complex with its own shopping arcade and souvenir stores",
-        "Outdoor swimming pool with shallow kids zone",
-        "Multiple dining restaurants serving Bengali, Indian, and Chinese dishes",
-        "Expansive air-conditioned grand conference halls for corporate retreats",
-        "Short 4-minute walk to Kolatoli Beach and local transport stands"
-      ],
-      bn: [
-        "নিজস্ব শপিং মার্কেট ও স্যুভেনির শপসমৃদ্ধ বিশাল বহু-ভবন বিশিষ্ট হোটেল কমপ্লেক্স",
-        "বাচ্চাদের অগভীর অংশসহ আউটডোর সুইমিং পুল",
-        "বাংলা, ইন্ডিয়ান ও চাইনিজ খাবার পরিবেশনকারী একাধিক নিজস্ব রেস্তোরাঁ",
-        "কর্পোরেট ইভেন্টের জন্য সুপ্রশস্ত শীতাতপ নিয়ন্ত্রিত কনফারেন্স হল",
-        "কলাতলী সমুদ্র সৈকত ও স্থানীয় পরিবহন স্ট্যান্ড থেকে মাত্র ৪ মিনিটের দূরত্ব"
-      ]
-    },
-    description: {
-      en: "One of Cox's Bazar's landmark multi-wing hotels on Kalatali Road. Features an outdoor pool, bustling in-house shopping arcade, multiple restaurants, and spacious family accommodations. Phone: +880 1714-652227.",
-      bn: "কলাতলী প্রধান সড়কের সুপরিচিত মেগা হোটেল কমপ্লেক্স। সুইমিং পুল, নিজস্ব শপিং আর্কেড, একাধিক রেস্তোরাঁ ও বিশাল ফ্যামিলি রুমের সুবিধা। ফোন: +880 1714-652227।"
-    },
-    phone: "+880 1714-652227",
-    sourceUrl: "https://hotelseapalacebd.com",
-    sourceName: "hotelseapalacebd.com",
-    image: "assets/images/white-orchid.jpg"
-  },
-  {
-    id: "hotel-sigiriya",
-    name: {
-      en: "Hotel Sigiriya",
-      bn: "হোটেল সিগিরিয়া (Hotel Sigiriya Cox's Bazar)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Standard",
-      bn: "৩-তারকা স্ট্যান্ডার্ড"
-    },
-    locationKey: "kolatoli",
-    spotName: {
-      en: "Marine Drive / Kolatoli",
-      bn: "মেরিন ড্রাইভ / কলাতলী"
-    },
-    location: {
-      en: "Marine Drive Road, South Kolatoli, Cox's Bazar",
-      bn: "মেরিন ড্রাইভ রোড, দক্ষিণ কলাতলী, কক্সবাজার"
-    },
-    minBDT: 2500,
-    maxBDT: 4800,
-    rating: "4.4",
-    badge: {
-      en: "3-Star Marine Drive View",
-      bn: "৩-তারকা মেরিন ড্রাইভ ভিউ"
-    },
-    amenities: {
-      en: ["Sea-Facing Balconies", "Marine Drive Location", "In-House Restaurant", "AC Deluxe Rooms", "24/7 Desk"],
-      bn: ["সি-ফেসিং ব্যালকনি", "মেরিন ড্রাইভ অবস্থান", "নিজস্ব রেস্টুরেন্ট", "এসি ডিলাক্স রুম", "২৪/৭ ফ্রন্ট ডেস্ক"]
-    },
-    facilities: {
-      en: [
-        "Modern sea-facing balcony suites providing panoramic Bay of Bengal views",
-        "Ideally positioned right along the starting stretch of scenic Marine Drive",
-        "In-house multi-cuisine restaurant serving fresh coastal curries",
-        "Elevator, power generator backup, and high-speed Wi-Fi in all rooms",
-        "24-hour reception desk offering Chander Gari jeep and sightseeing tour bookings"
-      ],
-      bn: [
-        "বঙ্গোপসাগরের মনোরম দৃশ্যসহ আধুনিক সি-ভিউ ব্যালকনি স্যুট",
-        "মনোরম মেরিন ড্রাইভ সড়কের সূচনা প্রান্তেই সুবিধাজনক অবস্থান",
-        "তাজা সামুদ্রিক মাছ ও বাংলা খাবারের নিজস্ব রেস্টুরেন্ট",
-        "লিফট, জেনারেটর ব্যাকআপ ও প্রতিটি রুমে দ্রুতগতির ওয়াই-ফাই",
-        "২৪ ঘণ্টা ফ্রন্ট ডেস্ক ও চান্দের গাড়ি রিজার্ভেশন সহায়তা"
-      ]
-    },
-    description: {
-      en: "Positioned directly along the Marine Drive boulevard in South Kolatoli. Provides private sea-facing balconies, fresh seafood dining, and effortless access to Marine Drive safari jeeps. Phone: +880 1847-333555.",
-      bn: "দক্ষিণ কলাতলীতে মেরিন ড্রাইভ সড়কের চমৎকার স্থানে অবস্থিত। সি-ভিউ ব্যালকনি রুম, সুস্বাদু খাবার এবং মেরিন ড্রাইভ ভ্রমণের সহজ সুবিধা। ফোন: +880 1847-333555।"
-    },
-    phone: "+880 1847-333555",
-    sourceUrl: "https://hotelsigiriyabd.com",
-    sourceName: "hotelsigiriyabd.com",
-    image: "assets/images/hero-coxs-bazar.jpg"
-  },
-  {
-    id: "hotel-upasham",
-    name: {
-      en: "Hotel Upasham",
-      bn: "হোটেল উপশম (Hotel Upasham Kolatoli)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Standard",
-      bn: "৩-তারকা স্ট্যান্ডার্ড"
-    },
-    locationKey: "kolatoli",
-    spotName: {
-      en: "Kolatoli Road",
-      bn: "কলাতলী রোড"
-    },
-    location: {
-      en: "Plot 51, Block C, Hotel Motel Zone, Kolatoli, Cox's Bazar",
-      bn: "প্লট ৫১, ব্লক সি, হোটেল মোটেল জোন, কলাতলী, কক্সবাজার"
-    },
-    minBDT: 1800,
-    maxBDT: 3400,
-    rating: "4.3",
-    badge: {
-      en: "3-Star Family Friendly",
-      bn: "৩-তারকা ফ্যামিলি ফ্রেন্ডলি"
-    },
-    amenities: {
-      en: ["Spacious Family Rooms", "Bangla Restaurant", "Elevator Service", "Power Generator", "Free Wi-Fi"],
-      bn: ["সুপ্রশস্ত ফ্যামিলি রুম", "বাংলা রেস্টুরেন্ট", "লিফট সুবিধা", "বিদ্যুৎ জেনারেটর", "ফ্রি ওয়াই-ফাই"]
-    },
-    facilities: {
-      en: [
-        "Comfortable air-conditioned family double and quad-bed accommodations",
-        "In-house Bengali dining restaurant cooking fresh local homestyle meals",
-        "Lift service, 24-hour security, and reliable backup generator power",
-        "Convenient 4-minute walking distance to Kolatoli Beach shoreline",
-        "Friendly front desk assisting with local Tomtom fares and island tours"
-      ],
-      bn: [
-        "পরিবারের জন্য আরামদায়ক এসি ডাবল ও চার-বেডের সুপ্রশস্ত রুম",
-        "ঘরোয়া স্বাদের তাজা দেশি খাবার পরিবেশনকারী নিজস্ব বাংলা রেস্তোরাঁ",
-        "লিফট, ২৪ ঘণ্টা সিসিটিভি নিরাপত্তা ও নিরবচ্ছিন্ন জেনারেটর বিদ্যুৎ",
-        "কলাতলী সমুদ্র সৈকত থেকে মাত্র ৪ মিনিটের সহজ হাঁটা পথ",
-        "টমটম ও স্থানীয় দর্শনীয় স্থান ভ্রমণের জন্য আন্তরিক ফ্রন্ট ডেস্ক সহায়তা"
-      ]
-    },
-    description: {
-      en: "A trusted family-friendly 3-star hotel in Block C of Kolatoli. Offers neat air-conditioned rooms, homestyle Bengali meals, dependable power backup, and honest local hospitality. Phone: +880 1711-382914.",
-      bn: "কলাতলী সি-ব্লকে অবস্থিত পরিবারবান্ধব বিশ্বস্ত ৩-তারকা হোটেল। পরিষ্কার-পরিচ্ছন্ন এসি রুম, ঘরোয়া বাংলা খাবার ও আন্তরিক সেবা। ফোন: +880 1711-382914।"
-    },
-    phone: "+880 1711-382914",
-    sourceUrl: "https://hotelupasham.com",
-    sourceName: "hotelupasham.com",
-    image: "assets/images/prime-park-hotel.jpg"
-  },
-  {
-    id: "deric-eco-village",
-    name: {
-      en: "Deric Eco Village Resort",
-      bn: "ডেরিক ইকো ভিলেজ রিসোর্ট (Deric Eco Village Inani)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Eco Village",
-      bn: "৩-তারকা ইকো ভিলেজ"
-    },
-    locationKey: "inani",
-    spotName: {
-      en: "Inani Beach",
-      bn: "ইনানী সৈকত"
-    },
-    location: {
-      en: "Marine Drive, Inani Beach, Ukhiya, Cox's Bazar",
-      bn: "মেরিন ড্রাইভ, ইনানী সমুদ্র সৈকত, উখিয়া, কক্সবাজার"
-    },
-    minBDT: 2800,
-    maxBDT: 5200,
-    rating: "4.5",
-    badge: {
-      en: "3-Star Serene Inani Nature",
-      bn: "৩-তারকা শান্ত ইনানী প্রকৃতি"
-    },
-    amenities: {
-      en: ["Rustic Eco Cottages", "Footsteps to Coral Beach", "Garden Lawns", "Fresh Local Kitchen", "Campfire Evenings"],
-      bn: ["নান্দনিক ইকো কটেজ", "প্রবাল সৈকতের কাছে", "সবুজ বাগান লন", "তাজা লোকাল কিচেন", "সান্ধ্যকালীন ক্যাম্পফায়ার"]
-    },
-    facilities: {
-      en: [
-        "Rustic timber and earthen-style eco cottages nestled near the coral sands of Inani",
-        "Far away from city noise—immersion in crashing sea waves and coastal birdsong",
-        "Home-cooked seafood, crab, and authentic rural coastal cuisine upon request",
-        "Sprawling tropical garden lawns for night relaxation and stargazing",
-        "Arrangement of beach campfires and guided Inani coral boulder walks"
-      ],
-      bn: [
-        "ইনানীর প্রবাল সৈকতের বালুচরে অবস্থিত নান্দনিক পরিবেশবান্ধব কাঠের কটেজ",
-        "শহুরে কোলাহলমুক্ত—কেবল সমুদ্রের ঢেউ ও পাখির কলকাকলিতে ঘেরা প্রশান্ত পরিবেশ",
-        "অনুরোধ সাপেক্ষে তাজা সামুদ্রিক মাছ, কাঁকড়া ও খাঁটি গ্রামীণ রান্না",
-        "রাতে মুক্ত আকাশ ও তারা দেখার জন্য বিশাল সবুজ বাগান লন",
-        "বিচে সান্ধ্যকালীন ক্যাম্পফায়ার ও ইনানীর প্রবাল পাথর ভ্রমণের চমৎকার সুবিধা"
-      ]
-    },
-    description: {
-      en: "An idyllic seaside eco-resort along Marine Drive at Inani Beach. Offers authentic rustic cottages, tranquil beach breezes, and steps to ancient coral shores. Hotline: +880 1888-223344.",
-      bn: "ইনানী বিচে মেরিন ড্রাইভের পাড়ে অবস্থিত অপূর্ব গ্রামীণ ইকো রিসোর্ট। নিরিবিলি কাঠের কটেজ, প্রবাল পাথরের কাছে অবস্থান ও শান্ত প্রকৃতি। হটলাইন: +880 1888-223344।"
-    },
-    phone: "+880 1888-223344",
-    sourceUrl: "https://dericecovillage.com",
-    sourceName: "dericecovillage.com",
-    image: "assets/images/inani-beach.jpg"
-  },
-  {
-    id: "royal-beach-resort",
-    name: {
-      en: "Royal Beach Resort",
-      bn: "রয়্যাল বিচ রিসোর্ট (Royal Beach Resort Sugandha)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Standard",
-      bn: "৩-তারকা স্ট্যান্ডার্ড"
-    },
-    locationKey: "sugandha",
-    spotName: {
-      en: "Sugandha Beach",
-      bn: "সুগন্ধা বিচ"
-    },
-    location: {
-      en: "Sugandha Beach Road, Hotel Motel Zone, Cox's Bazar",
-      bn: "সুগন্ধা বিচ রোড, হোটেল মোটেল জোন, কক্সবাজার"
-    },
-    minBDT: 2200,
-    maxBDT: 4200,
-    rating: "4.3",
-    badge: {
-      en: "3-Star Sugandha Beach Walk",
-      bn: "৩-তারকা সুগন্ধা বিচ সংযোগ"
-    },
-    amenities: {
-      en: ["2-Min Walk to Sugandha", "AC Family Rooms", "In-House Restaurant", "24/7 Security", "Free Wi-Fi"],
-      bn: ["সুগন্ধা থেকে ২ মিনিট", "এসি ফ্যামিলি রুম", "নিজস্ব রেস্টুরেন্ট", "২৪/৭ নিরাপত্তা", "ফ্রি ওয়াই-ফাই"]
-    },
-    facilities: {
-      en: [
-        "Situated just 2 minutes' walk from Sugandha Point beach and the live fish market",
-        "Neat air-conditioned double and family rooms with modern bathrooms",
-        "In-house dining serving hot Bengali breakfast and seafood dinners",
-        "24-hour security with CCTV monitoring and standby power generator",
-        "Complimentary high-speed Wi-Fi and airport luggage assistance"
-      ],
-      bn: [
-        "সুগন্ধা পয়েন্ট সমুদ্র সৈকত ও লাইভ মাছের বাজার থেকে মাত্র ২ মিনিটের হাঁটা পথ",
-        "আধুনিক বাথরুমসহ পরিচ্ছন্ন এয়ার-কন্ডিশন্ড ডাবল ও ফ্যামিলি রুম",
-        "সকালের গরম নাস্তা ও সান্ধ্যকালীন সি-ফুডের নিজস্ব রেস্তোরাঁ",
-        "সিসিটিভি নজরদারিসহ সার্বক্ষণিক নিরাপত্তা ও স্ট্যান্ডবাই জেনারেটর",
-        "কমপ্লিমেন্টারি হাই-স্পিড ওয়াই-ফাই ও লাগেজ সহায়তা"
-      ]
-    },
-    description: {
-      en: "Located on Sugandha Beach Road within footsteps of the bustling beach point and evening barbecue stalls. Offers clean AC rooms and very easy beach access. Phone: +880 1819-667788.",
-      bn: "সুগন্ধা বিচ রোডে অবস্থিত জনপ্রিয় হোটেল। সৈকত ও সান্ধ্যকালীন মাছের বাজারের একদম কাছে আরামদায়ক সাশ্রয়ী আবাসন। ফোন: +880 1819-667788।"
-    },
-    phone: "+880 1819-667788",
-    sourceUrl: "https://royalbeachresortbd.com",
-    sourceName: "royalbeachresortbd.com",
-    image: "assets/images/hotel-sea-crown.jpg"
-  },
-  {
-    id: "coral-reef-hotel",
-    name: {
-      en: "Coral Reef Hotel & Resort",
-      bn: "কোরাল রিফ হোটেল অ্যান্ড রিসোর্ট (Coral Reef Hotel)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Standard",
-      bn: "৩-তারকা স্ট্যান্ডার্ড"
-    },
-    locationKey: "kolatoli",
-    spotName: {
-      en: "Kolatoli Road",
-      bn: "কলাতলী রোড"
-    },
-    location: {
-      en: "Plot 47, Block B, Kolatoli Road, Cox's Bazar",
-      bn: "প্লট ৪৭, ব্লক বি, কলাতলী রোড, কক্সবাজার"
-    },
-    minBDT: 2000,
-    maxBDT: 3800,
-    rating: "4.3",
-    badge: {
-      en: "3-Star Budget Comfort",
-      bn: "৩-তারকা সাশ্রয়ী আরাম"
-    },
-    amenities: {
-      en: ["Deluxe AC Rooms", "Coral Dining Room", "Generator Backup", "Lift Service", "Free Wi-Fi"],
-      bn: ["ডিলাক্স এসি রুম", "কোরাল ডাইনিং রুম", "জেনারেটর ব্যাকআপ", "লিফট সার্ভিস", "ফ্রি ওয়াই-ফাই"]
-    },
-    facilities: {
-      en: [
-        "Well-furnished deluxe and twin air-conditioned rooms in Kolatoli Block B",
-        "In-house Coral Dining room serving fresh local pomfret, shrimp, and curries",
-        "Modern elevator, round-the-clock power backup, and intercom in every room",
-        "Short 5-minute stroll to Kolatoli Beach sunset point",
-        "Tour desk providing verified contacts for Marine Drive jeep and speedboat rentals"
-      ],
-      bn: [
-        "কলাতলী ব্লক-বি তে সুসজ্জিত ডিলাক্স ও টুইন এয়ার-কন্ডিশন্ড রুম",
-        "তাজা রূপচাঁদা, চিংড়ি ও স্থানীয় স্বাদের নিজস্ব কোরাল ডাইনিং রুম",
-        "আধুনিক লিফট, সার্বক্ষণিক জেনারেটর ব্যাকআপ ও ইন্টারকম সুবিধা",
-        "কলাতলী সমুদ্র সৈকত সূর্যাস্ত পয়েন্ট থেকে মাত্র ৫ মিনিটের হাঁটা দূরত্ব",
-        "মেরিন ড্রাইভ জিপ ও স্পিডবোট বুকিংয়ে ট্যুর ডেস্কের সহায়তা"
-      ]
-    },
-    description: {
-      en: "Comfortable 3-star hotel situated in Block B of Kolatoli Road. Offers clean rooms, Coral Restaurant, lift access, reliable generator backup, and prompt service. Phone: +880 1715-443322.",
-      bn: "কলাতলী ব্লক-বি তে অবস্থিত পরিচ্ছন্ন ৩-তারকা হোটেল। কোরাল রেস্তোরাঁ, লিফট, জেনারেটর ব্যাকআপ ও সৈকতের কাছে সাশ্রয়ী সেবা। ফোন: +880 1715-443322।"
-    },
-    phone: "+880 1715-443322",
-    sourceUrl: "https://coralreefhotelbd.com",
-    sourceName: "coralreefhotelbd.com",
-    image: "assets/images/hotel-kollol.jpg"
-  },
-  {
-    id: "inani-royal-resort",
-    name: {
-      en: "Inani Royal Resort",
-      bn: "ইনানী রয়্যাল রিসোর্ট (Inani Royal Resort)"
-    },
-    stars: 3,
-    starLabel: {
-      en: "3-Star Coral Beach Resort",
-      bn: "৩-তারকা প্রবাল সৈকত রিসোর্ট"
-    },
-    locationKey: "inani",
-    spotName: {
-      en: "Inani Beach",
-      bn: "ইনানী সৈকত"
-    },
-    location: {
-      en: "Marine Drive, Inani Coral Beach, Jaliapalong, Ukhiya",
-      bn: "মেরিন ড্রাইভ, ইনানী প্রবাল সৈকত, জালিয়াপালং, উখিয়া"
-    },
-    minBDT: 2500,
-    maxBDT: 5000,
-    rating: "4.4",
-    badge: {
-      en: "3-Star Inani Coral Shore",
-      bn: "৩-তারকা ইনানী প্রবাল সৈকত"
-    },
-    amenities: {
-      en: ["Direct Inani Beach Access", "Coral View Dining", "Green Lawn", "Sea Breeze Balconies", "Tour Support"],
-      bn: ["ইনানী সৈকত সরাসরি অ্যাক্সেস", "কোরাল ভিউ ডাইনিং", "সবুজ লন", "সি-ব্রিজ ব্যালকনি", "ট্যুর সাপোর্ট"]
-    },
-    facilities: {
-      en: [
-        "Situated immediately opposite the famed Inani coral boulder beach",
-        "Private sea-breeze balconies offering golden sunset views over the reef",
-        "Open-air dining restaurant cooking fresh ocean fish caught by Inani fishermen",
-        "Expansive garden lawn for relaxing under coconut palms",
-        "Assistance with parasailing, ATV beach rides, and Marine Drive expeditions"
-      ],
-      bn: [
-        "বিখ্যাত ইনানী প্রবাল পাথরের সমুদ্র সৈকতের একদম সম্মুখভাগে অবস্থিত",
-        "প্রবাল চরের ওপর মনোমুগ্ধকর সূর্যাস্ত দেখার ব্যক্তিগত সি-ব্রিজ ব্যালকনি",
-        "ইনানীর স্থানীয় জেলেদের ধরা তাজা মাছের উন্মুক্ত ডাইনিং রেস্তোরাঁ",
-        "নারকেল গাছের ছায়ায় বিশ্রামের জন্য মনোরম সবুজ বাগান লন",
-        "প্যারাসেইলিং, এটিভি বিচ বাইক ও মেরিন ড্রাইভ ট্যুরে বিশেষ সহায়তা"
-      ]
-    },
-    description: {
-      en: "Located directly opposite the pristine coral boulders of Inani Beach along Marine Drive. Enjoy unobstructed ocean sunsets, sea-view balconies, and calm natural shores. Phone: +880 1822-778899.",
-      bn: "মেরিন ড্রাইভের ইনানী প্রবাল সৈকতের একদম বিপরীতে অবস্থিত। শান্ত সৈকতে প্রবাল পাথর স্পর্শ করা দূরত্ব, সি-ভিউ ব্যালকনি ও সূর্যাস্তের সৌন্দর্য। ফোন: +880 1822-778899।"
-    },
-    phone: "+880 1822-778899",
-    sourceUrl: "https://inaniroyalresort.com",
-    sourceName: "inaniroyalresort.com",
-    image: "assets/images/inani-beach.jpg"
-  },
-  {
-    id: "nisanah-resort",
-    name: {
-      en: "Nisanah Resort",
-      bn: "নিসানাহ রিসোর্ট (Nisanah Eco Resort)"
-    },
-    stars: 2,
-    starLabel: {
-      en: "2-Star Eco Cottage",
-      bn: "২-তারকা ইকো কটেজ"
-    },
-    locationKey: "ecopark",
-    spotName: {
-      en: "Kolatoli Eco Park",
-      bn: "কলাতলী ইকো পার্ক"
-    },
-    location: {
-      en: "Kolatoli Eco Park (South Kolatoli / Marine Drive Fringe)",
-      bn: "কলাতলী ইকো পার্ক (দক্ষিণ কলাতলী পাহাড় পাদদেশ)"
-    },
-    minBDT: 1500,
-    maxBDT: 3000,
-    rating: "4.3",
-    badge: {
-      en: "2-Star Cottage & Nature Vibe",
-      bn: "২-তারকা কটেজ ও নির্জন প্রকৃতি"
-    },
-    amenities: {
-      en: ["Cottage-Style", "Quiet Nature Vibe", "Budget-Friendly", "Garden Lawn", "Eco Trails"],
-      bn: ["কটেজ-স্টাইল ডিজাইন", "নিরিবিলি প্রকৃতির ছোঁয়া", "সাশ্রয়ী বাজেট", "সবুজ বাগান লন", "প্রাকৃতিক ট্রেইল"]
-    },
-    facilities: {
-      en: [
-        "Eco-friendly bamboo & timber cottages surrounded by nature",
-        "Peaceful escape away from the crowded central hotel zone",
-        "Lush green garden courtyard for relaxing and reading",
-        "Authentic home-cooked local Bengali breakfast & meals upon request",
-        "Proximity to Kolatoli Eco Park trails & Himchari hills"
-      ],
-      bn: [
-        "প্রকৃতির মাঝে বাঁশ ও কাঠের তৈরি পরিবেশবান্ধব কটেজ",
-        "মূল শহরের যানজট ও ভিড়মুক্ত সম্পূর্ণ নিরিবিলি পরিবেশ",
-        "বিশ্রামের জন্য সুন্দর সবুজ বাগান ও আঙিনা",
-        "অনুরোধ সাপেক্ষে ঘরোয়া বাংলা খাবার ও নাস্তা",
-        "কলাতলী ইকো পার্ক ও হিমছড়ি পাহাড়ের কাছে"
-      ]
-    },
-    description: {
-      en: "Set against the tranquil tropical hills bordering Kolatoli Eco Park and Darianagar. Offers peaceful cottage-style stays surrounded by coastal greenery for budget-conscious nature lovers.",
-      bn: "কলাতলী ইকো পার্ক ও দরিযানগর সংলগ্ন সবুজ পাহাড়ের পাদদেশে অবস্থিত। নিরিবিলি পরিবেশে কটেজ ধাঁচের সাশ্রয়ী ও প্রকৃতিবান্ধব আবাসন।"
-    },
-    phone: "+880 1819-000111",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Hills_of_Cox%27s_Bazar_Recently_Captured.JPG",
-    sourceName: "Wikimedia Commons (Cox's Bazar Hills)",
-    image: "assets/images/nisanah-resort.jpg"
   }
 ];
 
 /* --------------------------------------------------------------------------
  * 3. DESTINATIONS & SIGHTSEEING DATA (5 Iconic Spots + 4 Hidden Gems)
- *    All using Original Photographs from Wikimedia Commons & Verified Sources
+ *    Photographs from Wikimedia Commons
  * -------------------------------------------------------------------------- */
 let DESTINATIONS_DATA = [
   {
@@ -2370,7 +1838,7 @@ let HIDDEN_GEMS_DATA = [
 ];
 
 /* --------------------------------------------------------------------------
- * 3B. ACTIVITIES & COASTAL ADVENTURES (10 Verified Experiences with Prices)
+ * 3B. ACTIVITIES & COASTAL ADVENTURES (approximate prices)
  * -------------------------------------------------------------------------- */
 let ACTIVITIES_DATA = [
   {
@@ -3016,74 +2484,3 @@ let FAQ_DATA = [
     }
   }
 ];
-
-/* --------------------------------------------------------------------------
- * 6. FACTORY SNAPSHOT & LOCALSTORAGE CMS HYDRATION (v2 Authentic Dataset)
- * -------------------------------------------------------------------------- */
-const FACTORY_DEFAULTS = JSON.parse(
-  JSON.stringify({
-    exchangeRateUSD: CONFIG.exchangeRateUSD,
-    hotels: HOTELS_DATA,
-    destinations: DESTINATIONS_DATA,
-    hiddenGems: HIDDEN_GEMS_DATA,
-    activities: ACTIVITIES_DATA,
-    transport: TRANSPORT_DATA,
-    faqs: FAQ_DATA
-  })
-);
-
-const CMS_STORAGE_KEY = 'visit_cox_cms_data_v4';
-
-function loadCMSDataFromStorage() {
-  try {
-    const raw = localStorage.getItem(CMS_STORAGE_KEY);
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
-    if (parsed.exchangeRateUSD) CONFIG.exchangeRateUSD = Number(parsed.exchangeRateUSD);
-    if (Array.isArray(parsed.hotels) && parsed.hotels.length >= 20) {
-      HOTELS_DATA = parsed.hotels;
-    } else if (Array.isArray(parsed.hotels)) {
-      // Merge stored custom hotels with default hotels
-      const existingIds = new Set(parsed.hotels.map(h => h.id));
-      HOTELS_DATA = [...parsed.hotels];
-      FACTORY_DEFAULTS.hotels.forEach(h => {
-        if (!existingIds.has(h.id)) {
-          HOTELS_DATA.push(h);
-        }
-      });
-    }
-    if (Array.isArray(parsed.destinations) && parsed.destinations.length >= 10) {
-      DESTINATIONS_DATA = parsed.destinations;
-    }
-    if (Array.isArray(parsed.hiddenGems) && parsed.hiddenGems.length >= 8) {
-      HIDDEN_GEMS_DATA = parsed.hiddenGems;
-    }
-    if (Array.isArray(parsed.activities) && parsed.activities.length >= 8) {
-      ACTIVITIES_DATA = parsed.activities;
-    }
-    if (Array.isArray(parsed.transport)) TRANSPORT_DATA = parsed.transport;
-    if (Array.isArray(parsed.faqs)) FAQ_DATA = parsed.faqs;
-  } catch (err) {
-    console.warn('Could not load saved CMS data from localStorage:', err);
-  }
-}
-
-function saveCMSDataToStorage() {
-  try {
-    const payload = {
-      exchangeRateUSD: CONFIG.exchangeRateUSD,
-      hotels: HOTELS_DATA,
-      destinations: DESTINATIONS_DATA,
-      hiddenGems: HIDDEN_GEMS_DATA,
-      activities: ACTIVITIES_DATA,
-      transport: TRANSPORT_DATA,
-      faqs: FAQ_DATA,
-      updatedAt: new Date().toISOString()
-    };
-    localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(payload));
-  } catch (err) {
-    console.error('Failed to save CMS data:', err);
-  }
-}
-
-loadCMSDataFromStorage();

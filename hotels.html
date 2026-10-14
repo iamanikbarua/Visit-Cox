@@ -30,7 +30,7 @@
   <!-- Tailwind CSS v3 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
+    if (window.tailwind) tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
@@ -206,8 +206,7 @@
         </nav>
       </div>
       <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
-        <p>Visit Cox's Bazar Official Guide</p>
-        <p class="mt-1">Verified Co-ops &amp; Police Data</p>
+        <p>Visit Cox's Bazar</p>
       </div>
     </div>
   </div>
@@ -229,14 +228,14 @@
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <span class="inline-block text-xs font-mono uppercase tracking-widest text-terracotta-600 font-semibold mb-2">
-              VERIFIED ACCOMMODATIONS (26+ HOTELS)
+              ACCOMMODATIONS
             </span>
             <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-charcoal font-normal tracking-tight">
               Where to Rest.
             </h1>
           </div>
           <p class="text-sm sm:text-base text-stone-600 max-w-xl font-normal leading-relaxed">
-            From 5-star oceanfront infinity pools along Marine Drive to cozy beachfront family suites in Kolatoli and Sugandha. Verified hotlines, official websites, and live rates.
+            From 5-star oceanfront infinity pools along Marine Drive to cozy beachfront family suites in Kolatoli and Sugandha. Contact details and estimated rates; confirm with the hotel before booking.
           </p>
         </div>
 
@@ -366,7 +365,7 @@
         <div class="lg:col-span-2 space-y-4">
           <span class="font-serif text-3xl text-white">Visit Cox.</span>
           <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
-            The definitive non-commercial guide to Cox's Bazar, Bangladesh. Verified by local tourist co-ops, cultural custodians, and the Bangladesh Tourist Police.
+            An independent, non-commercial guide to Cox's Bazar, Bangladesh.
           </p>
         </div>
 
@@ -393,11 +392,8 @@
 
         <div class="space-y-3">
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
-          <ul class="space-y-1.5 text-xs font-mono text-stone-400">
-            <li>Tourist Police: <span class="text-white">01320-169999</span></li>
-            <li>National Emergency: <span class="text-white">999</span></li>
-            <li>District Hospital: <span class="text-white">0341-63403</span></li>
-            <li>Sea Lifeguards: <span class="text-white">01819-012345</span></li>
+          <ul data-emergency-contacts class="space-y-1.5 text-xs text-stone-300">
+            <li>999</li>
           </ul>
         </div>
 
@@ -412,8 +408,8 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/data.js?v=20261015"></script>
+  <script src="js/app.js?v=20261015"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       renderHotels();

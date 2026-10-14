@@ -229,8 +229,8 @@
         </nav>
       </div>
       <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
-        <p>Visit Cox's Bazar Official Guide</p>
-        <p class="mt-1">Verified Logistics &amp; PDF Export</p>
+        <p>Visit Cox's Bazar Guide</p>
+        <p class="mt-1">Trip Planner &amp; Pass Export</p>
       </div>
     </div>
   </div>
@@ -290,7 +290,7 @@
                     Plan My Trip in 60 Seconds
                   </h3>
                   <p class="text-xs text-stone-500 font-mono">
-                    3 quick questions • Scam-free local costs • Instant verified itinerary
+                    3 quick questions • Estimated local costs • Instant itinerary
                   </p>
                 </div>
               </div>
@@ -657,7 +657,7 @@
                   placeholder="e.g., Anik's Family Tour" 
                   class="w-full bg-stone-50 border border-stone-200 text-charcoal text-xs font-medium rounded-xl p-2.5 focus:border-charcoal outline-none transition"
                 />
-                <p class="text-[11px] text-stone-400">Will be printed on your downloadable official itinerary pass.</p>
+                <p class="text-[11px] text-stone-400">Will be printed on your downloadable itinerary pass.</p>
               </div>
 
             </div>
@@ -797,6 +797,7 @@
 
                 <a 
                   id="btn-whatsapp-booking" 
+                  hidden
                   href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
@@ -871,7 +872,7 @@
                 <h4 class="font-serif text-lg text-charcoal font-semibold">Fair-Fare Anti-Scam Transit Guide for this Itinerary</h4>
               </div>
               <p class="text-xs text-stone-600 leading-relaxed">
-                Never negotiate transit blindly. Official verified maximum rates for your routes:
+                Know the usual fare before you bargain. Approximate rates for your routes:
               </p>
               <div id="planner-transit-fare-rules" class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
                 <!-- Injected via PlannerApp.renderTransitTips() -->
@@ -892,7 +893,7 @@
               <div class="flex items-start justify-between border-b border-stone-800 pb-6 relative z-10">
                 <div>
                   <span class="text-[10px] font-mono uppercase tracking-widest text-terracotta-400 font-semibold">
-                    Visit Cox's Bazar Official Guide • Itinerary Pass
+                    Visit Cox's Bazar • Itinerary Pass
                   </span>
                   <h2 id="pass-title" class="font-serif text-2xl sm:text-3xl font-normal text-white mt-1">
                     My Coastal Journey
@@ -935,13 +936,11 @@
 
               <!-- Pass Footer & Anti-Scam Disclaimer -->
               <div class="pt-4 border-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400 relative z-10">
-                <div>
-                  <span>🛡️ Verified Anti-Scam Transit Corridor</span>
-                  <span class="mx-2">•</span>
-                  <span>Emergency Tourist Police: 01320-169999</span>
+                <div id="pass-emergency" class="space-y-1 min-w-[220px]">
+                  <!-- Rendered from EMERGENCY_CONTACTS (js/data.js) -->
                 </div>
-                <div class="flex items-center gap-1.5 text-stone-300">
-                  <span>visitcox.com</span>
+                <div class="text-stone-400 text-right">
+                  <span>Prices are estimates</span>
                 </div>
               </div>
 
@@ -989,17 +988,11 @@
 
               <!-- Phone Pass Footer: Emergency Numbers & Anti-Scam -->
               <div class="relative z-10 pt-3 border-t border-stone-700/60 text-[10px] font-mono text-stone-300 space-y-1">
-                <div class="flex items-center justify-between">
-                  <span>🚨 Tourist Police:</span>
-                  <span class="text-white font-bold">01320-169999</span>
+                <div id="phone-pass-emergency" class="space-y-1">
+                  <!-- Rendered from EMERGENCY_CONTACTS (js/data.js) -->
                 </div>
-                <div class="flex items-center justify-between">
-                  <span>🚑 Lifeguard:</span>
-                  <span class="text-white font-bold">01819-012345</span>
-                </div>
-                <div class="flex items-center justify-between text-[9px] text-stone-400 pt-0.5">
-                  <span>🛡️ Anti-Scam Verified Fare</span>
-                  <span>visitcox.com</span>
+                <div class="text-[9px] text-stone-400 pt-0.5">
+                  <span>Prices are estimates</span>
                 </div>
               </div>
 
@@ -1025,7 +1018,7 @@
       >
         <div class="flex items-center justify-between pb-3 border-b border-stone-200">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-            🛡️ সরকারি ভেরিফায়েড ভাড়া কার্ড
+            🛺 ভাড়া কার্ড (আনুমানিক)
           </span>
           <button type="button" onclick="PlannerApp.closeDriverCard()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-charcoal font-bold cursor-pointer">
             ✕
@@ -1041,19 +1034,17 @@
         </div>
 
         <div class="bg-amber-50 rounded-2xl p-5 border-2 border-amber-300 space-y-1">
-          <span class="text-xs font-mono uppercase tracking-wider text-amber-800 font-semibold block">সর্বোচ্চ ন্যায্য নির্ধারিত ভাড়া</span>
+          <span class="text-xs font-mono uppercase tracking-wider text-amber-800 font-semibold block">সাধারণ ভাড়া (আনুমানিক)</span>
           <span id="driver-card-fare" class="font-serif text-3xl sm:text-4xl font-extrabold text-charcoal block">
             ৳৫০০ – ৳৬০০ টাকা
           </span>
           <p class="text-[11px] text-amber-900 font-semibold pt-1">
-            (এর বেশি দাবি করা অবৈধ ও দণ্ডনীয় অপরাধ)
+            (যাত্রার আগে ভাড়া ঠিক করে নিন)
           </p>
         </div>
 
-        <div class="bg-stone-900 text-white rounded-2xl p-4 text-xs font-mono space-y-1">
-          <p class="font-bold text-terracotta-400">ট্যুরিস্ট পুলিশ কন্ট্রোল রুম (২৪/৭):</p>
-          <p class="text-base font-bold text-white tracking-widest">০১৩২০-১৬৯৯৯৯ (01320-169999)</p>
-          <p class="text-[10px] text-stone-400">জাতীয় জরুরি সেবা: ৯৯৯ | জেলা প্রশাসন কক্সবাজার</p>
+        <div id="driver-card-emergency" class="bg-stone-900 text-white rounded-2xl p-4 text-xs font-mono space-y-1 text-left">
+          <!-- Rendered from EMERGENCY_CONTACTS (js/data.js), Bangla names -->
         </div>
 
         <button 
@@ -1079,7 +1070,7 @@
         <div class="lg:col-span-2 space-y-4">
           <span class="font-serif text-3xl text-white">Visit Cox.</span>
           <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
-            The definitive non-commercial guide to Cox's Bazar, Bangladesh. Verified by local tourist co-ops, cultural custodians, and the Bangladesh Tourist Police.
+            An independent, non-commercial guide to Cox's Bazar, Bangladesh. Prices are estimates; check locally.
           </p>
         </div>
 
@@ -1106,12 +1097,9 @@
 
         <div class="space-y-3">
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
-          <ul class="space-y-1.5 text-xs font-mono text-stone-400">
-            <li>Tourist Police: <span class="text-white">01320-169999</span></li>
-            <li>National Emergency: <span class="text-white">999</span></li>
-            <li>District Hospital: <span class="text-white">0341-63403</span></li>
-            <li>Lifeguards: <span class="text-white">01819-012345</span></li>
-          </ul>
+          <div id="footer-emergency" class="space-y-1.5 text-xs font-mono text-stone-400">
+            <!-- Rendered from EMERGENCY_CONTACTS (js/data.js) by PlannerApp -->
+          </div>
         </div>
 
       </div>
@@ -1125,19 +1113,8 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="js/data.js"></script>
-  <script src="js/features.js"></script>
-  <script src="js/planner.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof PlannerApp !== 'undefined') {
-        PlannerApp.init();
-      }
-      if (typeof composeSteppedItinerary === 'function') {
-        composeSteppedItinerary(3, 'relaxing');
-      }
-    });
-  </script>
+  <script src="js/data.js?v=20261015"></script>
+  <script src="js/planner.js?v=20261015"></script>
+  <script src="js/app.js?v=20261015"></script>
 </body>
 </html>

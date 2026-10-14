@@ -30,7 +30,7 @@
   <!-- Tailwind CSS v3 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
+    if (window.tailwind) tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
@@ -131,17 +131,7 @@
           <a href="blog.html" class="px-3 py-1 rounded-full bg-sky-500 text-white shadow-sm">Blog</a>
         </nav>
 
-        <!-- Right Controls: Admin Write Post CTA (Admin Only) + Language Switcher + Admin Login -->
         <div class="flex items-center gap-2.5 shrink-0">
-          <button
-            type="button"
-            data-blog-admin-only
-            onclick="openBlogEditorModal(null)"
-            class="hidden inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs shadow-md transition cursor-pointer whitespace-nowrap"
-          >
-            <span>✍️</span>
-            <span id="nav-write-post-label">Write Blog Post</span>
-          </button>
 
           <!-- Dual Language Switcher -->
           <div
@@ -153,17 +143,6 @@
             <button type="button" data-lang-btn="bn" onclick="switchBlogPageLang('bn')" class="px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap cursor-pointer">বাংলা</button>
           </div>
 
-          <!-- Admin Login / Logout Button -->
-          <button
-            type="button"
-            onclick="handleBlogPageAdminClick()"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-300/30 transition whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
-            <span class="admin-nav-btn-label whitespace-nowrap">Admin Login</span>
-          </button>
         </div>
 
       </div>
@@ -201,30 +180,10 @@
             Cox’s Bazar Travel Stories, Local Guides &amp; Tips
           </h1>
           <p id="blog-page-subtitle" class="mt-3.5 text-sky-100/90 text-sm sm:text-base leading-relaxed max-w-2xl">
-            Read verified guides on Marine Drive routes, local shutki &amp; seafood spots, budget breakdowns, and island adventures across Cox’s Bazar.
+            Read guides on Marine Drive routes, local shutki &amp; seafood spots, budget breakdowns, and island adventures across Cox’s Bazar.
           </p>
         </div>
 
-        <!-- Primary Action Box (Shown Only When Logged In as Administrator) -->
-        <div
-          data-blog-admin-only
-          class="hidden bg-white/10 backdrop-blur-md border border-white/15 rounded-3xl p-5 sm:p-6 shrink-0 lg:w-80 shadow-xl"
-        >
-          <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-1" id="blog-cta-box-eyebrow">
-            Administrator Publisher
-          </div>
-          <p class="text-xs text-sky-100/85 leading-relaxed mb-4" id="blog-cta-box-desc">
-            Publish a new Cox’s Bazar article, hotel review, food guide, or safety tip.
-          </p>
-          <button
-            type="button"
-            onclick="openBlogEditorModal(null)"
-            class="w-full py-3 px-5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>✍️</span>
-            <span id="blog-cta-box-btn">Create &amp; Publish Blog Post</span>
-          </button>
-        </div>
       </div>
 
       <!-- Search & Filter Bar -->
@@ -267,7 +226,7 @@
   <main class="flex-1 py-12 sm:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <!-- Quick Back Link + Admin New Post Button -->
+      <!-- Quick Back Link -->
       <div class="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div class="flex items-center gap-3">
           <a
@@ -279,15 +238,6 @@
           </a>
         </div>
 
-        <button
-          type="button"
-          data-blog-admin-only
-          onclick="openBlogEditorModal(null)"
-          class="hidden inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold shadow-sm transition cursor-pointer"
-        >
-          <span>+</span>
-          <span id="blog-secondary-write-btn">New Blog Post</span>
-        </button>
       </div>
 
       <!-- Blog Posts Grid (Populated via blog.js) -->
@@ -307,110 +257,17 @@
         <img src="assets/images/favicon.png" alt="Visit Cox Logo" loading="lazy" decoding="async" class="w-9 h-9 object-contain" />
         <div>
           <span class="font-extrabold text-white text-sm">Visit Cox's Bazar • Travel Blog</span>
-          <p class="text-xs text-sky-300/75">Explore verified coastal guides, food discoveries, and travel tips.</p>
+          <p class="text-xs text-sky-300/75">Explore coastal guides, food discoveries, and travel tips.</p>
         </div>
       </div>
       <div class="flex items-center gap-3 text-xs font-bold">
         <a href="index.html" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition">Main Website</a>
-        <button
-          type="button"
-          data-blog-admin-only
-          onclick="openBlogEditorModal(null)"
-          class="hidden px-3.5 py-2 rounded-xl bg-amber-400 text-slate-950 font-extrabold hover:bg-amber-300 transition cursor-pointer"
-        >
-          ✍️ Write a Post
-        </button>
-        <button
-          type="button"
-          onclick="handleBlogPageAdminClick()"
-          class="px-3.5 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-300/30 transition cursor-pointer"
-        >
-          ⚙ <span class="admin-nav-btn-label">Admin Login</span>
-        </button>
       </div>
     </div>
   </footer>
 
-  <!-- ========================================================================
-       ADMIN LOGIN MODAL (For Blog Page Administrator Access)
-       ======================================================================== -->
-  <div
-    id="admin-login-modal"
-    class="hidden fixed inset-0 z-[90] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-4"
-  >
-    <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border border-slate-200 relative">
-      <button
-        type="button"
-        onclick="closeAdminLoginModal()"
-        aria-label="Close Modal"
-        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 cursor-pointer"
-      >
-        ✕
-      </button>
-
-      <div class="w-12 h-12 rounded-2xl bg-ocean-950 text-amber-300 flex items-center justify-center mb-4 shadow-md">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-      </div>
-
-      <h3 class="text-2xl font-extrabold text-slate-900">Administrator Login</h3>
-      <p class="text-xs text-slate-500 mt-1">
-        Sign in with your administrative credentials to write, edit, or delete blog posts.
-      </p>
-
-      <div
-        id="admin-login-error"
-        class="hidden mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold"
-      ></div>
-
-      <form onsubmit="handleBlogAdminLoginSubmit(event)" class="mt-5 space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-            Username
-          </label>
-          <input
-            id="admin-login-username"
-            type="text"
-            required
-            placeholder="Enter admin username"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500"
-          />
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-            Password
-          </label>
-          <input
-            id="admin-login-password"
-            type="password"
-            required
-            placeholder="Enter admin password"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500"
-          />
-        </div>
-
-        <div class="flex items-center justify-between text-xs">
-          <label class="inline-flex items-center gap-2 text-slate-600 cursor-pointer">
-            <input id="admin-login-remember" type="checkbox" checked class="rounded text-sky-600" />
-            <span>Keep me signed in on this browser</span>
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          class="w-full py-3 rounded-xl bg-gradient-to-r from-ocean-950 via-sky-800 to-teal-700 hover:opacity-95 text-white font-bold text-sm shadow-lg transition cursor-pointer"
-        >
-          Sign In to Publish &amp; Manage Blog
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Data, Admin & Blog Scripts -->
-  <script src="js/data.js?v=20261013-blog2"></script>
-  <script src="js/admin.js?v=20261013-blog2"></script>
+  <!-- Data & Blog Scripts -->
+  <script src="js/data.js?v=20261015"></script>
   <script>
     // Minimal AppState & renderAll shim for standalone blog.html page
     window.AppState = window.AppState || { lang: 'en', currency: 'BDT' };
@@ -418,56 +275,7 @@
       if (typeof renderBlogSection === 'function') {
         renderBlogSection();
       }
-      updateBlogAdminNavLabels();
     };
-
-    function updateBlogAdminNavLabels() {
-      const isAuth = typeof isBlogAdminAuthenticated === 'function' && isBlogAdminAuthenticated();
-      document.querySelectorAll('.admin-nav-btn-label').forEach(el => {
-        el.textContent = isAuth ? 'Logout Admin' : 'Admin Login';
-      });
-    }
-
-    function handleBlogPageAdminClick() {
-      if (typeof isBlogAdminAuthenticated === 'function' && isBlogAdminAuthenticated()) {
-        if (typeof logoutAdmin === 'function') {
-          logoutAdmin();
-        } else {
-          sessionStorage.removeItem('visit_cox_admin_session_v1');
-          localStorage.removeItem('visit_cox_admin_session_v1');
-        }
-        if (typeof renderBlogSection === 'function') renderBlogSection();
-        updateBlogAdminNavLabels();
-      } else {
-        openAdminLoginModal();
-      }
-    }
-
-    function handleBlogAdminLoginSubmit(e) {
-      if (e) e.preventDefault();
-      const userEl = document.getElementById('admin-login-username');
-      const passEl = document.getElementById('admin-login-password');
-      const rememberEl = document.getElementById('admin-login-remember');
-      const errEl = document.getElementById('admin-login-error');
-
-      if (typeof verifyAdminLogin === 'function' && verifyAdminLogin(userEl?.value, passEl?.value)) {
-        if (typeof AdminState !== 'undefined') AdminState.isAuthenticated = true;
-        sessionStorage.setItem('visit_cox_admin_session_v1', 'true');
-        if (rememberEl && rememberEl.checked) {
-          localStorage.setItem('visit_cox_admin_session_v1', 'true');
-        }
-        if (errEl) errEl.classList.add('hidden');
-        closeAdminLoginModal();
-        if (typeof renderBlogSection === 'function') renderBlogSection();
-        updateBlogAdminNavLabels();
-        if (typeof showBlogToast === 'function') {
-          showBlogToast('Logged in as Administrator! Blog Publish, Edit & Delete controls unlocked.');
-        }
-      } else if (errEl) {
-        errEl.textContent = 'Invalid administrator username or password. Please try again.';
-        errEl.classList.remove('hidden');
-      }
-    }
 
     function switchBlogPageLang(lang) {
       window.AppState.lang = lang;
@@ -491,20 +299,15 @@
       };
 
       setTxt('blog-nav-brand', isEN ? "Visit Cox's Bazar" : 'ভিজিট কক্সবাজার');
-      setTxt('nav-write-post-label', isEN ? 'Write Blog Post' : 'ব্লগ লিখুন');
       setTxt('blog-page-badge', isEN ? "COX'S BAZAR TRAVEL BLOG & INSIDER GUIDES" : 'কক্সবাজার ট্রাভেল ব্লগ ও ভ্রমণ গাইড');
       setTxt('blog-page-title', isEN ? 'Cox’s Bazar Travel Stories, Local Guides & Tips' : 'কক্সবাজার ভ্রমণের অভিজ্ঞতা, গাইড ও টিপস');
       setTxt(
         'blog-page-subtitle',
         isEN
-          ? 'Read verified guides on Marine Drive routes, local shutki & seafood spots, budget breakdowns, and island adventures across Cox’s Bazar.'
+          ? 'Read guides on Marine Drive routes, local shutki & seafood spots, budget breakdowns, and island adventures across Cox’s Bazar.'
           : 'মেরিন ড্রাইভ রুট, স্থানীয় সামুদ্রিক খাবার, বাজেট প্ল্যান ও দ্বীপ ভ্রমণের বিস্তারিত গাইড পড়ুন।'
       );
-      setTxt('blog-cta-box-eyebrow', isEN ? 'Administrator Publisher' : 'অ্যাডমিন ব্লগ প্রকাশক');
-      setTxt('blog-cta-box-desc', isEN ? 'Publish a new Cox’s Bazar article, hotel review, food guide, or safety tip.' : 'নতুন কক্সবাজার আর্টিকেল, হোটেল রিভিউ বা ফুড গাইড প্রকাশ করুন।');
-      setTxt('blog-cta-box-btn', isEN ? 'Create & Publish Blog Post' : 'নতুন ব্লগ পোস্ট প্রকাশ করুন');
       setTxt('blog-back-home-label', isEN ? 'Back to Main Tourism Guide' : 'মূল গাইডে ফিরে যান');
-      setTxt('blog-secondary-write-btn', isEN ? 'New Blog Post' : 'নতুন ব্লগ পোস্ট');
 
       const searchInput = document.getElementById('blog-search-input');
       if (searchInput) {
@@ -514,13 +317,8 @@
       if (typeof renderBlogSection === 'function') {
         renderBlogSection();
       }
-      updateBlogAdminNavLabels();
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateBlogAdminNavLabels();
-    });
   </script>
-  <script src="js/blog.js?v=20261013-blog2"></script>
+  <script src="js/blog.js?v=20261015"></script>
 </body>
 </html>

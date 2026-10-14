@@ -1,9 +1,15 @@
 /**
- * Visit Cox — "Make My Planner" & 60-Second Trip Matchmaker Master Engine
- * Combines Catalog Schemas, WhatsApp Leadgen, Reactive Budget Speedometer,
- * Driver Anti-Scam Flash-Card, Tide/Sunset Timing, and Dual-Format Pass Exporters.
- * Verified by 6-Agent Collaboration Team.
+ * Visit Cox — "Make My Planner" & 60-Second Trip Matchmaker engine.
+ * Budget formula, schedule, WhatsApp hand-off and the two pass exporters (PNG).
+ * PlannerApp.estimate(params) is the one budget formula; quickpick.js uses it too.
  */
+
+// Escape catalog/URL text before it goes into innerHTML.
+function plannerEsc(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 
 // ============================================================================
 // 1. MASTER CATALOG & DATA SCHEMAS
@@ -256,7 +262,7 @@ const PLANNER_CATALOG = {
     },
     {
       id: "himchari_hill",
-      name: "Himchari National Park Viewpoint & Waterfall",
+      name: "Himchari National Park Viewpoint (waterfall in monsoon only)",
       costPerPerson: 50,
       duration: "2 Hours",
       vibe: ["relaxing", "family", "adventure"],
@@ -270,6 +276,13 @@ const PLANNER_CATALOG = {
       vibe: ["foodie", "relaxing", "romantic"],
       desc: "Tasting freshly caught red snapper, pomfret, and giant prawns grilled under beach lights."
     }
+  ],
+
+  // Daily hire for sightseeing. The planner's only fare table for this; capacities from VEHICLE_GLOSSARY text (CNG 3-4, chander gari 10-14, lower bound used).
+  // shortcut: daily rates are planner estimates without source/asOf; move to data.js TRANSPORT_DATA with a source when the data role adds daily-hire fares.
+  vehicles: [
+    { key: "cng", name: "Reserved CNG", capacity: 3, dailyBDT: 1000 },
+    { key: "chander_gari", name: "Chander Gari (open jeep)", capacity: 10, dailyBDT: 2200 }
   ],
 
   transitFares: [
@@ -307,7 +320,11 @@ const PLANNER_CATALOG = {
 // ============================================================================
 // 2. WHATSAPP CONCIERGE LEADGEN CONSTRUCTOR
 // ============================================================================
+// Returns null when SITE_CONTACT.whatsapp is not set, so the caller hides the button.
 function buildWhatsAppPlannerPayload(state) {
+  const number = typeof SITE_CONTACT !== 'undefined' && SITE_CONTACT && SITE_CONTACT.whatsapp
+    ? String(SITE_CONTACT.whatsapp).replace(/\D/g, '') : '';
+  if (!number) return null;
   const days = state.days || 3;
   const nights = Math.max(1, days - 1);
   const adults = state.adults || 2;
@@ -319,7 +336,7 @@ function buildWhatsAppPlannerPayload(state) {
   const travelerName = state.travelerName || "My Coastal Journey";
 
   let message = `*🌊 Visit Cox — 60-Second Trip Inquiry*\n\n`;
-  message += `Hello Concierge! I just matched my trip on *visitcox.com* and want to lock in verified hotel rates.\n\n`;
+  message += `Hello! I planned this trip on the Visit Cox planner and would like to check hotel availability and rates.\n\n`;
   message += `📋 *Trip Summary:*\n`;
   message += `• *Trip Name:* ${travelerName}\n`;
   message += `• *Duration:* ${days} Days / ${nights} Nights\n`;
@@ -331,94 +348,121 @@ function buildWhatsAppPlannerPayload(state) {
   if (state.selectedActivities && state.selectedActivities.length > 0) {
     message += `🎯 *Requested Activities:*\n`;
     state.selectedActivities.forEach(act => {
-      message += `• ${act}\n`;
+      const a = PLANNER_CATALOG.activities.find(x => x.id === act);
+      message += `• ${a ? a.name : act}\n`;
     });
     message += `\n`;
   }
 
-  message += `Please confirm room availability and verified transit booking. Thank you!`;
+  message += `Please confirm room availability, rates and transport. Thank you!`;
 
-  return `https://wa.me/8801819012345?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
 // ============================================================================
 // 3. REACTIVE PLANNER APP ENGINE
 // ============================================================================
 const PlannerApp = (function () {
-  const state = {
-    wizardStep: 1, // 1: Who & Days, 2: Archetype & Thrills, 3: Stay & Budget
-    days: 3,
-    adults: 2,
-    kids: 0,
-    selectedArchetype: "quiet_coral",
-    vibe: "relaxing",
-    budgetTier: "comfort",
-    baseHub: "any",
-    hotelType: "auto",
-    travelerName: "My Coastal Journey",
-    selectedActivities: ["marine_drive", "inani_coral", "himchari_hill"],
-    hotelIndex: 0,
-    diningIndex: 0,
-    exchangeRate: 120,
-    seasonMultiplier: 1.0
-  };
+  function defaultState() {
+    return {
+      wizardStep: 1, // 1: Who & Days, 2: Archetype & Thrills, 3: Stay & Budget
+      days: 3,
+      adults: 2,
+      kids: 0,
+      selectedArchetype: "quiet_coral",
+      vibe: "relaxing",
+      budgetTier: "comfort",
+      baseHub: "any",
+      hotelType: "auto",
+      travelerName: "My Coastal Journey",
+      selectedActivities: ["marine_drive", "inani_coral", "himchari_hill"],
+      hotelIndex: 0,
+      diningIndex: 0,
+      exchangeRate: 120,
+      seasonMultiplier: 1.0
+    };
+  }
+  const state = defaultState();
 
-  function calculateRooms(adults) {
-    return Math.max(1, Math.ceil(adults / 2));
+  const TIERS = ["backpacker", "comfort", "luxury"];
+  const VIBES = ["relaxing", "adventure", "romantic", "family", "foodie", "culture"];
+  // Same clamps for the steppers and for URL params; non-numbers fall back to the current value.
+  function clampInt(v, min, max, fallback) {
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) ? Math.max(min, Math.min(max, n)) : fallback;
+  }
+  const clampDays = (v, fb) => clampInt(v, 1, 14, fb);
+  const clampAdults = (v, fb) => clampInt(v, 1, 20, fb);
+  const clampKids = (v, fb) => clampInt(v, 0, 10, fb);
+
+  function applyArchetype(s, arcId) {
+    const arc = PLANNER_CATALOG.archetypes.find(a => a.id === arcId);
+    if (!arc) return;
+    s.selectedArchetype = arcId;
+    s.vibe = arc.vibe;
+    if (arc.preferredHub) s.baseHub = arc.preferredHub;
+    if (arc.hotelType) s.hotelType = arc.hotelType;
+    if (arc.defaultActivities) s.selectedActivities = [...arc.defaultActivities];
   }
 
+  // params: URLSearchParams. Unknown or malformed values are ignored.
+  function applyParams(s, params) {
+    if (params.has("arc")) applyArchetype(s, params.get("arc"));
+    if (params.has("days")) s.days = clampDays(params.get("days"), s.days);
+    const adults = params.has("adults") ? params.get("adults") : params.get("pax");
+    if (adults !== null) s.adults = clampAdults(adults, s.adults);
+    if (params.has("kids")) s.kids = clampKids(params.get("kids"), s.kids);
+    if (TIERS.includes(params.get("tier"))) s.budgetTier = params.get("tier");
+    if (VIBES.includes(params.get("vibe"))) s.vibe = params.get("vibe");
+  }
+
+  // Kids count as half a bed.
+  function calculateRooms(adults, kids) {
+    return Math.max(1, Math.ceil((adults + kids * 0.5) / 2));
+  }
+
+  // Cheapest fleet of one vehicle type that seats everyone: ceil(pax / capacity) vehicles.
   function calculateTransit(days, totalPax) {
-    let vehicle = "Tomtom / CNG";
-    let dailyBase = 800;
-
-    if (totalPax <= 3) {
-      vehicle = "CNG / Auto";
-      dailyBase = 900;
-    } else if (totalPax <= 5) {
-      vehicle = "Reserved CNG";
-      dailyBase = 1100;
-    } else {
-      vehicle = "Chander Gari (Open 4x4 Jeep)";
-      dailyBase = 2200;
-    }
-
-    const totalTransit = (dailyBase * days) + 600;
-    return { vehicle, totalTransit };
+    const pax = Math.max(1, totalPax);
+    const best = PLANNER_CATALOG.vehicles
+      .map(v => ({ v, count: Math.ceil(pax / v.capacity) }))
+      .reduce((a, b) => (b.count * b.v.dailyBDT < a.count * a.v.dailyBDT ? b : a));
+    const vehicle = best.count > 1 ? `${best.count} × ${best.v.name}` : best.v.name;
+    const totalTransit = best.count * best.v.dailyBDT * days + 600;
+    return { vehicle, vehicles: best.count, totalTransit };
   }
 
-  function computeBudget() {
-    const nights = Math.max(1, state.days - 1);
-    const rooms = calculateRooms(state.adults);
-    const totalGuests = state.adults + state.kids;
-    const effectiveMealGuests = state.adults + (state.kids * 0.6);
+  function computeBudget(s) {
+    const nights = Math.max(1, s.days - 1);
+    const rooms = calculateRooms(s.adults, s.kids);
+    const totalGuests = s.adults + s.kids;
+    const effectiveMealGuests = s.adults + (s.kids * 0.6);
 
-    const hotel = getActiveHotel();
-    const hotelNightly = (hotel ? hotel.rateBDT : 3500) * state.seasonMultiplier;
+    const hotel = getActiveHotel(s);
+    const hotelNightly = (hotel ? hotel.rateBDT : 3500) * s.seasonMultiplier;
     const totalHotel = hotelNightly * nights * rooms;
 
-    const dining = getActiveDining();
+    const dining = getActiveDining(s);
     const dailyMealRate = dining ? dining.costPerPerson : 800;
-    const totalFood = dailyMealRate * state.days * effectiveMealGuests;
+    const totalFood = dailyMealRate * s.days * effectiveMealGuests;
 
-    const transitInfo = calculateTransit(state.days, totalGuests);
+    const transitInfo = calculateTransit(s.days, totalGuests);
     const totalTransit = transitInfo.totalTransit;
 
     let totalActivities = 0;
-    if (PLANNER_CATALOG.activities) {
-      PLANNER_CATALOG.activities.forEach(act => {
-        if (state.selectedActivities.includes(act.id)) {
-          totalActivities += (act.costPerPerson * state.adults) + (act.costPerPerson * state.kids * 0.8);
-        }
-      });
-    }
+    PLANNER_CATALOG.activities.forEach(act => {
+      if (s.selectedActivities.includes(act.id)) {
+        totalActivities += (act.costPerPerson * s.adults) + (act.costPerPerson * s.kids * 0.8);
+      }
+    });
 
     const subtotal = totalHotel + totalFood + totalTransit + totalActivities;
     const buffer = Math.round(subtotal * 0.10);
     const totalBDT = Math.round((subtotal + buffer) / 50) * 50;
-    const totalUSD = Math.round(totalBDT / state.exchangeRate);
+    const totalUSD = Math.round(totalBDT / s.exchangeRate);
 
     const perPersonBDT = Math.round(totalBDT / Math.max(1, totalGuests));
-    const perPersonUSD = Math.round(perPersonBDT / state.exchangeRate);
+    const perPersonUSD = Math.round(perPersonBDT / s.exchangeRate);
 
     return {
       totalBDT,
@@ -431,46 +475,54 @@ const PlannerApp = (function () {
       totalActivities: Math.round(totalActivities),
       buffer,
       rooms,
-      vehicle: transitInfo.vehicle
+      vehicle: transitInfo.vehicle,
+      vehicles: transitInfo.vehicles
     };
   }
 
-  function getFilteredHotels() {
+  function getFilteredHotels(s) {
     let list = PLANNER_CATALOG.hotels;
 
-    if (state.hotelType === "5star") {
+    if (s.hotelType === "5star") {
       list = list.filter(h => h.stars >= 5);
-    } else if (state.hotelType === "34star") {
+    } else if (s.hotelType === "34star") {
       list = list.filter(h => h.stars >= 3 && h.stars <= 4);
-    } else if (state.hotelType === "eco") {
+    } else if (s.hotelType === "eco") {
       list = list.filter(h => h.id.includes("mermaid") || h.name.toLowerCase().includes("eco"));
-    } else if (state.hotelType === "budget") {
+    } else if (s.hotelType === "budget") {
       list = list.filter(h => h.tier === "backpacker");
     } else {
-      list = list.filter(h => h.tier === state.budgetTier);
+      list = list.filter(h => h.tier === s.budgetTier);
     }
 
-    if (state.baseHub !== "any") {
-      const hubList = list.filter(h => h.hub === state.baseHub);
+    if (s.baseHub !== "any") {
+      const hubList = list.filter(h => h.hub === s.baseHub);
       if (hubList.length > 0) list = hubList;
     }
 
     return list.length > 0 ? list : PLANNER_CATALOG.hotels;
   }
 
-  function getActiveHotel() {
-    const list = getFilteredHotels();
-    return list[state.hotelIndex % list.length];
+  function getActiveHotel(s) {
+    const list = getFilteredHotels(s);
+    return list[s.hotelIndex % list.length];
   }
 
-  function getFilteredDining() {
-    let list = PLANNER_CATALOG.dining.filter(d => d.tier === state.budgetTier);
+  function getFilteredDining(s) {
+    let list = PLANNER_CATALOG.dining.filter(d => d.tier === s.budgetTier);
     return list.length > 0 ? list : PLANNER_CATALOG.dining;
   }
 
-  function getActiveDining() {
-    const list = getFilteredDining();
-    return list[state.diningIndex % list.length];
+  function getActiveDining(s) {
+    const list = getFilteredDining(s);
+    return list[s.diningIndex % list.length];
+  }
+
+  // Pure: what the planner shows for itinerary.html?<query>. Used by quickpick.js.
+  function estimate(query) {
+    const s = defaultState();
+    applyParams(s, new URLSearchParams(query));
+    return { budget: computeBudget(s), hotel: getActiveHotel(s), days: s.days, adults: s.adults, kids: s.kids };
   }
 
   // TIDE & SUNSET INTELLIGENT TIMING SCHEDULE
@@ -500,7 +552,7 @@ const PlannerApp = (function () {
             time: "04:30 PM", 
             act: "Sugandha Beach Golden Hour Walk & Sunset", 
             tip: "Rent beach sunbed chairs (৳৫০/hr) and enjoy the crimson sunset.",
-            badge: "🌅 Sunset Golden Hour (5:15 PM)"
+            badge: "🌅 Sunset"
           },
           { 
             time: "07:30 PM", 
@@ -523,7 +575,7 @@ const PlannerApp = (function () {
           },
           { 
             time: "10:00 AM", 
-            act: "Himchari National Park Viewpoint & Waterfall", 
+            act: "Himchari National Park Viewpoint (waterfall in monsoon only)", 
             tip: "Climb the hill stairs for an infinite aerial vista of the coastline.",
             badge: "🌿 Hill meets Sea"
           },
@@ -531,7 +583,7 @@ const PlannerApp = (function () {
             time: "01:00 PM", 
             act: "Inani Coral Beach Exploration & Beachfront Lunch", 
             tip: "Walk among ancient golden-black coral stones at low tide. Great photo spot!",
-            badge: "🌊 Low Tide Window (Coral Exposed)"
+            badge: "🪨 Best at low tide"
           },
           { 
             time: "04:00 PM", 
@@ -621,9 +673,9 @@ const PlannerApp = (function () {
   }
 
   function renderAll() {
-    const budget = computeBudget();
-    const hotel = getActiveHotel();
-    const dining = getActiveDining();
+    const budget = computeBudget(state);
+    const hotel = getActiveHotel(state);
+    const dining = getActiveDining(state);
     const schedule = generateSchedule();
 
     state.calculatedBudget = budget;
@@ -690,7 +742,7 @@ const PlannerApp = (function () {
     if (durationTag) durationTag.textContent = `${state.days} Days / ${Math.max(1, state.days - 1)} Nights`;
 
     const partyTag = document.getElementById("budget-display-party-tag");
-    if (partyTag) partyTag.textContent = `${state.adults + state.kids} Guests`;
+    if (partyTag) partyTag.textContent = `${state.adults + state.kids} ${state.adults + state.kids === 1 ? "Guest" : "Guests"}`;
 
     const costHotel = document.getElementById("item-cost-hotel");
     if (costHotel) costHotel.textContent = `৳${budget.totalHotel.toLocaleString('en-IN')}`;
@@ -735,6 +787,8 @@ const PlannerApp = (function () {
       if (dPrice) dPrice.textContent = `৳${dining.costPerPerson.toLocaleString('en-IN')} / person / day`;
     }
 
+    renderEmergencyLines("footer-emergency");
+    renderEmergencyLines("driver-card-emergency", "bn");
     renderDailyTimeline(schedule);
     renderTransitTips();
     renderVisualPassCard(budget, hotel, schedule);
@@ -751,11 +805,11 @@ const PlannerApp = (function () {
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-stone-100 gap-2">
           <div class="flex items-center gap-3">
             <span class="w-9 h-9 rounded-2xl bg-charcoal text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
-              0${day.dayNum}
+              ${dayLabel(day.dayNum)}
             </span>
             <div>
-              <h4 class="font-serif text-xl sm:text-2xl text-charcoal font-semibold">${day.title}</h4>
-              <p class="text-xs font-mono text-terracotta-600 font-medium">${day.theme}</p>
+              <h4 class="font-serif text-xl sm:text-2xl text-charcoal font-semibold">${plannerEsc(day.title)}</h4>
+              <p class="text-xs font-mono text-terracotta-600 font-medium">${plannerEsc(day.theme)}</p>
             </div>
           </div>
           <span class="text-[11px] font-mono text-stone-400 bg-stone-50 px-3 py-1 rounded-full border border-stone-200 self-start sm:self-center">
@@ -767,14 +821,14 @@ const PlannerApp = (function () {
           ${day.items.map(item => `
             <div class="flex items-start gap-4 p-3 rounded-2xl hover:bg-stone-50 transition border border-transparent hover:border-stone-200">
               <span class="text-xs font-mono font-bold text-charcoal bg-stone-100 px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
-                ${item.time}
+                ${plannerEsc(item.time)}
               </span>
               <div class="space-y-1 flex-1">
                 <div class="flex flex-wrap items-center justify-between gap-1">
-                  <p class="text-xs sm:text-sm font-semibold text-charcoal">${item.act}</p>
-                  ${item.badge ? `<span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">${item.badge}</span>` : ''}
+                  <p class="text-xs sm:text-sm font-semibold text-charcoal">${plannerEsc(item.act)}</p>
+                  ${item.badge ? `<span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">${plannerEsc(item.badge)}</span>` : ''}
                 </div>
-                <p class="text-[11px] text-stone-500 font-mono">${item.tip}</p>
+                <p class="text-[11px] text-stone-500 font-mono">${plannerEsc(item.tip)}</p>
               </div>
             </div>
           `).join('')}
@@ -787,24 +841,33 @@ const PlannerApp = (function () {
     const container = document.getElementById("planner-transit-fare-rules");
     if (!container || !PLANNER_CATALOG.transitFares) return;
 
-    container.innerHTML = PLANNER_CATALOG.transitFares.map(fare => `
+    container.innerHTML = PLANNER_CATALOG.transitFares.map((fare, i) => `
       <div class="bg-white/80 rounded-2xl p-3 border border-amber-200 space-y-1">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] uppercase font-bold text-amber-900 block">${fare.route}</span>
-          <button type="button" onclick="PlannerApp.openDriverCard('${fare.routeBN}', '${fare.fairFareBDT}', '${fare.vehicle}')" class="text-[10px] font-bold text-terracotta-600 hover:underline">
+          <span class="text-[10px] uppercase font-bold text-amber-900 block">${plannerEsc(fare.route)}</span>
+          <button type="button" data-fare-index="${i}" class="text-[10px] font-bold text-terracotta-600 hover:underline">
             🛺 চালক কার্ড
           </button>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-stone-500 text-xs">${fare.vehicle}:</span>
-          <span class="font-bold text-charcoal text-xs">${fare.fairFareBDT}</span>
+          <span class="text-stone-500 text-xs">${plannerEsc(fare.vehicle)}:</span>
+          <span class="font-bold text-charcoal text-xs">${plannerEsc(fare.fairFareBDT)}</span>
         </div>
-        <p class="text-[10px] text-amber-700 leading-tight pt-1">${fare.scamAlert}</p>
+        <p class="text-[10px] text-amber-700 leading-tight pt-1">${plannerEsc(fare.scamAlert)}</p>
       </div>
     `).join('');
+    if (!container.dataset.wired) {
+      container.dataset.wired = "1";
+      container.addEventListener("click", e => {
+        const btn = e.target.closest && e.target.closest("[data-fare-index]");
+        const fare = btn && PLANNER_CATALOG.transitFares[Number(btn.dataset.fareIndex)];
+        if (fare) openDriverCard(fare.routeBN, fare.fairFareBDT, fare.vehicle);
+      });
+    }
   }
 
   function renderVisualPassCard(budget, hotel, schedule) {
+    renderEmergencyLines("pass-emergency");
     const titleEl = document.getElementById("pass-title");
     if (titleEl) titleEl.textContent = state.travelerName || "My Coastal Journey";
 
@@ -834,17 +897,34 @@ const PlannerApp = (function () {
       timelineEl.innerHTML = schedule.map(day => `
         <div class="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 flex items-center justify-between text-xs">
           <div class="flex items-center gap-3">
-            <span class="font-mono text-terracotta-400 font-bold">DAY 0${day.dayNum}</span>
-            <span class="text-stone-200 font-medium">${day.title}</span>
+            <span class="font-mono text-terracotta-400 font-bold">DAY ${dayLabel(day.dayNum)}</span>
+            <span class="text-stone-200 font-medium">${plannerEsc(day.title)}</span>
           </div>
-          <span class="text-[10px] font-mono text-stone-400 hidden sm:inline-block">${day.theme}</span>
+          <span class="text-[10px] font-mono text-stone-400 hidden sm:inline-block">${plannerEsc(day.theme)}</span>
         </div>
       `).join('');
     }
   }
 
+  const dayLabel = n => String(n).padStart(2, "0");
+
+  // Emergency lines come only from EMERGENCY_CONTACTS in data.js. Entries still awaiting
+  // owner confirmation are left off, because the passes are saved as images and outlive fixes.
+  function renderEmergencyLines(id, forceLang) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const list = typeof EMERGENCY_CONTACTS !== 'undefined' && Array.isArray(EMERGENCY_CONTACTS) ? EMERGENCY_CONTACTS : [];
+    const lang = forceLang || (typeof AppState !== 'undefined' && AppState.lang === 'bn' ? 'bn' : 'en');
+    el.innerHTML = list.filter(c => !c.needsOwnerConfirm).map(c => `
+      <div class="flex items-center justify-between gap-3">
+        <span>🚨 ${plannerEsc((c.name && (c.name[lang] || c.name.en)) || '')}</span>
+        <a href="${/^tel:\+?\d+$/.test(c.tel) ? c.tel : '#'}" class="text-white font-bold">${plannerEsc(c.number)}</a>
+      </div>`).join('');
+  }
+
   // RENDER 9:16 PHONE LOCK-SCREEN STORY PASS
   function renderPhoneLockScreenCard(budget, hotel, schedule) {
+    renderEmergencyLines("phone-pass-emergency");
     const pTitle = document.getElementById("phone-pass-title");
     if (pTitle) pTitle.textContent = state.travelerName || "My Coastal Journey";
 
@@ -859,10 +939,10 @@ const PlannerApp = (function () {
       pTimeline.innerHTML = schedule.slice(0, 3).map(day => `
         <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60 text-left">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold text-terracotta-400 uppercase">Day 0${day.dayNum}</span>
-            <span class="text-[9px] font-mono text-stone-400">${day.theme.slice(0, 26)}...</span>
+            <span class="text-[10px] font-mono font-bold text-terracotta-400 uppercase">Day ${dayLabel(day.dayNum)}</span>
+            <span class="text-[9px] font-mono text-stone-400">${plannerEsc(day.theme.slice(0, 26))}...</span>
           </div>
-          <p class="text-xs font-semibold text-white mt-0.5 truncate">${day.title}</p>
+          <p class="text-xs font-semibold text-white mt-0.5 truncate">${plannerEsc(day.title)}</p>
         </div>
       `).join('');
     }
@@ -878,12 +958,12 @@ const PlannerApp = (function () {
         <label class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium border ${isChecked ? 'border-charcoal bg-stone-100 text-charcoal' : 'border-stone-200 text-stone-600'} cursor-pointer hover:border-charcoal transition select-none">
           <input 
             type="checkbox" 
-            value="${act.id}" 
+            value="${plannerEsc(act.id)}" 
             ${isChecked ? 'checked' : ''} 
-            onchange="PlannerApp.toggleActivity('${act.id}')" 
+            onchange="PlannerApp.toggleActivity(this.value)" 
             class="rounded text-charcoal focus:ring-0 cursor-pointer"
           />
-          <span>${act.name}</span>
+          <span>${plannerEsc(act.name)}</span>
           ${act.costPerPerson > 0 ? `<span class="text-[10px] font-mono text-stone-400 font-normal">(+৳${act.costPerPerson})</span>` : ''}
         </label>
       `;
@@ -893,19 +973,15 @@ const PlannerApp = (function () {
   function updateWhatsAppLink() {
     const btn = document.getElementById("btn-whatsapp-booking");
     if (!btn) return;
-    btn.href = buildWhatsAppPlannerPayload(state);
+    const href = buildWhatsAppPlannerPayload(state);
+    btn.hidden = !href;
+    btn.classList.toggle("hidden", !href);
+    if (href) btn.href = href;
   }
 
   // 60-SECOND WIZARD CONTROLS & ARCHETYPE SELECTION
   function selectArchetype(arcId) {
-    state.selectedArchetype = arcId;
-    const arc = PLANNER_CATALOG.archetypes.find(a => a.id === arcId);
-    if (arc) {
-      state.vibe = arc.vibe;
-      if (arc.preferredHub) state.baseHub = arc.preferredHub;
-      if (arc.hotelType) state.hotelType = arc.hotelType;
-      if (arc.defaultActivities) state.selectedActivities = [...arc.defaultActivities];
-    }
+    applyArchetype(state, arcId);
     document.querySelectorAll(".archetype-card-btn").forEach(btn => {
       if (btn.dataset.arc === arcId) {
         btn.classList.add("border-charcoal", "bg-stone-50", "shadow-sm");
@@ -957,79 +1033,69 @@ const PlannerApp = (function () {
   }
 
   // IMAGE EXPORTERS
-  function downloadVisualPass() {
-    const card = document.getElementById("visual-pass-export-card");
+  function offerPrint(reason) {
+    if (typeof confirm === 'function' && confirm(reason + " Print this page (or save it as PDF) instead?")) window.print();
+  }
+
+  function exportCard(cardId, btnId, busyText, background, fileName) {
+    const card = document.getElementById(cardId);
     if (!card) return;
     if (typeof html2canvas === 'undefined') {
-      alert("Loading image export library... Please wait a second.");
+      offerPrint("The image export library did not load (offline or blocked).");
       return;
     }
-    const exportBtn = document.getElementById("btn-download-pass");
+    const exportBtn = document.getElementById(btnId);
     const originalText = exportBtn ? exportBtn.innerHTML : "";
-    if (exportBtn) exportBtn.innerHTML = "Generating Boarding Pass...";
+    if (exportBtn) exportBtn.textContent = busyText;
+    const restore = () => { if (exportBtn) exportBtn.innerHTML = originalText; };
 
     html2canvas(card, {
       scale: 2,
       useCORS: true,
-      backgroundColor: "#111827",
-      logging: false
+      backgroundColor: background,
+      logging: false,
+      // html2canvas cuts descenders on tight line-heights and overflow:hidden text; loosen them in the clone only.
+      onclone: doc => {
+        const style = doc.createElement("style");
+        // It also cannot blur, so the glow blobs would print as solid circles.
+        style.textContent = `#${cardId} h2, #${cardId} h3, #${cardId} p, #${cardId} span { line-height: 1.45 !important; padding-bottom: 2px; }
+          #${cardId} .truncate { padding-bottom: 0.35em !important; line-height: 1.5 !important; }
+          #${cardId} .blur-3xl { display: none !important; }`;
+        doc.head.appendChild(style);
+      }
     }).then(canvas => {
-      const imageURL = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      const safeName = (state.travelerName || "Visit-Cox-Itinerary").replace(/[^a-zA-Z0-9_-]/g, "_");
-      link.download = `${safeName}-${state.days}-Days-Pass.png`;
-      link.href = imageURL;
+      link.download = fileName;
+      link.href = canvas.toDataURL("image/png");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      if (exportBtn) exportBtn.innerHTML = originalText;
+      restore();
     }).catch(err => {
       console.error("Pass export error:", err);
-      if (exportBtn) exportBtn.innerHTML = originalText;
+      restore();
+      offerPrint("The image export failed.");
     });
   }
 
-  function downloadPhonePass() {
-    const card = document.getElementById("phone-lockscreen-pass-card");
-    if (!card) return;
-    if (typeof html2canvas === 'undefined') {
-      alert("Loading image export library...");
-      return;
-    }
-    const exportBtn = document.getElementById("btn-download-phone-pass");
-    const originalText = exportBtn ? exportBtn.innerHTML : "";
-    if (exportBtn) exportBtn.innerHTML = "Generating Phone Wallpaper...";
+  function safeName(fallback) {
+    return (state.travelerName || fallback).replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
 
-    card.classList.remove("hidden");
-    html2canvas(card, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#0B2135",
-      logging: false
-    }).then(canvas => {
-      const imageURL = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      const safeName = (state.travelerName || "Visit-Cox").replace(/[^a-zA-Z0-9_-]/g, "_");
-      link.download = `${safeName}-Phone-LockScreen-9-16.png`;
-      link.href = imageURL;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      if (exportBtn) exportBtn.innerHTML = originalText;
-    }).catch(err => {
-      console.error("Phone pass export error:", err);
-      if (exportBtn) exportBtn.innerHTML = originalText;
-    });
+  function downloadVisualPass() {
+    exportCard("visual-pass-export-card", "btn-download-pass", "Generating pass...", "#111827",
+      `${safeName("Visit-Cox-Itinerary")}-${state.days}-Days-Pass.png`);
+  }
+
+  function downloadPhonePass() {
+    exportCard("phone-lockscreen-pass-card", "btn-download-phone-pass", "Generating wallpaper...", "#0B2135",
+      `${safeName("Visit-Cox")}-Phone-LockScreen-9-16.png`);
   }
 
   // URL PARAMETER PARSER (CONNECTS INDEX.HTML QUICK-PICK TO ITINERARY.HTML)
   function parseURLParams() {
     if (typeof window === 'undefined' || !window.location.search) return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("days")) state.days = parseInt(params.get("days"), 10);
-    if (params.get("vibe")) state.vibe = params.get("vibe");
-    if (params.get("tier")) state.budgetTier = params.get("tier");
-    if (params.get("pax")) state.adults = parseInt(params.get("pax"), 10);
+    applyParams(state, new URLSearchParams(window.location.search));
   }
 
   return {
@@ -1044,19 +1110,19 @@ const PlannerApp = (function () {
     openDriverCard: openDriverCard,
     closeDriverCard: closeDriverCard,
     setDays: function (d) {
-      state.days = Math.max(1, Math.min(14, d));
+      state.days = clampDays(d, state.days);
       renderAll();
     },
     stepDays: function (delta) {
-      state.days = Math.max(1, Math.min(14, state.days + delta));
+      state.days = clampDays(state.days + delta, state.days);
       renderAll();
     },
     stepAdults: function (delta) {
-      state.adults = Math.max(1, Math.min(20, state.adults + delta));
+      state.adults = clampAdults(state.adults + delta, state.adults);
       renderAll();
     },
     stepKids: function (delta) {
-      state.kids = Math.max(0, Math.min(10, state.kids + delta));
+      state.kids = clampKids(state.kids + delta, state.kids);
       renderAll();
     },
     setBudgetTier: function (tier) {
@@ -1105,6 +1171,7 @@ const PlannerApp = (function () {
     },
     downloadVisualPass: downloadVisualPass,
     downloadPhonePass: downloadPhonePass,
+    estimate: estimate,
     getState: function () {
       return Object.assign({}, state);
     }

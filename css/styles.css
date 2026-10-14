@@ -12,7 +12,7 @@
   
   --text-charcoal: #111827;
   --text-body: #374151;
-  --text-muted: #6B7280;
+  --text-muted: #4B5563; /* AA on sand surfaces */
   --text-subtle: #9CA3AF;
   
   --border-stone: #E7E5E0;
@@ -114,61 +114,9 @@ button, a {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nav-link-item {
-  position: relative;
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 0.5rem 0.25rem;
-  transition: color 0.2s ease;
-}
-
-.nav-link-item::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 1.5px;
-  background-color: var(--text-charcoal);
-  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nav-link-item:hover,
-.nav-link-item.active {
-  color: var(--text-charcoal);
-}
-
-.nav-link-item:hover::after,
-.nav-link-item.active::after {
-  width: 100%;
-}
-
 /* --------------------------------------------------------------------------
  * Asymmetrical Hero Collage & Floating Glassmorphism Search Pill
  * -------------------------------------------------------------------------- */
-.hero-frame {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.5rem;
-  border: 1px solid var(--border-stone);
-  background-color: #EFECE6;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero-frame:hover img {
-  transform: scale(1.04);
-}
-
 .floating-search-pill {
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(24px);
@@ -253,26 +201,6 @@ button, a {
 /* --------------------------------------------------------------------------
  * Premium Stays: Draggable Horizontal Scroll Track
  * -------------------------------------------------------------------------- */
-.stays-horizontal-track {
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
-  cursor: grab;
-  padding-bottom: 1.5rem;
-}
-
-.stays-horizontal-track:active {
-  cursor: grabbing;
-}
-
-.stays-horizontal-track::-webkit-scrollbar {
-  display: none;
-}
-
 .stay-card {
   flex-shrink: 0;
   scroll-snap-align: start;
@@ -304,105 +232,6 @@ button, a {
 
 .stay-card:hover .stay-img {
   transform: scale(1.04);
-}
-
-/* --------------------------------------------------------------------------
- * The Local's Compass: Leaflet Monochrome CartoDB Map & Stepped Itinerary
- * -------------------------------------------------------------------------- */
-#coxs-bazar-map {
-  width: 100%;
-  height: 520px;
-  border-radius: 1.5rem;
-  border: 1px solid var(--border-stone);
-  z-index: 10;
-  background-color: #FAF9F6;
-}
-
-@media (max-width: 640px) {
-  #coxs-bazar-map {
-    height: 380px;
-  }
-}
-
-/* Minimalist Map Pins */
-.minimal-pin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  background-color: var(--text-charcoal);
-  color: #FFFFFF;
-  border: 2px solid #FFFFFF;
-  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.18);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-}
-
-.minimal-pin.pin-stay {
-  background-color: #0B2135;
-}
-
-.minimal-pin.pin-spot {
-  background-color: #C86446;
-}
-
-.minimal-pin.pin-activity {
-  background-color: #4A6B5D;
-}
-
-.minimal-pin:hover {
-  transform: scale(1.2) translateY(-2px);
-}
-
-.leaflet-popup-content-wrapper {
-  border-radius: 1rem !important;
-  padding: 0 !important;
-  overflow: hidden;
-  border: 1px solid var(--border-stone) !important;
-  box-shadow: 0 16px 32px -4px rgba(17, 24, 39, 0.12) !important;
-  background: #FFFFFF !important;
-}
-
-.leaflet-popup-content {
-  margin: 0 !important;
-  width: 260px !important;
-  font-family: var(--font-sans) !important;
-}
-
-.leaflet-popup-tip {
-  background: #FFFFFF !important;
-}
-
-/* --------------------------------------------------------------------------
- * Stepped Itinerary Engine: Vertical Animated Timeline
- * -------------------------------------------------------------------------- */
-.timeline-item {
-  position: relative;
-  padding-left: 2.25rem;
-  padding-bottom: 2.5rem;
-  border-left: 1.5px solid var(--border-stone);
-}
-
-.timeline-item:last-child {
-  border-left-color: transparent;
-  padding-bottom: 0;
-}
-
-.timeline-node {
-  position: absolute;
-  left: -0.5rem;
-  top: 0.25rem;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 9999px;
-  background-color: #FAF9F6;
-  border: 2px solid var(--text-charcoal);
-}
-
-.timeline-item.active-node .timeline-node {
-  background-color: var(--text-charcoal);
 }
 
 /* --------------------------------------------------------------------------
@@ -559,11 +388,116 @@ button, a {
 }
 
 /* Hardware accelerated layer promotion */
-.hero-frame,
 .bento-card,
 .stay-card {
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+/* --------------------------------------------------------------------------
+ * Accessibility: AA contrast, focus, tap targets, reduced motion
+ * `html` prefix beats the Tailwind CDN styles, which are injected after this file.
+ * -------------------------------------------------------------------------- */
+/* Light surfaces only: the same utilities stay as they are inside dark sections. */
+html :not(:is(.bg-charcoal, .bg-black, .bg-ocean-800, .bg-ocean-900, .bg-ocean-950, .bg-stone-700, .bg-stone-800, .bg-stone-900, .bg-slate-900, .bg-slate-950, .bg-teal-900, .bg-sky-700, .bg-\[\#111827\], [class*="from-"]) *):is(.text-stone-400, .text-stone-500) {
+  color: #5A564F; /* stone-600: 6.6:1 on sand, was 2.6:1 and 4.2:1 */
+}
+
+html :not(:is(.bg-charcoal, .bg-black, .bg-ocean-800, .bg-ocean-900, .bg-ocean-950, .bg-stone-800, .bg-stone-900, .bg-slate-900, .bg-slate-950, [class*="from-"]) *).text-terracotta-600 {
+  color: #A84C32; /* terracotta-700: 5.3:1, was 3.9:1 */
+}
+
+html :is(.bg-charcoal, .bg-black, .bg-ocean-900, .bg-ocean-950, .bg-stone-800, .bg-stone-900, .bg-slate-900, .bg-slate-950, .bg-\[\#111827\]) .text-stone-500 {
+  color: #A39D92; /* stone-400 on dark: 6.9:1, was 3.9:1 */
+}
+
+html .bg-terracotta-600 { background-color: #A84C32; } /* white text 5.6:1 */
+html .bg-sky-500.text-white { background-color: #0369A1; } /* 5.9:1 */
+html .bg-teal-500.text-white { background-color: #0F766E; } /* 5.5:1 */
+
+html :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--accent-terracotta); /* >= 3:1 on both sand and charcoal */
+  outline-offset: 2px;
+}
+
+.concierge-pill {
+  min-height: 44px;
+}
+
+@media (pointer: coarse) {
+  html :is(button, select, [role="button"], input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) {
+    min-height: 44px;
+  }
+  html :is(input[type="checkbox"], input[type="radio"]) {
+    width: 1.25rem; /* the wrapping <label> carries the rest of the tap area */
+    height: 1.25rem;
+  }
+  html :is(nav, footer) a,
+  html a[href^="tel:"] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+ * Shared content helpers (used from js/ templates and pages)
+ * -------------------------------------------------------------------------- */
+/* "Approximate, as of <date>" note under any price, fare or phone number. */
+.vc-approx {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6; /* room for Bangla matras */
+  font-style: italic;
+  color: #5A564F;
+}
+
+/* Emergency contacts: <ul class="vc-emergency"><li><span>Label</span><a href="tel:999">999</a></li></ul> */
+.vc-emergency {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-stone-dark);
+  border-left: 4px solid #B91C1C;
+  border-radius: 0.75rem;
+  background: var(--bg-surface);
+}
+
+.vc-emergency li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-charcoal);
+}
+
+.vc-emergency li + li {
+  border-top: 1px solid var(--border-stone-light);
+}
+
+.vc-emergency a[href^="tel:"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #B91C1C; /* 6.5:1 on white */
+  text-decoration: underline;
 }
 
 /* --------------------------------------------------------------------------

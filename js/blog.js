@@ -1,19 +1,9 @@
 /**
- * ============================================================================
- * Visit Cox's Bazar - Interactive Travel Blog & Community Publishing System (blog.js)
- * ============================================================================
- * Powers both:
- *   1. The dedicated standalone Blog Page (blog.html)
- *   2. The integrated Blog Preview & Publisher Section on index.html (#blog-section)
- *
- * Features:
- *   - Write & Publish new blog posts with Title, Category, Author, Read Time, Tags & Story
- *   - Choose Cover Image from 9 Cox's Bazar Photo Presets, Upload from Device, or Paste Image URL
- *   - Edit / Update or Delete any blog post with instant localStorage persistence
- *   - Category Filtering, Live Keyword Search, Helpful Like/Clap Counter, and Full Article Reader Modal
+ * Visit Cox's Bazar - travel blog (blog.js)
+ * Renders the built-in posts below on blog.html and the #blog-section preview on index.html,
+ * with category filter, search, reader modal, like (this visit only) and share.
+ * There is no publisher: to add or change a post, edit DEFAULT_BLOG_POSTS in git.
  */
-
-const BLOG_STORAGE_KEY = 'visit_cox_blog_posts_v1';
 
 const BLOG_CATEGORIES = [
   { id: 'ALL', icon: '🌊', en: 'All Stories', bn: 'সব ব্লগ পোস্ট' },
@@ -22,18 +12,6 @@ const BLOG_CATEGORIES = [
   { id: 'Island Hopping', icon: '🏝️', en: 'Island Hopping', bn: 'দ্বীপ ভ্রমণ' },
   { id: 'Local Tips & Safety', icon: '💡', en: 'Local Tips & Safety', bn: 'টিপস ও নিরাপত্তা' },
   { id: 'Hotel & Stay Guide', icon: '🏨', en: 'Hotel & Stay Guide', bn: 'হোটেল ও আবাসন' }
-];
-
-const BLOG_PHOTO_PRESETS = [
-  { label: 'Inani Coral Beach', url: 'assets/images/inani-beach.jpg' },
-  { label: 'Himchari Hills & Sea', url: 'assets/images/himchari.jpg' },
-  { label: 'Moheshkhali Island', url: 'assets/images/moheshkhali.jpg' },
-  { label: 'Ramu 100ft Buddha', url: 'assets/images/ramu-buddha.jpg' },
-  { label: 'Shamlapur Sampan Sunset', url: 'assets/images/shamlapur-sampan.jpg' },
-  { label: 'Sonadia Island Camping', url: 'assets/images/sonadia-island.jpg' },
-  { label: 'Hotel Sea Crown Beachfront', url: 'assets/images/hotel-sea-crown.jpg' },
-  { label: 'Kolatoli Eco Park Hills', url: 'assets/images/kolatoli-eco.jpg' },
-  { label: 'Najirartek Dried Fish Hub', url: 'assets/images/najirartek-shutki.jpg' }
 ];
 
 const DEFAULT_BLOG_POSTS = [
@@ -185,12 +163,12 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
       bn: 'নিরাপদ ও সাশ্রয়ী ভ্রমণের জন্য জেনে নিন টমটমের নির্ধারিত ভাড়া (১০-২০ টাকা), সৈকতের লাল-সবুজ পতাকার নিয়ম এবং জরুরি ট্যুরিস্ট পুলিশ নাম্বার।'
     },
     content: {
-      en: `Planning your first trip to Cox's Bazar? Keep these verified local tips in mind to save money and travel safely:
+      en: `Planning your first trip to Cox's Bazar? Keep these local tips in mind to save money and travel safely:
 
 1. Know Which Beach Zone Fits Your Style:
 • Sugandha Beach: Best for beachfront stays (like Hotel Sea Crown), evening seafood stalls, and water sports.
 • Laboni Beach: Closest to town, Burmese handicraft markets, and family hotels with pools (like Hotel Kollol).
-• Kalatali & Eco Park: Best for budget-friendly hill-view hotels (Prime Park Hotel, White Orchid, Nisanah Resort) and quick access to Marine Drive.
+• Kalatali & Eco Park: Best for budget-friendly hill-view hotels (Prime Park Hotel, White Orchid) and quick access to Marine Drive.
 
 2. Never Overpay for Local Rides:
 • Shared Tomtoms between Kalatali, Sugandha, and Laboni cost only 10 to 20 BDT per person!
@@ -198,17 +176,17 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 3. Beach Swimming Safety & Emergency Contacts:
 • Swim ONLY between Green Flags watched by CIPRB Sea Safe Lifeguards. Never enter the water near Red Flags or after sunset.
-• Keep Tourist Police Cox's Bazar (+880 1320-160000 / +880 1320-158995) and National Emergency (999) saved on your phone.`,
-      bn: `প্রথমবার কক্সবাজার ভ্রমণে গেলে নিচের প্রামাণ্য টিপসগুলো আপনার খরচ বাঁচাবে এবং ভ্রমণকে নিরাপদ রাখবে:
+• Save the Tourist Police helpline (01320-222222) and National Emergency (999) on your phone.`,
+      bn: `প্রথমবার কক্সবাজার ভ্রমণে গেলে নিচের টিপসগুলো আপনার খরচ বাঁচাবে এবং ভ্রমণকে নিরাপদ রাখবে:
 
 ১. কোন জোনে হোটেল নেবেন?
 • সুগন্ধা পয়েন্ট: সরাসরি সৈকত সংলগ্ন হোটেল (যেমন: হোটেল সী ক্রাউন) ও ফিশ ফ্রাই মার্কেটের জন্য সেরা।
 • লাবণী পয়েন্ট: বার্মিজ মার্কেট ও সুইমিং পুলসহ ফ্যামিলি হোটেলের (যেমন: হোটেল কল্লোল) জন্য আদর্শ।
-• কলাতলী ও ইকো পার্ক: সাশ্রয়ী বাজেটে ভালো হোটেল (প্রাইম পার্ক, হোয়াইট অর্কিড, নিসানাহ রিসোর্ট) ও মেরিন ড্রাইভের প্রবেশমুখ।
+• কলাতলী ও ইকো পার্ক: সাশ্রয়ী বাজেটে ভালো হোটেল (প্রাইম পার্ক, হোয়াইট অর্কিড) ও মেরিন ড্রাইভের প্রবেশমুখ।
 
 ২. সৈকতের নিরাপত্তা ও জরুরি নাম্বার:
 • সমুদ্রে গোসলের সময় শুধুমাত্র সি-সেফ লাইফগার্ডদের সবুজ পতাকা চিহ্নিত স্থানে নামুন। লাল পতাকা থাকলে কখনোই পানিতে নামবেন না।
-• যেকোনো প্রয়োজনে ট্যুরিস্ট পুলিশ (+880 1320-160000) বা জাতীয় জরুরি সেবা ৯৯৯-এ কল করুন।`
+• যেকোনো প্রয়োজনে ট্যুরিস্ট পুলিশ হেল্পলাইন (01320-222222) বা জাতীয় জরুরি সেবা ৯৯৯-এ কল করুন।`
     }
   }
 ];
@@ -217,51 +195,15 @@ const BlogState = {
   posts: [],
   activeCategory: 'ALL',
   searchQuery: '',
-  editingPostId: null,
-  readingPostId: null,
-  selectedImagePreset: 'assets/images/inani-beach.jpg',
-  uploadedImageDataUrl: ''
+  readingPostId: null
 };
 
-/* --------------------------------------------------------------------------
- * 1. LOAD & SAVE BLOG POSTS TO LOCALSTORAGE
- * -------------------------------------------------------------------------- */
 function loadBlogPosts() {
-  try {
-    const raw = localStorage.getItem(BLOG_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        BlogState.posts = parsed;
-        return;
-      }
-    }
-  } catch (err) {
-    console.warn('Could not load saved blog posts:', err);
-  }
   BlogState.posts = JSON.parse(JSON.stringify(DEFAULT_BLOG_POSTS));
-}
-
-function saveBlogPosts() {
-  try {
-    localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(BlogState.posts));
-  } catch (err) {
-    console.error('Failed to save blog posts to localStorage:', err);
-  }
 }
 
 function getBlogLang() {
   return typeof AppState !== 'undefined' && AppState.lang ? AppState.lang : 'en';
-}
-
-function isBlogAdminAuthenticated() {
-  if (typeof AdminState !== 'undefined' && typeof AdminState.isAuthenticated === 'boolean') {
-    return AdminState.isAuthenticated;
-  }
-  return (
-    sessionStorage.getItem('visit_cox_admin_session_v1') === 'true' ||
-    localStorage.getItem('visit_cox_admin_session_v1') === 'true'
-  );
 }
 
 function getLocalizedField(fieldObj, lang) {
@@ -316,16 +258,10 @@ function getFilteredBlogPosts() {
 
 function renderBlogSection() {
   const lang = getBlogLang();
-  const isAdmin = isBlogAdminAuthenticated();
 
   // Sync navbar links if present
   document.querySelectorAll('[data-nav="blog"]').forEach(el => {
     el.textContent = lang === 'en' ? 'Blog' : 'ব্লগ';
-  });
-
-  // Show/hide admin-only blog creation controls for visitors vs admin
-  document.querySelectorAll('[data-blog-admin-only]').forEach(el => {
-    el.classList.toggle('hidden', !isAdmin);
   });
 
   // Render category filter pills
@@ -377,7 +313,6 @@ function renderBlogSection() {
       ? 'Read insider tips on Marine Drive routes, authentic seafood spots, and island hopping across Cox’s Bazar.'
       : 'কক্সবাজারের ভ্রমণ অভিজ্ঞতা, সামুদ্রিক খাবার, মেরিন ড্রাইভ রুট ও দ্বীপ ভ্রমণের বিস্তারিত গাইড পড়ুন।'
   );
-  setTxt('blog-write-btn-text', lang === 'en' ? 'Write & Publish Blog Post' : 'নতুন ব্লগ পোস্ট লিখুন');
   setTxt('blog-open-page-text', lang === 'en' ? 'Open Full Blog Page' : 'সম্পূর্ণ ব্লগ পেজ দেখুন');
 
   const gridEl = document.getElementById('blog-posts-grid');
@@ -405,19 +340,6 @@ function renderBlogSection() {
           >
             ${lang === 'en' ? 'Show All Posts' : 'সব পোস্ট দেখুন'}
           </button>
-          ${
-            isAdmin
-              ? `
-            <button
-              type="button"
-              onclick="openBlogEditorModal(null)"
-              class="px-4 py-2 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-extrabold transition cursor-pointer"
-            >
-              ✍️ ${lang === 'en' ? 'Write New Post' : 'নতুন পোস্ট লিখুন'}
-            </button>
-          `
-              : ''
-          }
         </div>
       </div>
     `;
@@ -436,29 +358,6 @@ function renderBlogSection() {
             `<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold">#${t}</span>`
         )
         .join('');
-
-      const adminControlsHTML = isAdmin
-        ? `
-          <div class="absolute top-3.5 right-3.5 flex items-center gap-1.5">
-            <button
-              type="button"
-              onclick="event.stopPropagation(); openBlogEditorModal('${post.id}')"
-              title="${lang === 'en' ? 'Edit Post (Admin)' : 'সম্পাদনা করুন'}"
-              class="px-2.5 py-1 rounded-lg bg-slate-900/85 hover:bg-sky-600 text-white text-[11px] font-bold backdrop-blur-sm transition cursor-pointer"
-            >
-              ✎ ${lang === 'en' ? 'Edit' : 'এডিট'}
-            </button>
-            <button
-              type="button"
-              onclick="event.stopPropagation(); deleteBlogPost('${post.id}')"
-              title="${lang === 'en' ? 'Delete Post (Admin)' : 'মুছে ফেলুন'}"
-              class="px-2 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[11px] font-bold backdrop-blur-sm transition cursor-pointer"
-            >
-              ✕
-            </button>
-          </div>
-        `
-        : '';
 
       return `
         <article
@@ -482,8 +381,6 @@ function renderBlogSection() {
               <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-400 text-slate-950 shadow">
                 ${catMeta.icon} ${catMeta[lang]}
               </span>
-
-              ${adminControlsHTML}
 
               <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-sky-100 font-semibold">
                 <span>✍️ ${post.author || 'Traveler'} • ${post.date || 'Oct 2026'}</span>
@@ -641,19 +538,6 @@ function openBlogReaderModal(postId) {
         </div>
 
         <div class="flex items-center gap-2">
-          ${
-            isBlogAdminAuthenticated()
-              ? `
-            <button
-              type="button"
-              onclick="closeBlogReaderModal(); openBlogEditorModal('${post.id}');"
-              class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-800 font-bold text-xs transition cursor-pointer"
-            >
-              ✎ ${lang === 'en' ? 'Edit Post' : 'এডিট করুন'}
-            </button>
-          `
-              : ''
-          }
           <button
             type="button"
             onclick="closeBlogReaderModal()"
@@ -682,7 +566,6 @@ function likeBlogPost(postId, fromModal) {
   const post = BlogState.posts.find(p => p.id === postId);
   if (!post) return;
   post.likes = (Number(post.likes) || 0) + 1;
-  saveBlogPosts();
   renderBlogSection();
   if (fromModal) {
     openBlogReaderModal(postId);
@@ -714,229 +597,6 @@ function shareBlogPost(postId) {
   }
 }
 
-/* --------------------------------------------------------------------------
- * 4. WRITE / EDIT / DELETE BLOG POST MODAL
- * -------------------------------------------------------------------------- */
-function openBlogEditorModal(postId) {
-  if (!isBlogAdminAuthenticated()) {
-    if (typeof openAdminLoginModal === 'function') {
-      showBlogToast('🔒 Please sign in as Administrator to publish or edit blog posts.');
-      openAdminLoginModal();
-    } else {
-      showBlogToast('🔒 Administrator login required to publish or edit blog posts.');
-    }
-    return;
-  }
-
-  BlogState.editingPostId = postId || null;
-  const modal = document.getElementById('blog-editor-modal');
-  if (!modal) return;
-
-  const lang = getBlogLang();
-  const existing = postId ? BlogState.posts.find(p => p.id === postId) : null;
-
-  const modalTitle = document.getElementById('blog-editor-modal-title');
-  if (modalTitle) {
-    modalTitle.textContent = existing
-      ? lang === 'en'
-        ? '✎ Edit Blog Post'
-        : '✎ ব্লগ পোস্ট সম্পাদনা করুন'
-      : lang === 'en'
-      ? '✍️ Write & Publish a Cox’s Bazar Blog Post'
-      : '✍️ নতুন কক্সবাজার ব্লগ পোস্ট লিখুন ও প্রকাশ করুন';
-  }
-
-  const titleInput = document.getElementById('blog-form-title');
-  const authorInput = document.getElementById('blog-form-author');
-  const categorySelect = document.getElementById('blog-form-category');
-  const readTimeInput = document.getElementById('blog-form-readtime');
-  const imageInput = document.getElementById('blog-form-image');
-  const tagsInput = document.getElementById('blog-form-tags');
-  const summaryInput = document.getElementById('blog-form-summary');
-  const contentInput = document.getElementById('blog-form-content');
-
-  if (titleInput) titleInput.value = existing ? getLocalizedField(existing.title, lang) : '';
-  if (authorInput) authorInput.value = existing ? existing.author || 'Anik Barua' : 'Anik Barua';
-  if (categorySelect) categorySelect.value = existing ? existing.category : 'Adventure & Routes';
-  if (readTimeInput) readTimeInput.value = existing ? existing.readTime || '3 min read' : '3 min read';
-  if (imageInput) imageInput.value = existing ? existing.image || 'assets/images/inani-beach.jpg' : 'assets/images/inani-beach.jpg';
-  if (tagsInput) tagsInput.value = existing && Array.isArray(existing.tags) ? existing.tags.join(', ') : 'Coxs Bazar, Travel Guide, Local Tips';
-  if (summaryInput) summaryInput.value = existing ? getLocalizedField(existing.summary, lang) : '';
-  if (contentInput) contentInput.value = existing ? getLocalizedField(existing.content, lang) : '';
-
-  renderBlogImagePresets(imageInput ? imageInput.value : 'assets/images/inani-beach.jpg');
-
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
-  setTimeout(() => titleInput?.focus(), 100);
-}
-
-function closeBlogEditorModal() {
-  const modal = document.getElementById('blog-editor-modal');
-  if (modal) {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-  }
-}
-
-function renderBlogImagePresets(activeUrl) {
-  const container = document.getElementById('blog-image-presets');
-  if (!container) return;
-
-  container.innerHTML = BLOG_PHOTO_PRESETS.map(preset => {
-    const isSelected = preset.url === activeUrl;
-    return `
-      <button
-        type="button"
-        onclick="selectBlogPresetImage('${preset.url}')"
-        class="p-1.5 rounded-xl border-2 flex items-center gap-2 text-left transition cursor-pointer ${
-          isSelected
-            ? 'bg-sky-950 text-white border-amber-400 shadow-xs'
-            : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-sky-300'
-        }"
-      >
-        <img src="${preset.url}" alt="${preset.label}" class="w-8 h-8 rounded-lg object-cover shrink-0 bg-slate-200" />
-        <span class="text-[11px] font-bold truncate">${preset.label}</span>
-      </button>
-    `;
-  }).join('');
-}
-
-function selectBlogPresetImage(url) {
-  const imageInput = document.getElementById('blog-form-image');
-  if (imageInput) imageInput.value = url;
-  renderBlogImagePresets(url);
-}
-
-function handleBlogImageFileUpload(event) {
-  const file = event.target?.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const dataUrl = e.target?.result;
-    if (typeof dataUrl === 'string') {
-      const imageInput = document.getElementById('blog-form-image');
-      if (imageInput) imageInput.value = dataUrl;
-      renderBlogImagePresets('');
-      showBlogToast('Cover photo uploaded from your device!');
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-function handleSaveBlogPostSubmit(event) {
-  if (event) event.preventDefault();
-  if (!isBlogAdminAuthenticated()) return;
-  const lang = getBlogLang();
-
-  const titleVal = (document.getElementById('blog-form-title')?.value || '').trim();
-  const authorVal = (document.getElementById('blog-form-author')?.value || 'Anik Barua').trim();
-  const categoryVal = (document.getElementById('blog-form-category')?.value || 'Adventure & Routes').trim();
-  const readTimeVal = (document.getElementById('blog-form-readtime')?.value || '3 min read').trim();
-  const imageVal = (document.getElementById('blog-form-image')?.value || 'assets/images/inani-beach.jpg').trim();
-  const tagsRaw = (document.getElementById('blog-form-tags')?.value || '').trim();
-  const summaryVal = (document.getElementById('blog-form-summary')?.value || '').trim();
-  const contentVal = (document.getElementById('blog-form-content')?.value || '').trim();
-
-  if (!titleVal || !contentVal) {
-    showBlogToast(
-      lang === 'en'
-        ? 'Please enter both a Blog Title and your Story Content!'
-        : 'অনুগ্রহ করে ব্লগের শিরোনাম এবং মূল লেখা দিন!'
-    );
-    return;
-  }
-
-  const autoSummary =
-    summaryVal ||
-    contentVal
-      .replace(/\s+/g, ' ')
-      .slice(0, 160)
-      .trim() + (contentVal.length > 160 ? '...' : '');
-
-  const tagsList = tagsRaw
-    ? tagsRaw
-        .split(',')
-        .map(t => t.trim().replace(/^#/, ''))
-        .filter(Boolean)
-    : ['Coxs Bazar', 'Travel Guide'];
-
-  const formattedDate = new Date().toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  });
-
-  if (BlogState.editingPostId) {
-    const idx = BlogState.posts.findIndex(p => p.id === BlogState.editingPostId);
-    if (idx >= 0) {
-      const existing = BlogState.posts[idx];
-      BlogState.posts[idx] = {
-        ...existing,
-        title: { en: titleVal, bn: titleVal },
-        author: authorVal,
-        category: categoryVal,
-        readTime: readTimeVal,
-        image: imageVal,
-        tags: tagsList,
-        summary: { en: autoSummary, bn: autoSummary },
-        content: { en: contentVal, bn: contentVal }
-      };
-    }
-    showBlogToast(lang === 'en' ? 'Blog post updated!' : 'ব্লগ পোস্ট আপডেট হয়েছে!');
-  } else {
-    const newPost = {
-      id: `blog-${Date.now()}`,
-      title: { en: titleVal, bn: titleVal },
-      author: authorVal,
-      date: formattedDate,
-      readTime: readTimeVal,
-      category: categoryVal,
-      image: imageVal,
-      likes: 1,
-      tags: tagsList,
-      summary: { en: autoSummary, bn: autoSummary },
-      content: { en: contentVal, bn: contentVal }
-    };
-    BlogState.posts.unshift(newPost);
-    BlogState.activeCategory = 'ALL';
-    showBlogToast(
-      lang === 'en'
-        ? '🎉 Your blog post is now published and live!'
-        : '🎉 আপনার নতুন ব্লগ পোস্ট সফলভাবে প্রকাশিত হয়েছে!'
-    );
-  }
-
-  saveBlogPosts();
-  closeBlogEditorModal();
-  renderBlogSection();
-}
-
-function deleteBlogPost(postId) {
-  if (!isBlogAdminAuthenticated()) {
-    showBlogToast('🔒 Administrator login required to delete blog posts.');
-    return;
-  }
-  const lang = getBlogLang();
-  const confirmMsg =
-    lang === 'en'
-      ? 'Are you sure you want to delete this blog post?'
-      : 'আপনি কি নিশ্চিতভাবে এই ব্লগ পোস্টটি মুছে ফেলতে চান?';
-  if (!confirm(confirmMsg)) return;
-
-  BlogState.posts = BlogState.posts.filter(p => p.id !== postId);
-  saveBlogPosts();
-  renderBlogSection();
-  showBlogToast(lang === 'en' ? 'Blog post deleted.' : 'ব্লগ পোস্ট মুছে ফেলা হয়েছে।');
-}
-
-function resetDefaultBlogs() {
-  BlogState.posts = JSON.parse(JSON.stringify(DEFAULT_BLOG_POSTS));
-  saveBlogPosts();
-  renderBlogSection();
-  showBlogToast('Restored default Cox’s Bazar blog posts!');
-}
-
 function showBlogToast(message) {
   if (typeof showUserToast === 'function') {
     showUserToast(message);
@@ -959,7 +619,7 @@ function showBlogToast(message) {
 }
 
 /* --------------------------------------------------------------------------
- * 5. ENSURE READER & EDITOR MODALS EXIST IN DOM & INITIALIZE
+ * 4. ENSURE THE READER MODAL EXISTS IN DOM & INITIALIZE
  * -------------------------------------------------------------------------- */
 function ensureBlogModalsInDOM() {
   if (!document.getElementById('blog-reader-modal')) {
@@ -978,176 +638,6 @@ function ensureBlogModalsInDOM() {
     });
     document.body.appendChild(readerModal);
   }
-
-  if (!document.getElementById('blog-editor-modal')) {
-    const editorModal = document.createElement('div');
-    editorModal.id = 'blog-editor-modal';
-    editorModal.className =
-      'hidden fixed inset-0 z-[88] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-3 sm:p-6';
-    editorModal.innerHTML = `
-      <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
-        <!-- Modal Header -->
-        <div class="bg-gradient-to-r from-ocean-950 via-ocean-900 to-teal-900 text-white px-6 py-4 flex items-center justify-between">
-          <div>
-            <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-300 block">
-              COX’S BAZAR COMMUNITY & INSIDER BLOG
-            </span>
-            <h3 id="blog-editor-modal-title" class="text-lg font-extrabold">
-              ✍️ Write & Publish a Cox’s Bazar Blog Post
-            </h3>
-          </div>
-          <button
-            type="button"
-            onclick="closeBlogEditorModal()"
-            class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer"
-          >
-            ✕
-          </button>
-        </div>
-
-        <!-- Modal Form Body -->
-        <form onsubmit="handleSaveBlogPostSubmit(event)" class="p-6 overflow-y-auto flex-1 space-y-4">
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-              Blog Post Title *
-            </label>
-            <input
-              id="blog-form-title"
-              type="text"
-              required
-              placeholder="e.g., My 3-Day Marine Drive Bike & Inani Coral Beach Guide"
-              class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-                Category
-              </label>
-              <select
-                id="blog-form-category"
-                class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-bold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
-              >
-                <option value="Adventure & Routes">🏍️ Adventure & Routes</option>
-                <option value="Food & Seafood">🍛 Food & Seafood</option>
-                <option value="Island Hopping">🏝️ Island Hopping</option>
-                <option value="Local Tips & Safety">💡 Local Tips & Safety</option>
-                <option value="Hotel & Stay Guide">🏨 Hotel & Stay Guide</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-                Author Name
-              </label>
-              <input
-                id="blog-form-author"
-                type="text"
-                value="Anik Barua"
-                placeholder="Your Name"
-                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              />
-            </div>
-
-            <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-                Read Time
-              </label>
-              <input
-                id="blog-form-readtime"
-                type="text"
-                value="3 min read"
-                placeholder="e.g. 4 min read"
-                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              />
-            </div>
-          </div>
-
-          <!-- Cover Photo Picker (Presets + Upload from Device + Custom URL) -->
-          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600">
-                🖼️ Choose Cover Photo (Pick Preset, Upload, or Paste URL)
-              </label>
-              <label class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-extrabold cursor-pointer transition">
-                <span>📤 Upload Photo</span>
-                <input type="file" accept="image/*" onchange="handleBlogImageFileUpload(event)" class="hidden" />
-              </label>
-            </div>
-
-            <div id="blog-image-presets" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5"></div>
-
-            <input
-              id="blog-form-image"
-              type="text"
-              value="assets/images/inani-beach.jpg"
-              placeholder="Or paste an image URL..."
-              class="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
-
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-              Short Summary / Intro (Optional — Auto-generated if left blank)
-            </label>
-            <input
-              id="blog-form-summary"
-              type="text"
-              placeholder="Brief 1-2 sentence teaser shown on the blog card..."
-              class="w-full px-4 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
-
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-              Full Blog Story / Information *
-            </label>
-            <textarea
-              id="blog-form-content"
-              rows="7"
-              required
-              placeholder="Write your full Cox's Bazar travel guide, experience, hotel review, or local tips here..."
-              class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm text-slate-800 leading-relaxed focus:outline-none focus:ring-2 focus:ring-sky-500"
-            ></textarea>
-          </div>
-
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-1">
-              Tags (Comma separated)
-            </label>
-            <input
-              id="blog-form-tags"
-              type="text"
-              value="Coxs Bazar, Travel Guide, Local Tips"
-              placeholder="e.g. Marine Drive, Inani, Seafood, Budget"
-              class="w-full px-4 py-2 rounded-xl border border-slate-300 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
-
-          <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-3">
-            <button
-              type="button"
-              onclick="closeBlogEditorModal()"
-              class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold shadow-md transition cursor-pointer"
-            >
-              🚀 Publish Blog Post
-            </button>
-          </div>
-        </form>
-      </div>
-    `;
-    editorModal.addEventListener('click', e => {
-      if (e.target === editorModal) closeBlogEditorModal();
-    });
-    document.body.appendChild(editorModal);
-  }
 }
 
 function initBlogModule() {
@@ -1162,8 +652,6 @@ function initBlogModule() {
     if (matched) {
       setTimeout(() => openBlogReaderModal(matched.id), 250);
     }
-  } else if (window.location.hash === '#write-blog') {
-    setTimeout(() => openBlogEditorModal(null), 250);
   }
 }
 

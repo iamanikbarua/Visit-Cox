@@ -17,6 +17,18 @@ local_refs() { # every src/href to a local file in *.html must exist
     while read -r p; do [ -e "$p" ] || echo "missing: $p"; done)
   [ -z "$bad" ] || { echo "$bad"; return 1; }
 }
+json_ld() { # every <script type="application/ld+json"> block must be valid JSON
+  node -e '
+    const fs = require("fs"); let bad = 0, n = 0;
+    for (const f of fs.readdirSync(".").filter((f) => f.endsWith(".html"))) {
+      const re = /<script[^>]*type=["\x27]application\/ld\+json["\x27][^>]*>([\s\S]*?)<\/script>/gi;
+      for (const m of fs.readFileSync(f, "utf8").matchAll(re)) {
+        n++;
+        try { JSON.parse(m[1]); } catch (e) { bad++; console.log(`${f}: ${e.message}`); }
+      }
+    }
+    console.log(`${n} json-ld blocks, ${bad} invalid`); process.exit(bad ? 1 : 0);'
+}
 stray() {
   local f; f=$(find . -path ./.git -prune -o \( -name '*-e' -o -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o -name '.DS_Store' \) -print)
   [ -z "$f" ] || { echo "$f"; return 1; }
@@ -27,6 +39,7 @@ secrets() { # public repo: no credentials in shipped or tracked files
 step "js syntax" syntax
 step "tests (node --test)" tests
 step "local links and assets" local_refs
+step "json-ld" json_ld
 step "stray files" stray
 step "no secrets" secrets
 echo; printf '%-26s | %s\n' step result; printf '%-26s-+-%s\n' "--------------------------" ------

@@ -1,98 +1,47 @@
 /**
- * Visit Cox — "Quick Trip Pick" Hero Widget Engine (suggest.bike inspired)
- * Powers the real-time budget slider, vibe chips, and instant trip ranking on index.html
+ * Visit Cox — "Quick Trip Pick" hero widget on index.html: budget slider, vibe chips, trip ranking.
+ * Needs js/planner.js (PlannerApp.estimate); loads it on demand if the page did not include it.
  */
 
 const QuickTripPick = (function () {
+  // Each card is a planner link. Total, hotel and party size come from PlannerApp.estimate(linkParams),
+  // the same formula itinerary.html runs for that link (planner.js must be loaded first).
   const tripDatabase = [
-    {
-      id: "classic-escape",
-      vibe: "relaxing",
-      minBudget: 15000,
-      maxBudget: 28000,
-      duration: "3 Days / 2 Nights",
-      title: "Classic Coastal Escape",
-      tagline: "Hotel Sea Crown Seafront AC • Inani Coral Walk • Poushee Feast",
-      totalBDT: 19500,
-      perPersonBDT: 9750,
-      pax: 2,
-      badge: "Most Popular",
-      linkParams: "days=3&vibe=relaxing&tier=comfort"
-    },
-    {
-      id: "weekend-thrill",
-      vibe: "adventure",
-      minBudget: 12000,
-      maxBudget: 22000,
-      duration: "2 Days / 1 Night",
-      title: "Weekend Waves & Thrills",
-      tagline: "Prime Park Hotel • Tandem Parasailing • Sugandha Night BBQ",
-      totalBDT: 15200,
-      perPersonBDT: 7600,
-      pax: 2,
-      badge: "High Adrenaline",
-      linkParams: "days=2&vibe=adventure&tier=comfort"
-    },
-    {
-      id: "family-holiday",
-      vibe: "family",
-      minBudget: 22000,
-      maxBudget: 45000,
-      duration: "3 Days / 2 Nights",
-      title: "Stress-Free Family Safari",
-      tagline: "Sea Pearl Family Suite • Radiant Fish World • Safe Waves",
-      totalBDT: 28500,
-      perPersonBDT: 7125,
-      pax: 4,
-      badge: "Family Friendly",
-      linkParams: "days=3&vibe=family&tier=comfort"
-    },
-    {
-      id: "romantic-haven",
-      vibe: "romantic",
-      minBudget: 28000,
-      maxBudget: 70000,
-      duration: "3 Days / 2 Nights",
-      title: "Oceanview Romance & Sunset",
-      tagline: "Sayeman Beachfront Infinity Pool • Mermaid Twilight Dinner",
-      totalBDT: 34000,
-      perPersonBDT: 17000,
-      pax: 2,
-      badge: "5-Star Luxury",
-      linkParams: "days=3&vibe=romantic&tier=luxury"
-    },
-    {
-      id: "seafood-safari",
-      vibe: "foodie",
-      minBudget: 10000,
-      maxBudget: 25000,
-      duration: "2 Days / 1 Night",
-      title: "10-Item Bhorta & Live Catch Tour",
-      tagline: "Poushee Feast • Fresh Charcoal Rupchanda • Dry Fish Market",
-      totalBDT: 13500,
-      perPersonBDT: 6750,
-      pax: 2,
-      badge: "Foodie Choice",
-      linkParams: "days=2&vibe=foodie&tier=comfort"
-    },
-    {
-      id: "backpacker-odyssey",
-      vibe: "relaxing",
-      minBudget: 6000,
-      maxBudget: 14000,
-      duration: "3 Days / 2 Nights",
-      title: "Smart Saver Coastal Trek",
-      tagline: "Clean AC Guest House • Local Rice & Bhorta • Marine Drive Bus",
-      totalBDT: 8500,
-      perPersonBDT: 4250,
-      pax: 2,
-      badge: "Budget Saver",
-      linkParams: "days=3&vibe=relaxing&tier=backpacker"
-    }
+    { id: "classic-escape", vibe: "relaxing", title: "Classic Coastal Escape", badge: "Most Popular",
+      linkParams: "days=3&tier=comfort&arc=quiet_coral" },
+    { id: "weekend-thrill", vibe: "adventure", title: "Weekend Waves & Thrills", badge: "High Adrenaline",
+      linkParams: "days=2&tier=comfort&arc=wave_hunter" },
+    { id: "family-holiday", vibe: "family", title: "Stress-Free Family Safari", badge: "Family Friendly",
+      linkParams: "days=3&adults=2&kids=2&tier=comfort&arc=family_leader" },
+    { id: "romantic-haven", vibe: "romantic", title: "Oceanview Romance & Sunset", badge: "5-Star",
+      linkParams: "days=3&tier=luxury&arc=ocean_romance" },
+    { id: "seafood-safari", vibe: "foodie", title: "Bhorta & Live Catch Tour", badge: "Foodie Choice",
+      linkParams: "days=2&tier=comfort&arc=foodie_hunter" },
+    { id: "backpacker-odyssey", vibe: "relaxing", title: "Smart Saver Coastal Trek", badge: "Budget Saver",
+      linkParams: "days=3&tier=backpacker&arc=quiet_coral" }
   ];
 
   let currentBudget = 22000;
   let currentVibe = "all";
+  let priced = null;
+  let plannerRequested = false;
+
+  // index.html may not include planner.js; fetch it once rather than show numbers from a second formula.
+  function ensurePlanner() {
+    if (typeof PlannerApp !== "undefined" || plannerRequested) return;
+    plannerRequested = true;
+    const s = document.createElement("script");
+    s.src = "js/planner.js";
+    s.onload = render;
+    document.head.appendChild(s);
+  }
+
+  function pricedTrips() {
+    if (!priced && typeof PlannerApp !== "undefined") {
+      priced = tripDatabase.map(t => Object.assign({}, t, PlannerApp.estimate(t.linkParams)));
+    }
+    return priced;
+  }
 
   function render() {
     // 1. Update budget display
@@ -107,27 +56,26 @@ const QuickTripPick = (function () {
       perPersonEl.textContent = `≈ ৳${pp.toLocaleString('en-IN')}/person for 2 guests`;
     }
 
-    // 2. Filter & rank recommendations
-    let matches = tripDatabase.filter(trip => {
-      const matchesVibe = currentVibe === "all" || trip.vibe === currentVibe;
-      const budgetDiff = Math.abs(trip.totalBDT - currentBudget);
-      return matchesVibe && budgetDiff <= 15000;
-    });
-
-    if (matches.length === 0) {
-      matches = tripDatabase.slice(0, 2);
+    const listContainer = document.getElementById("qp-recommendations-list");
+    const trips = pricedTrips();
+    if (!trips) {
+      ensurePlanner();
+      return;
     }
 
-    // Sort by proximity to chosen budget
-    matches.sort((a, b) => Math.abs(a.totalBDT - currentBudget) - Math.abs(b.totalBDT - currentBudget));
-    const topMatches = matches.slice(0, 2);
+    // 2. Filter & rank recommendations by distance from the chosen budget
+    const gap = trip => Math.abs(trip.budget.totalBDT - currentBudget);
+    let matches = trips.filter(trip => (currentVibe === "all" || trip.vibe === currentVibe) && gap(trip) <= 15000);
+    if (matches.length === 0) matches = trips.slice(0, 2);
+    const topMatches = matches.sort((a, b) => gap(a) - gap(b)).slice(0, 2);
 
-    // 3. Render HTML
-    const listContainer = document.getElementById("qp-recommendations-list");
+    // 3. Render HTML (catalog text escaped with the planner's helper)
     if (listContainer) {
-      listContainer.innerHTML = topMatches.map((trip, idx) => `
+      listContainer.innerHTML = topMatches.map((trip, idx) => {
+        const guests = trip.adults + trip.kids;
+        return `
         <a 
-          href="itinerary.html?${trip.linkParams}&budget=${currentBudget}" 
+          href="itinerary.html?${trip.linkParams}" 
           class="group block p-3 rounded-2xl bg-stone-50 hover:bg-stone-100 border border-stone-200/80 hover:border-charcoal transition"
         >
           <div class="flex items-start justify-between gap-2">
@@ -137,24 +85,25 @@ const QuickTripPick = (function () {
               </span>
               <div>
                 <h4 class="text-xs sm:text-sm font-bold text-charcoal group-hover:text-terracotta-600 transition">
-                  ${trip.title}
+                  ${plannerEsc(trip.title)}
                 </h4>
                 <p class="text-[11px] text-stone-500 font-mono mt-0.5">
-                  ${trip.tagline}
+                  ${plannerEsc(trip.hotel ? trip.hotel.name : '')} • ${trip.days} days • ${guests} guests
                 </p>
               </div>
             </div>
             <div class="text-right shrink-0">
               <span class="text-xs font-bold text-charcoal font-mono block">
-                ৳${trip.totalBDT.toLocaleString('en-IN')}
+                ৳${trip.budget.totalBDT.toLocaleString('en-IN')}
               </span>
               <span class="text-[10px] text-stone-400 font-mono block">
-                ~৳${trip.perPersonBDT.toLocaleString('en-IN')}/pax
+                ~৳${trip.budget.perPersonBDT.toLocaleString('en-IN')}/pax
               </span>
             </div>
           </div>
         </a>
-      `).join('');
+      `;
+      }).join('');
     }
   }
 

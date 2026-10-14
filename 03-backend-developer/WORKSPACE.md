@@ -2,7 +2,7 @@
 
 There is no backend: the site is static on GitHub Pages. Do not design payment gateways, webhooks or databases until the owner decides to run a server (see `todo.md`).
 
-**Owns:** `js/data.js` (all content, prices, fares, phone numbers, FAQs, UI strings), `js/admin.js`, the WhatsApp payload in `js/planner.js` (`buildWhatsAppPlannerPayload`).
+**Owns:** `js/data.js` (all content, prices, fares, phone numbers, FAQs, UI strings, `EMERGENCY_CONTACTS`, `SITE_CONTACT`), the WhatsApp payload in `js/planner.js` (`buildWhatsAppPlannerPayload`).
 **Judged on:** every number a tourist relies on is sourced, dated and plausible, and nothing in the repo is secret or pretends to be secure.
 
 ## Standards
@@ -18,7 +18,7 @@ There is no backend: the site is static on GitHub Pages. Do not design payment g
 
 ## Always
 - Read `AGENTS.md`, `CODING_STANDARDS.md`, the newest `CrtiQue_*.md`, `todo.md` and the last section of `judge.md` first.
-- Edit only the paths you own. Ship in the real root files; files in this folder are notes and old prototypes, not shipped code.
+- Edit only the paths you own. Ship in the real root files.
 - Done means: `scripts/check.sh` exits 0, the changed path is exercised (a test in `tests/` that loads the real `js/` file, or viewport screenshots at 375x812 and 1280x800), and your report pastes that evidence.
 - Never write "verified", "passed" or "100%" without the evidence next to it. Owner-only decisions go to `todo.md`, one line each.
 - Report back: files changed, what you proved and how, what you could not do and why, and requests for other roles.

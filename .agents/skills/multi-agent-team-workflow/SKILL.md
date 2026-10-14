@@ -13,8 +13,8 @@ Ownership is in the `AGENTS.md` map and each `0N-*/WORKSPACE.md`. Two agents nev
 | Role | Folder | Owns |
 |---|---|---|
 | UI/UX | `01-uiux-designer/` | `css/styles.css`, visual markup |
-| Frontend | `02-frontend-developer/` | `js/app.js`, `js/features.js`, `js/planner.js`, `js/quickpick.js`, blog rendering |
-| Data and integrations | `03-backend-developer/` | `js/data.js`, `js/admin.js`, WhatsApp payload |
+| Frontend | `02-frontend-developer/` | `js/app.js`, `js/planner.js`, `js/quickpick.js`, blog rendering |
+| Data and integrations | `03-backend-developer/` | `js/data.js`, WhatsApp payload |
 | QA | `04-qa-engineer/` | `tests/`, `scripts/check.sh` |
 | SEO | `05-seo-specialist/` | `<head>` of pages, `sitemap.xml`, `robots.txt` |
 | Marketing | `06-marketing-manager/` | user-facing copy, `todo.md` GTM items |

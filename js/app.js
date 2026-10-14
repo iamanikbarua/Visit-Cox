@@ -9,12 +9,39 @@
  *  4. Dynamic Rendering of Hotels, Sightseeing, Hidden Gems, Transport & Info
  *  5. Hero Quick Search & Live Category/Location Filtering
  *  6. Interactive FAQ Accordion
- *  7. Floating Chatbot ("Cox's Bazar Travel Assistant") with AI Backend Hook
+ *  7. Floating Chatbot ("Cox's Bazar Travel Assistant"), keyword-matched answers from data.js
  */
 
+// Storage can throw (blocked/private mode) or hold stale values: read through a whitelist.
+function readPref(key, allowed, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    return allowed.includes(v) ? v : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function savePref(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    /* storage unavailable: the choice lasts for this page view only */
+  }
+}
+
+function escapeHTML(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const AppState = {
-  lang: (typeof localStorage !== 'undefined' && localStorage.getItem('visit_cox_lang')) || CONFIG.defaultLang,
-  currency: (typeof localStorage !== 'undefined' && localStorage.getItem('visit_cox_currency')) || CONFIG.defaultCurrency,
+  lang: readPref('visit_cox_lang', ['en', 'bn'], CONFIG.defaultLang),
+  currency: readPref('visit_cox_currency', ['BDT', 'USD'], CONFIG.defaultCurrency),
   hotelFilter: 'ALL',            // Legacy spot filter alias
   hotelStarFilter: 'ALL',        // 'ALL' | 5 | 4 | 3 | 2
   hotelPriceFilter: 'ALL',       // 'ALL' | 'budget' | 'mid' | 'luxury'
@@ -73,19 +100,15 @@ function formatPriceRange(minBDT, maxBDT) {
  * LANGUAGE & CURRENCY TOGGLE HANDLERS
  * -------------------------------------------------------------------------- */
 function toggleLanguage(targetLang) {
-  AppState.lang = targetLang || (AppState.lang === 'en' ? 'bn' : 'en');
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('visit_cox_lang', AppState.lang);
-  }
+  AppState.lang = targetLang === 'en' || targetLang === 'bn' ? targetLang : AppState.lang === 'en' ? 'bn' : 'en';
+  savePref('visit_cox_lang', AppState.lang);
   document.documentElement.lang = AppState.lang;
   renderAll();
 }
 
 function toggleCurrency(targetCurr) {
-  AppState.currency = targetCurr || (AppState.currency === 'BDT' ? 'USD' : 'BDT');
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('visit_cox_currency', AppState.currency);
-  }
+  AppState.currency = targetCurr === 'BDT' || targetCurr === 'USD' ? targetCurr : AppState.currency === 'BDT' ? 'USD' : 'BDT';
+  savePref('visit_cox_currency', AppState.currency);
   renderAll();
 }
 
@@ -185,24 +208,6 @@ function renderStaticText() {
   setText('search-opt-transport', t.hero.searchCategoryTransport);
   setText('hero-search-btn-text', t.hero.searchBtn);
 
-  // Hero Stats (Interactive Glass Cards)
-  const statsContainer = document.getElementById('hero-stats-grid');
-  if (statsContainer) {
-    const statTargets = ['#hotels', '#destinations', '#hidden-gems-grid', '#activities-section'];
-    statsContainer.innerHTML = t.hero.stats
-      .map(
-        (stat, idx) => `
-        <a
-          href="${statTargets[idx] || '#destinations'}"
-          class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/15 hover:border-amber-300/50 rounded-2xl p-3.5 sm:p-4 text-center transition transform hover:-translate-y-1 shadow-lg"
-        >
-          <div class="text-xl sm:text-2xl md:text-3xl font-extrabold text-amber-300 tracking-tight">${stat.value}</div>
-          <div class="text-[11px] sm:text-xs md:text-sm text-sky-100 mt-1 font-medium">${stat.label}</div>
-        </a>
-      `
-      )
-      .join('');
-  }
 
   // Section Headers & Hotel Filter Hub
   setText('hotels-eyebrow', t.hotelsSection.eyebrow);
@@ -603,7 +608,7 @@ function renderHotels() {
   if (counterEl) {
     const starTxt = AppState.hotelStarFilter !== 'ALL' ? ` [${AppState.hotelStarFilter}★]` : '';
     counterEl.textContent = isBn
-      ? `${formatNumber(filteredHotels.length, 'bn')}টি ভেরিফাইড হোটেল${starTxt} • মোট ১২টির মধ্যে • বামে-ডানে স্লাইড করুন ← →`
+      ? `${formatNumber(filteredHotels.length, 'bn')}টি হোটেল${starTxt} • মোট ${formatNumber(HOTELS_DATA.length, 'bn')}টির মধ্যে • বামে-ডানে স্লাইড করুন ← →`
       : `Showing ${filteredHotels.length} of ${HOTELS_DATA.length} Hotels${starTxt} • Swipe or Click Arrows ← →`;
   }
 
@@ -618,47 +623,47 @@ function renderHotels() {
             <svg class="w-3 h-3 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
             </svg>
-            ${item}
+            ${escapeHTML(item)}
           </span>
         `
         )
         .join('');
 
       const starStars = '★'.repeat(hotel.stars || 3);
-      const starLabel = hotel.starLabel ? hotel.starLabel[AppState.lang] : `${hotel.stars}-Star`;
+      const starLabel = hotel.starLabel ? hotel.starLabel[AppState.lang] : `${escapeHTML(hotel.stars)}-Star`;
       const spotName = hotel.spotName ? hotel.spotName[AppState.lang] : hotel.location[AppState.lang];
 
       return `
         <article
           data-hotel-slide-index="${idx}"
           class="stay-card group flex flex-col justify-between cursor-pointer"
-          onclick="openHotelFacilitiesModal('${hotel.id}')"
+          onclick="openHotelFacilitiesModal('${escapeHTML(hotel.id)}')"
         >
           <div>
             <div class="relative overflow-hidden bg-stone-100">
               <img
-                src="${hotel.image}"
-                alt="${hotel.name[AppState.lang]}"
+                src="${escapeHTML(hotel.image)}"
+                alt="${escapeHTML(hotel.name[AppState.lang])}"
                 loading="lazy"
                 decoding="async"
                 class="stay-img"
               />
               <div class="absolute top-3 left-3">
                 <span class="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider uppercase bg-white/95 text-charcoal backdrop-blur-sm border border-stone-200/80 shadow-xs">
-                  ${hotel.stars}★ ${hotel.starLabel ? hotel.starLabel[AppState.lang] : ''}
+                  ${escapeHTML(hotel.stars)}★ ${hotel.starLabel ? escapeHTML(hotel.starLabel[AppState.lang]) : ''}
                 </span>
               </div>
               <div class="absolute bottom-3 left-3 text-[11px] font-mono text-white bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-full">
-                ${spotName}
+                ${escapeHTML(spotName)}
               </div>
             </div>
 
             <div class="p-5">
               <h3 class="font-serif text-xl sm:text-2xl text-charcoal font-normal group-hover:text-terracotta-600 transition leading-snug">
-                ${hotel.name[AppState.lang]}
+                ${escapeHTML(hotel.name[AppState.lang])}
               </h3>
               <p class="text-xs text-stone-500 mt-2 line-clamp-2 leading-relaxed font-normal">
-                ${hotel.description[AppState.lang]}
+                ${escapeHTML(hotel.description[AppState.lang])}
               </p>
             </div>
           </div>
@@ -675,7 +680,7 @@ function renderHotels() {
               </div>
               <button
                 type="button"
-                onclick="event.stopPropagation(); openHotelFacilitiesModal('${hotel.id}')"
+                onclick="event.stopPropagation(); openHotelFacilitiesModal('${escapeHTML(hotel.id)}')"
                 class="px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal hover:bg-charcoal hover:text-white transition cursor-pointer"
               >
                 ${isBn ? 'বুকিং ➔' : 'Reserve ➔'}
@@ -799,14 +804,7 @@ function startHotelAutoSlide() {
   }, 4200);
 }
 
-function toggleHotelAutoSlide() {
-  hotelAutoSlideEnabled = !hotelAutoSlideEnabled;
-  updateHotelAutoSlideUI();
-}
 
-function pauseHotelAutoSlide(isPaused) {
-  hotelSliderHoverPaused = Boolean(isPaused);
-}
 
 function updateHotelAutoSlideUI() {
   const iconEl = document.getElementById('hotel-autoplay-icon');
@@ -848,9 +846,6 @@ function setHotelSpotFilter(spotVal) {
   if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
-function setHotelFilter(locationKey) {
-  setHotelSpotFilter(locationKey);
-}
 
 function setHotelFacilityFilter(facVal) {
   AppState.hotelFacilityFilter = facVal === AppState.hotelFacilityFilter ? 'ALL' : facVal;
@@ -921,7 +916,7 @@ function openHotelFacilitiesModal(hotelId) {
           ✓
         </span>
         <span class="text-xs sm:text-sm font-medium text-slate-800 leading-snug">
-          ${fac}
+          ${escapeHTML(fac)}
         </span>
       </div>
     `
@@ -932,7 +927,7 @@ function openHotelFacilitiesModal(hotelId) {
     .map(
       a => `
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-800 border border-sky-200">
-        <span class="text-teal-600">★</span> ${a}
+        <span class="text-teal-600">★</span> ${escapeHTML(a)}
       </span>
     `
     )
@@ -947,20 +942,9 @@ function openHotelFacilitiesModal(hotelId) {
         <p class="text-[11px] text-slate-500 mt-1">${isBn ? '* মৌসুমি চাহিদা ও রুম ক্যাটাগরি অনুযায়ী ভাড়া কম-বেশি হতে পারে' : '* Rates vary by room category, sea-facing view, and high/low seasons'}</p>
       </div>
       <div class="flex items-center gap-2">
-        <button
-          type="button"
-          onclick="if(typeof selectItineraryHotel==='function') { selectItineraryHotel('${hotel.id}', true); closeHotelFacilitiesModal(); }"
-          class="px-4 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs cursor-pointer ${
-            typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
-              ? 'bg-emerald-600 text-white'
-              : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
-          }">
-          ${
-            typeof FeaturesState !== 'undefined' && FeaturesState.selectedHotelId === hotel.id
-              ? (isBn ? '✓ প্ল্যানে সংরক্ষিত' : '✓ In My Trip Plan')
-              : (isBn ? '+ আমার ট্রিপে নিন' : '+ Add to Trip Plan')
-          }
-        </button>
+        <a href="itinerary.html" class="px-4 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs bg-amber-400 hover:bg-amber-300 text-slate-950">
+          ${isBn ? 'ট্রিপ প্ল্যান করুন' : 'Plan a Trip'}
+        </a>
       </div>
     </div>
 
@@ -970,7 +954,7 @@ function openHotelFacilitiesModal(hotelId) {
         ${isBn ? 'হোটেল পরিচিতি' : 'Property Overview'}
       </h4>
       <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200/70">
-        ${hotel.description[AppState.lang]}
+        ${escapeHTML(hotel.description[AppState.lang])}
       </p>
     </div>
 
@@ -984,14 +968,14 @@ function openHotelFacilitiesModal(hotelId) {
       </div>
     </div>
 
-    <!-- Verified Detailed Facilities List -->
+    <!-- Detailed Facilities List -->
     <div>
       <div class="flex items-center justify-between mb-3">
         <h4 class="text-xs font-extrabold uppercase tracking-wider text-teal-800">
-          ✨ ${isBn ? 'পূর্ণাঙ্গ সুযোগ-সুবিধা ও গেস্ট সার্ভিস' : 'Verified Facilities & Guest Services'}
+          ✨ ${isBn ? 'পূর্ণাঙ্গ সুযোগ-সুবিধা ও গেস্ট সার্ভিস' : 'Facilities & Guest Services'}
         </h4>
         <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
-          ${facilitiesList.length} ${isBn ? 'টি সুবিধা' : 'Verified Features'}
+          ${facilitiesList.length} ${isBn ? 'টি সুবিধা' : 'Listed Features'}
         </span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -1005,16 +989,16 @@ function openHotelFacilitiesModal(hotelId) {
       <div class="flex flex-wrap items-center gap-2">
         ${
           hotel.phone
-            ? `<a href="tel:${hotel.phone.replace(/\s+/g, '')}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition shadow-xs">
+            ? `<a href="tel:${escapeHTML(hotel.phone.replace(/\s+/g, ''))}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition shadow-xs">
                 <span>☎</span>
-                <span>${isBn ? 'হটলাইনে কল' : 'Call'} ${hotel.phone}</span>
+                <span>${isBn ? 'হটলাইনে কল' : 'Call'} ${escapeHTML(hotel.phone)}</span>
               </a>`
             : ''
         }
         ${
           hotel.sourceUrl
-            ? `<a href="${hotel.sourceUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-300 transition">
-                <span>🌐 ${isBn ? 'অফিশিয়াল সাইট' : 'Official Site'}</span>
+            ? `<a href="${escapeHTML(hotel.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-300 transition">
+                <span>🌐 ${isBn ? 'ওয়েবসাইট' : 'Website'}</span>
                 <span>↗</span>
               </a>`
             : ''
@@ -1022,13 +1006,6 @@ function openHotelFacilitiesModal(hotelId) {
       </div>
 
       <div class="flex items-center gap-2">
-        <button
-          type="button"
-          onclick="closeHotelFacilitiesModal(); openHotelInquiry('${hotel.id}');"
-          class="px-4 py-2 rounded-xl bg-ocean-950 hover:bg-sky-800 text-white text-xs font-bold transition shadow-sm cursor-pointer"
-        >
-          💬 ${isBn ? 'সহকারীর কাছে জানুন' : 'Ask AI Assistant'}
-        </button>
         <button
           type="button"
           onclick="closeHotelFacilitiesModal()"
@@ -1052,23 +1029,6 @@ function closeHotelFacilitiesModal() {
     modal.classList.remove('flex');
     document.body.style.overflow = '';
   }
-}
-
-function openHotelInquiry(hotelId) {
-  const hotel = HOTELS_DATA.find(h => h.id === hotelId);
-  if (!hotel) return;
-  const price = formatPriceRange(hotel.minBDT, hotel.maxBDT);
-
-  // Open Chatbot with pre-filled context about the selected hotel
-  if (!AppState.isChatOpen) {
-    toggleChatbot(true);
-  }
-  const promptText =
-    AppState.lang === 'en'
-      ? `Tell me more about ${hotel.name.en} at ${hotel.location.en} (${price}/night).`
-      : `${hotel.name.bn} (${hotel.location.bn}, ভাড়া: ${price}) সম্পর্কে বিস্তারিত জানান।`;
-
-  handleUserChatSubmission(promptText);
 }
 
 /* --------------------------------------------------------------------------
@@ -1133,21 +1093,20 @@ function renderDestinations() {
       >
         <div class="relative h-60 overflow-hidden bg-slate-200">
           <img
-            src="${spot.image}"
-            alt="${spot.name[AppState.lang]}"
+            src="${escapeHTML(spot.image)}"
+            alt="${escapeHTML(spot.name[AppState.lang])}"
             loading="lazy"
             decoding="async"
             class="card-img w-full h-full object-cover"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
           <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold bg-amber-400 text-slate-950 shadow">
-            ${spot.tag[AppState.lang]}
+            ${escapeHTML(spot.tag[AppState.lang])}
           </span>
           <div class="absolute top-4 right-4">
-            ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('destinations', spot.id) : ''}
           </div>
           <h3 class="absolute bottom-4 left-5 right-5 text-xl font-bold text-white drop-shadow-sm">
-            ${spot.name[AppState.lang]}
+            ${escapeHTML(spot.name[AppState.lang])}
           </h3>
         </div>
 
@@ -1162,7 +1121,7 @@ function renderDestinations() {
               </div>
               <div>
                 <span class="block text-xs font-bold uppercase tracking-wider text-teal-700">${t.vibeLabel}</span>
-                <p class="text-slate-700 text-sm font-medium mt-0.5">${spot.vibe[AppState.lang]}</p>
+                <p class="text-slate-700 text-sm font-medium mt-0.5">${escapeHTML(spot.vibe[AppState.lang])}</p>
               </div>
             </div>
 
@@ -1175,7 +1134,7 @@ function renderDestinations() {
               </div>
               <div>
                 <span class="block text-xs font-bold uppercase tracking-wider text-sky-700">${t.directionsLabel}</span>
-                <p class="text-slate-600 text-sm mt-0.5">${spot.directions[AppState.lang]}</p>
+                <p class="text-slate-600 text-sm mt-0.5">${escapeHTML(spot.directions[AppState.lang])}</p>
               </div>
             </div>
           </div>
@@ -1183,18 +1142,17 @@ function renderDestinations() {
           <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs text-slate-400">
             ${
               spot.sourceUrl
-                ? `<a href="${spot.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-semibold">
-                    ✓ ${spot.sourceName || 'Wikimedia Commons'} ↗
+                ? `<a href="${escapeHTML(spot.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-semibold">
+                    ✓ ${escapeHTML(spot.sourceName || 'Wikimedia Commons')} ↗
                   </a>`
                 : '<span></span>'
             }
-            <button
-              type="button"
-              onclick="if(typeof addSpotFromWebsiteCard==='function') addSpotFromWebsiteCard('${spot.id}')"
+            <a
+              href="itinerary.html"
               class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-2xs shrink-0"
             >
-              ${AppState.lang === 'en' ? '+ Add to My Trip' : '+ ট্রিপ প্ল্যানে নিন'}
-            </button>
+              ${AppState.lang === 'en' ? 'Plan a Trip' : 'ট্রিপ প্ল্যান করুন'}
+            </a>
           </div>
         </div>
       </article>
@@ -1227,34 +1185,33 @@ function renderDestinations() {
             gem.image
               ? `<div class="relative h-44 overflow-hidden bg-slate-950">
                   <img
-                    src="${gem.image}"
-                    alt="${gem.name[AppState.lang]}"
+                    src="${escapeHTML(gem.image)}"
+                    alt="${escapeHTML(gem.name[AppState.lang])}"
                     loading="lazy"
                     decoding="async"
                     class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-500"
                   />
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent"></div>
                   <span class="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400 text-slate-950 shadow-xs">
-                    #${idx + 1} • ${gem.highlight[AppState.lang]}
+                    #${idx + 1} • ${escapeHTML(gem.highlight[AppState.lang])}
                   </span>
                 </div>`
               : ''
           }
           <div class="p-5">
-            <h4 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">${gem.name[AppState.lang]}</h4>
-            <p class="text-sky-100/90 text-xs sm:text-sm mt-2 leading-relaxed">${gem.description[AppState.lang]}</p>
+            <h4 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">${escapeHTML(gem.name[AppState.lang])}</h4>
+            <p class="text-sky-100/90 text-xs sm:text-sm mt-2 leading-relaxed">${escapeHTML(gem.description[AppState.lang])}</p>
           </div>
         </div>
         <div class="px-5 pb-5 pt-2 border-t border-white/10 flex items-center justify-between gap-2">
           ${
             gem.sourceUrl
-              ? `<a href="${gem.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-300 hover:text-amber-300 hover:underline font-semibold transition-colors">
+              ? `<a href="${escapeHTML(gem.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-300 hover:text-amber-300 hover:underline font-semibold transition-colors">
                   ✓ ${AppState.lang === 'en' ? 'Photo Source' : 'ছবির উৎস'} ↗
                 </a>`
               : '<span></span>'
           }
           <div class="flex items-center gap-1.5">
-            ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('hiddenGems', gem.id) : ''}
           </div>
         </div>
       </article>
@@ -1372,14 +1329,7 @@ function startDestinationAutoSlide() {
   }, 4600);
 }
 
-function toggleDestinationAutoSlide() {
-  destinationAutoSlideEnabled = !destinationAutoSlideEnabled;
-  updateDestinationAutoSlideUI();
-}
 
-function pauseDestinationAutoSlide(isPaused) {
-  destinationSliderHoverPaused = Boolean(isPaused);
-}
 
 function updateDestinationAutoSlideUI() {
   const iconEl = document.getElementById('destination-autoplay-icon');
@@ -1510,14 +1460,7 @@ function startHiddenGemsAutoSlide() {
   }, 4400);
 }
 
-function toggleHiddenGemsAutoSlide() {
-  hiddenGemsAutoSlideEnabled = !hiddenGemsAutoSlideEnabled;
-  updateHiddenGemsAutoSlideUI();
-}
 
-function pauseHiddenGemsAutoSlide(isPaused) {
-  hiddenGemsSliderHoverPaused = Boolean(isPaused);
-}
 
 function updateHiddenGemsAutoSlideUI() {
   const iconEl = document.getElementById('gems-autoplay-icon');
@@ -1578,14 +1521,14 @@ function renderActivities() {
         return `
           <button
             type="button"
-            onclick="setActivityFilter('${cat.key}')"
+            onclick="setActivityFilter('${escapeHTML(cat.key)}')"
             class="px-3.5 py-1.5 rounded-full text-xs font-bold transition shadow-2xs cursor-pointer ${
               isActive
                 ? 'bg-amber-400 text-slate-950 font-extrabold shadow-sm'
                 : 'bg-white hover:bg-amber-50 text-slate-700 border border-slate-200'
             }"
           >
-            ${cat.label}
+            ${escapeHTML(cat.label)}
           </button>
         `;
       })
@@ -1654,8 +1597,8 @@ function renderActivities() {
         >
           <div class="relative h-56 overflow-hidden bg-slate-900">
             <img
-              src="${act.image}"
-              alt="${nameText}"
+              src="${escapeHTML(act.image)}"
+              alt="${escapeHTML(nameText)}"
               loading="lazy"
               decoding="async"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -1671,11 +1614,11 @@ function renderActivities() {
                 : ''
             }
             <span class="absolute top-4 right-4 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/20 backdrop-blur-md text-white border border-white/20">
-              ${diffText}
+              ${escapeHTML(diffText)}
             </span>
             <div class="absolute bottom-3 left-5 right-5">
               <h3 class="text-xl font-extrabold text-white leading-tight drop-shadow-sm">
-                ${nameText}
+                ${escapeHTML(nameText)}
               </h3>
             </div>
           </div>
@@ -1689,23 +1632,23 @@ function renderActivities() {
                   <span class="text-base sm:text-lg font-black text-amber-950">${priceText}</span>
                 </div>
                 <span class="text-[11px] text-amber-800/80 font-medium text-right max-w-[150px] leading-tight">
-                  ${noteText}
+                  ${escapeHTML(noteText)}
                 </span>
               </div>
 
               <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                ${descText}
+                ${escapeHTML(descText)}
               </p>
 
               <!-- Key Info: Location & Duration -->
               <div class="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
                 <div class="space-y-0.5">
                   <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">${t.locationLabel}</span>
-                  <span class="font-bold text-slate-800 leading-tight block">${locText}</span>
+                  <span class="font-bold text-slate-800 leading-tight block">${escapeHTML(locText)}</span>
                 </div>
                 <div class="space-y-0.5">
                   <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">${t.durationLabel}</span>
-                  <span class="font-bold text-slate-800 leading-tight block">${durText}</span>
+                  <span class="font-bold text-slate-800 leading-tight block">${escapeHTML(durText)}</span>
                 </div>
               </div>
 
@@ -1718,7 +1661,7 @@ function renderActivities() {
                     .map(
                       item => `
                     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-medium">
-                      ✓ ${item}
+                      ✓ ${escapeHTML(item)}
                     </span>
                   `
                     )
@@ -1731,21 +1674,12 @@ function renderActivities() {
 
             <!-- Bottom Action Buttons -->
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onclick="inquireAboutActivity('${act.id}')"
-                class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-2xs text-center cursor-pointer"
+              <a
+                href="itinerary.html"
+                class="flex-1 py-2.5 px-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition shadow-2xs text-center"
               >
-                ${AppState.lang === 'en' ? '💬 Inquire with AI Guide' : '💬 গাইডের পরামর্শ নিন'}
-              </button>
-              <button
-                type="button"
-                onclick="addActivityToTrip('${act.id}')"
-                class="py-2.5 px-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition shadow-2xs shrink-0 cursor-pointer"
-                title="${t.addToTrip}"
-              >
-                ${t.addToTrip}
-              </button>
+                ${AppState.lang === 'en' ? 'Plan a Trip' : 'ট্রিপ প্ল্যান করুন'}
+              </a>
             </div>
           </div>
         </article>
@@ -1863,14 +1797,7 @@ function startActivityAutoSlide() {
   }, 4500);
 }
 
-function toggleActivityAutoSlide() {
-  activityAutoSlideEnabled = !activityAutoSlideEnabled;
-  updateActivityAutoSlideUI();
-}
 
-function pauseActivityAutoSlide(isPaused) {
-  activitySliderHoverPaused = Boolean(isPaused);
-}
 
 function updateActivityAutoSlideUI() {
   const iconEl = document.getElementById('activities-autoplay-icon');
@@ -1895,32 +1822,6 @@ function setActivityFilter(cat) {
   if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
-function inquireAboutActivity(actId) {
-  const act = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).find(a => a.id === actId);
-  if (!act) return;
-  const name = act.name[AppState.lang];
-  const prompt =
-    AppState.lang === 'en'
-      ? `Tell me details, price and safety guidelines for ${name}`
-      : `${name}-এর বিস্তারিত খরচ ও নিরাপত্তা নির্দেশাবলী জানান`;
-  toggleChatbot(true);
-  handleUserChatSubmission(prompt);
-}
-
-function addActivityToTrip(actId) {
-  const act = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).find(a => a.id === actId);
-  if (!act) return;
-  const toastMsg =
-    AppState.lang === 'en'
-      ? `Added "${act.name.en}" to your trip wishlist!`
-      : `"${act.name.bn}" আপনার ট্রিপ তালিকায় যোগ করা হয়েছে!`;
-  if (typeof showAdminToast === 'function') {
-    showAdminToast(toastMsg);
-  } else {
-    alert(toastMsg);
-  }
-}
-
 /* --------------------------------------------------------------------------
  * SECTION 4: TRANSPORTATION & PRICING TABLE + FOREIGNER GLOSSARY
  * -------------------------------------------------------------------------- */
@@ -1938,9 +1839,9 @@ function renderTransport() {
           <div class="bg-white rounded-2xl p-4 border border-sky-100 shadow-sm flex flex-col justify-between">
             <div class="flex items-center gap-2.5 mb-2">
               <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-              <h4 class="font-bold text-slate-900 text-sm">${item.title[AppState.lang]}</h4>
+              <h4 class="font-bold text-slate-900 text-sm">${escapeHTML(item.title[AppState.lang])}</h4>
             </div>
-            <p class="text-xs text-slate-600 leading-relaxed">${item.desc[AppState.lang]}</p>
+            <p class="text-xs text-slate-600 leading-relaxed">${escapeHTML(item.desc[AppState.lang])}</p>
           </div>
         `;
       })
@@ -1968,15 +1869,14 @@ function renderTransport() {
           <!-- Route -->
           <td class="font-serif text-base text-charcoal font-normal py-4 px-6">
             <div class="flex items-center justify-between gap-3">
-              <span>${item.route[AppState.lang]}</span>
-              ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('transport', item.id) : ''}
+              <span>${escapeHTML(item.route[AppState.lang])}</span>
             </div>
           </td>
 
           <!-- Vehicle -->
           <td class="py-4 px-6">
             <span class="font-mono text-xs text-stone-700 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200">
-              ${item.vehicle[AppState.lang]}
+              ${escapeHTML(item.vehicle[AppState.lang])}
             </span>
           </td>
 
@@ -1987,12 +1887,12 @@ function renderTransport() {
 
           <!-- Mode Note -->
           <td class="text-xs font-mono text-stone-500 py-4 px-6">
-            ${item.modeNote[AppState.lang]}
+            ${escapeHTML(item.modeNote[AppState.lang])}
           </td>
 
           <!-- Duration -->
           <td class="text-xs font-mono text-stone-500 py-4 px-6 whitespace-nowrap">
-            ${item.duration[AppState.lang]}
+            ${escapeHTML(item.duration[AppState.lang])}
           </td>
         </tr>
       `;
@@ -2003,113 +1903,27 @@ function renderTransport() {
 /* --------------------------------------------------------------------------
  * SECTION 5: ESSENTIAL TRAVEL INFO RENDERER
  * -------------------------------------------------------------------------- */
-function renderEssentialInfo() {
-  const info = UI_TEXT[AppState.lang].essentialSection;
-  const container = document.getElementById('essential-info-grid');
-  if (!container) return;
-
-  const etiquetteHTML = info.etiquette.items
-    .map(
-      item => `
-      <li class="flex items-start gap-3">
-        <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✓</span>
-        <div>
-          <span class="font-bold text-slate-900 text-sm">${item.label}:</span>
-          <span class="text-slate-600 text-sm ml-1">${item.text}</span>
-        </div>
-      </li>
-    `
-    )
+// Emergency numbers come only from EMERGENCY_CONTACTS (data.js, each with source + asOf).
+// Pages hold an empty [data-emergency-contacts] list with 999 as the no-JS fallback.
+function emergencyContactsHTML(lang) {
+  const list = typeof EMERGENCY_CONTACTS !== 'undefined' && Array.isArray(EMERGENCY_CONTACTS) ? EMERGENCY_CONTACTS : [];
+  if (!list.length) return '<li>999</li>';
+  const checked = lang === 'bn' ? 'যাচাই' : 'checked';
+  return list
+    .map(c => `
+      <li>
+        <span>${escapeHTML((c.name && (c.name[lang] || c.name.en)) || '')}:</span>
+        <a href="tel:${escapeHTML(c.tel || c.number)}" class="font-mono font-semibold underline underline-offset-2">${escapeHTML(c.number)}</a>
+        ${c.source ? `<a href="${escapeHTML(c.source)}" target="_blank" rel="noopener" class="block text-[10px] opacity-70 hover:underline">${checked} ${escapeHTML(c.asOf || '')}</a>` : ''}
+      </li>`)
     .join('');
+}
 
-  const emergencyHTML = info.emergency.contacts
-    .map(
-      c => `
-      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
-        <div>
-          <h4 class="font-bold text-slate-900 text-sm">${c.name}</h4>
-          <p class="text-xs text-slate-500 mt-0.5">${c.note}</p>
-        </div>
-        <a
-          href="tel:${c.number.replace(/\s+/g, '')}"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shrink-0 shadow-sm">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-          </svg>
-          <span>${c.number}</span>
-        </a>
-      </div>
-    `
-    )
-    .join('');
-
-  container.innerHTML = `
-    <!-- Card 1: Weather & Best Time to Visit -->
-    <div class="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-      <div>
-        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-4">${info.weather.title}</h3>
-
-        <div class="space-y-4">
-          <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-100">
-            <span class="inline-block text-xs font-extrabold uppercase tracking-wider text-sky-800 bg-sky-200/70 px-2.5 py-0.5 rounded-md mb-1">
-              ★ ${info.weather.peakTitle}
-            </span>
-            <p class="text-sm text-slate-700 leading-relaxed">${info.weather.peakDesc}</p>
-          </div>
-
-          <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-100">
-            <span class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">
-              ${info.weather.shoulderTitle}
-            </span>
-            <p class="text-sm text-slate-600 leading-relaxed">${info.weather.shoulderDesc}</p>
-          </div>
-
-          <div class="p-4 rounded-2xl bg-teal-50/60 border border-teal-100">
-            <span class="block text-xs font-bold uppercase tracking-wider text-teal-900 mb-1">
-              ${info.weather.monsoonTitle}
-            </span>
-            <p class="text-sm text-slate-600 leading-relaxed">${info.weather.monsoonDesc}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 2: Cultural Etiquette & Dress Codes -->
-    <div class="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-      <div>
-        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-4">${info.etiquette.title}</h3>
-        <ul class="space-y-4">
-          ${etiquetteHTML}
-        </ul>
-      </div>
-    </div>
-
-    <!-- Card 3: Emergency Contacts (Tourist Police, Hospitals) -->
-    <div class="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-      <div>
-        <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-1">${info.emergency.title}</h3>
-        <p class="text-xs text-slate-500 mb-4">${info.emergency.subtitle}</p>
-        <div class="space-y-3">
-          ${emergencyHTML}
-        </div>
-      </div>
-    </div>
-  `;
+function renderEmergencyContacts() {
+  const html = emergencyContactsHTML(AppState.lang);
+  document.querySelectorAll('[data-emergency-contacts]').forEach(el => {
+    el.innerHTML = html;
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -2121,7 +1935,7 @@ function renderFAQs() {
 
   container.innerHTML = FAQ_DATA.map(item => {
     const isOpen = AppState.activeFaqId === item.id;
-    let answerText = item.answer[AppState.lang];
+    let answerText = escapeHTML(item.answer[AppState.lang]);
     if (item.id === 'faq-2' && AppState.currency === 'USD') {
       const converted = formatPriceRange(80, 100);
       answerText += ` (${converted})`;
@@ -2131,13 +1945,12 @@ function renderFAQs() {
       <div class="faq-row ${isOpen ? 'active' : ''}">
         <button
           type="button"
-          onclick="toggleFaqItem('${item.id}')"
+          onclick="toggleFaqItem('${escapeHTML(item.id)}')"
           class="faq-trigger"
           aria-expanded="${isOpen}"
         >
-          <span class="font-serif text-xl sm:text-2xl text-charcoal font-normal pr-4">${item.question[AppState.lang]}</span>
+          <span class="font-serif text-xl sm:text-2xl text-charcoal font-normal pr-4">${escapeHTML(item.question[AppState.lang])}</span>
           <div class="flex items-center gap-3 shrink-0">
-            ${typeof getInlineAdminControls === 'function' ? getInlineAdminControls('faqs', item.id) : ''}
             <span class="faq-plus-icon">+</span>
           </div>
         </button>
@@ -2196,32 +2009,15 @@ function startHeroAutoSlider() {
   }, 4800);
 }
 
-function triggerQuickHeroSearch(term, category) {
-  const input = document.getElementById('hero-search-input');
-  const categorySelect = document.getElementById('hero-search-category');
-  if (input) input.value = term;
-  if (categorySelect && category) categorySelect.value = category;
-  document.getElementById('hero-live-search-results')?.classList.add('hidden');
-  handleHeroSearch();
-}
-
-function selectLiveSearchResult(sectionId, query, category) {
-  const input = document.getElementById('hero-search-input');
-  const categorySelect = document.getElementById('hero-search-category');
-  if (input) input.value = query || '';
-  if (categorySelect) categorySelect.value = category || 'all';
-
-  AppState.searchQuery = query || '';
-  AppState.searchCategory = category || 'all';
-  AppState.hotelFilter = 'ALL';
-
-  renderHotels();
-  renderDestinations();
-  renderActivities();
-  renderTransport();
-
-  document.getElementById('hero-live-search-results')?.classList.add('hidden');
-  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// The hero search lives on index.html; results link to the dedicated page for each item type.
+function heroSearchPageFor(category, q) {
+  if (category === 'hotels' || category === 'spots' || category === 'transport') {
+    return { hotels: 'hotels.html', spots: 'spots.html', transport: 'transport.html' }[category];
+  }
+  if (/tomtom|chander|cng|speedboat|bus|rickshaw/.test(q)) return 'transport.html';
+  if (/surf|parasail|horse|safari|camp|kayak|quad|atv/.test(q)) return 'activities.html';
+  if (/inani|himchari|moheshkhali|ramu|sonadia|marine drive|pagoda|beach/.test(q)) return 'spots.html';
+  return 'hotels.html';
 }
 
 function handleLiveHeroSearchInput() {
@@ -2232,133 +2028,43 @@ function handleLiveHeroSearchInput() {
   const q = input.value.trim().toLowerCase();
   if (!q) {
     dropdown.classList.add('hidden');
-    if (AppState.searchQuery) {
-      AppState.searchQuery = '';
-      renderHotels();
-      renderDestinations();
-      renderActivities();
-      renderTransport();
-    }
     return;
   }
 
   const lang = AppState.lang;
-  const matchedHotels = HOTELS_DATA.filter(
-    h =>
-      h.name.en.toLowerCase().includes(q) ||
-      h.name.bn.toLowerCase().includes(q) ||
-      h.location.en.toLowerCase().includes(q)
-  ).slice(0, 3);
+  const has = (obj, ...keys) => keys.some(k => obj && typeof obj[k] === 'string' && obj[k].toLowerCase().includes(q));
+  const pick = (list, test, n) => (Array.isArray(list) ? list.filter(test).slice(0, n) : []);
 
+  const matchedHotels = pick(HOTELS_DATA, h => has(h.name, 'en', 'bn') || has(h.location, 'en'), 3);
   const allSpots = [...DESTINATIONS_DATA, ...(typeof HIDDEN_GEMS_DATA !== 'undefined' ? HIDDEN_GEMS_DATA : [])];
-  const matchedSpots = allSpots
-    .filter(
-      s =>
-        s.name.en.toLowerCase().includes(q) ||
-        s.name.bn.toLowerCase().includes(q) ||
-        (s.vibe && s.vibe.en.toLowerCase().includes(q))
-    )
-    .slice(0, 3);
+  const matchedSpots = pick(allSpots, s => has(s.name, 'en', 'bn') || has(s.vibe, 'en'), 3);
+  const matchedActivities = pick(typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : [], a => has(a.name, 'en', 'bn') || has(a.location, 'en'), 3);
+  const matchedTransport = pick(TRANSPORT_DATA, tr => has(tr.route, 'en', 'bn') || has(tr.vehicle, 'en', 'bn'), 2);
 
-  const matchedActivities = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : [])
-    .filter(
-      a =>
-        a.name.en.toLowerCase().includes(q) ||
-        a.name.bn.toLowerCase().includes(q) ||
-        a.location.en.toLowerCase().includes(q)
-    )
-    .slice(0, 3);
-
-  const matchedTransport = TRANSPORT_DATA.filter(
-    tr =>
-      tr.route.en.toLowerCase().includes(q) ||
-      tr.vehicleName.en.toLowerCase().includes(q) ||
-      tr.route.bn.toLowerCase().includes(q)
-  ).slice(0, 2);
-
-  const itemsHTML = [];
-
-  matchedHotels.forEach(h => {
-    const safeName = h.name.en.replace(/'/g, "\\'");
-    itemsHTML.push(`
-      <button
-        type="button"
-        onclick="selectLiveSearchResult('hotels', '${safeName}', 'hotels')"
-        class="w-full p-2.5 rounded-xl hover:bg-sky-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
-      >
+  const row = (href, img, color, label, title, right) => `
+      <a href="${href}" class="w-full p-2.5 rounded-xl hover:bg-stone-50 flex items-center justify-between gap-3 transition text-left">
         <div class="flex items-center gap-2.5 min-w-0">
-          <img src="${h.image}" alt="${h.name[lang]}" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
+          ${img ? `<img src="${escapeHTML(img)}" alt="" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />` : ''}
           <div class="min-w-0">
-            <span class="block text-[10px] font-extrabold uppercase tracking-wider text-sky-700">🏨 ${lang === 'en' ? 'Hotel' : 'হোটেল'}</span>
-            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${h.name[lang]}</span>
+            <span class="block text-[10px] font-extrabold uppercase tracking-wider ${color}">${label}</span>
+            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${escapeHTML(title)}</span>
           </div>
         </div>
-        <span class="text-xs font-extrabold text-teal-700 shrink-0">${formatPriceRange(h.minBDT, h.maxBDT)}</span>
-      </button>
-    `);
-  });
-
-  matchedSpots.forEach(s => {
-    const safeName = s.name.en.replace(/'/g, "\\'");
-    itemsHTML.push(`
-      <button
-        type="button"
-        onclick="selectLiveSearchResult('destinations', '${safeName}', 'spots')"
-        class="w-full p-2.5 rounded-xl hover:bg-teal-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
-      >
-        <div class="flex items-center gap-2.5 min-w-0">
-          <img src="${s.image}" alt="${s.name[lang]}" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
-          <div class="min-w-0">
-            <span class="block text-[10px] font-extrabold uppercase tracking-wider text-teal-700">📍 ${lang === 'en' ? 'Sightseeing Spot' : 'দর্শনীয় স্থান'}</span>
-            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${s.name[lang]}</span>
-          </div>
-        </div>
-        <span class="text-xs font-bold text-sky-700 shrink-0">Explore →</span>
-      </button>
-    `);
-  });
-
-  matchedActivities.forEach(act => {
-    const safeName = act.name.en.replace(/'/g, "\\'");
-    itemsHTML.push(`
-      <button
-        type="button"
-        onclick="selectLiveSearchResult('activities-section', '${safeName}', 'spots')"
-        class="w-full p-2.5 rounded-xl hover:bg-amber-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
-      >
-        <div class="flex items-center gap-2.5 min-w-0">
-          <img src="${act.image}" alt="${act.name[lang]}" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />
-          <div class="min-w-0">
-            <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-700">🏄 ${lang === 'en' ? 'Coastal Activity' : 'রোমাঞ্চকর অ্যাক্টিভিটি'}</span>
-            <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${act.name[lang]}</span>
-          </div>
-        </div>
-        <span class="text-xs font-extrabold text-amber-800 shrink-0">${formatPriceRange(act.priceBDT, act.priceMaxBDT)}</span>
-      </button>
-    `);
-  });
-
-  matchedTransport.forEach(tr => {
-    const safeVeh = tr.vehicleName.en.replace(/'/g, "\\'");
-    itemsHTML.push(`
-      <button
-        type="button"
-        onclick="selectLiveSearchResult('transport', '${safeVeh}', 'transport')"
-        class="w-full p-2.5 rounded-xl hover:bg-amber-50 flex items-center justify-between gap-3 transition text-left cursor-pointer"
-      >
-        <div class="min-w-0">
-          <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-700">🚕 ${lang === 'en' ? 'Local Transport' : 'স্থানীয় যাতায়াত'}</span>
-          <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${tr.route[lang]} (${tr.vehicleName[lang]})</span>
-        </div>
-        <span class="text-xs font-extrabold text-slate-800 shrink-0">${formatPriceRange(tr.minBDT, tr.maxBDT)}</span>
-      </button>
-    `);
-  });
+        <span class="text-xs font-extrabold text-slate-800 shrink-0">${escapeHTML(right)}</span>
+      </a>`;
+  const isEn = lang === 'en';
+  const itemsHTML = [
+    ...matchedHotels.map(h => row('hotels.html', h.image, 'text-sky-700', isEn ? '🏨 Hotel' : '🏨 হোটেল', h.name[lang], formatPriceRange(h.minBDT, h.maxBDT))),
+    ...matchedSpots.map(s => row('spots.html', s.image, 'text-teal-700', isEn ? '📍 Sightseeing Spot' : '📍 দর্শনীয় স্থান', s.name[lang], isEn ? 'Explore →' : 'দেখুন →')),
+    ...matchedActivities.map(a => row('activities.html', a.image, 'text-amber-700', isEn ? '🏄 Coastal Activity' : '🏄 অ্যাক্টিভিটি', a.name[lang], formatPriceRange(a.priceBDT, a.priceMaxBDT))),
+    ...matchedTransport.map(tr => row('transport.html', '', 'text-amber-700', isEn ? '🚕 Local Transport' : '🚕 স্থানীয় যাতায়াত', `${escapeHTML(tr.route[lang])} (${escapeHTML(tr.vehicle[lang])})`, formatPriceRange(tr.minBDT, tr.maxBDT)))
+  ];
 
   if (!itemsHTML.length) {
+    const typed = escapeHTML(input.value);
     dropdown.innerHTML = `
       <div class="p-3 text-center text-xs text-slate-500">
-        ${lang === 'en' ? `No direct matches for "${input.value}". Press Enter to search all sections.` : `"${input.value}" এর জন্য সরাসরি কিছু পাওয়া যায়নি।`}
+        ${isEn ? `No direct matches for "${typed}". Press Enter to search all sections.` : `"${typed}" এর জন্য সরাসরি কিছু পাওয়া যায়নি।`}
       </div>
     `;
   } else {
@@ -2371,35 +2077,10 @@ function handleHeroSearch(e) {
   if (e) e.preventDefault();
   const input = document.getElementById('hero-search-input');
   const categorySelect = document.getElementById('hero-search-category');
-  document.getElementById('hero-live-search-results')?.classList.add('hidden');
-
-  AppState.searchQuery = input ? input.value : '';
-  AppState.searchCategory = categorySelect ? categorySelect.value : 'all';
-
-  renderHotels();
-  renderDestinations();
-  renderActivities();
-  renderTransport();
-
-  // Scroll smoothly to target section based on category or query
-  if (AppState.searchCategory === 'hotels') {
-    document.getElementById('hotels')?.scrollIntoView({ behavior: 'smooth' });
-  } else if (AppState.searchCategory === 'spots') {
-    document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' });
-  } else if (AppState.searchCategory === 'transport') {
-    document.getElementById('transport')?.scrollIntoView({ behavior: 'smooth' });
-  } else if (AppState.searchQuery.trim()) {
-    const q = AppState.searchQuery.toLowerCase();
-    if (q.includes('tomtom') || q.includes('chander') || q.includes('cng') || q.includes('speedboat')) {
-      document.getElementById('transport')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (q.includes('surf') || q.includes('parasail') || q.includes('horse') || q.includes('safari') || q.includes('camp') || q.includes('kayak') || q.includes('quad')) {
-      document.getElementById('activities-section')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (q.includes('inani') || q.includes('himchari') || q.includes('moheshkhali') || q.includes('ramu') || q.includes('sonadia') || q.includes('radiant')) {
-      document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      document.getElementById('hotels')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
+  const q = input ? input.value.trim().toLowerCase() : '';
+  const category = categorySelect ? categorySelect.value : 'all';
+  if (!q && category === 'all') return;
+  window.location.href = heroSearchPageFor(category, q);
 }
 
 function resetSearchAndFilters() {
@@ -2466,14 +2147,6 @@ function renderChatQuickPrompts() {
     .join('');
 }
 
-function escapeUserChatHTML(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
 function appendChatMessage(sender, htmlText) {
   const messagesBox = document.getElementById('chatbot-messages');
   if (!messagesBox) return;
@@ -2483,7 +2156,7 @@ function appendChatMessage(sender, htmlText) {
     wrapper.className = 'flex justify-end';
     wrapper.innerHTML = `
       <div class="max-w-[82%] bg-sky-700 text-white px-4 py-2.5 rounded-2xl rounded-br-xs text-sm shadow-sm">
-        ${escapeUserChatHTML(htmlText)}
+        ${escapeHTML(htmlText)}
       </div>
     `;
   } else {
@@ -2529,36 +2202,32 @@ function buildSingleHotelChatCard(hotel, lang) {
   return `
     <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-1.5">
       <div class="flex items-center gap-2.5">
-        <img src="${hotel.image}" alt="${hotel.name[lang]}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
+        <img src="${escapeHTML(hotel.image)}" alt="${escapeHTML(hotel.name[lang])}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-1">
-            <strong class="text-slate-900 text-xs sm:text-sm truncate">${hotel.name[lang]}</strong>
-            <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-extrabold shrink-0">★ ${hotel.rating}</span>
+            <strong class="text-slate-900 text-xs sm:text-sm truncate">${escapeHTML(hotel.name[lang])}</strong>
+            <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-extrabold shrink-0">★ ${escapeHTML(hotel.rating)}</span>
           </div>
           <div class="text-xs font-extrabold text-teal-700">${priceStr} <span class="font-normal text-slate-500">/${lang === 'en' ? 'night' : 'রাত'}</span></div>
         </div>
       </div>
       <div class="text-[11px] text-slate-600">
-        📍 <strong>${lang === 'en' ? 'Location:' : 'অবস্থান:'}</strong> ${hotel.location[lang]}
+        📍 <strong>${lang === 'en' ? 'Location:' : 'অবস্থান:'}</strong> ${escapeHTML(hotel.location[lang])}
       </div>
       <div class="text-[11px] text-slate-600">
-        ✨ <strong>${lang === 'en' ? 'Amenities:' : 'সুবিধা:'}</strong> ${amenitiesStr}
+        ✨ <strong>${lang === 'en' ? 'Amenities:' : 'সুবিধা:'}</strong> ${escapeHTML(amenitiesStr)}
       </div>
       <div class="flex flex-wrap items-center justify-between gap-1.5 pt-1">
         ${
           hotel.phone
-            ? `<a href="tel:${hotel.phone.replace(/\s+/g, '')}" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition">
-                📞 ${hotel.phone}
+            ? `<a href="tel:${escapeHTML(hotel.phone.replace(/\s+/g, ''))}" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition">
+                📞 ${escapeHTML(hotel.phone)}
               </a>`
             : ''
         }
-        <button
-          type="button"
-          onclick="if(typeof selectItineraryHotel==='function'){selectItineraryHotel('${hotel.id}', true);}"
-          class="px-2.5 py-1 rounded-lg bg-ocean-950 hover:bg-sky-800 text-amber-300 text-[11px] font-bold transition cursor-pointer"
-        >
-          🏨 ${lang === 'en' ? 'Use in My Trip Plan' : 'ট্রিপ প্ল্যানে নিন'}
-        </button>
+        <a href="itinerary.html" class="px-2.5 py-1 rounded-lg bg-ocean-950 hover:bg-sky-800 text-amber-300 text-[11px] font-bold transition">
+          🏨 ${lang === 'en' ? 'Plan a Trip' : 'ট্রিপ প্ল্যান করুন'}
+        </a>
       </div>
     </div>
   `;
@@ -2623,8 +2292,8 @@ async function fetchTravelAssistantReply(userText) {
     const h0 = matchedSpecificHotels[0];
     const leadText =
       lang === 'en'
-        ? `Here are the specific verified details for <strong>${h0.name.en}</strong>:`
-        : `<strong>${h0.name.bn}</strong>-এর সুনির্দিষ্ট তথ্য নিচে দেওয়া হলো:`;
+        ? `Here are the listed details for <strong>${escapeHTML(h0.name.en)}</strong>:`
+        : `<strong>${escapeHTML(h0.name.bn)}</strong>-এর সুনির্দিষ্ট তথ্য নিচে দেওয়া হলো:`;
 
     return `
       <div>${leadText}</div>
@@ -2661,39 +2330,30 @@ async function fetchTravelAssistantReply(userText) {
     q.includes('কম দামে') ||
     q.includes('সাশ্রয়ী');
 
-  if (isAskingCheap && (isAskingHotel || !q.includes('food'))) {
-    const sortedCheap = [...HOTELS_DATA].sort((a, b) => a.minBDT - b.minBDT).slice(0, 2);
+  const sortedCheap = [...HOTELS_DATA].sort((a, b) => a.minBDT - b.minBDT).slice(0, 2);
+  if (isAskingCheap && (isAskingHotel || !q.includes('food')) && sortedCheap.length) {
     const cheapest = sortedCheap[0];
-    const second = sortedCheap[1];
     return lang === 'en'
       ? `
-        <div>💡 <strong>Most Budget-Friendly Hotels in Cox's Bazar:</strong></div>
-        <div>The most affordable option is <strong>${cheapest.name.en}</strong> starting at <strong>${formatPriceRange(cheapest.minBDT, cheapest.maxBDT)}/night</strong>, followed by <strong>${second.name.en}</strong> (${formatPriceRange(second.minBDT, second.maxBDT)}/night):</div>
+        <div>💡 <strong>Most Budget-Friendly Listed Hotels:</strong></div>
+        <div>The lowest listed rate is at <strong>${escapeHTML(cheapest.name.en)}</strong>, from <strong>${formatPriceRange(cheapest.minBDT, cheapest.maxBDT)}/night</strong>:</div>
         <div class="space-y-2">${sortedCheap.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
         ${buildChatFollowUpChips(['Beachfront hotel?', 'Hotel with swimming pool?', 'My trip budget?'])}
       `
       : `
-        <div>💡 <strong>কক্সবাজারের সবচেয়ে সাশ্রয়ী হোটেল:</strong></div>
-        <div>সবচেয়ে কম ভাড়ায় রয়েছে <strong>${cheapest.name.bn}</strong> (প্রতি রাত <strong>${formatPriceRange(cheapest.minBDT, cheapest.maxBDT)}</strong>) এবং <strong>${second.name.bn}</strong> (${formatPriceRange(second.minBDT, second.maxBDT)}):</div>
+        <div>💡 <strong>কম ভাড়ার হোটেল (তালিকা থেকে):</strong></div>
+        <div>সবচেয়ে কম তালিকাভুক্ত ভাড়া <strong>${escapeHTML(cheapest.name.bn)}</strong>-এ (প্রতি রাত <strong>${formatPriceRange(cheapest.minBDT, cheapest.maxBDT)}</strong> থেকে):</div>
         <div class="space-y-2">${sortedCheap.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
         ${buildChatFollowUpChips(['সৈকত সংলগ্ন হোটেল?', 'সুইমিং পুলসহ হোটেল?', 'আমার ট্রিপ বাজেট কত?'])}
       `;
   }
 
-  if (q.includes('pool') || q.includes('পুল') || q.includes('সুইমিং')) {
-    const kollol = HOTELS_DATA.find(h => h.id === 'hotel-kollol') || HOTELS_DATA[0];
-    return lang === 'en'
-      ? `
-        <div>🏊 <strong>Hotel with Swimming Pool:</strong></div>
-        <div><strong>${kollol.name.en}</strong> at Laboni Point features an outdoor swimming pool, in-house Kasundi restaurant, and immediate access to Laboni Beach:</div>
-        ${buildSingleHotelChatCard(kollol, lang)}
-        ${buildChatFollowUpChips(['Hotel Sea Crown details', 'Cheapest hotel?', 'Laboni Beach info'])}
-      `
-      : `
-        <div>🏊 <strong>সুইমিং পুলসহ হোটেল:</strong></div>
-        <div>লাবণী পয়েন্টে অবস্থিত <strong>${kollol.name.bn}</strong>-এ সুইমিং পুল এবং নিজস্ব কাসুন্দি রেস্তোরাঁ রয়েছে:</div>
-        ${buildSingleHotelChatCard(kollol, lang)}
-        ${buildChatFollowUpChips(['হোটেল সী ক্রাউন বিস্তারিত', 'সবচেয়ে সস্তা হোটেল কোনটি?'])}
+  const poolHotels = HOTELS_DATA.filter(h => JSON.stringify(h.amenities || '').toLowerCase().includes('pool')).slice(0, 2);
+  if ((q.includes('pool') || q.includes('পুল') || q.includes('সুইমিং')) && poolHotels.length) {
+    return `
+        <div>🏊 <strong>${lang === 'en' ? 'Listed hotels with a swimming pool:' : 'সুইমিং পুলসহ তালিকাভুক্ত হোটেল:'}</strong></div>
+        <div class="space-y-2">${poolHotels.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
+        ${buildChatFollowUpChips(lang === 'en' ? ['Cheapest hotel?', 'Laboni Beach info'] : ['সবচেয়ে সস্তা হোটেল কোনটি?'])}
       `;
   }
 
@@ -2708,20 +2368,12 @@ async function fetchTravelAssistantReply(userText) {
       q.includes('সেরা') ||
       q.includes('ফ্যামিলি'))
   ) {
-    const seaCrown = HOTELS_DATA.find(h => h.id === 'hotel-sea-crown') || HOTELS_DATA[0];
-    const kollol = HOTELS_DATA.find(h => h.id === 'hotel-kollol') || HOTELS_DATA[2];
-    return lang === 'en'
-      ? `
-        <div>🌊 <strong>Top Beachfront & Family Hotels:</strong></div>
-        <div>• <strong>${seaCrown.name.en} (4.6★)</strong> is right on Sugandha Beach (Marine Drive) with direct beach access & free buffet breakfast.<br/>• <strong>${kollol.name.en} (4.5★)</strong> is at Laboni Point with a swimming pool:</div>
-        <div class="space-y-2">${buildSingleHotelChatCard(seaCrown, lang)}${buildSingleHotelChatCard(kollol, lang)}</div>
-        ${buildChatFollowUpChips(['Cheapest hotel?', 'Best seafood nearby?', 'My trip budget?'])}
-      `
-      : `
-        <div>🌊 <strong>সেরা সৈকত সংলগ্ন ও ফ্যামিলি হোটেল:</strong></div>
-        <div>• <strong>${seaCrown.name.bn} (৪.৬★)</strong> সরাসরি সুগন্ধা সৈকতে অবস্থিত (ফ্রি ব্রেকফাস্টসহ)।<br/>• <strong>${kollol.name.bn} (৪.৫★)</strong> লাবণী পয়েন্টে সুইমিং পুলসহ:</div>
-        <div class="space-y-2">${buildSingleHotelChatCard(seaCrown, lang)}${buildSingleHotelChatCard(kollol, lang)}</div>
-        ${buildChatFollowUpChips(['সবচেয়ে সস্তা হোটেল কোনটি?', 'সেরা সি-ফুড রেস্তোরাঁ?'])}
+    const picks = HOTELS_DATA.filter(h => /beach|sea|সৈকত/i.test(JSON.stringify(h.amenities || ''))).slice(0, 2);
+    const shown = picks.length ? picks : HOTELS_DATA.slice(0, 2);
+    return `
+        <div>🌊 <strong>${lang === 'en' ? 'Hotels near the beach (from our list):' : 'সৈকতের কাছের হোটেল (তালিকা থেকে):'}</strong></div>
+        <div class="space-y-2">${shown.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
+        ${buildChatFollowUpChips(lang === 'en' ? ['Cheapest hotel?', 'Best seafood nearby?', 'My trip budget?'] : ['সবচেয়ে সস্তা হোটেল কোনটি?', 'সেরা সি-ফুড রেস্তোরাঁ?'])}
       `;
   }
 
@@ -2867,16 +2519,12 @@ async function fetchTravelAssistantReply(userText) {
       .map(
         sp => `
         <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-200/80 space-y-1.5">
-          <div class="font-extrabold text-ocean-950 text-xs sm:text-sm">${sp.title[lang]}</div>
-          <div class="text-xs text-slate-700 leading-relaxed">${sp.body[lang]}</div>
+          <div class="font-extrabold text-ocean-950 text-xs sm:text-sm">${escapeHTML(sp.title[lang])}</div>
+          <div class="text-xs text-slate-700 leading-relaxed">${escapeHTML(sp.body[lang])}</div>
           <div class="pt-1 flex flex-wrap gap-1.5">
-            <button
-              type="button"
-              onclick="if(typeof addSpotFromWebsiteCard==='function'){addSpotFromWebsiteCard('${sp.id}');}"
-              class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-[11px] font-bold transition cursor-pointer"
-            >
-              + ${lang === 'en' ? 'Add to My Trip & Route Map' : 'ট্রিপ ও রুট ম্যাপে যোগ করুন'}
-            </button>
+            <a href="itinerary.html" class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-[11px] font-bold transition">
+              ${lang === 'en' ? 'Plan a Trip' : 'ট্রিপ প্ল্যান করুন'}
+            </a>
           </div>
         </div>
       `
@@ -3034,42 +2682,34 @@ async function fetchTravelAssistantReply(userText) {
     const priceText = formatPriceRange(act.priceBDT, act.priceMaxBDT);
     return lang === 'en'
       ? `
-        <div>🏄 <strong>${act.name.en}</strong></div>
+        <div>🏄 <strong>${escapeHTML(act.name.en)}</strong></div>
         <div class="text-xs text-slate-700 space-y-1 mt-1">
-          • <strong>Estimated Price:</strong> <strong>${priceText}</strong> (${act.priceNote.en})<br/>
-          • <strong>Location:</strong> ${act.location.en}<br/>
-          • <strong>Duration:</strong> ${act.duration.en} • <strong>Level:</strong> ${act.difficulty.en}<br/>
-          • <strong>Overview:</strong> ${act.description.en}<br/>
-          • <strong>Included:</strong> ${act.included.en.join(', ')}
+          • <strong>Estimated Price:</strong> <strong>${priceText}</strong> (${escapeHTML(act.priceNote.en)})<br/>
+          • <strong>Location:</strong> ${escapeHTML(act.location.en)}<br/>
+          • <strong>Duration:</strong> ${escapeHTML(act.duration.en)} • <strong>Level:</strong> ${escapeHTML(act.difficulty.en)}<br/>
+          • <strong>Overview:</strong> ${escapeHTML(act.description.en)}<br/>
+          • <strong>Included:</strong> ${escapeHTML(act.included.en.join(', '))}
         </div>
         <div class="pt-2 flex gap-2">
-          <button
-            type="button"
-            onclick="addActivityToTrip('${act.id}')"
-            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
-          >
-            + Add to My Trip
-          </button>
+          <a href="itinerary.html" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition">
+            Plan a Trip
+          </a>
         </div>
         ${buildChatFollowUpChips(['Top 10 activities list', 'Best seafood restaurants', 'My trip budget?'])}
       `
       : `
-        <div>🏄 <strong>${act.name.bn}</strong></div>
+        <div>🏄 <strong>${escapeHTML(act.name.bn)}</strong></div>
         <div class="text-xs text-slate-700 space-y-1 mt-1">
-          • <strong>আনুমানিক খরচ:</strong> <strong>${priceText}</strong> (${act.priceNote.bn})<br/>
-          • <strong>স্থান:</strong> ${act.location.bn}<br/>
-          • <strong>সময়কাল:</strong> ${act.duration.bn} • <strong>ধরন:</strong> ${act.difficulty.bn}<br/>
-          • <strong>বিবরণ:</strong> ${act.description.bn}<br/>
-          • <strong>যা যা থাকছে:</strong> ${act.included.bn.join(', ')}
+          • <strong>আনুমানিক খরচ:</strong> <strong>${priceText}</strong> (${escapeHTML(act.priceNote.bn)})<br/>
+          • <strong>স্থান:</strong> ${escapeHTML(act.location.bn)}<br/>
+          • <strong>সময়কাল:</strong> ${escapeHTML(act.duration.bn)} • <strong>ধরন:</strong> ${escapeHTML(act.difficulty.bn)}<br/>
+          • <strong>বিবরণ:</strong> ${escapeHTML(act.description.bn)}<br/>
+          • <strong>যা যা থাকছে:</strong> ${escapeHTML(act.included.bn.join(', '))}
         </div>
         <div class="pt-2 flex gap-2">
-          <button
-            type="button"
-            onclick="addActivityToTrip('${act.id}')"
-            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
-          >
-            + ট্রিপ প্ল্যানে যোগ করুন
-          </button>
+          <a href="itinerary.html" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition">
+            ট্রিপ প্ল্যান করুন
+          </a>
         </div>
         ${buildChatFollowUpChips(['১০টি অ্যাক্টিভিটি তালিকা', 'সেরা সি-ফুড রেস্তোরাঁ', 'আমার ট্রিপ বাজেট কত?'])}
       `;
@@ -3088,13 +2728,9 @@ async function fetchTravelAssistantReply(userText) {
           • <strong>Requirements & Safety:</strong> Carry your original NID/Passport & driving license, wear a helmet, and finish your return ride before sunset.
         </div>
         <div class="pt-1">
-          <button
-            type="button"
-            onclick="if(typeof applyItineraryPreset==='function'){applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});}"
-            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
-          >
-            🏍️ Load 5-Day Bike & Island Plan
-          </button>
+          <a href="itinerary.html" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition">
+            🏍️ Open the trip planner
+          </a>
         </div>
         ${buildChatFollowUpChips(['Inani & Himchari route', 'Is Marine Drive safe at night?', 'Chander Gari jeep cost?'])}
       `
@@ -3106,13 +2742,9 @@ async function fetchTravelAssistantReply(userText) {
           • <strong>নিরাপত্তা টিপস:</strong> মূল এনআইডি ও ড্রাইভিং লাইসেন্স সাথে রাখুন এবং সূর্যাস্তের আগে শহরে ফিরে আসুন।
         </div>
         <div class="pt-1">
-          <button
-            type="button"
-            onclick="if(typeof applyItineraryPreset==='function'){applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});}"
-            class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition cursor-pointer"
-          >
-            🏍️ ৫ দিনের বাইক ও দ্বীপ প্ল্যান লোড করুন
-          </button>
+          <a href="itinerary.html" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition">
+            🏍️ ট্রিপ প্ল্যানার খুলুন
+          </a>
         </div>
         ${buildChatFollowUpChips(['ইনানী ও হিমছড়ি রুট', 'চান্দের গাড়ি ভাড়া কত?'])}
       `;
@@ -3218,12 +2850,12 @@ async function fetchTravelAssistantReply(userText) {
   ) {
     const rows = TRANSPORT_DATA.map(
       tr =>
-        `• <strong>${tr.route[lang]}</strong> (${tr.vehicle[lang]}): <strong class="text-teal-700">${formatPriceRange(tr.minBDT, tr.maxBDT)}</strong> — ${tr.modeNote[lang]}, ${tr.duration[lang]}`
+        `• <strong>${escapeHTML(tr.route[lang])}</strong> (${escapeHTML(tr.vehicle[lang])}): <strong class="text-teal-700">${formatPriceRange(tr.minBDT, tr.maxBDT)}</strong> — ${escapeHTML(tr.modeNote[lang])}, ${escapeHTML(tr.duration[lang])}`
     ).join('<br/>');
 
     return lang === 'en'
       ? `
-        <div>🚕 <strong>Verified Local Transport Fares & Vehicles (${AppState.currency}):</strong></div>
+        <div>🚕 <strong>Estimated Local Transport Fares & Vehicles (${AppState.currency}):</strong></div>
         <div class="text-xs text-slate-700 leading-relaxed">${rows}</div>
         <div class="p-2 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-950">
           💡 <strong>Quick Guide:</strong> <em>Tomtoms</em> are cheap shared electric 3-wheelers for beach hops; <em>Chander Gari</em> is an open-top 10–14 seat 4x4 jeep for Marine Drive; <em>Speedboats</em> depart from Kasturi Ghat.
@@ -3259,45 +2891,9 @@ async function fetchTravelAssistantReply(userText) {
     q.includes('ট্রিপ প্ল্যান') ||
     q.includes('রুট')
   ) {
-    if (typeof calculateItineraryBudget === 'function' && typeof FeaturesState !== 'undefined') {
-      const b = calculateItineraryBudget();
-      const hotelName = b.selectedHotel ? b.selectedHotel.name[lang] : 'Hotel Sea Crown';
-      return lang === 'en'
-        ? `
-          <div>📊 <strong>Your Live Cox's Bazar Trip Summary (${FeaturesState.totalDays} Days / ${b.nights} Nights):</strong></div>
-          <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-xs space-y-1">
-            <div>🏨 <strong>Base Hotel (${hotelName}):</strong> ${fmtSingle(b.totalHotelBDT)} (${b.nights} nights)</div>
-            <div>🏍️ <strong>Local Travel & Rides:</strong> ${fmtSingle(b.totalTransportBDT)}</div>
-            <div>🍽️ <strong>Restaurants & Food:</strong> ${fmtSingle(b.totalDiningBDT)}</div>
-            <div>🪂 <strong>Activities & Fun:</strong> ${fmtSingle(b.totalActivitiesBDT)}</div>
-            <div class="pt-1 border-t border-sky-200 font-extrabold text-ocean-950 text-sm">
-              💰 Est. Total Trip Cost: <span class="text-teal-700">${fmtSingle(b.grandTotalBDT)}</span>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-1.5 pt-1">
-            <button type="button" onclick="applyItineraryPreset('2day_quick'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">⚡ 2-Day Plan</button>
-            <button type="button" onclick="applyItineraryPreset('3day_family'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">👨‍👩‍👧 3-Day Family</button>
-            <button type="button" onclick="applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-extrabold cursor-pointer">🏍️ 5-Day Bike Plan</button>
-          </div>
-        `
-        : `
-          <div>📊 <strong>আপনার বর্তমান কক্সবাজার ট্রিপ সামারি (${FeaturesState.totalDays} দিন / ${b.nights} রাত):</strong></div>
-          <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-xs space-y-1">
-            <div>🏨 <strong>হোটেল (${hotelName}):</strong> ${fmtSingle(b.totalHotelBDT)} (${b.nights} রাত)</div>
-            <div>🏍️ <strong>যাতায়াত ও বাইক:</strong> ${fmtSingle(b.totalTransportBDT)}</div>
-            <div>🍽️ <strong>রেস্তোরাঁ ও খাবার:</strong> ${fmtSingle(b.totalDiningBDT)}</div>
-            <div>🪂 <strong>অ্যাক্টিভিটি:</strong> ${fmtSingle(b.totalActivitiesBDT)}</div>
-            <div class="pt-1 border-t border-sky-200 font-extrabold text-ocean-950 text-sm">
-              💰 সর্বমোট আনুমানিক খরচ: <span class="text-teal-700">${fmtSingle(b.grandTotalBDT)}</span>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-1.5 pt-1">
-            <button type="button" onclick="applyItineraryPreset('2day_quick'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">⚡ ২ দিন</button>
-            <button type="button" onclick="applyItineraryPreset('3day_family'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-100 text-slate-800 text-[11px] font-bold cursor-pointer">👨‍👩‍👧 ৩ দিন ফ্যামিলি</button>
-            <button type="button" onclick="applyItineraryPreset('5day_biker'); document.getElementById('itinerary-section')?.scrollIntoView({behavior:'smooth'});" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-extrabold cursor-pointer">🏍️ ৫ দিন বাইক প্ল্যান</button>
-          </div>
-        `;
-    }
+    return lang === 'en'
+      ? `<div>📊 The <a href="itinerary.html" class="underline font-bold">trip planner</a> builds a day-by-day plan and an estimated budget for your group.</div>`
+      : `<div>📊 <a href="itinerary.html" class="underline font-bold">ট্রিপ প্ল্যানার</a> আপনার দলের জন্য দিনভিত্তিক পরিকল্পনা ও আনুমানিক বাজেট তৈরি করে।</div>`;
   }
 
   // --------------------------------------------------------------------------
@@ -3316,24 +2912,9 @@ async function fetchTravelAssistantReply(userText) {
     q.includes('জরুরি') ||
     q.includes('সাহায্য')
   ) {
-    const contacts = UI_TEXT[lang].essentialSection.emergency.contacts;
     return `
-      <div>🚨 <strong>${lang === 'en' ? '24/7 Official Emergency & Tourist Police Hotlines:' : '২৪/৭ জরুরি সেবা ও ট্যুরিস্ট পুলিশ নাম্বার:'}</strong></div>
-      <div class="space-y-1.5">
-        ${contacts
-          .map(
-            c => `
-            <div class="p-2 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-between gap-2 text-xs">
-              <div>
-                <strong class="text-slate-900 block">${c.name}</strong>
-                <span class="text-[10px] text-slate-500">${c.note}</span>
-              </div>
-              <a href="tel:${c.number.replace(/\s+/g, '')}" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-extrabold text-[11px] shrink-0">📞 ${c.number}</a>
-            </div>
-          `
-          )
-          .join('')}
-      </div>
+      <div>🚨 <strong>${lang === 'en' ? 'Emergency numbers:' : 'জরুরি নম্বর:'}</strong></div>
+      <ul class="space-y-1.5 text-xs">${emergencyContactsHTML(lang)}</ul>
     `;
   }
 
@@ -3361,11 +2942,11 @@ async function fetchTravelAssistantReply(userText) {
   if (q.includes('best time') || q.includes('weather') || q.includes('season') || q.includes('rain') || q.includes('monsoon') || q.includes('winter') || q.includes('সেরা সময়') || q.includes('আবহাওয়া') || q.includes('শীতকাল') || q.includes('বর্ষা')) {
     const w = UI_TEXT[lang].essentialSection.weather;
     return `
-      <div>☀️ <strong>${w.title}:</strong></div>
+      <div>☀️ <strong>${escapeHTML(w.title)}:</strong></div>
       <div class="text-xs text-slate-700 space-y-1.5">
-        <div>• <strong>${w.peakTitle}:</strong> ${w.peakDesc}</div>
-        <div>• <strong>${w.shoulderTitle}:</strong> ${w.shoulderDesc}</div>
-        <div>• <strong>${w.monsoonTitle}:</strong> ${w.monsoonDesc}</div>
+        <div>• <strong>${escapeHTML(w.peakTitle)}:</strong> ${escapeHTML(w.peakDesc)}</div>
+        <div>• <strong>${escapeHTML(w.shoulderTitle)}:</strong> ${escapeHTML(w.shoulderDesc)}</div>
+        <div>• <strong>${escapeHTML(w.monsoonTitle)}:</strong> ${escapeHTML(w.monsoonDesc)}</div>
       </div>
       ${buildChatFollowUpChips(
         lang === 'en'
@@ -3405,18 +2986,18 @@ async function fetchTravelAssistantReply(userText) {
   if (isAskingHotel || q.includes('price') || q.includes('ভাড়া')) {
     const lines = HOTELS_DATA.map(
       h =>
-        `• <strong>${h.name[lang]}</strong> (${h.locationKey}): <strong class="text-teal-700">${formatPriceRange(h.minBDT, h.maxBDT)}</strong>/night — 📞 <a href="tel:${h.phone.replace(/\s+/g, '')}" class="underline text-sky-700">${h.phone}</a>`
+        `• <strong>${escapeHTML(h.name[lang])}</strong> (${escapeHTML(h.locationKey)}): <strong class="text-teal-700">${formatPriceRange(h.minBDT, h.maxBDT)}</strong>/night${h.phone ? ` — 📞 <a href="tel:${escapeHTML(h.phone.replace(/\s+/g, ''))}" class="underline text-sky-700">${escapeHTML(h.phone)}</a>` : ''}`
     ).join('<br/>');
 
     return lang === 'en'
       ? `
-        <div>🏨 <strong>All 5 Verified Hotels in Cox's Bazar (${AppState.currency}):</strong></div>
+        <div>🏨 <strong>Hotels in Cox's Bazar (${AppState.currency}):</strong></div>
         <div class="text-xs text-slate-700 leading-relaxed">${lines}</div>
         <div class="text-[11px] text-slate-500">Tap any hotel below to see its full address, amenities & booking link:</div>
         ${buildChatFollowUpChips(['Hotel Sea Crown details', 'Prime Park Hotel details', 'Hotel Kollol details', 'Cheapest hotel?'])}
       `
       : `
-        <div>🏨 <strong>কক্সবাজারের ৫টি ভেরিফাইড হোটেলের ভাড়া ও ফোন (${AppState.currency}):</strong></div>
+        <div>🏨 <strong>কক্সবাজারের হোটেলের আনুমানিক ভাড়া ও ফোন (${AppState.currency}):</strong></div>
         <div class="text-xs text-slate-700 leading-relaxed">${lines}</div>
         ${buildChatFollowUpChips(['হোটেল সী ক্রাউন বিস্তারিত', 'প্রাইম পার্ক হোটেল', 'সবচেয়ে সস্তা হোটেল কোনটি?'])}
       `;
@@ -3427,7 +3008,7 @@ async function fetchTravelAssistantReply(userText) {
   // --------------------------------------------------------------------------
   return lang === 'en'
     ? `
-      <div>👋 <strong>I'm your Cox's Bazar Smart AI Guide!</strong> Ask me anything specific—or tap a topic below for instant verified details:</div>
+      <div>👋 <strong>I'm a keyword-based Cox's Bazar guide.</strong> Ask about a topic, or tap one below:</div>
       <div class="text-xs text-slate-600 space-y-1">
         • 🏨 <strong>Specific Hotels:</strong> <em>"Sea Crown details"</em>, <em>"Cheapest hotel"</em>, <em>"Hotel with pool"</em><br/>
         • 📍 <strong>Exact Routes & Spots:</strong> <em>"Inani & Himchari route"</em>, <em>"Moheshkhali speedboat"</em>, <em>"Ramu Buddha"</em>, <em>"Sonadia camping"</em><br/>
@@ -3443,7 +3024,7 @@ async function fetchTravelAssistantReply(userText) {
       ])}
     `
     : `
-      <div>👋 <strong>আমি আপনার কক্সবাজার স্মার্ট এআই গাইড!</strong> যেকোনো নির্দিষ্ট প্রশ্ন লিখুন অথবা নিচের বাটনে ক্লিক করুন:</div>
+      <div>👋 <strong>আমি কি-ওয়ার্ড ভিত্তিক কক্সবাজার গাইড।</strong> একটি বিষয় লিখুন অথবা নিচের বাটনে ক্লিক করুন:</div>
       <div class="text-xs text-slate-600 space-y-1">
         • 🏨 <strong>নির্দিষ্ট হোটেল:</strong> <em>"সী ক্রাউন বিস্তারিত"</em>, <em>"সবচেয়ে সস্তা হোটেল"</em>, <em>"সুইমিং পুলসহ হোটেল"</em><br/>
         • 📍 <strong>স্পট ও রুট:</strong> <em>"ইনানী ও হিমছড়ি রুট"</em>, <em>"মহেশখালী স্পিডবোট"</em>, <em>"রামু বৌদ্ধ বিহার"</em><br/>
@@ -3511,11 +3092,7 @@ function initScrollListeners() {
     'hotels',
     'destinations',
     'activities-section',
-    'map-section',
-    'itinerary-section',
     'transport',
-    'essential-info',
-    'blog-section',
     'faq'
   ];
 
@@ -3614,12 +3191,9 @@ function renderAll() {
   renderDestinations();
   renderActivities();
   renderTransport();
-  renderEssentialInfo();
+  renderEmergencyContacts();
   renderFAQs();
   renderChatQuickPrompts();
-  if (typeof renderInteractiveFeatures === 'function') {
-    renderInteractiveFeatures();
-  }
   if (typeof renderBlogSection === 'function') {
     renderBlogSection();
   }

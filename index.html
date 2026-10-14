@@ -31,7 +31,7 @@
   <!-- Tailwind CSS v3 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
+    if (window.tailwind) tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
@@ -161,17 +161,6 @@
               <button type="button" data-curr-btn="USD" onclick="toggleCurrency('USD')" class="px-2.5 py-1 rounded-full text-stone-600 hover:text-charcoal transition">$ USD</button>
             </div>
 
-            <!-- Admin Quick-Access -->
-            <button
-              type="button"
-              onclick="handleAdminButtonClick()"
-              aria-label="Admin Portal"
-              class="text-stone-400 hover:text-charcoal p-1.5 transition"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-              </svg>
-            </button>
           </div>
 
           <!-- Mobile Hamburger -->
@@ -238,7 +227,7 @@
           <div class="flex items-center gap-3">
             <span class="w-2.5 h-2.5 rounded-full bg-terracotta-600"></span>
             <span class="text-xs font-mono tracking-widest text-stone-500 uppercase">
-              THE AUTHORITATIVE COASTAL ARCHIVE • BAY OF BENGAL
+              AN INDEPENDENT COASTAL GUIDE • BAY OF BENGAL
             </span>
           </div>
 
@@ -435,8 +424,6 @@
           ></div>
         </div>
 
-        <!-- Hidden ID for AppState stats compatibility -->
-        <div id="hero-stats-grid" class="hidden"></div>
       </div>
 
     </div>
@@ -460,7 +447,7 @@
           </h2>
         </div>
         <p class="text-sm sm:text-base text-stone-600 max-w-md font-normal leading-relaxed">
-          Each aspect of your Cox's Bazar journey has its own dedicated portal—uncluttered, informative, and verified with local guides.
+          Each aspect of your Cox's Bazar journey has its own dedicated portal—uncluttered and informative.
         </p>
       </div>
 
@@ -494,7 +481,7 @@
               Hotels &amp; Coastal Sanctuaries
             </h3>
             <p class="text-sm text-stone-200 max-w-lg line-clamp-2 leading-relaxed">
-              Explore beachfront luxury at Sayeman and Royal Tulip, quiet eco-villas at Mermaid Beach Resort, and verified budget havens with transparent room pricing.
+              Explore beachfront luxury at Sayeman and Royal Tulip, quiet eco-villas at Mermaid Beach Resort, and budget stays with estimated room prices.
             </p>
             <div class="pt-3 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
               <span class="text-stone-300 font-mono text-[11px]">FILTER BY ZONE, STARS &amp; BUDGET</span>
@@ -554,13 +541,13 @@
 
           <div class="relative z-10 space-y-2">
             <span class="px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase bg-sky-500/80 text-white backdrop-blur-md">
-              10 VERIFIED ACTIVITIES
+              10 ACTIVITIES
             </span>
             <h3 class="font-serif text-2xl sm:text-3xl text-white font-normal">
               Activities &amp; Thrills
             </h3>
             <p class="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed">
-              Kalatoli beach surfing, Himchari parasailing, ATV quad bikes, open Chander Gari safaris, and beach camping with verified rates.
+              Kalatoli beach surfing, Himchari parasailing, ATV quad bikes, open Chander Gari safaris, and beach camping with estimated rates.
             </p>
             <div class="pt-2 flex items-center justify-between text-white font-semibold text-xs tracking-wider uppercase">
               <span class="text-stone-300 font-mono text-[11px]">PRICES &amp; SAFETY</span>
@@ -855,7 +842,7 @@
 
         <div class="lg:col-span-7 bg-[#FAF9F6] rounded-3xl p-6 sm:p-10 border border-stone-200 space-y-8">
           <div>
-            <h3 class="font-serif text-2xl text-charcoal mb-4">Official Beach Safety Guidelines</h3>
+            <h3 class="font-serif text-2xl text-charcoal mb-4">Beach Safety Guidelines</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="bg-white p-4 rounded-2xl border border-stone-200 text-xs">
                 <span class="block font-bold text-emerald-700 mb-1">🟢 Green Flag</span>
@@ -873,25 +860,10 @@
           </div>
 
           <div class="pt-4 border-t border-stone-200">
-            <h4 class="font-serif text-xl text-charcoal mb-3">24/7 Verified Emergency Contacts</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div class="p-3 bg-white rounded-xl border border-stone-200">
-                <strong class="text-charcoal block">Tourist Police Cox's Bazar:</strong>
-                <a href="tel:01320160160" class="text-terracotta-600 font-mono font-semibold">01320-160160</a>
-              </div>
-              <div class="p-3 bg-white rounded-xl border border-stone-200">
-                <strong class="text-charcoal block">National Emergency Service:</strong>
-                <a href="tel:999" class="text-terracotta-600 font-mono font-semibold">999 (Toll Free)</a>
-              </div>
-              <div class="p-3 bg-white rounded-xl border border-stone-200">
-                <strong class="text-charcoal block">Sadar 250-Bed Hospital:</strong>
-                <a href="tel:01730324778" class="text-terracotta-600 font-mono font-semibold">01730-324778</a>
-              </div>
-              <div class="p-3 bg-white rounded-xl border border-stone-200">
-                <strong class="text-charcoal block">Sea Lifeguard Stations:</strong>
-                <span class="text-stone-600">Laboni &amp; Sugandha Points</span>
-              </div>
-            </div>
+            <h4 class="font-serif text-xl text-charcoal mb-3">Emergency Numbers</h4>
+            <ul data-emergency-contacts class="space-y-2 text-sm text-charcoal">
+              <li>999</li>
+            </ul>
           </div>
         </div>
 
@@ -923,42 +895,6 @@
         <!-- Populated dynamically via app.js -->
       </div>
 
-      <!-- Hidden compatibility containers so app.js and features.js work seamlessly -->
-      <div id="destinations-grid" class="hidden"></div>
-      <div id="destination-slider-dots" class="hidden"></div>
-      <div id="destination-slider-counter" class="hidden"></div>
-      <div id="hidden-gems-grid" class="hidden"></div>
-      <div id="hidden-gems-slider-dots" class="hidden"></div>
-      <div id="gems-slider-counter" class="hidden"></div>
-      <div id="hotels-grid" class="hidden"></div>
-      <div id="hotel-star-filters" class="hidden"></div>
-      <div id="hotel-price-filters" class="hidden"></div>
-      <div id="hotel-spot-filters" class="hidden"></div>
-      <div id="hotel-facility-filters" class="hidden"></div>
-      <div id="hotel-active-filters-bar" class="hidden"></div>
-      <div id="hotel-active-chips" class="hidden"></div>
-      <div id="hotel-reset-filters-btn" class="hidden"></div>
-      <div id="hotel-slider-dots" class="hidden"></div>
-      <div id="hotel-slider-counter" class="hidden"></div>
-      <div id="transport-table-body" class="hidden"></div>
-      <div id="vehicle-glossary-cards" class="hidden"></div>
-      <div id="essential-info" class="hidden">
-        <div id="essential-info-grid"></div>
-      </div>
-      <div id="activities-section" class="hidden">
-        <div id="activities-grid"></div>
-        <div id="activity-category-filters"></div>
-        <div id="activity-slider-dots"></div>
-        <div id="activities-slider-counter"></div>
-      </div>
-      <div id="blog-section" class="hidden">
-        <div id="blog-posts-grid"></div>
-      </div>
-      <div id="itinerary-stepped-output" class="hidden"></div>
-      <div id="itinerary-output-container" class="hidden"></div>
-      <div id="itinerary-studio-builder" class="hidden"></div>
-      <div id="visual-itinerary-poster" class="hidden"></div>
-      <div id="map-section" class="hidden"></div>
 
     </div>
   </section>
@@ -997,12 +933,9 @@
 
         <div class="md:col-span-4 space-y-3">
           <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">24/7 TOURIST SAFETY</span>
-          <div class="space-y-2 text-xs text-stone-300">
-            <p><strong class="text-white">Tourist Police Cox's Bazar:</strong> 01320-160160</p>
-            <p><strong class="text-white">National Emergency Service:</strong> 999</p>
-            <p><strong class="text-white">Sadar District Hospital:</strong> 01730-324778</p>
-            <p><strong class="text-white">Sea Beach Lifeguards:</strong> Laboni &amp; Sugandha Points</p>
-          </div>
+          <ul data-emergency-contacts class="space-y-2 text-xs text-stone-300">
+            <li>999</li>
+          </ul>
         </div>
 
       </div>
@@ -1045,7 +978,7 @@
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
         <div>
           <span class="font-serif text-lg block">Coastal Concierge</span>
-          <span class="text-[10px] font-mono text-stone-400 uppercase">Live Local Guidance</span>
+          <span class="text-[10px] font-mono text-stone-400 uppercase">Answers from this guide</span>
         </div>
       </div>
       <button type="button" onclick="toggleChatbot()" class="text-stone-400 hover:text-white text-lg px-2">✕</button>
@@ -1102,18 +1035,10 @@
     </div>
   </div>
 
-  <!-- User Toast Notification Container -->
-  <div
-    id="user-friendly-toast"
-    class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-charcoal text-white text-xs font-mono px-5 py-2.5 rounded-full shadow-lg"
-  ></div>
-
   <!-- Modular JavaScript Files -->
-  <script src="js/data.js?v=20261014-editorial"></script>
-  <script src="js/admin.js?v=20261014-editorial"></script>
-  <script src="js/app.js?v=20261014-editorial"></script>
-  <script src="js/features.js?v=20261014-editorial"></script>
-  <script src="js/quickpick.js"></script>
-  <script src="js/blog.js?v=20261014-editorial"></script>
+  <script src="js/data.js?v=20261015"></script>
+  <script src="js/app.js?v=20261015"></script>
+  <script src="js/planner.js?v=20261015"></script>
+  <script src="js/quickpick.js?v=20261015"></script>
 </body>
 </html>

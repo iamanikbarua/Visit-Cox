@@ -1,6 +1,6 @@
 # Visit Cox — agent operating contract
 
-Static, bilingual (EN/বাংলা) travel guide for Cox's Bazar, served by GitHub Pages from `main` at https://iamanikbarua.github.io/Visit-Cox/. No build step, no server, no database. Every page is a root `*.html` file that loads plain scripts from `js/` (globals, no modules) and Tailwind from a CDN.
+Static, bilingual (EN/বাংলা) travel guide for Cox's Bazar, served by GitHub Pages from `main` at https://iamanikbarua.github.io/Visit-Cox/. No build step, no server, no database. Every page is a root `*.html` file that loads plain scripts from `js/` (globals, no modules) and Tailwind from a CDN. There is no admin or CMS: content changes are edits to `js/data.js` in git.
 
 Read before any change: this file, `CODING_STANDARDS.md`, the last section of `judge.md`, the newest `CrtiQue_*.md`, `todo.md`, and your role file (`0N-*/WORKSPACE.md`).
 
@@ -15,15 +15,13 @@ Read before any change: this file, `CODING_STANDARDS.md`, the last section of `j
 |---|---|---|
 | `*.html` | Pages: markup, meta, JSON-LD | frontend (meta/JSON-LD: seo) |
 | `css/styles.css` | Theme tokens, components | uiux |
-| `js/data.js` | All content and prices (hotels, spots, fares, FAQs, UI strings) | data (03) |
+| `js/data.js` | All content and prices (hotels, spots, fares, FAQs, UI strings, `EMERGENCY_CONTACTS`, `SITE_CONTACT`) | data (03) |
 | `js/app.js` | Language/currency state, search, chatbot, page renderers | frontend |
-| `js/features.js` | Itinerary studio, PNG/PDF export | frontend |
-| `js/planner.js`, `js/quickpick.js` | Planner engine, quick pick, WhatsApp payload | frontend (payload: data) |
+| `js/planner.js`, `js/quickpick.js` | Planner engine (`PlannerApp.estimate` is the only budget formula), quick pick, PNG/PDF pass export, WhatsApp payload | frontend (payload: data) |
 | `js/blog.js` | Blog content and rendering | marketing (copy), frontend (code) |
-| `js/admin.js` | Browser-only "CMS" | data (03) |
 | `tests/` | `node --test` suites that load the real `js/` files | qa |
 | `scripts/check.sh` | The gate. Must pass before any commit | qa |
-| `0N-*/` | Role files. `WORKSPACE.md` is the brief; other files there are old prototypes, not shipped code | each role |
+| `0N-*/` | Role files. `WORKSPACE.md` is the brief; nothing in these folders ships | each role |
 
 ## Rules for every agent
 - **Ship in place.** Edit the real root files. Never build a "staging" copy in a role folder; copies drift and nothing loads them.
