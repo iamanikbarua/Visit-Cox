@@ -635,6 +635,16 @@ const PlannerApp = (function () {
     const travelersLabel = document.getElementById("param-travelers-label");
     if (travelersLabel) travelersLabel.textContent = `${state.adults} Adults${state.kids > 0 ? `, ${state.kids} Kids` : ''}`;
 
+    const wizardDurationFeedback = document.getElementById("wizard-duration-feedback");
+    if (wizardDurationFeedback) {
+      wizardDurationFeedback.textContent = `${state.days} Days (${state.days === 2 ? 'Weekend Trip' : state.days === 3 ? 'Classic' : 'Extended'})`;
+    }
+
+    const wizardGroupFeedback = document.getElementById("wizard-group-feedback");
+    if (wizardGroupFeedback) {
+      wizardGroupFeedback.textContent = `${state.adults} Adults${state.kids > 0 ? `, ${state.kids} Kids` : ''}`;
+    }
+
     const customDaysVal = document.getElementById("planner-custom-days-val");
     if (customDaysVal) customDaysVal.textContent = state.days;
 
@@ -649,6 +659,49 @@ const PlannerApp = (function () {
 
     const vehicleTag = document.getElementById("planner-vehicle-tag");
     if (vehicleTag) vehicleTag.textContent = budget.vehicle;
+
+    // Wizard Duration Buttons (01 Duration)
+    document.querySelectorAll(".wizard-duration-btn").forEach(btn => {
+      const d = parseInt(btn.dataset.days);
+      if (d === state.days) {
+        btn.className = "wizard-duration-btn p-3 rounded-2xl border-2 border-charcoal bg-charcoal text-white text-center transition cursor-pointer shadow-sm";
+      } else {
+        btn.className = "wizard-duration-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-center transition cursor-pointer";
+      }
+    });
+
+    // Wizard Pax Buttons (01 Group)
+    document.querySelectorAll(".wizard-pax-btn").forEach(btn => {
+      const p = btn.dataset.pax;
+      const isMatch = (p === 'solo' && state.adults === 1 && state.kids === 0) ||
+                      (p === 'couple' && state.adults === 2 && state.kids === 0) ||
+                      (p === 'family' && state.adults === 2 && state.kids === 2) ||
+                      (p === 'friends' && state.adults >= 4);
+      if (isMatch) {
+        btn.className = "wizard-pax-btn p-3 rounded-2xl border-2 border-charcoal bg-charcoal text-white text-xs font-semibold transition cursor-pointer shadow-sm";
+      } else {
+        btn.className = "wizard-pax-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-xs font-semibold transition cursor-pointer";
+      }
+    });
+
+    // Wizard Tier Buttons (03 Stay)
+    document.querySelectorAll(".wizard-tier-btn").forEach(btn => {
+      const t = btn.dataset.tier;
+      if (t === state.budgetTier) {
+        btn.className = "wizard-tier-btn w-full p-4 rounded-2xl border-2 border-charcoal bg-stone-100 text-left transition flex items-center justify-between cursor-pointer shadow-sm";
+      } else {
+        btn.className = "wizard-tier-btn w-full p-4 rounded-2xl border border-stone-200 hover:border-charcoal bg-white text-left transition flex items-center justify-between cursor-pointer";
+      }
+    });
+
+    // Archetype Card Buttons (02 Vibe)
+    document.querySelectorAll(".archetype-card-btn").forEach(btn => {
+      if (btn.dataset.arc === state.selectedArchetype) {
+        btn.className = "archetype-card-btn p-5 rounded-2xl border-2 border-charcoal bg-stone-50 text-left transition flex flex-col justify-between cursor-pointer group shadow-sm";
+      } else {
+        btn.className = "archetype-card-btn p-5 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer group";
+      }
+    });
 
     document.querySelectorAll(".planner-duration-btn").forEach(btn => {
       const d = parseInt(btn.dataset.days);
@@ -972,7 +1025,16 @@ const PlannerApp = (function () {
       scale: 2,
       useCORS: true,
       backgroundColor: "#111827",
-      logging: false
+      logging: false,
+      windowWidth: 1200,
+      onclone: (clonedDoc) => {
+        const el = clonedDoc.getElementById("visual-pass-export-card");
+        if (el && el.parentElement) {
+          el.parentElement.style.position = "static";
+          el.parentElement.style.left = "auto";
+          el.parentElement.style.top = "auto";
+        }
+      }
     }).then(canvas => {
       const imageURL = canvas.toDataURL("image/png");
       const link = document.createElement("a");
@@ -1000,12 +1062,20 @@ const PlannerApp = (function () {
     const originalText = exportBtn ? exportBtn.innerHTML : "";
     if (exportBtn) exportBtn.innerHTML = "Generating Phone Wallpaper...";
 
-    card.classList.remove("hidden");
     html2canvas(card, {
       scale: 2,
       useCORS: true,
       backgroundColor: "#0B2135",
-      logging: false
+      logging: false,
+      windowWidth: 600,
+      onclone: (clonedDoc) => {
+        const el = clonedDoc.getElementById("phone-lockscreen-pass-card");
+        if (el && el.parentElement) {
+          el.parentElement.style.position = "static";
+          el.parentElement.style.left = "auto";
+          el.parentElement.style.top = "auto";
+        }
+      }
     }).then(canvas => {
       const imageURL = canvas.toDataURL("image/png");
       const link = document.createElement("a");
@@ -1045,6 +1115,11 @@ const PlannerApp = (function () {
     closeDriverCard: closeDriverCard,
     setDays: function (d) {
       state.days = Math.max(1, Math.min(14, d));
+      renderAll();
+    },
+    setPax: function (adults, kids) {
+      state.adults = Math.max(1, adults);
+      state.kids = Math.max(0, kids);
       renderAll();
     },
     stepDays: function (delta) {
