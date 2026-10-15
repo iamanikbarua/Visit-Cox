@@ -130,7 +130,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 2. Speedboat Crossing to Moheshkhali Island:
 • Fare: roughly 80 to 100 BDT per passenger each way (estimate, Oct 2026; confirm at the ghat).
-• Duration: about 20 minutes across the Moheshkhali channel. Ask for a life jacket before you board.
+• Duration: about 30 minutes to Gorakghata (about 1 hour by engine boat or sampan). Ask for a life jacket before you board, and refuse extra tolls at the ghat (Tourist Police, Oct 2026).
 • What to See on the Island: Hire a local island Tomtom (~150–200 BDT reserved) to visit the historic Adinath Shiva Temple atop Mainak Hill, the Rakhine Buddhist Pagodas, betel-leaf hills, and coastal salt pans.
 
 3. Sonadia Ecological Island:
@@ -139,7 +139,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 ১. কীভাবে যাবেন (কস্তুরাঘাট / ৬ নং ঘাট):
 • কলাতলী বা লাবণী থেকে টমটমে করে শহরের কস্তুরাঘাট বা ৬ নং ঘাটে যান (ভাড়া ২০-৩০ টাকা)।
-• সেখান থেকে স্পিডবোটে প্রায় ২০ মিনিটে মহেশখালী দ্বীপে পৌঁছানো যায়, ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা (আনুমানিক, অক্টোবর ২০২৬; ঘাটে জেনে নিন)। ওঠার আগে লাইফজ্যাকেট চেয়ে নিন।
+• সেখান থেকে স্পিডবোটে প্রায় ৩০ মিনিটে (ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা) মহেশখালীর গোরকঘাটায় পৌঁছানো যায় (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬), ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা (আনুমানিক, অক্টোবর ২০২৬; ঘাটে জেনে নিন)। ওঠার আগে লাইফজ্যাকেট চেয়ে নিন, ঘাটে বাড়তি টোল দেবেন না।
 
 ২. কী কী দেখবেন:
 • মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক আদিনাথ মন্দির, রাখাইন বৌদ্ধ প্যাগোডা, লবণের মাঠ ও পানের বরজ। আর শীতকালে সোনাদিয়া দ্বীপে লাল কাঁকড়া ও বিচ ক্যাম্পিং উপভোগ করতে পারেন।`
@@ -176,7 +176,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 3. Beach Swimming Safety & Emergency Contacts:
 • Swim ONLY between Green Flags watched by CIPRB Sea Safe Lifeguards. Never enter the water near Red Flags or after sunset.
-• Save the Tourist Police helpline (01320-222222) and National Emergency (999) on your phone.`,
+• Save National Emergency (999) and the Tourist Police helplines (01320-222222, 01887-878787; Tourist Police, Oct 2026) on your phone.`,
       bn: `প্রথমবার কক্সবাজার ভ্রমণে গেলে নিচের টিপসগুলো আপনার খরচ বাঁচাবে এবং ভ্রমণকে নিরাপদ রাখবে:
 
 ১. কোন জোনে হোটেল নেবেন?
@@ -186,7 +186,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 ২. সৈকতের নিরাপত্তা ও জরুরি নাম্বার:
 • সমুদ্রে গোসলের সময় শুধুমাত্র সি-সেফ লাইফগার্ডদের সবুজ পতাকা চিহ্নিত স্থানে নামুন। লাল পতাকা থাকলে কখনোই পানিতে নামবেন না।
-• যেকোনো প্রয়োজনে ট্যুরিস্ট পুলিশ হেল্পলাইন (01320-222222) বা জাতীয় জরুরি সেবা ৯৯৯-এ কল করুন।`
+• যেকোনো প্রয়োজনে জাতীয় জরুরি সেবা ৯৯৯ বা ট্যুরিস্ট পুলিশ হেল্পলাইনে (01320-222222, 01887-878787; ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬) কল করুন।`
     }
   }
 ];

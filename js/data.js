@@ -6,9 +6,12 @@
  */
 
 // Rendered by app.js, planner.js and page footers. Confirm by phone before relying on them.
+// Owner-provided facts from the Tourist Police, Cox's Bazar Region (helplines, distances, spot safety).
+const TOURIST_POLICE_SOURCE = { source: "Tourist Police, Cox's Bazar Region (government notice and national portal page, provided by the owner)", asOf: '2026-10-15' };
 const EMERGENCY_CONTACTS = [
   { id: 'national', name: { en: 'National Emergency (police, fire, ambulance)', bn: 'জাতীয় জরুরি সেবা (পুলিশ, ফায়ার, অ্যাম্বুলেন্স)' }, number: '999', tel: '999', source: 'https://999.gov.bd', asOf: '2026-10-15' },
-  { id: 'tourist-police', name: { en: 'Tourist Police helpline (24/7)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (২৪/৭)' }, number: '01320-222222', tel: '+8801320222222', source: 'https://bangladeshmonitor.com.bd/en/bangladesh-tourist-police-launches-247-helpline-for-travellers', asOf: '2026-10-15', needsOwnerConfirm: true },
+  { id: 'tourist-police', name: { en: 'Tourist Police helpline (24/7)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (২৪/৭)' }, number: '01320-222222', tel: '+8801320222222', ...TOURIST_POLICE_SOURCE, sourceUrl: 'https://bangladeshmonitor.com.bd/en/bangladesh-tourist-police-launches-247-helpline-for-travellers' },
+  { id: 'tourist-police-2', name: { en: 'Tourist Police helpline (second line)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (দ্বিতীয় নাম্বার)' }, number: '01887-878787', tel: '+8801887878787', ...TOURIST_POLICE_SOURCE },
 ];
 const SITE_CONTACT = { whatsapp: null }; // null = no real number yet; UI must hide WhatsApp CTAs
 
@@ -163,7 +166,8 @@ const UI_TEXT = {
         subtitle: "Save these before you travel. Numbers from published sources, last checked 2026-10-15:",
         contacts: [
           { name: "National Emergency Service", number: "999", note: "24/7 toll-free police, fire and ambulance" },
-          { name: "Tourist Police helpline", number: "01320-222222", note: "24/7 national helpline (reported Sep 2023, Bangladesh Monitor)" }
+          { name: "Tourist Police helpline", number: "01320-222222", note: "Tourist Police helpline for tourist spots across Bangladesh (Tourist Police, Oct 2026)" },
+          { name: "Tourist Police helpline (second line)", number: "01887-878787", note: "Tourist Police helpline for tourist spots across Bangladesh (Tourist Police, Oct 2026)" }
         ]
       }
     },
@@ -337,7 +341,8 @@ const UI_TEXT = {
         subtitle: "ভ্রমণের আগে নাম্বারগুলো সেভ করে রাখুন। প্রকাশিত সূত্র থেকে নেওয়া, সর্বশেষ যাচাই ২০২৬-১০-১৫:",
         contacts: [
           { name: "জাতীয় জরুরি সেবা (টোল-ফ্রি)", number: "999", note: "২৪/৭ পুলিশ, ফায়ার সার্ভিস ও অ্যাম্বুলেন্স" },
-          { name: "ট্যুরিস্ট পুলিশ হেল্পলাইন", number: "01320-222222", note: "২৪/৭ জাতীয় হেল্পলাইন (সেপ্টেম্বর ২০২৩, বাংলাদেশ মনিটর)" }
+          { name: "ট্যুরিস্ট পুলিশ হেল্পলাইন", number: "01320-222222", note: "সারা দেশের পর্যটন স্পটে ট্যুরিস্ট পুলিশের হেল্পলাইন (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)" },
+          { name: "ট্যুরিস্ট পুলিশ হেল্পলাইন (দ্বিতীয় নাম্বার)", number: "01887-878787", note: "সারা দেশের পর্যটন স্পটে ট্যুরিস্ট পুলিশের হেল্পলাইন (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)" }
         ]
       }
     },
@@ -1359,8 +1364,8 @@ let DESTINATIONS_DATA = [
       bn: "সবুজ উপকূলীয় পাহাড় যেখানে সমুদ্রের সাথে মিশেছে। (১,৭২৯ হেক্টর সংরক্ষিত বন ও প্রাকৃতিক ঝর্ণা)"
     },
     directions: {
-      en: "18 km south on Marine Drive.",
-      bn: "মেরিন ড্রাইভ ধরে ১৮ কিমি দক্ষিণে।"
+      en: "About 10 km south of the Cox's Bazar bus stand on Marine Drive (Tourist Police, Oct 2026). Easybike and CNG drivers may overcharge and isolated spots carry a snatching risk: agree the fare first and stay in busy areas.",
+      bn: "মেরিন ড্রাইভ ধরে কক্সবাজার বাসস্ট্যান্ড থেকে প্রায় ১০ কিমি দক্ষিণে (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)। ইজিবাইক ও সিএনজি চালকেরা বাড়তি ভাড়া চাইতে পারেন, নির্জন জায়গায় ছিনতাইয়ের ঝুঁকি আছে: আগে ভাড়া ঠিক করুন, লোকজন আছে এমন জায়গায় থাকুন।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
     sourceName: "Wikimedia Commons (Moheen Reeyad)",
@@ -1381,8 +1386,8 @@ let DESTINATIONS_DATA = [
       bn: "স্বচ্ছ নীল জলরাশি ও প্রাচীন প্রবাল পাথর ঘেরা শান্ত সমুদ্র সৈকত।"
     },
     directions: {
-      en: "32 km south on Marine Drive.",
-      bn: "মেরিন ড্রাইভ ধরে ৩২ কিমি দক্ষিণে (উখিয়া উপজেলা)।"
+      en: "About 24 km south of the Cox's Bazar bus stand on Marine Drive (Tourist Police, Oct 2026). Easybike and CNG drivers may overcharge and isolated spots carry a snatching risk: agree the fare first and stay in busy areas.",
+      bn: "মেরিন ড্রাইভ ধরে কক্সবাজার বাসস্ট্যান্ড থেকে প্রায় ২৪ কিমি দক্ষিণে, উখিয়া উপজেলা (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)। ইজিবাইক ও সিএনজি চালকেরা বাড়তি ভাড়া চাইতে পারেন, নির্জন জায়গায় ছিনতাইয়ের ঝুঁকি আছে: আগে ভাড়া ঠিক করুন, লোকজন আছে এমন জায়গায় থাকুন।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Inani_Beach_(135005).jpg",
     sourceName: "Wikimedia Commons (Inani Beach)",
@@ -1403,8 +1408,8 @@ let DESTINATIONS_DATA = [
       bn: "সমৃদ্ধ সংস্কৃতি, মৈনাক পাহাড়ের চূড়ায় আদিনাথ মন্দির, বৌদ্ধ প্যাগোডা ও লবণের মাঠ।"
     },
     directions: {
-      en: "35 mins via speedboat from Kasturi Ghat.",
-      bn: "কস্তুরাঘাট (বা ৬ নং ঘাট) থেকে স্পিডবোটে মাত্র ৩৫ মিনিট।"
+      en: "From 6 No. Ghat (Kasturi Ghat) to Gorakghata: about 30 min by speedboat, about 1 hour by engine boat or sampan. Adinath Temple is about 500 m from the ghat. Watch for extra tolls at the ghats and unprofessional guides (Tourist Police, Oct 2026).",
+      bn: "৬ নং ঘাট (কস্তুরাঘাট) থেকে গোরকঘাটা: স্পিডবোটে প্রায় ৩০ মিনিট, ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা। ঘাট থেকে আদিনাথ মন্দির প্রায় ৫০০ মিটার। ঘাটে বাড়তি টোল ও অদক্ষ গাইড থেকে সাবধান (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
     sourceName: "Wikimedia Commons (Adinath Temple)",
@@ -1425,8 +1430,8 @@ let DESTINATIONS_DATA = [
       bn: "বাংলাদেশের প্রথম আন্তর্জাতিক মানের সামুদ্রিক ফিশ অ্যাকোয়ারিয়াম ও আন্ডারওয়াটার গ্লাস টানেল।"
     },
     directions: {
-      en: "Located in Jhautola town center.",
-      bn: "কক্সবাজার শহরের ঝাউতলা মূল কেন্দ্রে অবস্থিত।"
+      en: "Located in Jhautola town center, about 5 km from the bus stand and 1.5 km from the airport. Open 9:00 AM to 11:00 PM (Tourist Police, Oct 2026).",
+      bn: "কক্সবাজার শহরের ঝাউতলায়, বাসস্ট্যান্ড থেকে প্রায় ৫ কিমি ও বিমানবন্দর থেকে দেড় কিমি। খোলা সকাল ৯টা থেকে রাত ১১টা (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Rhinobatos_rhinobatos_in_Bangladesh_aquarium.jpg",
     sourceName: "Wikimedia Commons (Bangladesh Aquarium)",
@@ -1469,8 +1474,8 @@ let DESTINATIONS_DATA = [
       bn: "সোনালী বালুকাবেলা, রঙিন বিচ ছাতা, ঝিনুকের হস্তশিল্পের দোকান এবং লাইফগার্ড নিয়ন্ত্রিত সাঁতার কাটার সবচেয়ে জনপ্রিয় সৈকত।"
     },
     directions: {
-      en: "Directly in town center at the end of Sea Beach Road.",
-      bn: "কক্সবাজার শহরের কেন্দ্রস্থলে, সি বিচ রোডের মাথায়।"
+      en: "In town at the end of Sea Beach Road, about 2 km from the bus stand. The water is deeper here with rip currents, and people have drowned: swim only where lifeguards are, follow loudspeaker warnings and stay out in rough weather (Tourist Police, Oct 2026).",
+      bn: "শহরে সি বিচ রোডের মাথায়, বাসস্ট্যান্ড থেকে প্রায় ২ কিমি। এখানে পানি গভীর ও রিপ কারেন্ট আছে, ডুবে মৃত্যুর ঘটনাও ঘটেছে: শুধু লাইফগার্ড যেখানে আছেন সেখানে নামুন, মাইকের সতর্কবার্তা মানুন, উত্তাল সাগরে নামবেন না (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Laboni_beach.jpg",
     sourceName: "Wikimedia Commons (Laboni Beach)",
@@ -1491,8 +1496,8 @@ let DESTINATIONS_DATA = [
       bn: "প্রাণবন্ত সৈকত প্রাঙ্গণ, সুস্বাদু লাইভ সামুদ্রিক মাছের ফ্রাই, বিচ কোয়াড বাইকিং এবং পর্যটকদের জমজমাট সান্ধ্যকালীন আড্ডা।"
     },
     directions: {
-      en: "1 km south of Laboni, 5-min walk from Kolatoli junction.",
-      bn: "লাবণী থেকে ১ কিমি দক্ষিণে, কলাতলী মোড় থেকে ৫ মিনিটের পথ।"
+      en: "About 4 km from the bus stand, a 5-min walk from Kolatoli junction. Very crowded on holidays and children get separated: agree a meeting point (Tourist Police run lost-and-found by loudspeaker). Say no firmly to persistent hawkers, massage boys and photographers; patrols handle harassment. No quicksand, generally safe for bathing (Tourist Police, Oct 2026).",
+      bn: "বাসস্ট্যান্ড থেকে প্রায় ৪ কিমি, কলাতলী মোড় থেকে ৫ মিনিটের পথ। ছুটির দিনে প্রচণ্ড ভিড় হয়, শিশুরা হারিয়ে যায়: আগে থেকে একটা দেখা করার জায়গা ঠিক করুন (ট্যুরিস্ট পুলিশ মাইকে হারানো-প্রাপ্তির ঘোষণা দেয়)। নাছোড় হকার, ম্যাসাজ বয় ও ফটোগ্রাফারদের দৃঢ়ভাবে না বলুন; হয়রানি হলে টহল পুলিশ ব্যবস্থা নেয়। চোরাবালি নেই, গোসলের জন্য সাধারণত নিরাপদ (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Sugandha_Beach,_Cox%27s_Bazar.jpg",
     sourceName: "Wikimedia Commons (Sugandha Beach)",
@@ -1513,8 +1518,8 @@ let DESTINATIONS_DATA = [
       bn: "কক্সবাজারের মূল প্রবেশদ্বার সৈকত যেখানে নামীদামী রিসোর্টগুলোর অবস্থান; সাগরের বিশাল ঢেউ ও সূর্যাস্তের অসাধারণ রূপ।"
     },
     directions: {
-      en: "Kolatoli Circle (Dolphin Mor), start of Marine Drive.",
-      bn: "কলাতলী গোলচত্বর (ডলফিন মোড়) ও মেরিন ড্রাইভের শুরুর মুখে।"
+      en: "Kolatoli Circle (Dolphin Mor), start of Marine Drive, about 3 km from the bus stand. Snatching risk on quiet stretches: keep valuables close (Tourist Police, Oct 2026).",
+      bn: "কলাতলী গোলচত্বর (ডলফিন মোড়), মেরিন ড্রাইভের শুরুতে, বাসস্ট্যান্ড থেকে প্রায় ৩ কিমি। নির্জন অংশে ছিনতাইয়ের ঝুঁকি আছে: দামি জিনিস কাছে রাখুন (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg",
     sourceName: "Wikimedia Commons (Kolatoli Beach)",
@@ -1535,8 +1540,8 @@ let DESTINATIONS_DATA = [
       bn: "পাহাড় ও সমুদ্রের মিলনস্থলে প্রাচীন প্রাকৃতিক গুহা ও ঝিরিপথ; রোমাঞ্চকর প্যারাসেইলিং ও ক্যাম্পিংয়ের জন্য আদর্শ।"
     },
     directions: {
-      en: "8 km south on Marine Drive (between Kolatoli and Himchari).",
-      bn: "কলাতলী থেকে মেরিন ড্রাইভ ধরে ৮ কিমি দক্ষিণে (হিমছড়ির ঠিক আগে)।"
+      en: "On Marine Drive between Kolatoli and Himchari, about 5 km from the bus stand (Tourist Police, Oct 2026).",
+      bn: "মেরিন ড্রাইভে কলাতলী ও হিমছড়ির মাঝে, বাসস্ট্যান্ড থেকে প্রায় ৫ কিমি (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Marine_Drive_Cox%27s_Bazar.jpg",
     sourceName: "Wikimedia Commons (Marine Drive)",
@@ -1623,8 +1628,8 @@ let DESTINATIONS_DATA = [
       bn: "দেশের প্রথম সাফারি পার্ক যেখানে প্রাকৃতিক পরিবেশে রয়েল বেঙ্গল টাইগার, সিংহ, মায়াহরিণ ও বহু প্রজাতির পাখি বাস করে।"
     },
     directions: {
-      en: "45 km north of Cox's Bazar on the Chittagong-Cox's Bazar National Highway (Chakaria).",
-      bn: "চট্টগ্রাম-কক্সবাজার জাতীয় মহাসড়ক ধরে চকরিয়া উপজেলায় (কক্সবাজার থেকে ৪৫ কিমি)।"
+      en: "About 50 km north of the Cox's Bazar bus stand on the Cox's Bazar–Chattogram highway (Chakaria). Tickets at the Forest Department's set price; canteen, picnic shed and parking on site (Tourist Police, Oct 2026).",
+      bn: "কক্সবাজার-চট্টগ্রাম মহাসড়ক ধরে চকরিয়া উপজেলায়, কক্সবাজার বাসস্ট্যান্ড থেকে প্রায় ৫০ কিমি। টিকিটের দাম বন বিভাগের নির্ধারিত; ক্যান্টিন, পিকনিক শেড ও পার্কিং আছে (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
     sourceName: "Wikimedia Commons (Dulhazra)",
@@ -1928,11 +1933,12 @@ let ACTIVITIES_DATA = [
       bn: "প্যারাসেইলিং ও ওশান স্কাই গ্লাইডিং"
     },
     category: "water",
-    priceBDT: 2000,
-    priceMaxBDT: 3500,
+    priceBDT: 1000,
+    priceMaxBDT: 3000,
+    ...TOURIST_POLICE_SOURCE,
     priceNote: {
-      en: "per flight (Normal or Ocean Dip)",
-      bn: "প্রতি ফ্লাইট (নরমাল বা ওয়াটার ডিপ সহ)"
+      en: "per package at Daria Nagar (Fly Air Sea Sports); life jacket required, rescue speedboat on standby (Tourist Police, Oct 2026)",
+      bn: "দরিয়ানগরে প্রতি প্যাকেজ (ফ্লাই এয়ার সি স্পোর্টস); লাইফজ্যাকেট বাধ্যতামূলক, উদ্ধারকারী স্পিডবোট প্রস্তুত থাকে (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)"
     },
     location: {
       en: "Daria Nagar Beach & Kolatoli Point",
@@ -2139,8 +2145,8 @@ let ACTIVITIES_DATA = [
       bn: "কস্তুরাঘাট (৬ নং ঘাট) থেকে মহেশখালী জেটি"
     },
     duration: {
-      en: "30 – 40 Mins",
-      bn: "৩০ – ৪০ মিনিট"
+      en: "About 30 Mins",
+      bn: "প্রায় ৩০ মিনিট"
     },
     difficulty: {
       en: "Fast Marine Transit",
@@ -2395,9 +2401,10 @@ let TRANSPORT_DATA = [
       en: "Per passenger",
       bn: "জনপ্রতি"
     },
+    durationSource: TOURIST_POLICE_SOURCE,
     duration: {
-      en: "35 mins",
-      bn: "৩৫ মিনিট"
+      en: "about 30 mins",
+      bn: "প্রায় ৩০ মিনিট"
     }
   },
   {
@@ -2446,9 +2453,10 @@ let FAQ_DATA = [
       bn: "আমি কীভাবে মহেশখালী দ্বীপে যেতে পারি?"
     },
     answer: {
-      en: "Speedboats leave from Kasturi Ghat (6 No. Ghat) in town. The crossing takes about 20 minutes and costs roughly 80-100 BDT per person; confirm the fare at the ghat.",
-      bn: "শহরের কস্তুরাঘাট (৬ নং ঘাট) থেকে স্পিডবোটে মহেশখালী যেতে প্রায় ২০ মিনিট লাগে, ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা। ঘাটে ভাড়াটা জেনে নিন।"
-    }
+      en: "Speedboats leave from Kasturi Ghat (6 No. Ghat) in town. The crossing to Gorakghata takes about 30 minutes (about 1 hour by engine boat or sampan) and costs roughly 80-100 BDT per person; confirm the fare at the ghat and refuse extra tolls (Tourist Police, Oct 2026).",
+      bn: "শহরের কস্তুরাঘাট (৬ নং ঘাট) থেকে স্পিডবোটে মহেশখালীর গোরকঘাটা যেতে প্রায় ৩০ মিনিট লাগে (ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা), ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা। ঘাটে ভাড়াটা জেনে নিন, বাড়তি টোল দেবেন না (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
+    },
+    ...TOURIST_POLICE_SOURCE
   },
   {
     id: "faq-3",
@@ -2493,6 +2501,30 @@ let FAQ_DATA = [
       en: "No. Visit Cox is an independent guide with no hotel or transport partners. Prices and fares are estimates last reviewed in Oct 2026 and change with season and holidays. Use them as a starting point and confirm before you pay.",
       bn: "না। ভিজিট কক্স একটি স্বাধীন গাইড, কোনো হোটেল বা পরিবহনের সাথে আমাদের চুক্তি নেই। দাম ও ভাড়াগুলো আনুমানিক, সর্বশেষ দেখা হয়েছে অক্টোবর ২০২৬-এ, আর মৌসুম ও ছুটিতে বদলায়। এগুলো ধারণা হিসেবে নিন, টাকা দেওয়ার আগে জেনে নিন।"
     }
+  },
+  {
+    id: "faq-7",
+    question: {
+      en: "What should I watch out for at the main beaches?",
+      bn: "প্রধান সৈকতগুলোতে কী কী বিষয়ে সাবধান থাকব?"
+    },
+    answer: {
+      en: "Laboni: deeper water and rip currents; swim only where lifeguards are and follow loudspeaker warnings. Sugandha: very crowded on holidays, so agree a meeting point for children and say no firmly to hawkers. Kolatoli: keep valuables close on quiet stretches. Himchari and Inani: agree the easybike or CNG fare first and stay in busy areas. Tourist Police helplines: 01320-222222 and 01887-878787 (Tourist Police, Oct 2026).",
+      bn: "লাবণী: পানি গভীর ও রিপ কারেন্ট আছে; শুধু লাইফগার্ড যেখানে আছেন সেখানে নামুন, মাইকের সতর্কবার্তা মানুন। সুগন্ধা: ছুটির দিনে প্রচণ্ড ভিড়, তাই শিশুদের জন্য একটা দেখা করার জায়গা ঠিক করুন আর হকারদের দৃঢ়ভাবে না বলুন। কলাতলী: নির্জন অংশে দামি জিনিস কাছে রাখুন। হিমছড়ি ও ইনানী: ইজিবাইক বা সিএনজির ভাড়া আগে ঠিক করুন, লোকজন আছে এমন জায়গায় থাকুন। ট্যুরিস্ট পুলিশ হেল্পলাইন: 01320-222222 ও 01887-878787 (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
+    },
+    ...TOURIST_POLICE_SOURCE
+  },
+  {
+    id: "faq-8",
+    question: {
+      en: "How long does it take to reach Saint Martin's Island?",
+      bn: "সেন্টমার্টিন দ্বীপে যেতে কত সময় লাগে?"
+    },
+    answer: {
+      en: "From Teknaf jetty: about 2 hours by speedboat, 3.5 hours by ship or 6.5 hours by engine boat. A ship from Cox's Bazar 6 No. Ghat takes about 6.5 hours; 3-4 tourist ships run a day in season. Watch for overloaded boats, touts and hotel booking fraud: book only with known operators and pay after you see the confirmation (Tourist Police, Oct 2026).",
+      bn: "টেকনাফ জেটি থেকে স্পিডবোটে প্রায় ২ ঘণ্টা, জাহাজে প্রায় সাড়ে ৩ ঘণ্টা, ইঞ্জিনচালিত নৌকায় প্রায় সাড়ে ৬ ঘণ্টা। কক্সবাজারের ৬ নং ঘাট থেকে জাহাজে প্রায় সাড়ে ৬ ঘণ্টা; মৌসুমে দিনে ৩-৪টি পর্যটক জাহাজ চলে। অতিরিক্ত যাত্রী বোঝাই নৌকা, দালাল ও হোটেল বুকিং প্রতারণা থেকে সাবধান: শুধু পরিচিত অপারেটরের মাধ্যমে বুক করুন, কনফার্মেশন দেখে তারপর টাকা দিন (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
+    },
+    ...TOURIST_POLICE_SOURCE
   }
 ];
 
@@ -2550,7 +2582,7 @@ const PRICE_BOOK = (() => {
         modeNote: { en: 'Reserved', bn: 'রিজার্ভড' }, duration: { en: '15 mins', bn: '১৫ মিনিট' } }),
       e({ id: 'town-to-himchari-jeep', route: { en: 'Town to Himchari', bn: 'শহর থেকে হিমছড়ি' },
         vehicle: { en: 'Chander Gari (Jeep)', bn: 'চান্দের গাড়ি (জিপ)' }, vehicleKey: 'chander_gari', minBDT: 1800, maxBDT: 2500,
-        modeNote: { en: 'Round trip, reserved for group', bn: 'আসা-যাওয়া, গ্রুপের জন্য রিজার্ভড' }, duration: { en: '35 mins each way', bn: 'এক দিকে ৩৫ মিনিট' } }),
+        modeNote: { en: 'Round trip, reserved for group', bn: 'আসা-যাওয়া, গ্রুপের জন্য রিজার্ভড' }, duration: { en: 'About 30 mins each way (Tourist Police)', bn: 'এক দিকে প্রায় ৩০ মিনিট (ট্যুরিস্ট পুলিশ)' } }),
       e({ id: 'town-to-inani-car', route: { en: 'Town to Inani Beach', bn: 'শহর থেকে ইনানী সৈকত' },
         vehicle: { en: 'CNG or car', bn: 'সিএনজি বা গাড়ি' }, vehicleKey: 'cng', minBDT: 800, maxBDT: 1200,
         modeNote: { en: 'Round trip, reserved', bn: 'আসা-যাওয়া, রিজার্ভড' }, duration: { en: '50 mins each way', bn: 'এক দিকে ৫০ মিনিট' } }),

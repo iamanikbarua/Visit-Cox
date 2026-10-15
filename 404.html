@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="assets/images/favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/consent.js?v=20261015" defer></script>
 </head>
 <body class="bg-[#FAF9F6] text-[#111827] font-sans antialiased min-h-screen flex flex-col items-center justify-center px-4 text-center">
   <main class="max-w-md">
@@ -21,6 +22,10 @@
     <div class="flex flex-col sm:flex-row gap-3 justify-center">
       <a href="index.html" class="px-5 py-3 rounded-full bg-[#111827] text-white font-semibold">Go to home</a>
       <a href="itinerary.html" class="px-5 py-3 rounded-full border border-stone-300 font-semibold">Open the trip planner</a>
+    </div>
+    <div class="footer-legal-row text-stone-600">
+      <a href="privacy.html" class="footer-legal">Privacy</a>
+      <button type="button" class="footer-legal" onclick="window.VisitCoxConsent &amp;&amp; VisitCoxConsent.reset()">Cookie settings</button>
     </div>
   </main>
 </body>

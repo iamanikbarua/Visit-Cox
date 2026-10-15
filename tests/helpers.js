@@ -46,12 +46,12 @@ function memoryStorage() {
 }
 
 // load(['data.js', 'planner.js']) -> evaluate('EXPR') reads any top-level const/let/function.
-// Options: storage, search ('?days=3'), dom (true = fakeDocument with real element objects).
-function load(files, { storage = memoryStorage(), search = '', dom = false } = {}) {
+// Options: storage, search ('?days=3'), dom (true = fakeDocument with real element objects), document (your own fake).
+function load(files, { storage = memoryStorage(), search = '', dom = false, document = dom ? fakeDocument() : stub() } = {}) {
   const ctx = {
     console, setTimeout: () => 0, clearTimeout() {}, setInterval: () => 0, clearInterval() {},
     localStorage: storage, sessionStorage: memoryStorage(),
-    document: dom ? fakeDocument() : stub(), navigator: { language: 'en', userAgent: 'node' },
+    document, navigator: { language: 'en', userAgent: 'node' },
     location: { search, hash: '', href: 'http://localhost/' + search, pathname: '/' },
     URLSearchParams, URL, Intl, encodeURIComponent, decodeURIComponent,
   };

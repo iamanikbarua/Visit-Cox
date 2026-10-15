@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <script src="js/consent.js?v=20261015" defer></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy | Visit Cox</title>
+  <meta name="description" content="How Visit Cox handles data: Google Analytics only with your consent, settings kept in your browser, no accounts, no payments, no selling of data." />
+  <link rel="canonical" href="https://iamanikbarua.github.io/Visit-Cox/privacy.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Visit Cox" />
+  <meta property="og:title" content="Privacy | Visit Cox" />
+  <meta property="og:description" content="How Visit Cox handles data: Google Analytics only with your consent, settings kept in your browser, no accounts, no payments, no selling of data." />
+  <meta property="og:url" content="https://iamanikbarua.github.io/Visit-Cox/privacy.html" />
+  <meta property="og:image" content="https://iamanikbarua.github.io/Visit-Cox/assets/images/hero-coxs-bazar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/images/favicon.png" />
+
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (window.tailwind) tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            alabaster: '#FAF9F6',
+            charcoal: '#111827',
+            stone: {
+              50: '#FAF9F6',
+              100: '#F5F3EF',
+              200: '#E7E5E0',
+              300: '#D5D1C8',
+              400: '#A39D92',
+              500: '#79746A',
+              600: '#5A564F',
+              700: '#3E3B36',
+              800: '#2A2824',
+              900: '#1A1916'
+            },
+            terracotta: {
+              50: '#FCF6F4',
+              100: '#F8ECE7',
+              500: '#D97757',
+              600: '#C86446',
+              700: '#A84C32'
+            },
+            sage: {
+              50: '#F4F7F5',
+              100: '#E5ECE7',
+              600: '#4A6B5D',
+              700: '#385347'
+            },
+            ocean: {
+              800: '#0E2A47',
+              900: '#0B2135',
+              950: '#061320'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
+
+  <!-- ========================================================================
+       TOP UTILITY STRIP & NAVIGATION
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <span class="font-serif text-2xl sm:text-3xl tracking-tight text-charcoal font-normal">
+          Visit Cox<span class="text-terracotta-600">.</span>
+        </span>
+        <span class="hidden sm:inline-block text-[11px] font-mono uppercase tracking-widest text-stone-500 border-l border-stone-300 pl-3">
+          Privacy
+        </span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
+        <a href="index.html" class="hover:text-charcoal transition">Home</a>
+        <a href="hotels.html" class="hover:text-charcoal transition">Hotels</a>
+        <a href="food.html" class="hover:text-charcoal transition">Food &amp; Dining</a>
+        <a href="activities.html" class="hover:text-charcoal transition">Activities</a>
+        <a href="spots.html" class="hover:text-charcoal transition">Spots</a>
+        <a href="transport.html" class="hover:text-charcoal transition">Transport</a>
+        <a href="culture.html" class="hover:text-charcoal transition">Culture</a>
+        <a href="itinerary.html" class="hover:text-charcoal transition">Itinerary</a>
+        <a href="blog.html" class="hover:text-charcoal transition">Blog</a>
+      </nav>
+
+      <!-- Language & Currency Switchers -->
+      <div class="flex items-center gap-3">
+        <!-- Currency Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleCurrency('BDT')"
+            data-curr-btn="BDT"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            ৳ BDT
+          </button>
+          <button
+            type="button"
+            onclick="toggleCurrency('USD')"
+            data-curr-btn="USD"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            $ USD
+          </button>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="flex items-center bg-white border border-stone-200 rounded-full p-0.5 text-xs font-mono">
+          <button
+            type="button"
+            onclick="toggleLanguage('en')"
+            data-lang-btn="en"
+            class="px-2.5 py-1 rounded-full font-bold bg-charcoal text-white transition cursor-pointer"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onclick="toggleLanguage('bn')"
+            data-lang-btn="bn"
+            class="px-2.5 py-1 rounded-full font-bold text-stone-500 hover:text-charcoal transition cursor-pointer"
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button
+          type="button"
+          onclick="toggleMobileMenu()"
+          aria-label="Toggle navigation menu"
+          class="xl:hidden w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center text-charcoal hover:border-charcoal transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    id="mobile-menu-drawer"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300"
+    onclick="toggleMobileMenu()"
+  >
+    <div
+      class="fixed top-0 right-0 w-[300px] sm:w-[360px] h-full bg-[#FAF9F6] p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
+      onclick="event.stopPropagation()"
+    >
+      <div class="space-y-8">
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <span class="font-serif text-2xl text-charcoal">Menu</span>
+          <button type="button" onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-600">
+            ✕
+          </button>
+        </div>
+        <nav class="flex flex-col space-y-4 text-sm font-semibold uppercase tracking-wider text-stone-600">
+          <a href="index.html" class="hover:text-charcoal py-1">00 Home Portal</a>
+          <a href="hotels.html" class="hover:text-charcoal py-1">01 Hotels &amp; Resorts</a>
+          <a href="food.html" class="hover:text-charcoal py-1">02 Local Food &amp; Dining</a>
+          <a href="activities.html" class="hover:text-charcoal py-1">03 Activities &amp; Thrills</a>
+          <a href="spots.html" class="hover:text-charcoal py-1">04 Sightseeing &amp; Spots</a>
+          <a href="transport.html" class="hover:text-charcoal py-1">05 Transport &amp; Fares</a>
+          <a href="culture.html" class="hover:text-charcoal py-1">06 Culture &amp; Heritage</a>
+          <a href="itinerary.html" class="hover:text-charcoal py-1">07 Itinerary Planner</a>
+          <a href="blog.html" class="hover:text-charcoal py-1">08 Travel Blog</a>
+        </nav>
+      </div>
+      <div class="pt-6 border-t border-stone-200 text-xs font-mono text-stone-500">
+        <p>Visit Cox's Bazar</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow">
+    <article class="vc-approx not-italic text-base max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-stone-700 leading-relaxed">
+      <section lang="en" class="space-y-6">
+        <header>
+          <p class="text-xs font-mono uppercase tracking-widest text-stone-500">Last updated 2026-10-15</p>
+          <h1 class="font-serif text-4xl sm:text-5xl text-charcoal mt-2">Privacy</h1>
+          <p class="mt-4">Visit Cox is an independent, non-commercial travel guide to Cox's Bazar. It is a static website hosted on GitHub Pages. This page explains, in plain words, what the site does with data.</p>
+        </header>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">Who runs this site</h2>
+          <p>The site is maintained by the owner of the GitHub repository <a class="underline" href="https://github.com/iamanikbarua/Visit-Cox">iamanikbarua/Visit-Cox</a>. It is not a government or tourism-board site. For questions or requests, open an issue at <a class="underline" href="https://github.com/iamanikbarua/Visit-Cox/issues">github.com/iamanikbarua/Visit-Cox/issues</a>. Issues are public, so do not post personal details there.</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">Analytics, only if you accept</h2>
+          <p>If you tap "Accept analytics" in the banner, the site loads Google Analytics. It records page views and basic technical details (such as device type, browser, approximate location from your IP address, and the page that sent you here) so we can see which pages are useful. If you tap "Decline" or ignore the banner, Google Analytics is not loaded and sets no cookies.</p>
+          <p class="mt-2">With your consent, Google Analytics sets these cookies (per <a class="underline" href="https://support.google.com/analytics/answer/11397207">Google's documentation</a>):</p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li><code>_ga</code>: tells visits from the same browser apart. Lasts up to 2 years.</li>
+            <li><code>_ga_*</code> (for example <code>_ga_KNP95TZB0K</code>): keeps track of the current session. Lasts up to 2 years.</li>
+          </ul>
+          <p class="mt-2">Google processes this data under its own terms; see <a class="underline" href="https://policies.google.com/privacy">Google's privacy policy</a>.</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">What stays in your browser</h2>
+          <p>The site saves your language, currency and analytics choice in your browser's local storage. Trip planner inputs (dates, group size, budget choices) are worked out in your browser and are not sent to us; if you export a trip pass as an image or PDF, that file is saved on your device only.</p>
+          <p class="mt-2">Like most websites, pages load fonts from Google Fonts and scripts from public CDNs (Tailwind CSS, cdnjs). Those services see your IP address when your browser fetches the files. GitHub, which hosts the site, may keep server logs.</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">WhatsApp</h2>
+          <p>If a WhatsApp button is shown and you tap it, WhatsApp opens with a pre-filled message. Whatever you send then goes to WhatsApp (Meta) and the person you message, under their terms. Nothing is sent unless you tap and send.</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">What we do not do</h2>
+          <p>There are no accounts, no logins and no payments on this site. We do not sell or rent data to anyone.</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">Change your choice</h2>
+          <p>Use the "Cookie settings" link at the bottom of any page to show the banner again and pick differently. You can also clear this site's data (cookies and local storage) in your browser settings, which removes the saved choice and any analytics cookies.</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">Bangladesh law</h2>
+          <p>This site is aimed at visitors to Bangladesh. Bangladesh's rules on cyber security and personal data have changed in recent years (for example, the Digital Security Act 2018 was replaced by the Cyber Security Act 2023, and a personal data protection law has been drafted and revised). We aim to collect as little as possible and only with consent. This page is not a legal opinion or a certificate of compliance with any law.</p>
+        </div>
+      </section>
+
+      <section lang="bn" hidden class="space-y-6">
+        <header>
+          <p class="text-xs font-mono uppercase tracking-widest text-stone-500">সর্বশেষ হালনাগাদ ২০২৬-১০-১৫</p>
+          <h1 class="font-serif text-4xl sm:text-5xl text-charcoal mt-2">গোপনীয়তা</h1>
+          <p class="mt-4">Visit Cox কক্সবাজার নিয়ে একটি স্বাধীন, অবাণিজ্যিক ভ্রমণ গাইড। এটি GitHub Pages-এ রাখা একটি স্ট্যাটিক ওয়েবসাইট। এই পেজে সহজ ভাষায় বলা আছে সাইটটি তথ্য নিয়ে কী করে।</p>
+        </header>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">সাইটটি কে চালায়</h2>
+          <p>সাইটটি GitHub রিপোজিটরি <a class="underline" href="https://github.com/iamanikbarua/Visit-Cox">iamanikbarua/Visit-Cox</a>-এর মালিক পরিচালনা করেন। এটি কোনো সরকারি বা পর্যটন বোর্ডের সাইট নয়। প্রশ্ন বা অনুরোধের জন্য <a class="underline" href="https://github.com/iamanikbarua/Visit-Cox/issues">github.com/iamanikbarua/Visit-Cox/issues</a>-এ একটি issue খুলুন। issue সবাই দেখতে পায়, তাই সেখানে ব্যক্তিগত তথ্য দেবেন না।</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">অ্যানালিটিক্স, শুধু আপনি সম্মতি দিলে</h2>
+          <p>ব্যানারে "অ্যানালিটিক্স গ্রহণ করুন" চাপলে সাইটটি Google Analytics লোড করে। এটি পেজ ভিউ ও কিছু প্রাথমিক কারিগরি তথ্য (যেমন ডিভাইসের ধরন, ব্রাউজার, IP ঠিকানা থেকে আনুমানিক অবস্থান, কোন পেজ থেকে এসেছেন) রাখে, যাতে আমরা বুঝি কোন পেজ কাজে লাগছে। "প্রত্যাখ্যান করুন" চাপলে বা ব্যানার উপেক্ষা করলে Google Analytics লোড হয় না এবং কোনো কুকি বসে না।</p>
+          <p class="mt-2">সম্মতি দিলে Google Analytics এই কুকিগুলো বসায় (<a class="underline" href="https://support.google.com/analytics/answer/11397207">Google-এর ডকুমেন্টেশন</a> অনুযায়ী):</p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li><code>_ga</code>: একই ব্রাউজারের ভিজিট আলাদা করে চেনে। সর্বোচ্চ ২ বছর থাকে।</li>
+            <li><code>_ga_*</code>: চলতি সেশনের হিসাব রাখে। সর্বোচ্চ ২ বছর থাকে।</li>
+          </ul>
+          <p class="mt-2">Google এই তথ্য নিজের শর্তে প্রক্রিয়া করে; দেখুন <a class="underline" href="https://policies.google.com/privacy">Google-এর গোপনীয়তা নীতি</a>।</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">যা আপনার ব্রাউজারেই থাকে</h2>
+          <p>আপনার ভাষা, মুদ্রা ও অ্যানালিটিক্স সিদ্ধান্ত ব্রাউজারের local storage-এ সংরক্ষিত হয়। ট্রিপ প্ল্যানারের তথ্য (তারিখ, দলের সদস্য, বাজেট) আপনার ব্রাউজারেই হিসাব হয়, আমাদের কাছে পাঠানো হয় না; ট্রিপ পাস ছবি বা PDF হিসেবে নামালে ফাইলটি শুধু আপনার ডিভাইসে থাকে।</p>
+          <p class="mt-2">বেশিরভাগ ওয়েবসাইটের মতো এখানেও ফন্ট Google Fonts থেকে এবং স্ক্রিপ্ট পাবলিক CDN (Tailwind CSS, cdnjs) থেকে লোড হয়। ফাইল আনার সময় এই সেবাগুলো আপনার IP ঠিকানা দেখতে পায়। সাইটের হোস্ট GitHub সার্ভার লগ রাখতে পারে।</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">WhatsApp</h2>
+          <p>WhatsApp বোতাম দেখানো থাকলে এবং আপনি তা চাপলে, একটি লেখা-ভরা বার্তাসহ WhatsApp খোলে। আপনি যা পাঠান তা WhatsApp (Meta) ও যাকে পাঠাচ্ছেন তার কাছে যায়, তাদের শর্তে। আপনি চেপে পাঠানো ছাড়া কিছুই যায় না।</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">আমরা যা করি না</h2>
+          <p>এই সাইটে কোনো অ্যাকাউন্ট, লগইন বা পেমেন্ট নেই। আমরা কারও কাছে তথ্য বিক্রি বা ভাড়া দিই না।</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">সিদ্ধান্ত বদলাবেন যেভাবে</h2>
+          <p>যেকোনো পেজের নিচে "Cookie settings" লিংকে চাপলে ব্যানার আবার আসবে, তখন নতুন করে বেছে নিন। ব্রাউজারের সেটিংস থেকে এই সাইটের ডেটা (কুকি ও local storage) মুছেও দিতে পারেন; তাতে সংরক্ষিত সিদ্ধান্ত ও অ্যানালিটিক্স কুকি মুছে যাবে।</p>
+        </div>
+        <div>
+          <h2 class="font-serif text-2xl text-charcoal mb-2">বাংলাদেশের আইন</h2>
+          <p>সাইটটি বাংলাদেশ ভ্রমণকারীদের জন্য। গত কয়েক বছরে বাংলাদেশের সাইবার নিরাপত্তা ও ব্যক্তিগত তথ্য সংক্রান্ত আইন কয়েকবার বদলেছে (যেমন ডিজিটাল নিরাপত্তা আইন ২০১৮-এর জায়গায় সাইবার নিরাপত্তা আইন ২০২৩ এসেছে, এবং ব্যক্তিগত তথ্য সুরক্ষা আইনের খসড়া তৈরি ও সংশোধন হয়েছে)। আমরা যত কম সম্ভব তথ্য নিই, এবং শুধু সম্মতি নিয়ে। এই পেজ কোনো আইনি মতামত বা কোনো আইন মেনে চলার সনদ নয়।</p>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="bg-charcoal text-white pt-20 pb-12 border-t border-stone-800">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-stone-800">
+        
+        <div class="lg:col-span-2 space-y-4">
+          <span class="font-serif text-3xl text-white">Visit Cox.</span>
+          <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
+            An independent, non-commercial guide to Cox's Bazar, Bangladesh. Prices are estimates; check before you pay.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Pages</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="index.html" class="hover:text-white transition">Home Portal</a></li>
+            <li><a href="hotels.html" class="hover:text-white transition">Hotels &amp; Resorts</a></li>
+            <li><a href="food.html" class="hover:text-white transition">Food &amp; Dining</a></li>
+            <li><a href="activities.html" class="hover:text-white transition">Activities &amp; Thrills</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Explore</span>
+          <ul class="space-y-2 text-xs uppercase tracking-wider text-stone-300">
+            <li><a href="spots.html" class="hover:text-white transition">Sightseeing &amp; Spots</a></li>
+            <li><a href="transport.html" class="hover:text-white transition">Transport &amp; Fares</a></li>
+            <li><a href="culture.html" class="hover:text-white transition">Culture &amp; Heritage</a></li>
+            <li><a href="itinerary.html" class="hover:text-white transition">Itinerary Builder</a></li>
+            <li><a href="blog.html" class="hover:text-white transition">Travel Blog</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <span class="block text-xs font-mono uppercase tracking-widest text-stone-400">Emergency 24/7</span>
+          <ul data-emergency-contacts class="space-y-1.5 text-xs text-stone-300">
+            <li>999</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-4">
+        <p>&copy; 2026 Visit Cox's Bazar. All Rights Reserved.</p>
+        <p>Curated for conscious coastal travelers.</p>
+      </div>
+
+    </div>
+    <div class="footer-legal-row">
+      <a href="privacy.html" class="footer-legal">Privacy</a>
+      <button type="button" class="footer-legal" onclick="window.VisitCoxConsent &amp;&amp; VisitCoxConsent.reset()">Cookie settings</button>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js?v=20261015"></script>
+  <script src="js/app.js?v=20261015"></script>
+</body>
+</html>

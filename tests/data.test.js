@@ -19,3 +19,15 @@ test('a corrupt CMS value in localStorage does not crash data.js', () => {
   const ev = load(['data.js'], { storage: s });
   assert.ok(ev('HOTELS_DATA.length') > 0);
 });
+
+test('both Tourist Police helplines are listed, none awaits confirmation, and the officer mobile is not shipped', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const ev = load(['data.js']);
+  const list = ev('EMERGENCY_CONTACTS');
+  for (const tel of ['+8801320222222', '+8801887878787']) assert.ok(list.some((c) => c.tel === tel), tel);
+  assert.deepStrictEqual([...list.filter((c) => c.needsOwnerConfirm === true).map((c) => c.id)], []);
+  const root = path.join(__dirname, '..');
+  const files = [...fs.readdirSync(path.join(root, 'js')).map((f) => path.join('js', f)), ...fs.readdirSync(root).filter((f) => f.endsWith('.html'))];
+  assert.deepStrictEqual(files.filter((f) => fs.readFileSync(path.join(root, f), 'utf8').includes('01320-158995')), []);
+});

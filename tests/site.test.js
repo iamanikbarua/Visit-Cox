@@ -41,3 +41,17 @@ test('hero search echoes typed text escaped', () => {
   assert.ok(html.includes('&lt;img'), html);
   assert.ok(!html.includes('<img src=x'), html);
 });
+
+test('index.html FAQPage JSON-LD matches FAQ_DATA (en) exactly', () => {
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
+  const block = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((j) => j['@type'] === 'FAQPage');
+  const faq = JSON.parse(load(['data.js'])('JSON.stringify(FAQ_DATA)')); // plain arrays: vm-realm arrays fail deepStrictEqual
+  assert.deepStrictEqual(block.mainEntity.map((q) => [q.name, q.acceptedAnswer.text]), faq.map((f) => [f.question.en, f.answer.en]));
+});
+
+test('emergency citations: text sources are escaped text, only URLs become links', () => {
+  const html = load(['data.js', 'app.js'])("emergencyContactsHTML('en')");
+  const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]).filter((h) => !h.startsWith('tel:'));
+  assert.ok(hrefs.length > 0 && hrefs.every((h) => /^https?:\/\//.test(h)), hrefs.join(', '));
+  assert.match(html, /Tourist Police, Cox&#39;s Bazar Region/);
+});

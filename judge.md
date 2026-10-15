@@ -26,3 +26,11 @@ Gaps and next steps. Newest section last; read it first.
 - Proof: `scripts/check.sh` all 6 steps pass, 34 node tests. Headless Chrome shows 0 page errors on all 10 pages. Exported bn phone pass shows only 999 plus an "estimates" note.
 - Not done, or needs the owner: see `todo.md`. The GTM score is not re-scored yet; the critique predicts about 30-35% after these fixes plus the owner's emergency-number call. Re-run the critique pipeline to confirm.
 - Merge: the owner pushed `168f198` (planner UX overhaul) during the rounds. It was merged in `1b3f3ac`, keeping the owner's wizard, offscreen pass and activity customizer, and re-applying Bangla, clamps, `PRICE_BOOK`, emergency/WhatsApp rules and hype removal on top. 35 tests pass. Pushed as `a29aa2b`.
+
+## Update 3 (2026-10-15): Tourist Police confirmed, analytics consent
+
+- Owner confirmed the Tourist Police helplines from a government notice: 01320-222222 and 01887-878787. Both are in `EMERGENCY_CONTACTS` and on exported passes. Officers' personal mobiles were left off.
+- Content added from the Tourist Police Cox's Bazar Region page: bus-stand distances, Radiant Fish World hours, parasailing ৳1,000-3,000, Moheshkhali speedboat about 30 min (was 20/35 in places), Saint Martin's times, and per-beach safety tips. Two FAQs added (beach safety, Saint Martin's).
+- Analytics: GA now loads only after the visitor taps Accept (`js/consent.js`). The banner is bilingual, with a "Cookie settings" link in every footer to change the choice. `privacy.html` is added and in the sitemap. Checked in Chrome: no Google request and no `_ga` cookie before consent.
+- Proof: `scripts/check.sh` all 6 steps pass, 44 node tests. 0 page errors on all 11 pages.
+- Open: the owner should review the legal wording on `privacy.html`. Google Fonts and the CDNs still load for everyone, and the privacy page says so.
