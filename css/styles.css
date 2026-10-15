@@ -438,6 +438,31 @@ html :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible 
     align-items: center;
     min-height: 44px;
   }
+  html :is(button, [role="button"], a[href^="tel:"]) {
+    min-width: 44px;
+  }
+  html label:has(> input[type="checkbox"], > input[type="radio"]) {
+    min-height: 44px;
+  }
+  /* The thumb is drawn centred; the transparent box is the tap area. */
+  html input[type="range"] {
+    height: 44px;
+    background: transparent;
+  }
+  /* Standalone links (card links, photo credits, breadcrumbs). Links inside a sentence are exempt.
+     :where() keeps specificity at 0 so a Tailwind display class (.block, .flex) still wins. */
+  :where(a[href]:not(p a, li a, td a, :has(div, img, h2, h3, h4, p))) {
+    display: inline-flex;
+    align-items: center;
+  }
+  html a[href] { /* ignored by links that stay display: inline */
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Short links widened by min-width ("Home", "999"): centre the text instead of leaving a gap. */
+  html a[href]:not([class*="flex"], [class*="block"], [class*="grid"]) {
+    justify-content: center;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

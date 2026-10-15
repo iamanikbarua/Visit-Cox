@@ -253,6 +253,20 @@ function pt(key, vars) {
   return String(s).replace(/\{(\w+)\}/g, (m, k) => (vars && k in vars ? (typeof vars[k] === 'number' ? plannerNum(vars[k]) : vars[k]) : m));
 }
 
+// Catalog and schedule copy: obj.bn[key] in বাংলা mode, else the English field.
+function pl(obj, key) {
+  return (plannerLang() === 'bn' && obj.bn && obj.bn[key]) || obj[key];
+}
+
+// "04:30 PM" -> "বিকেল ৪:৩০" in বাংলা mode; English is shown as written.
+function slotTime(t) {
+  const m = /^(\d{1,2}):(\d{2}) (AM|PM)$/.exec(t);
+  if (plannerLang() !== 'bn' || !m) return t;
+  const h = Number(m[1]) % 12 + (m[3] === 'PM' ? 12 : 0);
+  const part = h < 12 ? 'সকাল' : h < 15 ? 'দুপুর' : h < 18 ? 'বিকেল' : h < 19 ? 'সন্ধ্যা' : 'রাত';
+  return `${part} ${plannerNum(h % 12 || 12)}:${m[2].replace(/\d/g, plannerNum)}`;
+}
+
 // ============================================================================
 // 1. MASTER CATALOG & DATA SCHEMAS
 // ============================================================================
@@ -317,6 +331,7 @@ const PLANNER_CATALOG = {
       stars: 5,
       location: "Marine Drive, Kolatoli Beach",
       why: "Premier beachfront 5-star with infinity pool overlooking the Bay of Bengal and private lounge.",
+      bn: {"location": "মেরিন ড্রাইভ, কলাতলী সৈকত", "why": "বঙ্গোপসাগরমুখী ইনফিনিটি পুল ও প্রাইভেট লাউঞ্জসহ সৈকতঘেঁষা প্রথম সারির ৫-তারকা রিসোর্ট।"},
       amenities: ["Ocean View Balcony", "Infinity Pool", "Buffet Breakfast", "Private Beach Access"]
     },
     {
@@ -327,6 +342,7 @@ const PLANNER_CATALOG = {
       stars: 5,
       location: "Jaliapalong, Inani Beach",
       why: "Massive ultra-luxury beachfront escape with private water park, 5 specialty restaurants, and secluded coral sands.",
+      bn: {"location": "জালিয়াপালং, ইনানী সৈকত", "why": "নিজস্ব ওয়াটার পার্ক, ৫টি বিশেষ রেস্তোরাঁ ও নিরিবিলি প্রবাল-বালুর সৈকতসহ বিশাল অতি-বিলাসবহুল সৈকত রিসোর্ট।"},
       amenities: ["Water Park", "Private Beach", "Spa & Wellness", "Kids Zone"]
     },
     {
@@ -337,6 +353,7 @@ const PLANNER_CATALOG = {
       stars: 5,
       location: "Pechardwip, Marine Drive",
       why: "Iconic organic boutique beach villas nestled directly where lush hills meet pristine waves.",
+      bn: {"location": "পেঁচারদ্বীপ, মেরিন ড্রাইভ", "why": "সবুজ পাহাড় যেখানে নির্মল ঢেউয়ের সঙ্গে মিশেছে, ঠিক সেখানে পরিচিত অর্গানিক বুটিক বিচ ভিলা।"},
       amenities: ["Private Beach Villas", "Artisanal Organic Dining", "Kayaking", "Sunset Lounge"]
     },
     {
@@ -347,6 +364,7 @@ const PLANNER_CATALOG = {
       stars: 3,
       location: "Kolatoli Beach Front",
       why: "Best-value true seafront hotel. Step right out onto the sands without crossing roads.",
+      bn: {"location": "কলাতলী সৈকতের সামনে", "why": "দামের তুলনায় সেরা, একেবারে সমুদ্রের সামনের হোটেল। রাস্তা পার না হয়েই সরাসরি বালুতে নামা যায়।"},
       amenities: ["Direct Beachfront", "Sea View AC Rooms", "Beachside Cafe", "24/7 Security"]
     },
     {
@@ -357,6 +375,7 @@ const PLANNER_CATALOG = {
       stars: 3,
       location: "Kolatoli Central",
       why: "Highly rated modern comfort hotel with spotless AC deluxe suites and excellent service.",
+      bn: {"location": "কলাতলী কেন্দ্র", "why": "ঝকঝকে এসি ডিলাক্স স্যুট ও চমৎকার সেবাসহ উচ্চ রেটিংয়ের আধুনিক আরামদায়ক হোটেল।"},
       amenities: ["AC Deluxe Suites", "Rooftop Restaurant", "Free High-Speed WiFi"]
     },
     {
@@ -367,6 +386,7 @@ const PLANNER_CATALOG = {
       stars: 4,
       location: "Main Road, Kolatoli",
       why: "Renowned 4-star hospitality with swimming pool, multiple banquet halls, and panoramic views.",
+      bn: {"location": "মেইন রোড, কলাতলী", "why": "সুইমিং পুল, একাধিক ব্যাংকুয়েট হল ও প্যানোরামিক দৃশ্যসহ পরিচিত ৪-তারকা হোটেল।"},
       amenities: ["Swimming Pool", "Rooftop BBQ", "Gym & Spa"]
     },
     {
@@ -377,6 +397,7 @@ const PLANNER_CATALOG = {
       stars: 3,
       location: "Pechardwip, Marine Drive",
       why: "Tranquil bamboo bungalows surrounded by canals, lotus ponds, and organic gardens.",
+      bn: {"location": "পেঁচারদ্বীপ, মেরিন ড্রাইভ", "why": "খাল, পদ্মপুকুর ও অর্গানিক বাগানে ঘেরা শান্ত বাঁশের বাংলো।"},
       amenities: ["Eco Bamboo Cottages", "Canal Boat Rides", "Organic Farm Food"]
     },
     {
@@ -387,6 +408,7 @@ const PLANNER_CATALOG = {
       stars: 2,
       location: "Kolatoli Dolphin Mor 2nd Line",
       why: "Clean, reliable budget AC guest house within 4 minutes walking distance to the sea.",
+      bn: {"location": "কলাতলী ডলফিন মোড়, দ্বিতীয় লাইন", "why": "সমুদ্র থেকে হেঁটে ৪ মিনিটের মধ্যে পরিচ্ছন্ন, নির্ভরযোগ্য সাশ্রয়ী এসি গেস্ট হাউস।"},
       amenities: ["Clean Attached Bath", "AC Available", "24hr Power Backup"]
     },
     {
@@ -397,6 +419,7 @@ const PLANNER_CATALOG = {
       stars: 2,
       location: "Old Laboni Point Road",
       why: "Affordable base right next to the historic beach and Rakhine weaving shops.",
+      bn: {"location": "পুরোনো লাবণী পয়েন্ট রোড", "why": "ঐতিহাসিক সৈকত ও রাখাইন তাঁতের দোকানের ঠিক পাশে সাশ্রয়ী থাকার জায়গা।"},
       amenities: ["Attached Bath", "Walking Distance to Beach & Markets"]
     }
   ],
@@ -409,6 +432,7 @@ const PLANNER_CATALOG = {
       cuisine: "Authentic Bengali & Seafood",
       location: "Hotel Motel Zone & Kolatoli",
       why: "Legendary 12-item shutki and vegetable bhorta platter, fresh crispy Loitta fry, and Coral fish curry.",
+      bn: {"cuisine": "খাঁটি বাঙালি ও সামুদ্রিক খাবার", "location": "হোটেল-মোটেল জোন ও কলাতলী", "why": "বিখ্যাত ১২ পদের শুঁটকি ও সবজি ভর্তার প্ল্যাটার, তাজা মচমচে লইট্যা ফ্রাই ও কোরাল মাছের তরকারি।"},
       highlights: ["Loitta Fry", "Chitol Macher Muitha", "12 Bhorta Platter"]
     },
     {
@@ -418,6 +442,7 @@ const PLANNER_CATALOG = {
       cuisine: "Live Charcoal Grilled Fish",
       location: "Sugandha Beach Point",
       why: "Pick your own live fresh catch (Rupchanda, Koral, Crab, Tiger Prawn) grilled on open charcoal embers.",
+      bn: {"cuisine": "কয়লায় গ্রিল করা জ্যান্ত মাছ", "location": "সুগন্ধা বিচ পয়েন্ট", "why": "নিজের পছন্দের তাজা মাছ (রূপচাঁদা, কোরাল, কাঁকড়া, বাগদা চিংড়ি) বেছে নিন; খোলা কয়লার আগুনে গ্রিল করা হয়।"},
       highlights: ["Charcoal Rupchanda", "Spicy Crab Fry", "Garlic Butter Squid"]
     },
     {
@@ -427,6 +452,7 @@ const PLANNER_CATALOG = {
       cuisine: "Gourmet Oceanfront & Artisanal Italian",
       location: "Marine Drive & Pechardwip",
       why: "Romantic sea-breeze dining with wood-fired sourdough pizza, grilled whole lobster, and fresh tender coconuts.",
+      bn: {"cuisine": "সমুদ্রমুখী গুরমে ও হাতে তৈরি ইতালীয় খাবার", "location": "মেরিন ড্রাইভ ও পেঁচারদ্বীপ", "why": "সমুদ্রের হাওয়ায় রোমান্টিক খাবার: কাঠের চুলায় সাওয়ারডো পিৎজা, আস্ত গ্রিলড লবস্টার ও তাজা কচি ডাব।"},
       highlights: ["Wood-fired Seafood Pizza", "Grilled Sea Lobster", "Sunset Cocktails"]
     },
     {
@@ -436,6 +462,7 @@ const PLANNER_CATALOG = {
       cuisine: "Everyday Traditional Bengali",
       location: "Dolphin Mor & Main Road",
       why: "Delicious steaming hot rice with dal, shutki bhorta, and local fish curry at rock-bottom local prices.",
+      bn: {"cuisine": "প্রতিদিনের ঐতিহ্যবাহী বাঙালি খাবার", "location": "ডলফিন মোড় ও মেইন রোড", "why": "স্থানীয় সবচেয়ে কম দামে গরম ভাতের সঙ্গে ডাল, শুঁটকি ভর্তা ও স্থানীয় মাছের তরকারি।"},
       highlights: ["Shutki Bhorta", "Machher Jhol", "Dal & Rice"]
     }
   ],
@@ -538,7 +565,7 @@ function buildWhatsAppPlannerPayload(state) {
     message += `${pt("wa_acts")}\n`;
     state.selectedActivities.forEach(act => {
       const a = PLANNER_CATALOG.activities.find(x => x.id === act);
-      message += `• ${a ? a.name : act}\n`;
+      message += `• ${a ? pt("act_" + a.id) : act}\n`;
     });
     message += `\n`;
   }
@@ -726,29 +753,30 @@ const PlannerApp = (function () {
       {
         dayNum: 1,
         title: "Coastal Arrival & Sugandha Sunset Fish BBQ",
+        bn: {"title": "কক্সবাজারে পৌঁছানো, সুগন্ধায় সূর্যাস্ত ও মাছের বারবিকিউ", "theme": "পৌঁছানো, সমুদ্রমুখী হোটেলে চেক-ইন ও সন্ধ্যার খাবারের দোকান"},
         theme: "Arrival, Oceanfront Check-in & Evening Food Stalls",
         items: [
           { 
             time: "09:00 AM", 
-            act: "Arrival in Cox's Bazar & Smooth Hotel Check-in", 
+            act: "Arrival in Cox's Bazar & Smooth Hotel Check-in", bn: {"act": "কক্সবাজারে পৌঁছানো ও হোটেলে চেক-ইন", "tip": "ডাবের পানি খেয়ে বিশ্রাম নিন, ব্যাগ গুছিয়ে নিন।", "badge": "🌅 পৌঁছানো"}, 
             tip: "Relax and unpack with refreshing green coconut.",
             badge: "🌅 Fresh Arrival"
           },
           { 
             time: "01:00 PM", 
-            act: "Seafood Lunch Feast at Poushee / Local Dhaba", 
+            act: "Seafood Lunch Feast at Poushee / Local Dhaba", bn: {"act": "পৌষী / স্থানীয় খাবারের হোটেলে সামুদ্রিক খাবারে দুপুরের খাবার", "tip": "বিখ্যাত মচমচে লইট্যা ফ্রাই ও ১০ রকমের শুঁটকি ভর্তা চেখে দেখুন।", "badge": "🍤 খাঁটি স্বাদ"}, 
             tip: "Try legendary crispy Loitta fry and 10 types of shutki bhorta.",
             badge: "🍤 Authentic Taste"
           },
           { 
             time: "04:30 PM", 
-            act: "Sugandha Beach Golden Hour Walk & Sunset", 
+            act: "Sugandha Beach Golden Hour Walk & Sunset", bn: {"act": "সুগন্ধা সৈকতে বিকেলের হাঁটা ও সূর্যাস্ত", "tip": "বিচ চেয়ার ভাড়া নিয়ে সূর্যাস্ত দেখুন (আগে ঘণ্টাপ্রতি ভাড়া ঠিক করে নিন)।", "badge": "🌅 সূর্যাস্ত"}, 
             tip: "Rent a beach chair and watch the sunset (agree the hourly rate first).",
             badge: "🌅 Sunset"
           },
           { 
             time: "07:30 PM", 
-            act: "Sugandha Live Fish BBQ Dinner", 
+            act: "Sugandha Live Fish BBQ Dinner", bn: {"act": "সুগন্ধায় তাজা মাছের বারবিকিউ ডিনার", "tip": "জ্যান্ত রূপচাঁদা বা কোরাল মাছ বেছে নিন; খোলা কয়লার আগুনে গ্রিল করা হয়।", "badge": "🎣 সন্ধ্যার তাজা মাছ"}, 
             tip: "Pick live Rupchanda or Coral fish grilled over open charcoal embers.",
             badge: "🎣 Fresh Evening Catch"
           }
@@ -757,35 +785,36 @@ const PlannerApp = (function () {
       {
         dayNum: 2,
         title: "Scenic Marine Drive, Himchari & Inani Coral Safari",
+        bn: {"title": "মেরিন ড্রাইভ, হিমছড়ি ও ইনানী প্রবাল সৈকত ভ্রমণ", "theme": "৮০ কিমি উপকূলীয় সড়ক, পাহাড় ও সমুদ্রের মিলন, প্রবাল পাথর"},
         theme: "The 80km Coastal Highway, Hills Meet Sea & Coral Reefs",
         items: [
           { 
             time: "08:30 AM", 
-            act: "Open Chander Gari / CNG Ride down Scenic Marine Drive", 
+            act: "Open Chander Gari / CNG Ride down Scenic Marine Drive", bn: {"act": "খোলা চাঁদের গাড়ি / সিএনজিতে মেরিন ড্রাইভ ভ্রমণ", "tip": "উপকূলীয় সড়ক: এক পাশে সমুদ্র, অন্য পাশে পাহাড়।", "badge": "🚗 ৮০ কিমি উপকূলীয় সড়ক"}, 
             tip: "Coastal road with the sea on one side and hills on the other.",
             badge: "🚗 80km Coastal Highway"
           },
           { 
             time: "10:00 AM", 
-            act: "Himchari National Park Viewpoint (waterfall in monsoon only)", 
+            act: "Himchari National Park Viewpoint (waterfall in monsoon only)", bn: {"act": "হিমছড়ি জাতীয় উদ্যান ভিউপয়েন্ট (ঝরনা শুধু বর্ষায়)", "tip": "পাহাড়ের সিঁড়ি বেয়ে উঠে ওপর থেকে লম্বা উপকূলরেখা দেখুন।", "badge": "🌿 পাহাড় ও সমুদ্র"}, 
             tip: "Climb the hill stairs for an infinite aerial vista of the coastline.",
             badge: "🌿 Hill meets Sea"
           },
           { 
             time: "01:00 PM", 
-            act: "Inani Coral Beach Exploration & Beachfront Lunch", 
+            act: "Inani Coral Beach Exploration & Beachfront Lunch", bn: {"act": "ইনানী প্রবাল সৈকত ঘোরা ও সৈকতের পাশে দুপুরের খাবার", "tip": "ভাটার সময় প্রাচীন সোনালি-কালো প্রবাল পাথরের মাঝে হাঁটুন। ছবি তোলার দারুণ জায়গা!", "badge": "🪨 ভাটায় সবচেয়ে ভালো"}, 
             tip: "Walk among ancient golden-black coral stones at low tide. Great photo spot!",
             badge: "🪨 Best at low tide"
           },
           { 
             time: "04:00 PM", 
-            act: "Darianagar Sea Waves & Beachfront Parasailing", 
+            act: "Darianagar Sea Waves & Beachfront Parasailing", bn: {"act": "দরিয়ানগরের ঢেউ ও সৈকতে প্যারাসেইলিং", "tip": "রোমাঞ্চপ্রেমীদের জন্য বঙ্গোপসাগরের ৩০০ ফুট ওপরে টেন্ডেম ফ্লাইট।", "badge": "🪂 রোমাঞ্চ"}, 
             tip: "Tandem flights 300 feet above the Bay of Bengal for adrenaline seekers.",
             badge: "🪂 High Adrenaline"
           },
           { 
             time: "06:30 PM", 
-            act: "Twilight Refreshments at Mermaid Beach Cafe", 
+            act: "Twilight Refreshments at Mermaid Beach Cafe", bn: {"act": "মারমেইড বিচ ক্যাফেতে গোধূলির নাশতা", "tip": "তাজা কচি ডাব, কাঠের চুলায় সি-ফুড পিৎজা ও শান্ত সমুদ্রের হাওয়া।", "badge": "☕ গোধূলির ক্যাফে"}, 
             tip: "Fresh tender coconuts, wood-fired seafood pizza, and quiet ocean breeze.",
             badge: "☕ Twilight Cafe"
           }
@@ -794,29 +823,30 @@ const PlannerApp = (function () {
       {
         dayNum: 3,
         title: "Offshore Island Cruise or Heritage Pagodas",
+        bn: {"title": "দ্বীপে নৌভ্রমণ বা ঐতিহ্যবাহী প্যাগোডা", "theme": "মহেশখালী স্পিডবোট ভ্রমণ ও রাখাইন মার্কেট"},
         theme: "Moheshkhali Speedboat Expedition & Rakhine Markets",
         items: [
           { 
             time: "08:30 AM", 
-            act: "Tomtom to 6 No. Ghat & speedboat crossing", 
+            act: "Tomtom to 6 No. Ghat & speedboat crossing", bn: {"act": "টমটমে ৬ নম্বর ঘাট, তারপর স্পিডবোটে পারাপার", "tip": "স্পিডবোটে অল্প সময়ের পারাপার; লাইফ জ্যাকেট পরুন।", "badge": "🚤 সকালের শান্ত সমুদ্র"}, 
             tip: "Short speedboat crossing; wear a life jacket.",
             badge: "🚤 Calm Morning Sea"
           },
           { 
             time: "10:00 AM", 
-            act: "Adinath Ancient Hilltop Temple & Golden Pagoda", 
+            act: "Adinath Ancient Hilltop Temple & Golden Pagoda", bn: {"act": "পাহাড়চূড়ার প্রাচীন আদিনাথ মন্দির ও স্বর্ণ প্যাগোডা", "tip": "শত শত বছরের পুরোনো ঐতিহাসিক মন্দির, চারপাশে ম্যানগ্রোভ খালের দৃশ্য।", "badge": "🏛️ প্রাচীন ঐতিহ্য"}, 
             tip: "Centuries-old historic shrine with panoramic mangrove channel views.",
             badge: "🏛️ Ancient Heritage"
           },
           { 
             time: "01:30 PM", 
-            act: "Return to Town & Traditional Bengali Lunch", 
+            act: "Return to Town & Traditional Bengali Lunch", bn: {"act": "শহরে ফেরা ও বাঙালি দুপুরের খাবার", "tip": "তাজা রূপচাঁদা মাছের তরকারি আর গরম ভাত খান।", "badge": "🍤 উপকূলের ভোজ"}, 
             tip: "Savor fresh pomfret curry and steaming hot rice.",
             badge: "🍤 Coastal Feast"
           },
           { 
             time: "04:30 PM", 
-            act: "Barmis (Burmese) Market Souvenir Shopping", 
+            act: "Barmis (Burmese) Market Souvenir Shopping", bn: {"act": "বার্মিজ মার্কেটে স্মারক কেনাকাটা", "tip": "রাখাইন তাঁতের কাপড়, শুঁটকি, মুক্তা ও হাতে বানানো আচার।", "badge": "🛍️ স্থানীয় তাঁত"}, 
             tip: "Handloom Rakhine fabrics, dry fish (shutki), pearls, and handmade pickles.",
             badge: "🛍️ Local Handloom"
           }
@@ -825,21 +855,23 @@ const PlannerApp = (function () {
       {
         dayNum: 4,
         title: "Patuartek Secret Coral Point & Rubber Garden Safari",
+        bn: {"title": "পাটুয়ারটেকের নিরিবিলি প্রবাল পয়েন্ট ও রাবার বাগান ভ্রমণ", "theme": "অচেনা সুন্দর জায়গা ও সাংস্কৃতিক অঞ্চল"},
         theme: "Hidden Gems & Cultural Hinterland",
         items: [
-          { time: "09:00 AM", act: "Southern Marine Drive Drive to Patuartek Beach", tip: "Untouched rocky shoreline with dramatic turquoise waves.", badge: "🌊 Secret Beach" },
-          { time: "01:00 PM", act: "Fresh Coconut & Coastal Lunch at Inani", tip: "Relax under swaying betel nut and casuarina palm groves.", badge: "🥥 Palm Groves" },
-          { time: "03:30 PM", act: "Ramu 100-Foot Reclining Buddha & Ancient Pagodas", tip: "Discover the peaceful Buddhist heritage of the region.", badge: "🏛️ Golden Vihara" }
+          { time: "09:00 AM", act: "Southern Marine Drive Drive to Patuartek Beach", bn: {"act": "মেরিন ড্রাইভ ধরে দক্ষিণে পাটুয়ারটেক সৈকতে", "tip": "অক্ষত পাথুরে তীর, ফিরোজা রঙের ঢেউ।", "badge": "🌊 নিরিবিলি সৈকত"}, tip: "Untouched rocky shoreline with dramatic turquoise waves.", badge: "🌊 Secret Beach" },
+          { time: "01:00 PM", act: "Fresh Coconut & Coastal Lunch at Inani", bn: {"act": "ইনানীতে ডাব ও উপকূলীয় দুপুরের খাবার", "tip": "দোল খাওয়া সুপারি ও ঝাউ গাছের ছায়ায় বিশ্রাম নিন।", "badge": "🥥 গাছের ছায়া"}, tip: "Relax under swaying betel nut and casuarina palm groves.", badge: "🥥 Palm Groves" },
+          { time: "03:30 PM", act: "Ramu 100-Foot Reclining Buddha & Ancient Pagodas", bn: {"act": "রামুর ১০০ ফুট শায়িত বুদ্ধমূর্তি ও প্রাচীন প্যাগোডা", "tip": "এই অঞ্চলের শান্ত বৌদ্ধ ঐতিহ্য দেখুন।", "badge": "🏛️ স্বর্ণ বিহার"}, tip: "Discover the peaceful Buddhist heritage of the region.", badge: "🏛️ Golden Vihara" }
         ]
       },
       {
         dayNum: 5,
         title: "Radiant Fish World Aquarium & Farewell Sunset",
+        bn: {"title": "রেডিয়েন্ট ফিশ ওয়ার্ল্ড অ্যাকুয়ারিয়াম ও বিদায়ী সূর্যাস্ত", "theme": "সামুদ্রিক প্রাণীর জগৎ ও ধীরেসুস্থে বিদায়"},
         theme: "Marine Life Wonder & Relaxed Departure",
         items: [
-          { time: "09:30 AM", act: "Radiant Fish World Marine Tunnel Aquarium", tip: "Walk-through aquarium tunnel; good for kids.", badge: "🐠 Marine Life" },
-          { time: "12:30 PM", act: "Farewell Feast at Jhaubon Restaurant", tip: "Last savoring of authentic Cox's Bazar seafood delicacies.", badge: "🍤 Farewell Lunch" },
-          { time: "03:30 PM", act: "Final Sunset Stroll at Laboni Beach", tip: "Pick up shell crafts and take memorable group portraits before departure.", badge: "🌅 Farewell Sunset" }
+          { time: "09:30 AM", act: "Radiant Fish World Marine Tunnel Aquarium", bn: {"act": "রেডিয়েন্ট ফিশ ওয়ার্ল্ড টানেল অ্যাকুয়ারিয়াম", "tip": "হেঁটে পার হওয়া যায় এমন অ্যাকুয়ারিয়াম টানেল; বাচ্চাদের জন্য ভালো।", "badge": "🐠 সামুদ্রিক প্রাণী"}, tip: "Walk-through aquarium tunnel; good for kids.", badge: "🐠 Marine Life" },
+          { time: "12:30 PM", act: "Farewell Feast at Jhaubon Restaurant", bn: {"act": "ঝাউবন রেস্তোরাঁয় বিদায়ী ভোজ", "tip": "শেষবারের মতো কক্সবাজারের খাঁটি সামুদ্রিক খাবার।", "badge": "🍤 বিদায়ী দুপুরের খাবার"}, tip: "Last savoring of authentic Cox's Bazar seafood delicacies.", badge: "🍤 Farewell Lunch" },
+          { time: "03:30 PM", act: "Final Sunset Stroll at Laboni Beach", bn: {"act": "লাবণী সৈকতে শেষ সূর্যাস্তের হাঁটা", "tip": "ফেরার আগে ঝিনুকের কারুপণ্য কিনুন ও দলের সঙ্গে স্মরণীয় ছবি তুলুন।", "badge": "🌅 বিদায়ী সূর্যাস্ত"}, tip: "Pick up shell crafts and take memorable group portraits before departure.", badge: "🌅 Farewell Sunset" }
         ]
       }
     ];
@@ -852,10 +884,11 @@ const PlannerApp = (function () {
           dayNum: i + 1,
           title: `Day ${i + 1}: Custom Coastal Exploration & Leisure`,
           theme: "Relaxed Beach Time, Local Crafts & Fresh Coastal Feasts",
+          bn: { title: `দিন ${plannerNum(i + 1)}: নিজের মতো উপকূল ঘোরা ও অবসর`, theme: "সৈকতে অবসর, স্থানীয় কারুপণ্য ও তাজা উপকূলীয় খাবার" },
           items: [
-            { time: "09:00 AM", act: "Morning Beach Jog & Sunrise Swim", tip: "Gentle morning waves at Dolphin / Sugandha point.", badge: "🌊 Morning Waves" },
-            { time: "01:00 PM", act: "Local Flavor Tasting & Seafood Lunch", tip: "Explore hidden food alleys near Main Road.", badge: "🍤 Local Flavors" },
-            { time: "05:00 PM", act: "Sunset Photography & Souvenir Shopping", tip: "Capture breathtaking sunset hues.", badge: "🌅 Sunset Glow" }
+            { time: "09:00 AM", act: "Morning Beach Jog & Sunrise Swim", bn: {"act": "সকালে সৈকতে জগিং ও সূর্যোদয়ের সময় সাঁতার", "tip": "ডলফিন / সুগন্ধা পয়েন্টে সকালের শান্ত ঢেউ।", "badge": "🌊 সকালের ঢেউ"}, tip: "Gentle morning waves at Dolphin / Sugandha point.", badge: "🌊 Morning Waves" },
+            { time: "01:00 PM", act: "Local Flavor Tasting & Seafood Lunch", bn: {"act": "স্থানীয় স্বাদ ও সামুদ্রিক খাবারে দুপুরের খাবার", "tip": "মেইন রোডের কাছে খাবারের গলিগুলো ঘুরে দেখুন।", "badge": "🍤 স্থানীয় স্বাদ"}, tip: "Explore hidden food alleys near Main Road.", badge: "🍤 Local Flavors" },
+            { time: "05:00 PM", act: "Sunset Photography & Souvenir Shopping", bn: {"act": "সূর্যাস্তের ছবি তোলা ও স্মারক কেনাকাটা", "tip": "সূর্যাস্তের রং ক্যামেরায় ধরে রাখুন।", "badge": "🌅 সূর্যাস্তের আলো"}, tip: "Capture breathtaking sunset hues.", badge: "🌅 Sunset Glow" }
           ]
         });
       }
@@ -1001,10 +1034,10 @@ const PlannerApp = (function () {
       if (hName) hName.textContent = hotel.name;
 
       const hLoc = document.getElementById("rec-hotel-location");
-      if (hLoc) hLoc.textContent = `${hotel.location} • ${'★'.repeat(hotel.stars)}`;
+      if (hLoc) hLoc.textContent = `${pl(hotel, "location")} • ${'★'.repeat(hotel.stars)}`;
 
       const hWhy = document.getElementById("rec-hotel-why");
-      if (hWhy) hWhy.textContent = hotel.why;
+      if (hWhy) hWhy.textContent = pl(hotel, "why");
 
       const hPrice = document.getElementById("rec-hotel-price");
       if (hPrice) hPrice.textContent = pt("per_night", { n: hotel.rateBDT });
@@ -1018,10 +1051,10 @@ const PlannerApp = (function () {
       if (dName) dName.textContent = dining.name;
 
       const dSpots = document.getElementById("rec-dining-spots");
-      if (dSpots) dSpots.textContent = `${dining.location} • ${dining.cuisine}`;
+      if (dSpots) dSpots.textContent = `${pl(dining, "location")} • ${pl(dining, "cuisine")}`;
 
       const dWhy = document.getElementById("rec-dining-why");
-      if (dWhy) dWhy.textContent = dining.why;
+      if (dWhy) dWhy.textContent = pl(dining, "why");
 
       const dPrice = document.getElementById("rec-dining-price");
       if (dPrice) dPrice.textContent = pt("per_person_day", { n: dining.costPerPerson });
@@ -1049,8 +1082,8 @@ const PlannerApp = (function () {
               ${dayLabel(day.dayNum)}
             </span>
             <div>
-              <h4 class="font-serif text-xl sm:text-2xl text-charcoal font-semibold">${plannerEsc(day.title)}</h4>
-              <p class="text-xs font-mono text-terracotta-600 font-medium">${plannerEsc(day.theme)}</p>
+              <h4 class="font-serif text-xl sm:text-2xl text-charcoal font-semibold">${plannerEsc(pl(day, "title"))}</h4>
+              <p class="text-xs font-mono text-terracotta-600 font-medium">${plannerEsc(pl(day, "theme"))}</p>
             </div>
           </div>
           <span class="text-[11px] font-mono text-stone-400 bg-stone-50 px-3 py-1 rounded-full border border-stone-200 self-start sm:self-center">
@@ -1062,14 +1095,14 @@ const PlannerApp = (function () {
           ${day.items.map(item => `
             <div class="flex items-start gap-4 p-3 rounded-2xl hover:bg-stone-50 transition border border-transparent hover:border-stone-200">
               <span class="text-xs font-mono font-bold text-charcoal bg-stone-100 px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
-                ${plannerEsc(item.time)}
+                ${plannerEsc(slotTime(item.time))}
               </span>
               <div class="space-y-1 flex-1">
                 <div class="flex flex-wrap items-center justify-between gap-1">
-                  <p class="text-xs sm:text-sm font-semibold text-charcoal">${plannerEsc(item.act)}</p>
-                  ${item.badge ? `<span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">${plannerEsc(item.badge)}</span>` : ''}
+                  <p class="text-xs sm:text-sm font-semibold text-charcoal">${plannerEsc(pl(item, "act"))}</p>
+                  ${item.badge ? `<span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">${plannerEsc(pl(item, "badge"))}</span>` : ''}
                 </div>
-                <p class="text-[11px] text-stone-500 font-mono">${plannerEsc(item.tip)}</p>
+                <p class="text-[11px] text-stone-500 font-mono">${plannerEsc(pl(item, "tip"))}</p>
               </div>
             </div>
           `).join('')}
@@ -1146,9 +1179,9 @@ const PlannerApp = (function () {
         <div class="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 flex items-center justify-between text-xs">
           <div class="flex items-center gap-3">
             <span class="font-mono text-terracotta-400 font-bold">${plannerEsc(pt("day_tag", { d: dayLabel(day.dayNum) }))}</span>
-            <span class="text-stone-200 font-medium">${plannerEsc(day.title)}</span>
+            <span class="text-stone-200 font-medium">${plannerEsc(pl(day, "title"))}</span>
           </div>
-          <span class="text-[10px] font-mono text-stone-400 hidden sm:inline-block">${plannerEsc(day.theme)}</span>
+          <span class="text-[10px] font-mono text-stone-400 hidden sm:inline-block">${plannerEsc(pl(day, "theme"))}</span>
         </div>
       `).join('');
     }
@@ -1201,9 +1234,9 @@ const PlannerApp = (function () {
         <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60 text-left">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono font-bold text-terracotta-400 uppercase">${plannerEsc(pt("day_tag", { d: dayLabel(day.dayNum) }))}</span>
-            <span class="text-[9px] font-mono text-stone-400">${plannerEsc(day.theme.slice(0, 26))}...</span>
+            <span class="text-[9px] font-mono text-stone-400">${plannerEsc(pl(day, "theme").slice(0, 26))}...</span>
           </div>
-          <p class="text-xs font-semibold text-white mt-0.5 truncate">${plannerEsc(day.title)}</p>
+          <p class="text-xs font-semibold text-white mt-0.5 truncate">${plannerEsc(pl(day, "title"))}</p>
         </div>
       `).join('');
     }

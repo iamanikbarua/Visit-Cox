@@ -125,7 +125,8 @@ const UI_TEXT = {
         bookingType: "Fare Type",
         duration: "Est. Duration"
       },
-      rateDisclaimer: "* Fares are typical local rates along Kalatali, Laboni, Sugandha, Kasturi Ghat and Marine Drive, last reviewed Oct 2026. They are estimates, not fixed tariffs. Agree the fare before boarding."
+      rateDisclaimer: "* Fares are typical local rates along Kalatali, Laboni, Sugandha, Kasturi Ghat and Marine Drive, last reviewed Oct 2026. They are estimates, not fixed tariffs. Agree the fare before boarding.",
+      calcTip: "Agree the fare, and any waiting time for a round trip, before you get in."
     },
     essentialSection: {
       eyebrow: "TRAVELER BRIEFING",
@@ -300,7 +301,8 @@ const UI_TEXT = {
         bookingType: "ভাড়ার ধরন",
         duration: "সম্ভাব্য সময়"
       },
-      rateDisclaimer: "* ভাড়াগুলো কলাতলী, লাবণী, সুগন্ধা, কস্তুরাঘাট ও মেরিন ড্রাইভের প্রচলিত হার, সর্বশেষ দেখা হয়েছে অক্টোবর ২০২৬-এ। এগুলো আনুমানিক, নির্ধারিত ভাড়া নয়। গাড়িতে ওঠার আগে ভাড়া ঠিক করে নিন।"
+      rateDisclaimer: "* ভাড়াগুলো কলাতলী, লাবণী, সুগন্ধা, কস্তুরাঘাট ও মেরিন ড্রাইভের প্রচলিত হার, সর্বশেষ দেখা হয়েছে অক্টোবর ২০২৬-এ। এগুলো আনুমানিক, নির্ধারিত ভাড়া নয়। গাড়িতে ওঠার আগে ভাড়া ঠিক করে নিন।",
+      calcTip: "ওঠার আগেই ভাড়া ঠিক করুন; আসা-যাওয়া হলে অপেক্ষার সময়ও ঠিক করে নিন।"
     },
     essentialSection: {
       eyebrow: "ভ্রমণের পূর্বে করণীয়",

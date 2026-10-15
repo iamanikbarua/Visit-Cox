@@ -3202,10 +3202,6 @@ const FARE_CALC_ROUTES = {
   ramu: { any: ['town-to-ramu'] },
   shamlapur: { any: ['town-to-shamlapur-jeep'] }
 };
-const FARE_CALC_TIP = {
-  en: 'Agree the fare, and any waiting time for a round trip, before you get in.',
-  bn: 'ওঠার আগেই ভাড়া ঠিক করুন; আসা-যাওয়া হলে অপেক্ষার সময়ও ঠিক করে নিন।'
-};
 
 function runFareCalculation() {
   const destEl = document.getElementById('calc-destination');
@@ -3220,7 +3216,7 @@ function runFareCalculation() {
   fareEl.innerHTML = `${escapeHTML(legs.map(f => formatPriceRange(f.minBDT, f.maxBDT)).join(' + '))}
     <span class="vc-approx block text-xs font-mono font-normal text-stone-500 mt-1">${escapeHTML(PRICE_BOOK.asOfLabel[lang])}</span>`;
   set('calc-meta-text', legs.map(f => `${f.route[lang]}: ${f.duration[lang]} • ${f.modeNote[lang]}`).join(' | '));
-  set('calc-tip-text', FARE_CALC_TIP[lang]);
+  set('calc-tip-text', UI_TEXT[lang].transportSection.calcTip);
 }
 
 function renderAll() {
