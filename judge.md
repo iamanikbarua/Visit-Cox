@@ -25,3 +25,4 @@ Gaps and next steps. Newest section last; read it first.
   - Planner: one `PRICE_BOOK`; five conflicting fare tables reconciled to `TRANSPORT_DATA`; planner and passes in Bangla. Totals are unchanged and covered by a snapshot test.
 - Proof: `scripts/check.sh` all 6 steps pass, 34 node tests. Headless Chrome shows 0 page errors on all 10 pages. Exported bn phone pass shows only 999 plus an "estimates" note.
 - Not done, or needs the owner: see `todo.md`. The GTM score is not re-scored yet; the critique predicts about 30-35% after these fixes plus the owner's emergency-number call. Re-run the critique pipeline to confirm.
+- Merge: the owner pushed `168f198` (planner UX overhaul) during the rounds. It was merged in `1b3f3ac`, keeping the owner's wizard, offscreen pass and activity customizer, and re-applying Bangla, clamps, `PRICE_BOOK`, emergency/WhatsApp rules and hype removal on top. 35 tests pass. Pushed as `a29aa2b`.
