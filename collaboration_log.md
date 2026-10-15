@@ -22,7 +22,7 @@
 ## 🔒 Main Agent Integration Log
 * **Hero Widget:** Integrated live `QuickTripPick` card with budget slider and vibe chips onto `index.html`.
 * **60s Matchmaker:** Added 3-step zero-friction wizard (`#sixty-sec-wizard-card`) on `itinerary.html`.
-* **Driver Anti-Scam Shield:** Added 1-tap Bengali `driver-anti-scam-modal` with official rate caps and 24/7 Tourist Police hotline (01320-169999).
+* **Driver Anti-Scam Shield:** Added 1-tap Bengali `driver-anti-scam-modal` with fare caps (now read from `PRICE_BOOK`) and emergency lines (now from `EMERGENCY_CONTACTS`; the old 01320-169999 number was unsourced and removed 2026-10-15).
 * **Dual Exporter:** Added 1-click downloads for both Horizontal Boarding Pass and 9:16 Smartphone Lock-Screen Wallpaper (`html2canvas` 2x resolution).
 * **Tide & Sunset Sync:** Injected intelligent timing badges (Inani low tide coral walk, Sugandha golden hour sunset, fresh evening catch BBQ).
 * **Sprint 3.1 UX Overhaul (User-Friendliness & Professional Polish):**
