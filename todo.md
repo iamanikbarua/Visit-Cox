@@ -31,8 +31,9 @@ Items agents cannot finish without the owner. Each line says what to do and why 
 - [ ] Approve a GitHub Actions workflow that runs `scripts/check.sh` on every push. Why you: pushing workflow files needs a token with `workflow` scope.
 
 ## Agent follow-ups (no owner input needed)
-- Bangla for hotel descriptions, activity names and the day-by-day schedule; they are still English in বাংলা mode (data and frontend).
-- Move the calculator tip line in `app.js` into `UI_TEXT`. Replace the old placeholder fare numbers in `transport.html`, which show when JS fails.
-- The 680 px export card scrolls inside its own box on phones (uiux).
-- Card text links, the range slider and icon buttons are still under 44 px (uiux).
-- Re-run the critique pipeline to re-score GTM after the owner items above.
+- [x] Bangla for hotel descriptions, activity names and the day-by-day schedule in the planner and passes (2026-10-15, `a399655`).
+- [x] Calculator tip moved to `UI_TEXT.transportSection.calcTip`. The `transport.html` no-JS fallback now says fares need JavaScript instead of showing old numbers (`a399655`).
+- [x] The 680 px export card no longer scrolls inside its own box on phones: the owner's `168f198` moved it offscreen. Checked at 375 px: no inner scroll box, and both passes export whole (1600x1260 and 720x1280).
+- [x] Card text links, the range slider and icon buttons are 44 px on touch screens (`a399655`). Only links inside sentences on `privacy.html` stay smaller; WCAG exempts those.
+- [ ] Re-run the critique pipeline to re-score GTM after the owner items above. Skipped on 2026-10-15: the owner items are still open.
+- [ ] Bangla for the static page text: nav drawer, page heroes, footer and section copy are hard-coded English in the HTML (for example 120 English blocks on `index.html` and 119 on `food.html` in বাংলা mode). The quick-pick cards on the home page and the hotel brand names in the planner are English too (frontend, marketing for copy).

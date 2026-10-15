@@ -34,3 +34,13 @@ Gaps and next steps. Newest section last; read it first.
 - Analytics: GA now loads only after the visitor taps Accept (`js/consent.js`). The banner is bilingual, with a "Cookie settings" link in every footer to change the choice. `privacy.html` is added and in the sitemap. Checked in Chrome: no Google request and no `_ga` cookie before consent.
 - Proof: `scripts/check.sh` all 6 steps pass, 44 node tests. 0 page errors on all 11 pages.
 - Open: the owner should review the legal wording on `privacy.html`. Google Fonts and the CDNs still load for everyone, and the privacy page says so.
+
+## Update 4 (2026-10-15, agent round)
+
+Closed the "Agent follow-ups" in `todo.md`. Code commit: `a399655`.
+- Bangla planner: hotel and dining descriptions, the day-by-day schedule (titles, themes, items, badges, times such as "বিকেল ৪:৩০") and both passes now render in Bangla in বাংলা mode. The translations follow the English copy and add no new claims. Brand names stay in English. The WhatsApp message uses the Bangla activity names.
+- The calculator tip is now `UI_TEXT.transportSection.calcTip`. The `transport.html` no-JS fallback no longer shows old placeholder fares (৳400-600, "৳100-200 waiting"). It says fares need JavaScript, so no price table is copied out of `PRICE_BOOK`.
+- 680 px export card: already fixed by the owner's `168f198`, which moved the card offscreen. At 375 px no element scrolls inside its own box, and both exports come out whole.
+- Tap targets: the `pointer: coarse` block in `css/styles.css` now covers button width, standalone and card links, tel links, checkbox labels and the range slider. Small targets at 375 px went from 105 to 3. The 3 left are links inside sentences on `privacy.html`, which WCAG exempts.
+- Proof: `scripts/check.sh` passes all 6 steps with 45 node tests. The new test loads the real planner in বাংলা mode and asserts there is no English in the schedule, the passes or the hotel and dining copy. Headless Chrome shows 0 page errors on all 11 pages. English text blocks on the planner page in বাংলা mode went from 89 to 29 (brand names and site chrome). Screenshots were checked at 375x812.
+- Not done: the GTM re-score, which waits on the owner items. Bangla for the static HTML text (nav, heroes, footers, home quick-pick cards) is a new follow-up in `todo.md`.
