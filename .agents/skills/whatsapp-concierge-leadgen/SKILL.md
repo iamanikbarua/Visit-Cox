@@ -16,7 +16,7 @@ Direct click-to-chat URL format:
 ```text
 https://wa.me/<HOTLINE_NUMBER>?text=<URL_ENCODED_MESSAGE>
 ```
-* Default Hotline Number: `8801800000000` (Configure with official Visit Cox concierge line).
+* The number comes only from `SITE_CONTACT.whatsapp` in `js/data.js`. While it is `null`, every WhatsApp button stays hidden. Never ship a placeholder number: whoever owns that SIM receives the traveller's trip details.
 
 ---
 

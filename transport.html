@@ -12,12 +12,18 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Local Transportation & Fare Guide in Cox's Bazar | Budgeting & Tariffs</title>
-  <meta
-    name="description"
-    content="Official local transportation tariffs and budgeting guide for Cox's Bazar: Tomtom, CNG, Chander Gari, speedboats, and rental cars. Interactive fare calculator to prevent overcharging."
-  />
-  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <title>Cox's Bazar Transport and Local Fares: Tomtom, CNG, Boats</title>
+  <meta name="description" content="Getting around Cox's Bazar: typical fares for tomtom, CNG, Chander Gari, speedboats and rental cars, plus a fare estimator to agree a price first." />
+  <link rel="canonical" href="https://iamanikbarua.github.io/Visit-Cox/transport.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Visit Cox" />
+  <meta property="og:title" content="Cox's Bazar Transport and Local Fares: Tomtom, CNG, Boats" />
+  <meta property="og:description" content="Getting around Cox's Bazar: typical fares for tomtom, CNG, Chander Gari, speedboats and rental cars, plus a fare estimator to agree a price first." />
+  <meta property="og:url" content="https://iamanikbarua.github.io/Visit-Cox/transport.html" />
+  <meta property="og:image" content="https://iamanikbarua.github.io/Visit-Cox/assets/images/shamlapur-sampan.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
   <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Geometric Sans) + Hind Siliguri (Bengali) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -347,6 +353,7 @@
           </div>
           <span class="text-xs font-mono text-stone-500 uppercase">RATES ARE ESTIMATES, NOT FIXED TARIFFS</span>
         </div>
+        <p class="vc-approx text-stone-500"><span lang="en">Prices are estimates, last reviewed Oct 2026. Confirm before you pay.</span><span lang="bn" hidden>দাম আনুমানিক, সর্বশেষ দেখা হয়েছে অক্টোবর ২০২৬-এ। টাকা দেওয়ার আগে জেনে নিন।</span></p>
 
         <div class="overflow-x-auto bg-white rounded-3xl border border-stone-200 shadow-xs">
           <table class="editorial-table">
@@ -385,7 +392,7 @@
         <div class="lg:col-span-2 space-y-4">
           <span class="font-serif text-3xl text-white">Visit Cox.</span>
           <p class="text-xs font-sans text-stone-400 max-w-sm leading-relaxed">
-            An independent, non-commercial guide to Cox's Bazar, Bangladesh.
+            An independent, non-commercial guide to Cox's Bazar, Bangladesh. Prices are estimates; check before you pay.
           </p>
         </div>
 
@@ -430,68 +437,5 @@
   <!-- Scripts -->
   <script src="js/data.js?v=20261015"></script>
   <script src="js/app.js?v=20261015"></script>
-  <script>
-    function runFareCalculation() {
-      const orig = document.getElementById('calc-origin').value;
-      const dest = document.getElementById('calc-destination').value;
-      const party = document.getElementById('calc-party').value;
-
-      const badge = document.getElementById('calc-vehicle-badge');
-      const fare = document.getElementById('calc-fare-text');
-      const meta = document.getElementById('calc-meta-text');
-      const tip = document.getElementById('calc-tip-text');
-
-      if (dest === 'sugandha') {
-        badge.textContent = 'RECOMMENDED: SHARED TOMTOM (EASY-BIKE)';
-        fare.textContent = '৳20 – ৳30 per person ($0.25 USD)';
-        meta.textContent = '⏱ ~10 mins • Wave down any green Tomtom on the road';
-        tip.textContent = 'Shared Tomtoms run continuously along Kolatoli and Main Road. No reservation needed.';
-      } else if (dest === 'himchari') {
-        if (party === 'group') {
-          badge.textContent = 'RECOMMENDED: OPEN 4x4 CHANDER GARI';
-          fare.textContent = '৳1,800 – ৳2,500 roundtrip ($15–$20 USD)';
-          meta.textContent = '⏱ ~35 mins each way • 10–14 seats';
-          tip.textContent = 'Chander Gari provides open breeze and hillside vistas. Reserve from Kolatoli Circle.';
-        } else {
-          badge.textContent = 'RECOMMENDED: RESERVED CNG AUTO-RICKSHAW';
-          fare.textContent = '৳400 – ৳600 roundtrip ($3.5–$5 USD)';
-          meta.textContent = '⏱ ~30 mins each way • Includes 1.5 hr waiting';
-          tip.textContent = 'Confirm roundtrip with the driver before getting in so you are not stranded for a ride back.';
-        }
-      } else if (dest === 'inani') {
-        if (party === 'group') {
-          badge.textContent = 'RECOMMENDED: CHANDER GARI SAFARI';
-          fare.textContent = '৳2,800 – ৳3,800 roundtrip ($24–$32 USD)';
-          meta.textContent = '⏱ ~1 hr each way • 32 km down Marine Drive';
-          tip.textContent = 'Driver will stop at Himchari waterfall and Inani coral beach. Best sunset ride back.';
-        } else {
-          badge.textContent = 'RECOMMENDED: RESERVED CNG OR AC CAR';
-          fare.textContent = '৳800 – ৳1,200 roundtrip ($7–$10 USD)';
-          meta.textContent = '⏱ ~50 mins each way • 32 km along ocean';
-          tip.textContent = 'Make sure to tell the driver you want the Marine Drive route, which is scenic and smooth.';
-        }
-      } else if (dest === 'moheshkhali') {
-        badge.textContent = 'RECOMMENDED: TOMTOM TO GHAT + SPEEDBOAT';
-        fare.textContent = '৳50 to Ghat + ৳90 Boat Ticket ($1.20 USD)';
-        meta.textContent = '⏱ 15m to 6 No. Ghat + 35m boat crossing';
-        tip.textContent = 'Take lifejackets at 6th Ghat jetty. Boats run until 5:00 PM; head back before dusk.';
-      } else if (dest === 'ramu') {
-        badge.textContent = 'RECOMMENDED: RESERVED CNG AUTO-RICKSHAW';
-        fare.textContent = '৳500 – ৳800 roundtrip ($4.5–$7 USD)';
-        meta.textContent = '⏱ ~40 mins each way • 16 km inland';
-        tip.textContent = 'Reserve the CNG to wait for 2 hours while you explore the 100-ft Buddha and Lanka Khyang.';
-      } else {
-        badge.textContent = 'RECOMMENDED: RESERVED CHANDER GARI';
-        fare.textContent = '৳3,500 – ৳4,500 full day ($30–$38 USD)';
-        meta.textContent = '⏱ ~1.5 hrs each way • 45 km south';
-        tip.textContent = 'Ideal for visiting traditional wooden Sampans and isolated quiet beaches.';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderTransport();
-      runFareCalculation();
-    });
-  </script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://iamanikbarua.github.io/Visit-Cox/sitemap.xml

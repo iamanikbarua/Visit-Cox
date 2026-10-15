@@ -11,6 +11,222 @@ function plannerEsc(str) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+// Planner and itinerary-page strings. Static elements carry data-pt="key"; {name} is filled by pt().
+const PLANNER_TEXT = {
+  en: {
+    crumb_home: "Home", crumb_page: "Trip Planner",
+    hero_kicker: "Trip planner (2, 3 & 5 days)",
+    hero_title: "Plan your trip.",
+    hero_lead: "Build a day-by-day plan with an estimated budget for stay, food, transport and activities. Prices are approximate; check them locally. Save the plan as an image or print it.",
+    wiz_title: "Quick start: three questions",
+    wiz_sub: "Days and group • Traveller type • Stay style",
+    step1: "Who & days", step2: "Traveller type", step3: "Stay & plan",
+    q_days: "A. How many days will you stay?",
+    d2: "2 Days", d2_sub: "Weekend", d3: "3 Days", d3_sub: "Classic", d5: "5 Days", d5_sub: "Coast & island",
+    q_who: "B. Who are you traveling with?",
+    who_solo: "🚶 Solo", who_couple: "👫 Couple", who_family: "👨‍👩‍👧‍👦 Family", who_friends: "👥 Friends (6)",
+    next_persona: "Next: traveller type ➔",
+    persona_title: "Choose your traveller type",
+    arc_wave_hunter: "The Wave Hunter", arc_wave_hunter_desc: "Parasailing, jet ski & the Marine Drive.", arc_wave_hunter_tag: "Adventure",
+    arc_quiet_coral: "The Quiet Coral", arc_quiet_coral_desc: "Quiet Inani beach, low-tide walk & cafes.", arc_quiet_coral_tag: "Calm",
+    arc_foodie_hunter: "The Bhorta Foodie", arc_foodie_hunter_desc: "Seafood, shutki bhorta & night BBQ.", arc_foodie_hunter_tag: "Seafood",
+    arc_family_leader: "Family Leader", arc_family_leader_desc: "Shallow beaches, aquarium & an easy pace.", arc_family_leader_tag: "Family",
+    arc_ocean_romance: "Ocean Romance", arc_ocean_romance_desc: "Sea-view room, sunsets & a beach dinner.", arc_ocean_romance_tag: "Couples",
+    back_step1: "← Back to step 1", next_budget: "Next: budget & stay ➔",
+    stay_title: "Select your stay style",
+    stay_comfort: "3-4★ Beachfront comfort", stay_comfort_sub: "Hotel Sea Crown / Prime Park (sea-view AC)",
+    stay_luxury: "5★ Beach resort", stay_luxury_sub: "Sayeman Beach Resort / Royal Tulip",
+    stay_budget: "Economy AC", stay_budget_sub: "Guest house near Dolphin Mor",
+    from_night: "from ৳{n}/night",
+    trip_name_label: "Trip name",
+    trip_name_hint: "Printed on your phone wallpaper and itinerary pass.",
+    trip_default: "My Coastal Journey",
+    reveal: "Show my plan ➔",
+    back_persona: "← Back to traveller type",
+    wiz_note: "Prices are estimates",
+    planner_kicker: "Route & budget planner",
+    planner_title: "Adjust your plan",
+    planner_lead: "Choose your trip details. The planner suggests a hotel, food and transport, and adds up an estimated budget.",
+    season_label: "Season multiplier", season_std: "Standard season (1.0x)",
+    p_days: "1. Trip duration", custom_days: "Custom days:",
+    days_label: "{n} Days ({kind})", kind_weekend: "Weekend", kind_classic: "Classic", kind_extended: "Extended",
+    p_group: "2. Travellers & group", adults_label: "Adults (12+)", kids_label: "Kids (under 12)",
+    travelers: "{a} Adults", travelers_kids: "{a} Adults, {k} Kids",
+    rooms_label: "Rooms needed:", room_1: "1 Room", rooms_n: "{n} Rooms", vehicle_label: "Vehicle:",
+    veh_cng: "Reserved CNG", veh_chander_gari: "Chander Gari (open jeep)",
+    p_tier: "3. Budget tier", quality_label: "Food & stay:",
+    tier_backpacker: "Economy", tier_comfort: "Comfort", tier_luxury: "5★ Luxury",
+    tierdesc_backpacker: "Budget guest house + local rice stalls",
+    tierdesc_comfort: "AC hotel + seafood restaurants",
+    tierdesc_luxury: "5★ resort + resort dining",
+    p_hub: "4. Preferred stay area",
+    hub_any: "Any area", hub_kolatoli: "🌊 Kolatoli / Sugandha (busy beachfront, food stalls)",
+    hub_inani: "🪸 Marine Drive / Inani (quiet beach, resorts)", hub_laboni: "🌅 Laboni Point (old beach & Burmese market)",
+    hub_note: "Staying near the places you visit cuts transport costs.",
+    p_hotel: "5. Hotel category",
+    ht_auto: "Match my budget tier", ht_34star: "3-4★ sea-view hotel (Sea Crown, Prime Park)",
+    ht_5star: "5★ beach resort (Sayeman, Royal Tulip)", ht_eco: "Eco cottage (Mermaid Eco Resort)",
+    ht_budget: "Economy guest house (Kolatoli Dolphin Mor)",
+    hotel_note: "The nightly rate feeds into the estimated budget.",
+    p_name: "6. Trip name (printed on the pass)", p_name_hint: "Printed on your downloadable itinerary pass.",
+    p_vibe: "7. Choose your trip vibe",
+    vibe_relaxing: "Relaxing", vibe_relaxing_sub: "Beach time & breeze",
+    vibe_adventure: "Adventure", vibe_adventure_sub: "Parasailing & jet ski",
+    vibe_romantic: "Romantic", vibe_romantic_sub: "Couples & sunsets",
+    vibe_family: "Family", vibe_family_sub: "Easy beaches & aquarium",
+    vibe_foodie: "Seafood Tour", vibe_foodie_sub: "BBQ & bhorta",
+    vibe_culture: "Culture", vibe_culture_sub: "Moheshkhali & pagodas",
+    p_acts: "8. Optional activities (changes the budget)", acts_note: "Updates the total",
+    budget_kicker: "Estimated budget",
+    approx: "estimate, as of Oct 2026",
+    per_person: "Per person:", duration_label: "Duration:", party_label: "Party:",
+    days_nights: "{d} Days / {n} Nights", days_short: "{d} Days",
+    guest_1: "1 Guest", guests_n: "{n} Guests",
+    cost_stay: "🏨 Stay", cost_food: "🍽️ Dining", cost_transit: "🛺 Transport", cost_act: "🎟️ Activities",
+    btn_pass: "Itinerary pass (PNG)", btn_phone: "📱 Phone wallpaper", whatsapp: "💬 WhatsApp",
+    busy_pass: "Making pass...", busy_phone: "Making wallpaper...",
+    export_no_lib: "The image export library did not load (offline or blocked).",
+    export_failed: "The image export failed.",
+    export_print: "Print this page (or save it as PDF) instead?",
+    rec_hotel: "Suggested stay", tier_badge: "{t} tier", est_rate: "Est. rate:", per_night: "৳{n} / night",
+    swap_hotel: "🔄 Swap hotel",
+    rec_dining: "Suggested food", dining_badge: "Local food", est_meals: "Est. meals:", per_person_day: "৳{n} / person / day",
+    swap_dining: "🔄 Swap food",
+    day_of: "Day {d} of {n}",
+    fare_title: "Usual fares for these routes",
+    fare_lead: "Know the usual fare before you bargain, and agree it before you get in.",
+    driver_card: "🛺 Driver card",
+    fare_tip: "{mode} • {dur}",
+    pass_brand: "Visit Cox • Itinerary pass",
+    pass_budget: "Est. total budget", pass_base: "Base area", pass_hotel: "Stay", pass_transit: "Transport", pass_vibe: "Vibe",
+    base_inani: "Inani / Marine Drive", base_laboni: "Laboni Point", base_kolatoli: "Kolatoli",
+    estimates: "Prices are estimates, as of Oct 2026",
+    phone_heading: "📱 Phone wallpaper (9:16)",
+    phone_brand: "Visit Cox • Trip pass",
+    phone_stay: "Stay",
+    day_tag: "DAY {d}",
+    wa_title: "*🌊 Visit Cox — Trip inquiry*",
+    wa_hello: "Hello! I planned this trip on the Visit Cox planner and would like to check hotel availability and rates.",
+    wa_summary: "📋 *Trip summary:*", wa_name: "Trip name", wa_duration: "Duration", wa_travelers: "Travellers",
+    wa_style: "Style", wa_hotel: "Hotel", wa_budget: "Estimated budget", wa_acts: "🎯 *Activities:*",
+    wa_close: "Please confirm room availability, rates and transport. Thank you!"
+  },
+  bn: {
+    crumb_home: "হোম", crumb_page: "ট্রিপ প্ল্যানার",
+    hero_kicker: "ট্রিপ প্ল্যানার (২, ৩ ও ৫ দিন)",
+    hero_title: "আপনার ভ্রমণ সাজান।",
+    hero_lead: "থাকা, খাওয়া, যাতায়াত ও অ্যাক্টিভিটির আনুমানিক খরচসহ দিনভিত্তিক পরিকল্পনা তৈরি করুন। দাম আনুমানিক; স্থানীয়ভাবে যাচাই করে নিন। পরিকল্পনাটি ছবি হিসেবে সেভ বা প্রিন্ট করতে পারবেন।",
+    wiz_title: "দ্রুত শুরু: তিনটি প্রশ্ন",
+    wiz_sub: "দিন ও দল • ভ্রমণের ধরন • থাকার ধরন",
+    step1: "কে ও কত দিন", step2: "ভ্রমণের ধরন", step3: "থাকা ও পরিকল্পনা",
+    q_days: "ক. কত দিন থাকবেন?",
+    d2: "২ দিন", d2_sub: "সাপ্তাহিক ছুটি", d3: "৩ দিন", d3_sub: "সাধারণ", d5: "৫ দিন", d5_sub: "সৈকত ও দ্বীপ",
+    q_who: "খ. কার সাথে যাচ্ছেন?",
+    who_solo: "🚶 একা", who_couple: "👫 দম্পতি", who_family: "👨‍👩‍👧‍👦 পরিবার", who_friends: "👥 বন্ধুরা (৬ জন)",
+    next_persona: "পরের ধাপ: ভ্রমণের ধরন ➔",
+    persona_title: "আপনার ভ্রমণের ধরন বেছে নিন",
+    arc_wave_hunter: "ঢেউপ্রেমী", arc_wave_hunter_desc: "প্যারাসেইলিং, জেট স্কি ও মেরিন ড্রাইভ।", arc_wave_hunter_tag: "রোমাঞ্চ",
+    arc_quiet_coral: "নিরিবিলি প্রবাল", arc_quiet_coral_desc: "শান্ত ইনানী সৈকত, ভাটায় হাঁটা ও ক্যাফে।", arc_quiet_coral_tag: "শান্ত",
+    arc_foodie_hunter: "ভর্তা-প্রেমী", arc_foodie_hunter_desc: "সামুদ্রিক মাছ, শুঁটকি ভর্তা ও রাতের বারবিকিউ।", arc_foodie_hunter_tag: "সামুদ্রিক খাবার",
+    arc_family_leader: "পরিবার নিয়ে", arc_family_leader_desc: "অগভীর সৈকত, অ্যাকুয়ারিয়াম ও ধীরেসুস্থে ঘোরা।", arc_family_leader_tag: "পরিবার",
+    arc_ocean_romance: "সমুদ্র ও রোমান্স", arc_ocean_romance_desc: "সমুদ্রমুখী রুম, সূর্যাস্ত ও সৈকতে রাতের খাবার।", arc_ocean_romance_tag: "দম্পতি",
+    back_step1: "← প্রথম ধাপে ফিরুন", next_budget: "পরের ধাপ: বাজেট ও থাকা ➔",
+    stay_title: "থাকার ধরন বেছে নিন",
+    stay_comfort: "৩-৪★ সৈকতের পাশে আরামদায়ক", stay_comfort_sub: "হোটেল সি ক্রাউন / প্রাইম পার্ক (সমুদ্রমুখী এসি)",
+    stay_luxury: "৫★ বিচ রিসোর্ট", stay_luxury_sub: "সায়েমান বিচ রিসোর্ট / রয়্যাল টিউলিপ",
+    stay_budget: "সাশ্রয়ী এসি", stay_budget_sub: "ডলফিন মোড়ের কাছে গেস্ট হাউস",
+    from_night: "প্রতি রাত ৳{n} থেকে",
+    trip_name_label: "ভ্রমণের নাম",
+    trip_name_hint: "ফোন ওয়ালপেপার ও ভ্রমণ পাসে ছাপা হবে।",
+    trip_default: "আমার সৈকত ভ্রমণ",
+    reveal: "আমার পরিকল্পনা দেখুন ➔",
+    back_persona: "← ভ্রমণের ধরনে ফিরুন",
+    wiz_note: "দাম আনুমানিক",
+    planner_kicker: "রুট ও বাজেট প্ল্যানার",
+    planner_title: "পরিকল্পনা ঠিক করুন",
+    planner_lead: "ভ্রমণের তথ্য বেছে নিন। প্ল্যানার হোটেল, খাবার ও যাতায়াতের পরামর্শ দেয় এবং আনুমানিক বাজেট হিসাব করে।",
+    season_label: "মৌসুম গুণক", season_std: "সাধারণ মৌসুম (১.০x)",
+    p_days: "১. ভ্রমণের মেয়াদ", custom_days: "নিজের মতো দিন:",
+    days_label: "{n} দিন ({kind})", kind_weekend: "সাপ্তাহিক ছুটি", kind_classic: "সাধারণ", kind_extended: "দীর্ঘ",
+    p_group: "২. ভ্রমণকারী ও দল", adults_label: "প্রাপ্তবয়স্ক (১২+)", kids_label: "শিশু (১২-এর কম)",
+    travelers: "{a} জন প্রাপ্তবয়স্ক", travelers_kids: "{a} জন প্রাপ্তবয়স্ক, {k} শিশু",
+    rooms_label: "রুম লাগবে:", room_1: "১টি রুম", rooms_n: "{n}টি রুম", vehicle_label: "গাড়ি:",
+    veh_cng: "রিজার্ভ সিএনজি", veh_chander_gari: "চান্দের গাড়ি (খোলা জিপ)",
+    p_tier: "৩. বাজেটের স্তর", quality_label: "খাবার ও থাকা:",
+    tier_backpacker: "সাশ্রয়ী", tier_comfort: "আরামদায়ক", tier_luxury: "৫★ বিলাসবহুল",
+    tierdesc_backpacker: "সাশ্রয়ী গেস্ট হাউস + স্থানীয় ভাতের হোটেল",
+    tierdesc_comfort: "এসি হোটেল + সামুদ্রিক খাবারের রেস্তোরাঁ",
+    tierdesc_luxury: "৫★ রিসোর্ট + রিসোর্টের রেস্তোরাঁ",
+    p_hub: "৪. কোন এলাকায় থাকতে চান",
+    hub_any: "যেকোনো এলাকা", hub_kolatoli: "🌊 কলাতলী / সুগন্ধা (ব্যস্ত সৈকত, খাবারের দোকান)",
+    hub_inani: "🪸 মেরিন ড্রাইভ / ইনানী (নিরিবিলি সৈকত, রিসোর্ট)", hub_laboni: "🌅 লাবণী পয়েন্ট (পুরোনো সৈকত ও বার্মিজ মার্কেট)",
+    hub_note: "যেখানে ঘুরবেন তার কাছে থাকলে যাতায়াত খরচ কমে।",
+    p_hotel: "৫. হোটেলের ধরন",
+    ht_auto: "বাজেট স্তর অনুযায়ী", ht_34star: "৩-৪★ সমুদ্রমুখী হোটেল (সি ক্রাউন, প্রাইম পার্ক)",
+    ht_5star: "৫★ বিচ রিসোর্ট (সায়েমান, রয়্যাল টিউলিপ)", ht_eco: "ইকো কটেজ (মারমেইড ইকো রিসোর্ট)",
+    ht_budget: "সাশ্রয়ী গেস্ট হাউস (কলাতলী ডলফিন মোড়)",
+    hotel_note: "প্রতি রাতের ভাড়া আনুমানিক বাজেটে যোগ হয়।",
+    p_name: "৬. ভ্রমণের নাম (পাসে ছাপা হবে)", p_name_hint: "ডাউনলোড করা ভ্রমণ পাসে ছাপা হবে।",
+    p_vibe: "৭. ভ্রমণের মেজাজ বেছে নিন",
+    vibe_relaxing: "বিশ্রাম", vibe_relaxing_sub: "সৈকতে সময় ও হাওয়া",
+    vibe_adventure: "রোমাঞ্চ", vibe_adventure_sub: "প্যারাসেইলিং ও জেট স্কি",
+    vibe_romantic: "রোমান্টিক", vibe_romantic_sub: "দম্পতি ও সূর্যাস্ত",
+    vibe_family: "পরিবার", vibe_family_sub: "সহজ সৈকত ও অ্যাকুয়ারিয়াম",
+    vibe_foodie: "সামুদ্রিক খাবার", vibe_foodie_sub: "বারবিকিউ ও ভর্তা",
+    vibe_culture: "সংস্কৃতি", vibe_culture_sub: "মহেশখালী ও প্যাগোডা",
+    p_acts: "৮. ঐচ্ছিক অ্যাক্টিভিটি (বাজেট বদলায়)", acts_note: "মোট খরচ বদলায়",
+    budget_kicker: "আনুমানিক বাজেট",
+    approx: "আনুমানিক, অক্টোবর ২০২৬ অনুযায়ী",
+    per_person: "জনপ্রতি:", duration_label: "মেয়াদ:", party_label: "দল:",
+    days_nights: "{d} দিন / {n} রাত", days_short: "{d} দিন",
+    guest_1: "১ জন অতিথি", guests_n: "{n} জন অতিথি",
+    cost_stay: "🏨 থাকা", cost_food: "🍽️ খাবার", cost_transit: "🛺 যাতায়াত", cost_act: "🎟️ অ্যাক্টিভিটি",
+    btn_pass: "ভ্রমণ পাস (PNG)", btn_phone: "📱 ফোন ওয়ালপেপার", whatsapp: "💬 হোয়াটসঅ্যাপ",
+    busy_pass: "পাস তৈরি হচ্ছে...", busy_phone: "ওয়ালপেপার তৈরি হচ্ছে...",
+    export_no_lib: "ছবি তৈরির লাইব্রেরি লোড হয়নি (অফলাইন বা ব্লক করা)।",
+    export_failed: "ছবি তৈরি করা যায়নি।",
+    export_print: "এর বদলে পেজটি প্রিন্ট করবেন (বা PDF হিসেবে সেভ করবেন)?",
+    rec_hotel: "প্রস্তাবিত থাকার জায়গা", tier_badge: "{t} স্তর", est_rate: "আনুমানিক ভাড়া:", per_night: "প্রতি রাত ৳{n}",
+    swap_hotel: "🔄 অন্য হোটেল",
+    rec_dining: "প্রস্তাবিত খাবার", dining_badge: "স্থানীয় খাবার", est_meals: "আনুমানিক খাবার খরচ:", per_person_day: "জনপ্রতি দিনে ৳{n}",
+    swap_dining: "🔄 অন্য খাবার",
+    day_of: "{n} দিনের মধ্যে {d}তম দিন",
+    fare_title: "এই রুটগুলোর সাধারণ ভাড়া",
+    fare_lead: "দরদাম করার আগে সাধারণ ভাড়া জেনে নিন, আর ওঠার আগেই ভাড়া ঠিক করুন।",
+    driver_card: "🛺 চালক কার্ড",
+    fare_tip: "{mode} • {dur}",
+    pass_brand: "Visit Cox • ভ্রমণ পাস",
+    pass_budget: "আনুমানিক মোট বাজেট", pass_base: "যে এলাকায় থাকবেন", pass_hotel: "থাকা", pass_transit: "যাতায়াত", pass_vibe: "মেজাজ",
+    base_inani: "ইনানী / মেরিন ড্রাইভ", base_laboni: "লাবণী পয়েন্ট", base_kolatoli: "কলাতলী",
+    estimates: "দাম আনুমানিক, অক্টোবর ২০২৬ অনুযায়ী",
+    phone_heading: "📱 ফোন ওয়ালপেপার (৯:১৬)",
+    phone_brand: "Visit Cox • ভ্রমণ পাস",
+    phone_stay: "থাকা",
+    day_tag: "দিন {d}",
+    wa_title: "*🌊 Visit Cox — ভ্রমণ সংক্রান্ত জিজ্ঞাসা*",
+    wa_hello: "আসসালামু আলাইকুম! আমি Visit Cox প্ল্যানারে এই ভ্রমণটি সাজিয়েছি। হোটেলের রুম খালি আছে কি না এবং ভাড়া জানতে চাই।",
+    wa_summary: "📋 *ভ্রমণের সারাংশ:*", wa_name: "ভ্রমণের নাম", wa_duration: "মেয়াদ", wa_travelers: "ভ্রমণকারী",
+    wa_style: "ধরন", wa_hotel: "হোটেল", wa_budget: "আনুমানিক বাজেট", wa_acts: "🎯 *অ্যাক্টিভিটি:*",
+    wa_close: "অনুগ্রহ করে রুম, ভাড়া ও যাতায়াতের ব্যবস্থা নিশ্চিত করুন। ধন্যবাদ!"
+  }
+};
+
+function plannerLang() {
+  return typeof AppState !== 'undefined' && AppState.lang === 'bn' ? 'bn' : 'en';
+}
+
+// Bangla digits via the bn-BD locale; English keeps en-IN grouping (1,00,000).
+function plannerNum(n) {
+  return Number(n).toLocaleString(plannerLang() === 'bn' ? 'bn-BD' : 'en-IN');
+}
+
+// pt('days_nights', {d: 3, n: 2}): numbers are formatted for the current language.
+function pt(key, vars) {
+  const lang = plannerLang();
+  const s = PLANNER_TEXT[lang][key] != null ? PLANNER_TEXT[lang][key] : PLANNER_TEXT.en[key];
+  return String(s).replace(/\{(\w+)\}/g, (m, k) => (vars && k in vars ? (typeof vars[k] === 'number' ? plannerNum(vars[k]) : vars[k]) : m));
+}
+
 // ============================================================================
 // 1. MASTER CATALOG & DATA SCHEMAS
 // ============================================================================
@@ -73,7 +289,6 @@ const PLANNER_CATALOG = {
       tier: "luxury",
       hub: "kolatoli",
       stars: 5,
-      rateBDT: 12500,
       location: "Marine Drive, Kolatoli Beach",
       why: "Premier beachfront 5-star with infinity pool overlooking the Bay of Bengal and private lounge.",
       amenities: ["Ocean View Balcony", "Infinity Pool", "Buffet Breakfast", "Private Beach Access"]
@@ -84,7 +299,6 @@ const PLANNER_CATALOG = {
       tier: "luxury",
       hub: "inani",
       stars: 5,
-      rateBDT: 14500,
       location: "Jaliapalong, Inani Beach",
       why: "Massive ultra-luxury beachfront escape with private water park, 5 specialty restaurants, and secluded coral sands.",
       amenities: ["Water Park", "Private Beach", "Spa & Wellness", "Kids Zone"]
@@ -95,7 +309,6 @@ const PLANNER_CATALOG = {
       tier: "luxury",
       hub: "inani",
       stars: 5,
-      rateBDT: 13000,
       location: "Pechardwip, Marine Drive",
       why: "Iconic organic boutique beach villas nestled directly where lush hills meet pristine waves.",
       amenities: ["Private Beach Villas", "Artisanal Organic Dining", "Kayaking", "Sunset Lounge"]
@@ -106,7 +319,6 @@ const PLANNER_CATALOG = {
       tier: "comfort",
       hub: "kolatoli",
       stars: 3,
-      rateBDT: 3500,
       location: "Kolatoli Beach Front",
       why: "Best-value true seafront hotel. Step right out onto the sands without crossing roads.",
       amenities: ["Direct Beachfront", "Sea View AC Rooms", "Beachside Cafe", "24/7 Security"]
@@ -117,7 +329,6 @@ const PLANNER_CATALOG = {
       tier: "comfort",
       hub: "kolatoli",
       stars: 3,
-      rateBDT: 3200,
       location: "Kolatoli Central",
       why: "Highly rated modern comfort hotel with spotless AC deluxe suites and excellent service.",
       amenities: ["AC Deluxe Suites", "Rooftop Restaurant", "Free High-Speed WiFi"]
@@ -128,7 +339,6 @@ const PLANNER_CATALOG = {
       tier: "comfort",
       hub: "kolatoli",
       stars: 4,
-      rateBDT: 5500,
       location: "Main Road, Kolatoli",
       why: "Renowned 4-star hospitality with swimming pool, multiple banquet halls, and panoramic views.",
       amenities: ["Swimming Pool", "Rooftop BBQ", "Gym & Spa"]
@@ -139,7 +349,6 @@ const PLANNER_CATALOG = {
       tier: "comfort",
       hub: "inani",
       stars: 3,
-      rateBDT: 4800,
       location: "Pechardwip, Marine Drive",
       why: "Tranquil bamboo bungalows surrounded by canals, lotus ponds, and organic gardens.",
       amenities: ["Eco Bamboo Cottages", "Canal Boat Rides", "Organic Farm Food"]
@@ -150,7 +359,6 @@ const PLANNER_CATALOG = {
       tier: "backpacker",
       hub: "kolatoli",
       stars: 2,
-      rateBDT: 1500,
       location: "Kolatoli Dolphin Mor 2nd Line",
       why: "Clean, reliable budget AC guest house within 4 minutes walking distance to the sea.",
       amenities: ["Clean Attached Bath", "AC Available", "24hr Power Backup"]
@@ -161,7 +369,6 @@ const PLANNER_CATALOG = {
       tier: "backpacker",
       hub: "laboni",
       stars: 2,
-      rateBDT: 1400,
       location: "Old Laboni Point Road",
       why: "Affordable base right next to the historic beach and Rakhine weaving shops.",
       amenities: ["Attached Bath", "Walking Distance to Beach & Markets"]
@@ -173,7 +380,6 @@ const PLANNER_CATALOG = {
       id: "poushee_feast",
       name: "Poushee Restaurant & Jhaubon",
       tier: "comfort",
-      costPerPerson: 800,
       cuisine: "Authentic Bengali & Seafood",
       location: "Hotel Motel Zone & Kolatoli",
       why: "Legendary 12-item shutki and vegetable bhorta platter, fresh crispy Loitta fry, and Coral fish curry.",
@@ -183,7 +389,6 @@ const PLANNER_CATALOG = {
       id: "sugandha_bbq",
       name: "Sugandha Live Fish Night BBQ",
       tier: "comfort",
-      costPerPerson: 900,
       cuisine: "Live Charcoal Grilled Fish",
       location: "Sugandha Beach Point",
       why: "Pick your own live fresh catch (Rupchanda, Koral, Crab, Tiger Prawn) grilled on open charcoal embers.",
@@ -193,7 +398,6 @@ const PLANNER_CATALOG = {
       id: "mermaid_cafe",
       name: "Mermaid Beach Cafe & Tarboosh",
       tier: "luxury",
-      costPerPerson: 2200,
       cuisine: "Gourmet Oceanfront & Artisanal Italian",
       location: "Marine Drive & Pechardwip",
       why: "Romantic sea-breeze dining with wood-fired sourdough pizza, grilled whole lobster, and fresh tender coconuts.",
@@ -203,7 +407,6 @@ const PLANNER_CATALOG = {
       id: "local_bhorta_dhaba",
       name: "Niribili & Central Rice Stalls",
       tier: "backpacker",
-      costPerPerson: 450,
       cuisine: "Everyday Traditional Bengali",
       location: "Dolphin Mor & Main Road",
       why: "Delicious steaming hot rice with dal, shutki bhorta, and local fish curry at rock-bottom local prices.",
@@ -215,15 +418,13 @@ const PLANNER_CATALOG = {
     {
       id: "marine_drive",
       name: "Scenic Marine Drive 80km Open Safari",
-      costPerPerson: 400,
       duration: "Half Day",
       vibe: ["relaxing", "adventure", "romantic"],
-      desc: "World's longest marine drive with endless ocean surf on one side and green jungle hills on the other."
+      desc: "Long coastal road with the sea on one side and green hills on the other."
     },
     {
       id: "inani_coral",
       name: "Inani Coral Beach & Sea Glass Walk",
-      costPerPerson: 0,
       duration: "2-3 Hours",
       vibe: ["relaxing", "romantic", "family"],
       desc: "Walk among ancient golden-black coral stones exposed at low tide, free from coastal noise."
@@ -231,15 +432,13 @@ const PLANNER_CATALOG = {
     {
       id: "parasailing",
       name: "Beachfront Ocean Parasailing",
-      costPerPerson: 1500,
       duration: "1 Hour",
       vibe: ["adventure"],
-      desc: "Soar 300 feet above the Bay of Bengal with certified safety harnesses and tandem flights."
+      desc: "Tandem flight above the beach. Check the harness and ask about safety gear before paying."
     },
     {
       id: "jetski",
       name: "Jet Ski Wave Bashing (10 Min Ride)",
-      costPerPerson: 1000,
       duration: "15 min",
       vibe: ["adventure"],
       desc: "Power through sea swells at high speed with an experienced safety instructor."
@@ -247,7 +446,6 @@ const PLANNER_CATALOG = {
     {
       id: "moheshkhali",
       name: "Moheshkhali Island Speedboat & Adinath Temple",
-      costPerPerson: 400,
       duration: "Half Day",
       vibe: ["culture", "adventure", "family"],
       desc: "Thrilling speedboat sea-crossing from 6-No. Ghat, exploring the ancient hilltop Hindu shrine and Buddhist pagodas."
@@ -255,15 +453,13 @@ const PLANNER_CATALOG = {
     {
       id: "fish_world",
       name: "Radiant Fish World Marine Aquarium",
-      costPerPerson: 350,
       duration: "2 Hours",
       vibe: ["family", "culture"],
-      desc: "Bangladesh's first international marine aquarium tunnel with 100+ species of aquatic creatures."
+      desc: "Marine aquarium with a walk-through tunnel."
     },
     {
       id: "himchari_hill",
       name: "Himchari National Park Viewpoint (waterfall in monsoon only)",
-      costPerPerson: 50,
       duration: "2 Hours",
       vibe: ["relaxing", "family", "adventure"],
       desc: "Climb the hilltop stairs for an aerial panorama of the infinite coastline and visit seasonal cascades."
@@ -271,51 +467,17 @@ const PLANNER_CATALOG = {
     {
       id: "night_bbq",
       name: "Sugandha Live Fish BBQ Dinner Feast",
-      costPerPerson: 800,
       duration: "Evening",
       vibe: ["foodie", "relaxing", "romantic"],
       desc: "Tasting freshly caught red snapper, pomfret, and giant prawns grilled under beach lights."
     }
-  ],
-
-  // Daily hire for sightseeing. The planner's only fare table for this; capacities from VEHICLE_GLOSSARY text (CNG 3-4, chander gari 10-14, lower bound used).
-  // shortcut: daily rates are planner estimates without source/asOf; move to data.js TRANSPORT_DATA with a source when the data role adds daily-hire fares.
-  vehicles: [
-    { key: "cng", name: "Reserved CNG", capacity: 3, dailyBDT: 1000 },
-    { key: "chander_gari", name: "Chander Gari (open jeep)", capacity: 10, dailyBDT: 2200 }
-  ],
-
-  transitFares: [
-    {
-      routeBN: "কলাতলী / শহর ➔ ইনানী বিচ (মেরিন ড্রাইভ)",
-      route: "Town Central ➔ Inani Beach",
-      vehicle: "CNG Reserve",
-      fairFareBDT: "৳৫০০ – ৳৬০০",
-      scamAlert: "Scammers ask ৳১,০০০+. Stand firm on ৳৫০০-৳৬০০."
-    },
-    {
-      routeBN: "কলাতলী / শহর ➔ হিমছড়ি জাতীয় উদ্যান",
-      route: "Town Central ➔ Himchari",
-      vehicle: "CNG Reserve",
-      fairFareBDT: "৳৩০০ – ৳৩৫০",
-      scamAlert: "Shared Tomtom is only ৳৪০-৳৫০ per seat."
-    },
-    {
-      routeBN: "কলাতলী ➔ ৬নং ঘাট (মহেশখালী স্পিডবোট ঘাট)",
-      route: "Kolatoli ➔ 6-No. Ghat (Moheshkhali)",
-      vehicle: "Tomtom Reserve",
-      fairFareBDT: "৳৮০ – ৳১০০",
-      scamAlert: "Shared Tomtom is ৳২০ per person."
-    },
-    {
-      routeBN: "৬নং ঘাট ➔ মহেশখালী দ্বীপ",
-      route: "6-No. Ghat ➔ Moheshkhali",
-      vehicle: "Speedboat (Per Seat)",
-      fairFareBDT: "৳১০০ – ৳১২০",
-      scamAlert: "Govt fixed rate with life jacket included."
-    }
   ]
 };
+
+// Prices live in PRICE_BOOK (js/data.js); the catalog keeps names and copy only.
+["hotels", "dining", "activities"].forEach(g => PLANNER_CATALOG[g].forEach(x => Object.assign(x, PRICE_BOOK[g][x.id])));
+PLANNER_CATALOG.vehicles = PRICE_BOOK.vehicles;
+
 
 // ============================================================================
 // 2. WHATSAPP CONCIERGE LEADGEN CONSTRUCTOR
@@ -331,22 +493,23 @@ function buildWhatsAppPlannerPayload(state) {
   const children = state.kids || 0;
   const vibe = state.vibe || "relaxing";
   const budgetTier = state.budgetTier || "comfort";
-  const hotelName = state.selectedHotel?.name || "Recommended Hotel";
-  const totalBDT = state.calculatedBudget?.totalBDT || "18500";
-  const travelerName = state.travelerName || "My Coastal Journey";
+  const hotelName = state.selectedHotel?.name || "-";
+  const totalBDT = state.calculatedBudget?.totalBDT || 0;
+  const travelerName = state.travelerName || pt("trip_default");
+  const travelers = children > 0 ? pt("travelers_kids", { a: adults, k: children }) : pt("travelers", { a: adults });
 
-  let message = `*🌊 Visit Cox — 60-Second Trip Inquiry*\n\n`;
-  message += `Hello! I planned this trip on the Visit Cox planner and would like to check hotel availability and rates.\n\n`;
-  message += `📋 *Trip Summary:*\n`;
-  message += `• *Trip Name:* ${travelerName}\n`;
-  message += `• *Duration:* ${days} Days / ${nights} Nights\n`;
-  message += `• *Travelers:* ${adults} Adults${children > 0 ? `, ${children} Children` : ""}\n`;
-  message += `• *Style:* ${vibe.toUpperCase()} (${budgetTier.toUpperCase()} Tier)\n`;
-  message += `• *Selected Hotel:* ${hotelName}\n`;
-  message += `• *Estimated Budget:* ৳${Number(totalBDT).toLocaleString('en-IN')} BDT\n\n`;
-  
+  let message = `${pt("wa_title")}\n\n`;
+  message += `${pt("wa_hello")}\n\n`;
+  message += `${pt("wa_summary")}\n`;
+  message += `• *${pt("wa_name")}:* ${travelerName}\n`;
+  message += `• *${pt("wa_duration")}:* ${pt("days_nights", { d: days, n: nights })}\n`;
+  message += `• *${pt("wa_travelers")}:* ${travelers}\n`;
+  message += `• *${pt("wa_style")}:* ${pt("vibe_" + vibe)} (${pt("tier_badge", { t: pt("tier_" + budgetTier) })})\n`;
+  message += `• *${pt("wa_hotel")}:* ${hotelName}\n`;
+  message += `• *${pt("wa_budget")}:* ৳${plannerNum(totalBDT)} (${pt("approx")})\n\n`;
+
   if (state.selectedActivities && state.selectedActivities.length > 0) {
-    message += `🎯 *Requested Activities:*\n`;
+    message += `${pt("wa_acts")}\n`;
     state.selectedActivities.forEach(act => {
       const a = PLANNER_CATALOG.activities.find(x => x.id === act);
       message += `• ${a ? a.name : act}\n`;
@@ -354,7 +517,7 @@ function buildWhatsAppPlannerPayload(state) {
     message += `\n`;
   }
 
-  message += `Please confirm room availability, rates and transport. Thank you!`;
+  message += pt("wa_close");
 
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
@@ -374,7 +537,7 @@ const PlannerApp = (function () {
       budgetTier: "comfort",
       baseHub: "any",
       hotelType: "auto",
-      travelerName: "My Coastal Journey",
+      travelerName: "", // empty = pt("trip_default") in the current language
       selectedActivities: ["marine_drive", "inani_coral", "himchari_hill"],
       hotelIndex: 0,
       diningIndex: 0,
@@ -383,6 +546,7 @@ const PlannerApp = (function () {
     };
   }
   const state = defaultState();
+  let initialised = false;
 
   const TIERS = ["backpacker", "comfort", "luxury"];
   const VIBES = ["relaxing", "adventure", "romantic", "family", "foodie", "culture"];
@@ -427,9 +591,10 @@ const PlannerApp = (function () {
     const best = PLANNER_CATALOG.vehicles
       .map(v => ({ v, count: Math.ceil(pax / v.capacity) }))
       .reduce((a, b) => (b.count * b.v.dailyBDT < a.count * a.v.dailyBDT ? b : a));
-    const vehicle = best.count > 1 ? `${best.count} × ${best.v.name}` : best.v.name;
-    const totalTransit = best.count * best.v.dailyBDT * days + 600;
-    return { vehicle, vehicles: best.count, totalTransit };
+    const name = PLANNER_TEXT.en["veh_" + best.v.key];
+    const vehicle = best.count > 1 ? `${best.count} × ${name}` : name;
+    const totalTransit = best.count * best.v.dailyBDT * days + PRICE_BOOK.transfers.totalBDT;
+    return { vehicle, vehicleKey: best.v.key, vehicles: best.count, totalTransit };
   }
 
   function computeBudget(s) {
@@ -476,6 +641,7 @@ const PlannerApp = (function () {
       buffer,
       rooms,
       vehicle: transitInfo.vehicle,
+      vehicleKey: transitInfo.vehicleKey,
       vehicles: transitInfo.vehicles
     };
   }
@@ -525,7 +691,7 @@ const PlannerApp = (function () {
     return { budget: computeBudget(s), hotel: getActiveHotel(s), days: s.days, adults: s.adults, kids: s.kids };
   }
 
-  // TIDE & SUNSET INTELLIGENT TIMING SCHEDULE
+  // Fixed day-by-day schedule (same for every season)
   function generateSchedule() {
     const days = state.days;
     const schedule = [];
@@ -551,7 +717,7 @@ const PlannerApp = (function () {
           { 
             time: "04:30 PM", 
             act: "Sugandha Beach Golden Hour Walk & Sunset", 
-            tip: "Rent beach sunbed chairs (৳৫০/hr) and enjoy the crimson sunset.",
+            tip: "Rent a beach chair and watch the sunset (agree the hourly rate first).",
             badge: "🌅 Sunset"
           },
           { 
@@ -570,7 +736,7 @@ const PlannerApp = (function () {
           { 
             time: "08:30 AM", 
             act: "Open Chander Gari / CNG Ride down Scenic Marine Drive", 
-            tip: "The world's longest marine drive highway. Endless ocean surf on right, jungle on left.",
+            tip: "Coastal road with the sea on one side and hills on the other.",
             badge: "🚗 80km Coastal Highway"
           },
           { 
@@ -606,8 +772,8 @@ const PlannerApp = (function () {
         items: [
           { 
             time: "08:30 AM", 
-            act: "Tomtom to 6-No. Ghat & Speedboat Crossing (৳১০০-১২০)", 
-            tip: "Exciting 15-minute speed crossing with safety life-jackets.",
+            act: "Tomtom to 6 No. Ghat & speedboat crossing", 
+            tip: "Short speedboat crossing; wear a life jacket.",
             badge: "🚤 Calm Morning Sea"
           },
           { 
@@ -645,7 +811,7 @@ const PlannerApp = (function () {
         title: "Radiant Fish World Aquarium & Farewell Sunset",
         theme: "Marine Life Wonder & Relaxed Departure",
         items: [
-          { time: "09:30 AM", act: "Radiant Fish World Marine Tunnel Aquarium", tip: "Explore 100+ species of aquatic creatures in international glass tunnels.", badge: "🐠 Marine Life" },
+          { time: "09:30 AM", act: "Radiant Fish World Marine Tunnel Aquarium", tip: "Walk-through aquarium tunnel; good for kids.", badge: "🐠 Marine Life" },
           { time: "12:30 PM", act: "Farewell Feast at Jhaubon Restaurant", tip: "Last savoring of authentic Cox's Bazar seafood delicacies.", badge: "🍤 Farewell Lunch" },
           { time: "03:30 PM", act: "Final Sunset Stroll at Laboni Beach", tip: "Pick up shell crafts and take memorable group portraits before departure.", badge: "🌅 Farewell Sunset" }
         ]
@@ -682,25 +848,30 @@ const PlannerApp = (function () {
     state.selectedHotel = hotel;
 
     const daysLabel = document.getElementById("param-days-label");
-    if (daysLabel) daysLabel.textContent = `${state.days} Days (${state.days === 2 ? 'Weekend' : state.days === 3 ? 'Classic' : 'Extended'})`;
+    if (daysLabel) daysLabel.textContent = pt("days_label", { n: state.days, kind: pt(state.days === 2 ? "kind_weekend" : state.days === 3 ? "kind_classic" : "kind_extended") });
 
     const travelersLabel = document.getElementById("param-travelers-label");
-    if (travelersLabel) travelersLabel.textContent = `${state.adults} Adults${state.kids > 0 ? `, ${state.kids} Kids` : ''}`;
+    if (travelersLabel) travelersLabel.textContent = state.kids > 0 ? pt("travelers_kids", { a: state.adults, k: state.kids }) : pt("travelers", { a: state.adults });
 
     const customDaysVal = document.getElementById("planner-custom-days-val");
-    if (customDaysVal) customDaysVal.textContent = state.days;
+    if (customDaysVal) customDaysVal.textContent = plannerNum(state.days);
 
     const adultsVal = document.getElementById("planner-adults-val");
-    if (adultsVal) adultsVal.textContent = state.adults;
+    if (adultsVal) adultsVal.textContent = plannerNum(state.adults);
 
     const kidsVal = document.getElementById("planner-kids-val");
-    if (kidsVal) kidsVal.textContent = state.kids;
+    if (kidsVal) kidsVal.textContent = plannerNum(state.kids);
 
     const roomsCount = document.getElementById("planner-rooms-count");
-    if (roomsCount) roomsCount.textContent = `${budget.rooms} ${budget.rooms === 1 ? 'Room' : 'Rooms'}`;
+    if (roomsCount) roomsCount.textContent = budget.rooms === 1 ? pt("room_1") : pt("rooms_n", { n: budget.rooms });
 
     const vehicleTag = document.getElementById("planner-vehicle-tag");
-    if (vehicleTag) vehicleTag.textContent = budget.vehicle;
+    if (vehicleTag) vehicleTag.textContent = vehicleText(budget);
+
+    const tierLabel = document.getElementById("param-budget-tier-label");
+    if (tierLabel) tierLabel.textContent = pt("tier_" + state.budgetTier);
+    const tierDesc = document.getElementById("planner-tier-desc");
+    if (tierDesc) tierDesc.textContent = pt("tierdesc_" + state.budgetTier);
 
     document.querySelectorAll(".planner-duration-btn").forEach(btn => {
       const d = parseInt(btn.dataset.days);
@@ -730,31 +901,31 @@ const PlannerApp = (function () {
     });
 
     const totalDisp = document.getElementById("budget-display-total");
-    if (totalDisp) totalDisp.textContent = `৳${budget.totalBDT.toLocaleString('en-IN')} BDT`;
+    if (totalDisp) totalDisp.textContent = `৳${plannerNum(budget.totalBDT)} BDT`;
 
     const usdDisp = document.getElementById("budget-display-usd");
-    if (usdDisp) usdDisp.textContent = `(~$${budget.totalUSD} USD)`;
+    if (usdDisp) usdDisp.textContent = `(~$${plannerNum(budget.totalUSD)} USD)`;
 
     const ppDisp = document.getElementById("budget-display-per-person");
-    if (ppDisp) ppDisp.textContent = `৳${budget.perPersonBDT.toLocaleString('en-IN')}`;
+    if (ppDisp) ppDisp.textContent = `৳${plannerNum(budget.perPersonBDT)}`;
 
     const durationTag = document.getElementById("budget-display-duration-tag");
-    if (durationTag) durationTag.textContent = `${state.days} Days / ${Math.max(1, state.days - 1)} Nights`;
+    if (durationTag) durationTag.textContent = pt("days_nights", { d: state.days, n: Math.max(1, state.days - 1) });
 
     const partyTag = document.getElementById("budget-display-party-tag");
-    if (partyTag) partyTag.textContent = `${state.adults + state.kids} ${state.adults + state.kids === 1 ? "Guest" : "Guests"}`;
+    if (partyTag) partyTag.textContent = guestsText();
 
     const costHotel = document.getElementById("item-cost-hotel");
-    if (costHotel) costHotel.textContent = `৳${budget.totalHotel.toLocaleString('en-IN')}`;
+    if (costHotel) costHotel.textContent = `৳${plannerNum(budget.totalHotel)}`;
 
     const costFood = document.getElementById("item-cost-food");
-    if (costFood) costFood.textContent = `৳${budget.totalFood.toLocaleString('en-IN')}`;
+    if (costFood) costFood.textContent = `৳${plannerNum(budget.totalFood)}`;
 
     const costTransit = document.getElementById("item-cost-transit");
-    if (costTransit) costTransit.textContent = `৳${budget.totalTransit.toLocaleString('en-IN')}`;
+    if (costTransit) costTransit.textContent = `৳${plannerNum(budget.totalTransit)}`;
 
     const costAct = document.getElementById("item-cost-activities");
-    if (costAct) costAct.textContent = `৳${budget.totalActivities.toLocaleString('en-IN')}`;
+    if (costAct) costAct.textContent = `৳${plannerNum(budget.totalActivities)}`;
 
     if (hotel) {
       const hName = document.getElementById("rec-hotel-name");
@@ -767,10 +938,10 @@ const PlannerApp = (function () {
       if (hWhy) hWhy.textContent = hotel.why;
 
       const hPrice = document.getElementById("rec-hotel-price");
-      if (hPrice) hPrice.textContent = `৳${hotel.rateBDT.toLocaleString('en-IN')} / night`;
+      if (hPrice) hPrice.textContent = pt("per_night", { n: hotel.rateBDT });
 
       const hTier = document.getElementById("rec-hotel-tier-badge");
-      if (hTier) hTier.textContent = `${hotel.tier.toUpperCase()} TIER`;
+      if (hTier) hTier.textContent = pt("tier_badge", { t: pt("tier_" + hotel.tier) });
     }
 
     if (dining) {
@@ -784,9 +955,10 @@ const PlannerApp = (function () {
       if (dWhy) dWhy.textContent = dining.why;
 
       const dPrice = document.getElementById("rec-dining-price");
-      if (dPrice) dPrice.textContent = `৳${dining.costPerPerson.toLocaleString('en-IN')} / person / day`;
+      if (dPrice) dPrice.textContent = pt("per_person_day", { n: dining.costPerPerson });
     }
 
+    applyStaticText();
     renderEmergencyLines("footer-emergency");
     renderEmergencyLines("driver-card-emergency", "bn");
     renderDailyTimeline(schedule);
@@ -813,7 +985,7 @@ const PlannerApp = (function () {
             </div>
           </div>
           <span class="text-[11px] font-mono text-stone-400 bg-stone-50 px-3 py-1 rounded-full border border-stone-200 self-start sm:self-center">
-            Day ${day.dayNum} of ${state.days}
+            ${plannerEsc(pt("day_of", { d: day.dayNum, n: state.days }))}
           </span>
         </div>
 
@@ -837,31 +1009,38 @@ const PlannerApp = (function () {
     `).join('');
   }
 
+  // Fare card and driver card read TRANSPORT_DATA / PRICE_BOOK.fares (js/data.js) via fareById.
+  const fareCard = () => PRICE_BOOK.fareCard.map(fareById).filter(Boolean);
+  const bnNum = n => Number(n).toLocaleString("bn-BD");
+  const fareRange = (f, toNum) => (f.minBDT === f.maxBDT ? `৳${toNum(f.minBDT)}` : `৳${toNum(f.minBDT)} – ৳${toNum(f.maxBDT)}`);
+
   function renderTransitTips() {
     const container = document.getElementById("planner-transit-fare-rules");
-    if (!container || !PLANNER_CATALOG.transitFares) return;
+    if (!container) return;
+    const lang = plannerLang();
 
-    container.innerHTML = PLANNER_CATALOG.transitFares.map((fare, i) => `
+    container.innerHTML = fareCard().map((fare, i) => `
       <div class="bg-white/80 rounded-2xl p-3 border border-amber-200 space-y-1">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] uppercase font-bold text-amber-900 block">${plannerEsc(fare.route)}</span>
+          <span class="text-[10px] uppercase font-bold text-amber-900 block">${plannerEsc(fare.route[lang])}</span>
           <button type="button" data-fare-index="${i}" class="text-[10px] font-bold text-terracotta-600 hover:underline">
-            🛺 চালক কার্ড
+            ${plannerEsc(pt("driver_card"))}
           </button>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-stone-500 text-xs">${plannerEsc(fare.vehicle)}:</span>
-          <span class="font-bold text-charcoal text-xs">${plannerEsc(fare.fairFareBDT)}</span>
+          <span class="text-stone-500 text-xs">${plannerEsc(fare.vehicle[lang])}:</span>
+          <span class="font-bold text-charcoal text-xs">${plannerEsc(fareRange(fare, plannerNum))}</span>
         </div>
-        <p class="text-[10px] text-amber-700 leading-tight pt-1">${plannerEsc(fare.scamAlert)}</p>
+        <p class="text-[10px] text-amber-700 leading-tight pt-1">${plannerEsc(pt("fare_tip", { mode: fare.modeNote[lang], dur: fare.duration[lang] }))}</p>
       </div>
     `).join('');
     if (!container.dataset.wired) {
       container.dataset.wired = "1";
       container.addEventListener("click", e => {
         const btn = e.target.closest && e.target.closest("[data-fare-index]");
-        const fare = btn && PLANNER_CATALOG.transitFares[Number(btn.dataset.fareIndex)];
-        if (fare) openDriverCard(fare.routeBN, fare.fairFareBDT, fare.vehicle);
+        const fare = btn && fareCard()[Number(btn.dataset.fareIndex)];
+        // The driver card stays in Bangla: it is shown to the driver.
+        if (fare) openDriverCard(fare.route.bn, `${fareRange(fare, bnNum)} টাকা (${fare.modeNote.bn})`, fare.vehicle.bn);
       });
     }
   }
@@ -869,35 +1048,35 @@ const PlannerApp = (function () {
   function renderVisualPassCard(budget, hotel, schedule) {
     renderEmergencyLines("pass-emergency");
     const titleEl = document.getElementById("pass-title");
-    if (titleEl) titleEl.textContent = state.travelerName || "My Coastal Journey";
+    if (titleEl) titleEl.textContent = state.travelerName || pt("trip_default");
 
     const datesEl = document.getElementById("pass-dates");
-    if (datesEl) datesEl.textContent = `${state.days} Days / ${Math.max(1, state.days - 1)} Nights • ${state.adults + state.kids} Guests • ${state.budgetTier.toUpperCase()} Tier`;
+    if (datesEl) datesEl.textContent = `${pt("days_nights", { d: state.days, n: Math.max(1, state.days - 1) })} • ${guestsText()} • ${pt("tier_badge", { t: pt("tier_" + state.budgetTier) })}`;
 
     const budgetEl = document.getElementById("pass-budget");
-    if (budgetEl) budgetEl.textContent = `৳${budget.totalBDT.toLocaleString('en-IN')} BDT`;
+    if (budgetEl) budgetEl.textContent = `৳${plannerNum(budget.totalBDT)} BDT`;
 
     const budgetUsdEl = document.getElementById("pass-budget-usd");
-    if (budgetUsdEl) budgetUsdEl.textContent = `(~$${budget.totalUSD} USD)`;
+    if (budgetUsdEl) budgetUsdEl.textContent = `(~$${plannerNum(budget.totalUSD)} USD)`;
 
     const baseEl = document.getElementById("pass-base");
-    if (baseEl) baseEl.textContent = state.baseHub === 'inani' ? 'Inani Corridor' : state.baseHub === 'laboni' ? 'Laboni Point' : 'Kolatoli Hub';
+    if (baseEl) baseEl.textContent = pt(state.baseHub === 'inani' ? 'base_inani' : state.baseHub === 'laboni' ? 'base_laboni' : 'base_kolatoli');
 
     const hotelEl = document.getElementById("pass-hotel");
-    if (hotelEl) hotelEl.textContent = hotel ? hotel.name : 'Ocean View';
+    if (hotelEl) hotelEl.textContent = hotel ? hotel.name : '-';
 
     const transitEl = document.getElementById("pass-transit");
-    if (transitEl) transitEl.textContent = budget.vehicle;
+    if (transitEl) transitEl.textContent = vehicleText(budget);
 
     const vibeEl = document.getElementById("pass-vibe");
-    if (vibeEl) vibeEl.textContent = state.vibe.toUpperCase();
+    if (vibeEl) vibeEl.textContent = pt("vibe_" + state.vibe);
 
     const timelineEl = document.getElementById("pass-condensed-timeline");
     if (timelineEl) {
       timelineEl.innerHTML = schedule.map(day => `
         <div class="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 flex items-center justify-between text-xs">
           <div class="flex items-center gap-3">
-            <span class="font-mono text-terracotta-400 font-bold">DAY ${dayLabel(day.dayNum)}</span>
+            <span class="font-mono text-terracotta-400 font-bold">${plannerEsc(pt("day_tag", { d: dayLabel(day.dayNum) }))}</span>
             <span class="text-stone-200 font-medium">${plannerEsc(day.title)}</span>
           </div>
           <span class="text-[10px] font-mono text-stone-400 hidden sm:inline-block">${plannerEsc(day.theme)}</span>
@@ -906,7 +1085,20 @@ const PlannerApp = (function () {
     }
   }
 
-  const dayLabel = n => String(n).padStart(2, "0");
+  const dayLabel = n => (n < 10 ? plannerNum(0) : "") + plannerNum(n);
+  const guestsText = () => (state.adults + state.kids === 1 ? pt("guest_1") : pt("guests_n", { n: state.adults + state.kids }));
+  const vehicleText = b => (b.vehicles > 1 ? `${plannerNum(b.vehicles)} × ` : "") + pt("veh_" + b.vehicleKey);
+
+  // Fixed page text: elements with data-pt="key" (and data-pt-placeholder) follow the language;
+  // [data-tier-from] shows the cheapest nightly rate of that tier from PRICE_BOOK.
+  function applyStaticText() {
+    document.querySelectorAll("[data-pt]").forEach(el => { el.textContent = pt(el.dataset.pt); });
+    document.querySelectorAll("[data-pt-placeholder]").forEach(el => { el.placeholder = pt(el.dataset.ptPlaceholder); });
+    document.querySelectorAll("[data-tier-from]").forEach(el => {
+      const rates = PLANNER_CATALOG.hotels.filter(h => h.tier === el.dataset.tierFrom).map(h => h.rateBDT);
+      el.textContent = pt("from_night", { n: Math.min(...rates) });
+    });
+  }
 
   // Emergency lines come only from EMERGENCY_CONTACTS in data.js. Entries still awaiting
   // owner confirmation are left off, because the passes are saved as images and outlive fixes.
@@ -926,20 +1118,20 @@ const PlannerApp = (function () {
   function renderPhoneLockScreenCard(budget, hotel, schedule) {
     renderEmergencyLines("phone-pass-emergency");
     const pTitle = document.getElementById("phone-pass-title");
-    if (pTitle) pTitle.textContent = state.travelerName || "My Coastal Journey";
+    if (pTitle) pTitle.textContent = state.travelerName || pt("trip_default");
 
     const pMeta = document.getElementById("phone-pass-meta");
-    if (pMeta) pMeta.textContent = `${state.days} Days • ${state.adults + state.kids} Guests • ৳${budget.totalBDT.toLocaleString('en-IN')}`;
+    if (pMeta) pMeta.textContent = `${pt("days_short", { d: state.days })} • ${guestsText()} • ৳${plannerNum(budget.totalBDT)}`;
 
     const pHotel = document.getElementById("phone-pass-hotel");
-    if (pHotel) pHotel.textContent = hotel ? hotel.name : "Seafront AC";
+    if (pHotel) pHotel.textContent = hotel ? hotel.name : "-";
 
     const pTimeline = document.getElementById("phone-pass-timeline");
     if (pTimeline) {
       pTimeline.innerHTML = schedule.slice(0, 3).map(day => `
         <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60 text-left">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold text-terracotta-400 uppercase">Day ${dayLabel(day.dayNum)}</span>
+            <span class="text-[10px] font-mono font-bold text-terracotta-400 uppercase">${plannerEsc(pt("day_tag", { d: dayLabel(day.dayNum) }))}</span>
             <span class="text-[9px] font-mono text-stone-400">${plannerEsc(day.theme.slice(0, 26))}...</span>
           </div>
           <p class="text-xs font-semibold text-white mt-0.5 truncate">${plannerEsc(day.title)}</p>
@@ -964,7 +1156,7 @@ const PlannerApp = (function () {
             class="rounded text-charcoal focus:ring-0 cursor-pointer"
           />
           <span>${plannerEsc(act.name)}</span>
-          ${act.costPerPerson > 0 ? `<span class="text-[10px] font-mono text-stone-400 font-normal">(+৳${act.costPerPerson})</span>` : ''}
+          ${act.costPerPerson > 0 ? `<span class="text-[10px] font-mono text-stone-400 font-normal">(+৳${plannerNum(act.costPerPerson)})</span>` : ''}
         </label>
       `;
     }).join('');
@@ -1034,14 +1226,14 @@ const PlannerApp = (function () {
 
   // IMAGE EXPORTERS
   function offerPrint(reason) {
-    if (typeof confirm === 'function' && confirm(reason + " Print this page (or save it as PDF) instead?")) window.print();
+    if (typeof confirm === 'function' && confirm(reason + " " + pt("export_print"))) window.print();
   }
 
   function exportCard(cardId, btnId, busyText, background, fileName) {
     const card = document.getElementById(cardId);
     if (!card) return;
     if (typeof html2canvas === 'undefined') {
-      offerPrint("The image export library did not load (offline or blocked).");
+      offerPrint(pt("export_no_lib"));
       return;
     }
     const exportBtn = document.getElementById(btnId);
@@ -1074,7 +1266,7 @@ const PlannerApp = (function () {
     }).catch(err => {
       console.error("Pass export error:", err);
       restore();
-      offerPrint("The image export failed.");
+      offerPrint(pt("export_failed"));
     });
   }
 
@@ -1083,12 +1275,12 @@ const PlannerApp = (function () {
   }
 
   function downloadVisualPass() {
-    exportCard("visual-pass-export-card", "btn-download-pass", "Generating pass...", "#111827",
+    exportCard("visual-pass-export-card", "btn-download-pass", pt("busy_pass"), "#111827",
       `${safeName("Visit-Cox-Itinerary")}-${state.days}-Days-Pass.png`);
   }
 
   function downloadPhonePass() {
-    exportCard("phone-lockscreen-pass-card", "btn-download-phone-pass", "Generating wallpaper...", "#0B2135",
+    exportCard("phone-lockscreen-pass-card", "btn-download-phone-pass", pt("busy_phone"), "#0B2135",
       `${safeName("Visit-Cox")}-Phone-LockScreen-9-16.png`);
   }
 
@@ -1100,10 +1292,17 @@ const PlannerApp = (function () {
 
   return {
     init: function () {
+      initialised = true;
       parseURLParams();
       renderActivityCheckboxes();
       renderAll();
       setWizardStep(1);
+    },
+    // Called by app.js renderAll() after a language or currency toggle.
+    refresh: function () {
+      if (!initialised) return;
+      renderActivityCheckboxes();
+      renderAll();
     },
     setWizardStep: setWizardStep,
     selectArchetype: selectArchetype,
@@ -1149,7 +1348,9 @@ const PlannerApp = (function () {
       state.travelerName = name;
       updateWhatsAppLink();
       const titleEl = document.getElementById("pass-title");
-      if (titleEl) titleEl.textContent = name || "My Coastal Journey";
+      if (titleEl) titleEl.textContent = name || pt("trip_default");
+      const pTitle = document.getElementById("phone-pass-title");
+      if (pTitle) pTitle.textContent = name || pt("trip_default");
     },
     toggleActivity: function (actId) {
       const idx = state.selectedActivities.indexOf(actId);

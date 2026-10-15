@@ -2,7 +2,7 @@
 name: trip-budget-calculator
 description: >-
   Cost calculation algorithms, baseline expense matrices, and formula standards
-  for estimating accurate Cox's Bazar travel budgets across duration, group size,
+  for estimating Cox's Bazar travel budgets across duration, group size,
   and travel styles (Backpacker, Standard, Luxury).
 ---
 
@@ -26,28 +26,8 @@ Total Trip Budget = (
 
 ---
 
-## 2. Baseline Expense Matrices (BDT ৳)
-
-### A. Hotel Accommodations (Per Room / Night)
-* **Backpacker / Ultra-Budget:** ৳৮০০ – ৳১,৫০০ (Kolatoli second-line, standard non-AC)
-* **Standard / Comfort:** ৳২,০০০ – ৳৩,৫০০ (Kolatoli / Sugandha, AC room, attached bath)
-* **Premium / 4-Star:** ৳৪,৫০০ – ৳৭,৫০০ (Hotel Sea Crown, Prime Park, Ocean Paradise)
-* **5-Star Luxury Resort:** ৳১০,০০০ – ৳২৫,০০০+ (Sayeman Beach Resort, Royal Tulip Sea Pearl, Mermaid Beach Resort)
-
-### B. Daily Dining (Per Person / Day)
-* **Budget Foodie:** ৳৪০০ – ৳৬০০ (Local rice, dal, shutki bhorta, standard fish curry)
-* **Standard Dining:** ৳৮০০ – ৳১,২০০ (Poushee / Jhaubon fish feasts, Sugandha live fish fry stalls)
-* **Gourmet / Luxury:** ৳১,৮০০ – ৳৩,৫০০ (Mermaid Beach Cafe, Tarboosh at Sayeman, live lobster/crab BBQ)
-
-### C. Activities & Entry Tickets (Per Person)
-* **Himchari National Park Entry:** ৳৩০
-* **Radiant Fish World Aquarium:** ৳৩০০ – ৳৪০০
-* **Moheshkhali Speedboat Crossing:** ৳১০০ – ৳১২০ (one way)
-* **Beach Parasailing:** ৳১,৫০০ – ৳২,০০০ (per flight)
-* **Jet Ski 10-Minute Ride:** ৳১,০০০ – ৳১,৫০০
-* **Marine Drive Bike / Scooter Rental:** ৳১,০০০ – ৳১,৫০০ (per day, fuel extra)
-
----
+## 2. Where prices live
+The formula is implemented once, in `PlannerApp.estimate(query)` (`js/planner.js`); quick pick and every other total call it. Prices live only in `js/data.js` (`PRICE_BOOK`, `HOTELS_DATA`, `TRANSPORT_DATA`) with `asOf` and `source` or `approx: true`. Do not keep price matrices here; they drift.
 
 ## 3. Seasonal Multipliers
 * **Peak Season (Nov – Feb):** Multiply base hotel rates by `1.2x – 1.4x`

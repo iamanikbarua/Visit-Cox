@@ -3184,6 +3184,37 @@ function initScrollReveal() {
 /* --------------------------------------------------------------------------
  * MASTER RENDER & INITIALIZATION
  * -------------------------------------------------------------------------- */
+/* Transport page fare calculator: legs per destination and party size; fares come from
+ * TRANSPORT_DATA / PRICE_BOOK.fares in data.js through fareById(). */
+const FARE_CALC_ROUTES = {
+  sugandha: { any: ['town-to-laboni-sugandha'] },
+  himchari: { group: ['town-to-himchari-jeep'], any: ['town-to-himchari'] },
+  inani: { group: ['town-to-inani'], any: ['town-to-inani-car'] },
+  moheshkhali: { any: ['kolatoli-to-6-ghat', 'town-to-moheshkhali'] },
+  ramu: { any: ['town-to-ramu'] },
+  shamlapur: { any: ['town-to-shamlapur-jeep'] }
+};
+const FARE_CALC_TIP = {
+  en: 'Agree the fare, and any waiting time for a round trip, before you get in.',
+  bn: 'ওঠার আগেই ভাড়া ঠিক করুন; আসা-যাওয়া হলে অপেক্ষার সময়ও ঠিক করে নিন।'
+};
+
+function runFareCalculation() {
+  const destEl = document.getElementById('calc-destination');
+  const partyEl = document.getElementById('calc-party');
+  const fareEl = document.getElementById('calc-fare-text');
+  if (!destEl || !partyEl || !fareEl || typeof fareById !== 'function') return;
+  const lang = AppState.lang;
+  const route = FARE_CALC_ROUTES[destEl.value] || FARE_CALC_ROUTES.shamlapur;
+  const legs = (partyEl.value === 'group' && route.group ? route.group : route.any).map(fareById).filter(Boolean);
+  const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+  set('calc-vehicle-badge', legs.map(f => f.vehicle[lang]).join(' + '));
+  fareEl.innerHTML = `${escapeHTML(legs.map(f => formatPriceRange(f.minBDT, f.maxBDT)).join(' + '))}
+    <span class="vc-approx block text-xs font-mono font-normal text-stone-500 mt-1">${escapeHTML(PRICE_BOOK.asOfLabel[lang])}</span>`;
+  set('calc-meta-text', legs.map(f => `${f.route[lang]}: ${f.duration[lang]} • ${f.modeNote[lang]}`).join(' | '));
+  set('calc-tip-text', FARE_CALC_TIP[lang]);
+}
+
 function renderAll() {
   updateToggleButtons();
   renderStaticText();
@@ -3197,7 +3228,11 @@ function renderAll() {
   if (typeof renderBlogSection === 'function') {
     renderBlogSection();
   }
-  
+  if (typeof PlannerApp !== 'undefined') PlannerApp.refresh();
+  runFareCalculation();
+  // Bilingual "prices are estimates" lines: show only the span for the current language.
+  document.querySelectorAll('.vc-approx [lang]').forEach(el => { el.hidden = el.lang !== AppState.lang; });
+
   const hotelsTrack = document.getElementById('hotels-grid');
   if (hotelsTrack) initHorizontalDragScroll(hotelsTrack);
   initScrollReveal();

@@ -82,3 +82,63 @@ test('fare buttons use data attributes, not inline onclick strings', () => {
   assert.ok(!html.includes('onclick'), 'inline onclick still present');
   assert.match(html, /data-fare-index="0"/);
 });
+
+test('PRICE_BOOK move kept the totals (snapshot taken before the move)', () => {
+  const ev = planner();
+  const snap = {
+    '': 17950,
+    'days=3&tier=comfort&arc=quiet_coral': 20800,
+    'days=2&tier=comfort&arc=wave_hunter': 16600,
+    'days=3&adults=2&kids=2&tier=comfort&arc=family_leader': 32700,
+    'days=3&tier=luxury&arc=ocean_romance': 48600,
+    'days=3&tier=backpacker&arc=quiet_coral': 11200,
+    'days=7&adults=20&kids=3&tier=luxury': 1339350,
+  };
+  for (const [q, total] of Object.entries(snap)) {
+    assert.strictEqual(ev(`PlannerApp.estimate(${JSON.stringify(q)}).budget.totalBDT`), total, q);
+  }
+});
+
+test('every PRICE_BOOK entry has asOf, approx and non-negative prices; every planner item is priced', () => {
+  const ev = planner();
+  const pb = ev('PRICE_BOOK');
+  const entries = [...Object.values(pb.hotels), ...Object.values(pb.dining), ...Object.values(pb.activities), ...pb.vehicles, pb.transfers, ...pb.fares];
+  for (const e of entries) {
+    assert.match(e.asOf, /^\d{4}-\d{2}-\d{2}$/);
+    assert.strictEqual(e.approx, true);
+    for (const k of ['rateBDT', 'costPerPerson', 'dailyBDT', 'totalBDT', 'minBDT', 'maxBDT']) {
+      if (k in e) assert.ok(Number.isFinite(e[k]) && e[k] >= 0, `${k}=${e[k]}`);
+    }
+    if ('minBDT' in e) assert.ok(e.minBDT <= e.maxBDT, e.id);
+  }
+  for (const g of ['hotels', 'dining', 'activities']) {
+    for (const x of ev(`PLANNER_CATALOG.${g}`)) assert.ok(x.id in pb[g], `${g}.${x.id} missing from PRICE_BOOK`);
+  }
+  for (const id of pb.fareCard) assert.ok(ev(`fareById(${JSON.stringify(id)})`), id);
+});
+
+test('PLANNER_TEXT has the same keys in en and bn, and covers every data-pt in itinerary.html', () => {
+  const ev = planner();
+  const t = ev('PLANNER_TEXT');
+  assert.deepStrictEqual(Object.keys(t.bn).sort(), Object.keys(t.en).sort());
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'itinerary.html'), 'utf8');
+  for (const m of html.matchAll(/data-pt(?:-placeholder)?="([^"]+)"/g)) assert.ok(m[1] in t.en, m[1]);
+});
+
+test('planner renders Bangla digits and labels when AppState.lang is bn', () => {
+  const ev = planner();
+  ev('var AppState = { lang: "bn" }; PlannerApp.refresh()');
+  const total = ev(`document.getElementById('budget-display-total').textContent`);
+  assert.match(total, /^৳[০-৯,]+ BDT$/);
+  assert.strictEqual(ev(`document.getElementById('budget-display-duration-tag').textContent`), '৩ দিন / ২ রাত');
+  assert.match(ev(`document.getElementById('planner-transit-fare-rules').innerHTML`), /চালক কার্ড/);
+});
+
+test('transport calculator shows fares from TRANSPORT_DATA / PRICE_BOOK', () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  const set = (id, v) => ev(`document.getElementById('${id}').value = ${JSON.stringify(v)}`);
+  set('calc-destination', 'ramu'); set('calc-party', 'solo');
+  ev('runFareCalculation()');
+  const ramu = ev(`TRANSPORT_DATA.find(f => f.id === 'town-to-ramu')`);
+  assert.ok(ev(`document.getElementById('calc-fare-text').innerHTML`).includes(ev(`formatPriceRange(${ramu.minBDT}, ${ramu.maxBDT})`)));
+});

@@ -35,9 +35,9 @@ const UI_TEXT = {
       faq: "FAQ"
     },
     hero: {
-      badge: "120 KM UNBROKEN NATURAL SEA BEACH • BAY OF BENGAL",
-      title: "Experience the Longest Sea Beach in the World",
-      subtitle: "Your ultimate guide to hotels, sightseeing, and local travel in Cox's Bazar.",
+      badge: "ABOUT 120 KM OF SANDY BEACH • BAY OF BENGAL",
+      title: "One of the World's Longest Sea Beaches",
+      subtitle: "An independent guide to hotels, sights, food and typical local fares in Cox's Bazar. Prices are estimates; check before you pay.",
       ctaHotels: "Find Hotels",
       ctaSpots: "Explore Spots",
       searchPlaceholder: "Search hotels, beaches, islands, or transport (e.g., Inani, Sea Crown, Tomtom)...",
@@ -47,7 +47,7 @@ const UI_TEXT = {
       searchCategoryTransport: "Local Transport",
       searchBtn: "Search Guide",
       stats: [
-        { value: "26+", label: "Top-Rated Renowned Hotels" },
+        { value: "16", label: "Hotels Listed" },
         { value: "14", label: "Iconic Sightseeing Spots" },
         { value: "10", label: "Hidden Food & Cultural Gems" },
         { value: "10", label: "Thrilling Coastal Activities" }
@@ -98,7 +98,7 @@ const UI_TEXT = {
     activitiesSection: {
       eyebrow: "THINGS TO DO & COASTAL THRILLS",
       title: "Top 10 Activities in Cox's Bazar",
-      subtitle: "From riding the surf and beach parasailing to open-top Marine Drive jeep safaris and night bonfires—approximate rates, locations, and safety briefings.",
+      subtitle: "From surf lessons and beach parasailing to open-top Marine Drive jeep rides and night bonfires: approximate rates, locations and safety notes.",
       filterAll: "All Activities",
       filterWater: "Water Sports",
       filterBeach: "Beach & Riding",
@@ -122,7 +122,7 @@ const UI_TEXT = {
         bookingType: "Fare Type",
         duration: "Est. Duration"
       },
-      rateDisclaimer: "* Fares shown are standard local rates along Kalatali, Laboni, Sugandha, Kasturi Ghat, and Marine Drive. Confirm reserved fares before boarding."
+      rateDisclaimer: "* Fares are typical local rates along Kalatali, Laboni, Sugandha, Kasturi Ghat and Marine Drive, last reviewed Oct 2026. They are estimates, not fixed tariffs. Agree the fare before boarding."
     },
     essentialSection: {
       eyebrow: "TRAVELER BRIEFING",
@@ -153,8 +153,8 @@ const UI_TEXT = {
             text: "Always ask permission before photographing local fishermen at Shamlapur, workers at Najirartek Shutki Palli, or indigenous Rakhine weavers."
           },
           {
-            label: "Smart Bargaining",
-            text: "Shared Tomtoms run on fixed per-passenger fares (10–20 BDT), but agree on the total round-trip fare beforehand when reserving a CNG or Chander Gari jeep."
+            label: "Fares & Bargaining",
+            text: "Shared Tomtoms usually charge a set per-passenger fare (10–20 BDT), but agree on the total round-trip fare beforehand when reserving a CNG or Chander Gari jeep."
           }
         ]
       },
@@ -174,8 +174,8 @@ const UI_TEXT = {
     },
     chatbot: {
       title: "Cox's Bazar Quick Guide",
-      status: "Online • Specific Local Prices, Routes & Contacts",
-      welcome: "Hello! Ask me anything specific—like 'Sea Crown phone & price', 'Cheapest hotel', 'How to reach Ramu or Inani', 'Best seafood at Poushee', 'Marine Drive bike rental', or 'My trip budget'!",
+      status: "Answers from this guide's data • prices are estimates",
+      welcome: "Hello! I match keywords against this guide's data. Try 'Sea Crown phone & price', 'Cheapest hotel', 'How to reach Ramu or Inani', 'Best seafood at Poushee', 'Marine Drive bike rental', or 'My trip budget'!",
       inputPlaceholder: "Ask specific hotel, spot, fare, restaurant, or route...",
       sendBtn: "Send",
       quickPrompts: [
@@ -189,7 +189,7 @@ const UI_TEXT = {
       ]
     },
     footer: {
-      about: "A bilingual guide to Cox's Bazar: hotel contacts, Wikimedia photography, and approximate local fares.",
+      about: "An independent, bilingual guide to Cox's Bazar: hotel contacts, Wikimedia photography and approximate local fares. Prices are estimates; check before you pay.",
       quickLinks: "Quick Navigation",
       travelerTools: "Traveler Controls",
       copyright: "© 2026 Visit Cox's Bazar Tourism Guide."
@@ -209,9 +209,9 @@ const UI_TEXT = {
       faq: "প্রশ্নোত্তর"
     },
     hero: {
-      badge: "১২০ কিমি অবিচ্ছিন্ন প্রাকৃতিক সমুদ্র সৈকত • বঙ্গোপসাগর",
-      title: "উপভোগ করুন বিশ্বের দীর্ঘতম সমুদ্র সৈকত",
-      subtitle: "কক্সবাজারের হোটেল, দর্শনীয় স্থান এবং স্থানীয় যাতায়াতের সম্পূর্ণ গাইড।",
+      badge: "প্রায় ১২০ কিমি বালুকাময় সৈকত • বঙ্গোপসাগর",
+      title: "বিশ্বের দীর্ঘতম সমুদ্র সৈকতগুলোর একটি",
+      subtitle: "কক্সবাজারের হোটেল, দর্শনীয় স্থান, খাবার আর স্থানীয় ভাড়ার একটি স্বাধীন গাইড। দাম আনুমানিক; টাকা দেওয়ার আগে জেনে নিন।",
       ctaHotels: "হোটেল খুঁজুন",
       ctaSpots: "দর্শনীয় স্থান দেখুন",
       searchPlaceholder: "হোটেল, সৈকত, দ্বীপ বা যানবাহন খুঁজুন (যেমন: ইনানী, সী ক্রাউন, টমটম)...",
@@ -221,7 +221,7 @@ const UI_TEXT = {
       searchCategoryTransport: "স্থানীয় যাতায়াত",
       searchBtn: "অনুসন্ধান করুন",
       stats: [
-        { value: "২৬+", label: "শীর্ষস্থানীয় হোটেল (৫★–২★)" },
+        { value: "১৬টি", label: "তালিকাভুক্ত হোটেল" },
         { value: "১৪টি", label: "জনপ্রিয় দর্শনীয় স্থান" },
         { value: "১০টি", label: "খাবার ও সংস্কৃতির হিডেন জেম" },
         { value: "১০টি", label: "রোমাঞ্চকর অ্যাক্টিভিটি" }
@@ -272,7 +272,7 @@ const UI_TEXT = {
     activitiesSection: {
       eyebrow: "রোমাঞ্চ ও সৈকত অ্যাক্টিভিটি",
       title: "কক্সবাজারের সেরা ১০টি অ্যাক্টিভিটি ও অভিজ্ঞতা",
-      subtitle: "সার্ফিং, প্যারাসেইলিং, খোলা চান্দের গাড়িতে সাফারি থেকে শুরু করে সৈকত ক্যাম্পিং ও বারবিকিউ—সঠিক লোকেশন ও ভাড়ার তালিকা।",
+      subtitle: "সার্ফিং, প্যারাসেইলিং, খোলা চান্দের গাড়িতে সাফারি থেকে শুরু করে সৈকত ক্যাম্পিং ও বারবিকিউ—লোকেশন, আনুমানিক খরচ ও নিরাপত্তা টিপস।",
       filterAll: "সব অ্যাক্টিভিটি",
       filterWater: "ওয়াটার স্পোর্টস",
       filterBeach: "সৈকত ও রাইডিং",
@@ -286,7 +286,7 @@ const UI_TEXT = {
     transportSection: {
       eyebrow: "সহজ যাতায়াত নির্দেশিকা",
       title: "স্থানীয় যাতায়াত ও ভাড়ার তালিকা",
-      subtitle: "দেশি ও বিদেশি পর্যটকদের জন্য কক্সবাজারের স্থানীয় যানবাহনের নির্ধারিত ও আনুমানিক ভাড়ার তালিকা।",
+      subtitle: "দেশি ও বিদেশি পর্যটকদের জন্য কক্সবাজারের স্থানীয় যানবাহনের আনুমানিক ভাড়া—ওঠার আগে স্বাভাবিক ভাড়াটা জেনে নিন।",
       foreignerNoteTitle: "স্থানীয় যানবাহন পরিচিতি (টমটম ও চান্দের গাড়ি)",
       foreignerNoteDesc: "টেবিলের যানবাহনের নামের ওপর কার্সর রাখুন অথবা নিচের সংক্ষিপ্ত পরিচিতি থেকে কক্সবাজারের ঐতিহ্যবাহী যানবাহন সম্পর্কে জানুন:",
       tableHeaders: {
@@ -296,7 +296,7 @@ const UI_TEXT = {
         bookingType: "ভাড়ার ধরন",
         duration: "সম্ভাব্য সময়"
       },
-      rateDisclaimer: "* প্রদর্শিত ভাড়াগুলো কলাতলী, লাবণী, সুগন্ধা, কস্তুরাঘাট এবং মেরিন ড্রাইভের প্রচলিত হার। রিজার্ভ গাণিতে ওঠার আগে ভাড়া নিশ্চিত করে নিন।"
+      rateDisclaimer: "* ভাড়াগুলো কলাতলী, লাবণী, সুগন্ধা, কস্তুরাঘাট ও মেরিন ড্রাইভের প্রচলিত হার, সর্বশেষ দেখা হয়েছে অক্টোবর ২০২৬-এ। এগুলো আনুমানিক, নির্ধারিত ভাড়া নয়। গাড়িতে ওঠার আগে ভাড়া ঠিক করে নিন।"
     },
     essentialSection: {
       eyebrow: "ভ্রমণের পূর্বে করণীয়",
@@ -328,7 +328,7 @@ const UI_TEXT = {
           },
           {
             label: "ভাড়া ও দরদাম",
-            text: "শেয়ারড টমটমে ভাড়া নির্ধারিত (১০-২০ টাকা), তবে রিজার্ভ সিএনজি বা চান্দের গাড়ি ভাড়ার ক্ষেত্রে যাওয়ার-আসার পূর্ণ ভাড়া আগে থেকেই ঠিক করে নিন।"
+            text: "শেয়ারড টমটমে সাধারণত জনপ্রতি একটা চলতি ভাড়া থাকে (১০-২০ টাকা), তবে রিজার্ভ সিএনজি বা চান্দের গাড়ি ভাড়ার ক্ষেত্রে যাওয়ার-আসার পূর্ণ ভাড়া আগে থেকেই ঠিক করে নিন।"
           }
         ]
       },
@@ -348,8 +348,8 @@ const UI_TEXT = {
     },
     chatbot: {
       title: "Cox's Bazar Quick Guide",
-      status: "অনলাইন • সুনির্দিষ্ট ভাড়া, রুট ও হোটেল তথ্য",
-      welcome: "স্বাগতম! আমাকে যেকোনো নির্দিষ্ট প্রশ্ন করুন—যেমন: 'সী ক্রাউন হোটেলের ভাড়া ও ফোন', 'সবচেয়ে কম দামের হোটেল', 'ইনানী বা রামু কীভাবে যাব', 'পৌষী রেস্তোরাঁর খাবার খরচ', 'মেরিন ড্রাইভে বাইক ভাড়া', বা 'আমার ট্রিপ বাজেট কত'!",
+      status: "এই গাইডের তথ্য থেকে উত্তর • দাম আনুমানিক",
+      welcome: "স্বাগতম! আপনার লেখা শব্দ মিলিয়ে এই গাইডের তথ্য থেকে উত্তর দিই। লিখে দেখুন—যেমন: 'সী ক্রাউন হোটেলের ভাড়া ও ফোন', 'সবচেয়ে কম দামের হোটেল', 'ইনানী বা রামু কীভাবে যাব', 'পৌষী রেস্তোরাঁর খাবার খরচ', 'মেরিন ড্রাইভে বাইক ভাড়া', বা 'আমার ট্রিপ বাজেট কত'!",
       inputPlaceholder: "নির্দিষ্ট হোটেল, স্পট, ভাড়া, খাবার বা রুট সম্পর্কে লিখুন...",
       sendBtn: "পাঠান",
       quickPrompts: [
@@ -363,7 +363,7 @@ const UI_TEXT = {
       ]
     },
     footer: {
-      about: "বিশ্বের দীর্ঘতম সমুদ্র সৈকতগুলোর একটি, কক্সবাজার ভ্রমণের দ্বিভাষিক গাইড—হোটেল তথ্য, উইকিমিডিয়া আলোকচিত্র ও আনুমানিক ভাড়ার তালিকা।",
+      about: "কক্সবাজার ভ্রমণের একটি স্বাধীন, দ্বিভাষিক গাইড—হোটেলের যোগাযোগ, উইকিমিডিয়ার ছবি ও আনুমানিক ভাড়া। দাম আনুমানিক; টাকা দেওয়ার আগে জেনে নিন।",
       quickLinks: "দ্রুত লিংকসমূহ",
       travelerTools: "ভ্রমণকারী সেটিংস",
       copyright: "© ২০২৬ ভিজিট কক্সবাজার ট্যুরিজম গাইড।"
@@ -1871,11 +1871,11 @@ let ACTIVITIES_DATA = [
       bn: "সেরা রোমাঞ্চকর খেলা"
     },
     description: {
-      en: "Learn to catch and ride the Bay of Bengal swells under the guidance of certified local surf lifesavers. Includes international-standard soft-top boards, rashguards, safety leashes, and ocean reading instructions.",
+      en: "Learn to catch and ride the Bay of Bengal swells with local surf instructors. Operators usually include soft-top boards, rashguards, safety leashes, and ocean reading instructions.",
       bn: "দক্ষ স্থানীয় সার্ফারদের নির্দেশনায় বঙ্গোপসাগরের ঢেউয়ের ওপর ভেসে চলার রোমাঞ্চ উপভোগ করুন। সার্ফবোর্ড, সেফটি গিয়ার ও প্রাথমিক প্রশিক্ষণ অন্তর্ভুক্ত।"
     },
     included: {
-      en: ["Certified Surf Instructor", "Surfboard & Safety Leash", "Rashguard Vest", "Basic Safety Briefing"],
+      en: ["Local Surf Instructor", "Surfboard & Safety Leash", "Rashguard Vest", "Basic Safety Briefing"],
       bn: ["প্রশিক্ষিত সার্ফ ট্রেইনার", "সার্ফবোর্ড ও সেফটি রশি", "র‌্যাশগার্ড টি-শার্ট", "নিরাপত্তা ব্রিফিং"]
     },
     image: "assets/images/hero-coxs-bazar.jpg",
@@ -1991,7 +1991,7 @@ let ACTIVITIES_DATA = [
       bn: "গ্রুপ ভ্রমণের সেরা আকর্ষণ"
     },
     description: {
-      en: "Hop into an open-roof modified 4x4 'Chander Gari' (Moon Car) and cruise down the world's longest 80 km Marine Drive highway, wedged between towering emerald hills on one side and roaring waves on the other.",
+      en: "Hop into an open-roof modified 4x4 'Chander Gari' (Moon Car) and cruise down the roughly 80 km Marine Drive, wedged between towering emerald hills on one side and roaring waves on the other.",
       bn: "খোলা ছাদের চান্দের গাড়িতে দলবেঁধে গান গাইতে গাইতে মেরিন ড্রাইভ ধরে ছুটে চলা—একপাশে পাহাড়ের সবুজ দেয়াল আর অন্যপাশে গর্জনশীল সাগর। কক্সবাজারের সবচেয়ে সেরা স্মৃতি।"
     },
     included: {
@@ -2075,8 +2075,8 @@ let ACTIVITIES_DATA = [
       bn: "শক্তিশালী জেট স্কিতে সাগরের উত্তাল ঢেউ কেটে বিদ্যুৎ গতিতে ছুটে চলা। অভিজ্ঞ পাইলটের তত্ত্বাবধানে জীবনের অন্যতম সেরা অ্যাডভেঞ্চার।"
     },
     included: {
-      en: ["High-Powered Watercraft", "CE-Certified Life Jacket", "Professional Pilot Escort", "Emergency Rescue Patrol"],
-      bn: ["হাই-পাওয়ার জেট স্কি", "লাইফজ্যাকেট", "পেশাদার পাইলট সহায়তা", "জরুরি রেসকিউ সুরক্ষা"]
+      en: ["High-Powered Watercraft", "Life Jacket (check the fit)", "Operator Escort", "Rescue Boat (ask before you ride)"],
+      bn: ["হাই-পাওয়ার জেট স্কি", "লাইফজ্যাকেট (মাপমতো কিনা দেখে নিন)", "অপারেটরের সহায়তা", "রেসকিউ বোট (চড়ার আগে জিজ্ঞেস করুন)"]
     },
     image: "assets/images/inani-beach.jpg",
     icon: "waves"
@@ -2446,8 +2446,8 @@ let FAQ_DATA = [
       bn: "আমি কীভাবে মহেশখালী দ্বীপে যেতে পারি?"
     },
     answer: {
-      en: "You can take a 35-minute speedboat ride from Kasturi Ghat in the main town for about 80-100 BDT per person.",
-      bn: "মূল শহরের কস্তুরাঘাট (বা ৬ নং ঘাট) থেকে জনপ্রতি প্রায় ৮০-১০০ টাকা ভাড়ায় ৩৫ মিনিটের স্পিডবোট যাত্রায় মহেশখালী দ্বীপে যেতে পারেন।"
+      en: "Speedboats leave from Kasturi Ghat (6 No. Ghat) in town. The crossing takes about 20 minutes and costs roughly 80-100 BDT per person; confirm the fare at the ghat.",
+      bn: "শহরের কস্তুরাঘাট (৬ নং ঘাট) থেকে স্পিডবোটে মহেশখালী যেতে প্রায় ২০ মিনিট লাগে, ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা। ঘাটে ভাড়াটা জেনে নিন।"
     }
   },
   {
@@ -2482,5 +2482,88 @@ let FAQ_DATA = [
       en: "Yes, there are authorized money changers and banks in the main town area, though carrying some local currency (BDT) beforehand is advised.",
       bn: "হ্যাঁ, মূল শহর ও কলাতলী এলাকায় অনুমোদিত মানি এক্সচেঞ্জার এবং ব্যাংক রয়েছে, তবে সুবিধার জন্য আগে থেকেই কিছু স্থানীয় মুদ্রা (বাংলাদেশি টাকা - BDT) সাথে রাখা ভালো।"
     }
+  },
+  {
+    id: "faq-6",
+    question: {
+      en: "Are the prices on this site exact?",
+      bn: "এই সাইটের দামগুলো কি একদম সঠিক?"
+    },
+    answer: {
+      en: "No. Visit Cox is an independent guide with no hotel or transport partners. Prices and fares are estimates last reviewed in Oct 2026 and change with season and holidays. Use them as a starting point and confirm before you pay.",
+      bn: "না। ভিজিট কক্স একটি স্বাধীন গাইড, কোনো হোটেল বা পরিবহনের সাথে আমাদের চুক্তি নেই। দাম ও ভাড়াগুলো আনুমানিক, সর্বশেষ দেখা হয়েছে অক্টোবর ২০২৬-এ, আর মৌসুম ও ছুটিতে বদলায়। এগুলো ধারণা হিসেবে নিন, টাকা দেওয়ার আগে জেনে নিন।"
+    }
   }
 ];
+
+/* --------------------------------------------------------------------------
+ * PRICE_BOOK: the planner's prices (hotels, food, activities, daily vehicle hire)
+ * and the fares that TRANSPORT_DATA does not cover. Engines read prices only from
+ * here and TRANSPORT_DATA. No source yet: every entry is an estimate (approx: true)
+ * last reviewed on asOf; the UI labels them "estimate, as of Oct 2026".
+ * -------------------------------------------------------------------------- */
+const PRICE_BOOK = (() => {
+  const e = o => Object.assign(o, { asOf: '2026-10-15', approx: true });
+  return {
+    asOfLabel: { en: 'estimate, as of Oct 2026', bn: 'আনুমানিক, অক্টোবর ২০২৬ অনুযায়ী' },
+    // Per room per night, keyed by planner hotel id.
+    hotels: {
+      sayeman: e({ rateBDT: 12500 }),
+      royal_tulip: e({ rateBDT: 14500 }),
+      mermaid_beach: e({ rateBDT: 13000 }),
+      sea_crown: e({ rateBDT: 3500 }),
+      prime_park: e({ rateBDT: 3200 }),
+      ocean_paradise: e({ rateBDT: 5500 }),
+      mermaid_eco: e({ rateBDT: 4800 }),
+      kolatoli_guesthouse: e({ rateBDT: 1500 }),
+      laboni_guest: e({ rateBDT: 1400 })
+    },
+    // Food per person per day.
+    dining: {
+      poushee_feast: e({ costPerPerson: 800 }),
+      sugandha_bbq: e({ costPerPerson: 900 }),
+      mermaid_cafe: e({ costPerPerson: 2200 }),
+      local_bhorta_dhaba: e({ costPerPerson: 450 })
+    },
+    // Per person (kids pay 80% in the planner).
+    activities: {
+      marine_drive: e({ costPerPerson: 400 }),
+      inani_coral: e({ costPerPerson: 0 }),
+      parasailing: e({ costPerPerson: 1500 }),
+      jetski: e({ costPerPerson: 1000 }),
+      moheshkhali: e({ costPerPerson: 400 }),
+      fish_world: e({ costPerPerson: 350 }),
+      himchari_hill: e({ costPerPerson: 50 }),
+      night_bbq: e({ costPerPerson: 800 })
+    },
+    // Daily sightseeing hire. Capacity = lower bound of VEHICLE_GLOSSARY seats (CNG 3-4, chander gari 10-14).
+    vehicles: [
+      e({ key: 'cng', capacity: 3, dailyBDT: 1000 }),
+      e({ key: 'chander_gari', capacity: 10, dailyBDT: 2200 })
+    ],
+    // Arrival/departure local hops added once per trip.
+    transfers: e({ totalBDT: 600 }),
+    // Fares missing from TRANSPORT_DATA (same shape). Read both through fareById() in planner.js / app.js.
+    fares: [
+      e({ id: 'kolatoli-to-6-ghat', route: { en: 'Kolatoli to 6 No. Ghat (Kasturi Ghat)', bn: 'কলাতলী থেকে ৬ নং ঘাট (কস্তুরাঘাট)' },
+        vehicle: { en: 'Tomtom', bn: 'টমটম' }, vehicleKey: 'tomtom', minBDT: 80, maxBDT: 100,
+        modeNote: { en: 'Reserved', bn: 'রিজার্ভড' }, duration: { en: '15 mins', bn: '১৫ মিনিট' } }),
+      e({ id: 'town-to-himchari-jeep', route: { en: 'Town to Himchari', bn: 'শহর থেকে হিমছড়ি' },
+        vehicle: { en: 'Chander Gari (Jeep)', bn: 'চান্দের গাড়ি (জিপ)' }, vehicleKey: 'chander_gari', minBDT: 1800, maxBDT: 2500,
+        modeNote: { en: 'Round trip, reserved for group', bn: 'আসা-যাওয়া, গ্রুপের জন্য রিজার্ভড' }, duration: { en: '35 mins each way', bn: 'এক দিকে ৩৫ মিনিট' } }),
+      e({ id: 'town-to-inani-car', route: { en: 'Town to Inani Beach', bn: 'শহর থেকে ইনানী সৈকত' },
+        vehicle: { en: 'CNG or car', bn: 'সিএনজি বা গাড়ি' }, vehicleKey: 'cng', minBDT: 800, maxBDT: 1200,
+        modeNote: { en: 'Round trip, reserved', bn: 'আসা-যাওয়া, রিজার্ভড' }, duration: { en: '50 mins each way', bn: 'এক দিকে ৫০ মিনিট' } }),
+      e({ id: 'town-to-shamlapur-jeep', route: { en: 'Town to Shamlapur', bn: 'শহর থেকে শামলাপুর' },
+        vehicle: { en: 'Chander Gari (Jeep)', bn: 'চান্দের গাড়ি (জিপ)' }, vehicleKey: 'chander_gari', minBDT: 3500, maxBDT: 4500,
+        modeNote: { en: 'Full day, reserved', bn: 'সারা দিন, রিজার্ভড' }, duration: { en: '1.5 hours each way', bn: 'এক দিকে দেড় ঘণ্টা' } })
+    ],
+    // Routes on the planner's fare card and driver card (ids in TRANSPORT_DATA or fares above).
+    fareCard: ['town-to-inani', 'town-to-himchari', 'kolatoli-to-6-ghat', 'town-to-moheshkhali']
+  };
+})();
+
+// One lookup for both fare tables.
+function fareById(id) {
+  return TRANSPORT_DATA.find(f => f.id === id) || PRICE_BOOK.fares.find(f => f.id === id) || null;
+}

@@ -129,8 +129,8 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 • Take a shared Tomtom (Easybike) from Laboni, Sugandha, or Kolatoli to Kasturi Ghat (or 6 No. Ghat) in Cox's Bazar town (fare: 20–30 BDT, ~15 mins).
 
 2. Speedboat Crossing to Moheshkhali Island:
-• Fare: 80 to 100 BDT per passenger each way.
-• Duration: ~30–35 minutes across scenic mangrove channels and the Moheshkhali channel. Life jackets are provided on board.
+• Fare: roughly 80 to 100 BDT per passenger each way (estimate, Oct 2026; confirm at the ghat).
+• Duration: about 20 minutes across the Moheshkhali channel. Ask for a life jacket before you board.
 • What to See on the Island: Hire a local island Tomtom (~150–200 BDT reserved) to visit the historic Adinath Shiva Temple atop Mainak Hill, the Rakhine Buddhist Pagodas, betel-leaf hills, and coastal salt pans.
 
 3. Sonadia Ecological Island:
@@ -139,7 +139,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 ১. কীভাবে যাবেন (কস্তুরাঘাট / ৬ নং ঘাট):
 • কলাতলী বা লাবণী থেকে টমটমে করে শহরের কস্তুরাঘাট বা ৬ নং ঘাটে যান (ভাড়া ২০-৩০ টাকা)।
-• সেখান থেকে জনপ্রতি মাত্র ৮০-১০০ টাকা ভাড়ায় স্পিডবোটে ৩৫ মিনিটে মহেশখালী দ্বীপে পৌঁছানো যায়।
+• সেখান থেকে স্পিডবোটে প্রায় ২০ মিনিটে মহেশখালী দ্বীপে পৌঁছানো যায়, ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা (আনুমানিক, অক্টোবর ২০২৬; ঘাটে জেনে নিন)। ওঠার আগে লাইফজ্যাকেট চেয়ে নিন।
 
 ২. কী কী দেখবেন:
 • মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক আদিনাথ মন্দির, রাখাইন বৌদ্ধ প্যাগোডা, লবণের মাঠ ও পানের বরজ। আর শীতকালে সোনাদিয়া দ্বীপে লাল কাঁকড়া ও বিচ ক্যাম্পিং উপভোগ করতে পারেন।`
@@ -159,8 +159,8 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     likes: 51,
     tags: ['Safety Tips', 'Tomtom Fares', 'Hotels', 'Tourist Police', 'Budget'],
     summary: {
-      en: 'Avoid overpaying and stay safe: standard Tomtom fares (10–20 BDT), green vs. red lifeguard flags, hotel zone comparison, and 24/7 emergency numbers.',
-      bn: 'নিরাপদ ও সাশ্রয়ী ভ্রমণের জন্য জেনে নিন টমটমের নির্ধারিত ভাড়া (১০-২০ টাকা), সৈকতের লাল-সবুজ পতাকার নিয়ম এবং জরুরি ট্যুরিস্ট পুলিশ নাম্বার।'
+      en: 'Avoid overpaying and stay safe: typical Tomtom fares (estimates, Oct 2026), green vs. red lifeguard flags, hotel zone comparison, and 24/7 emergency numbers.',
+      bn: 'নিরাপদ ও সাশ্রয়ী ভ্রমণের জন্য জেনে নিন টমটমের সাধারণ ভাড়া (আনুমানিক, অক্টোবর ২০২৬), সৈকতের লাল-সবুজ পতাকার নিয়ম এবং জরুরি ট্যুরিস্ট পুলিশ নাম্বার।'
     },
     content: {
       en: `Planning your first trip to Cox's Bazar? Keep these local tips in mind to save money and travel safely:
@@ -170,8 +170,8 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 • Laboni Beach: Closest to town, Burmese handicraft markets, and family hotels with pools (like Hotel Kollol).
 • Kalatali & Eco Park: Best for budget-friendly hill-view hotels (Prime Park Hotel, White Orchid) and quick access to Marine Drive.
 
-2. Never Overpay for Local Rides:
-• Shared Tomtoms between Kalatali, Sugandha, and Laboni cost only 10 to 20 BDT per person!
+2. Avoid Overpaying for Local Rides (fares below are estimates, Oct 2026):
+• Shared Tomtoms between Kalatali, Sugandha, and Laboni usually cost 10 to 20 BDT per person.
 • For reserved CNGs (to Himchari: 300–400 BDT; to Ramu: 400–500 BDT) or Chander Gari jeeps (to Inani: 1,500–2,000 BDT), always agree on the round-trip fare and waiting time before boarding.
 
 3. Beach Swimming Safety & Emergency Contacts:
