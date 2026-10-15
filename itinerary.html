@@ -287,446 +287,284 @@
           <!-- ================================================================
                60-SECOND TRIP MATCHMAKER WIZARD CARD (suggest.bike inspired)
                ================================================================ -->
-          <div id="sixty-sec-wizard-card" class="bg-white rounded-3xl p-6 sm:p-10 border border-stone-200/90 shadow-md space-y-6 scroll-mt-24">
+          <div id="sixty-sec-wizard-card" class="bg-white rounded-3xl p-6 sm:p-10 border border-stone-200/90 shadow-sm space-y-8 scroll-mt-24">
             
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-stone-100 gap-3">
-              <div class="flex items-center gap-2.5">
-                <span class="w-8 h-8 rounded-full bg-terracotta-50 text-terracotta-600 font-bold flex items-center justify-center text-sm">
-                  ⏱️
+            <!-- Wizard Header & Steps Stepper -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-stone-100 gap-4">
+              <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-2xl bg-terracotta-50 text-terracotta-600 font-bold flex items-center justify-center text-lg">
+                  ⚡
                 </span>
                 <div>
-                  <h3 class="font-serif text-xl sm:text-2xl text-charcoal font-semibold" data-pt="wiz_title">
-                    Quick start: three questions
-                  </h3>
-                  <p class="text-xs text-stone-500 font-mono" data-pt="wiz_sub">
-                    Days and group • Traveller type • Stay style
+                  <h2 class="font-serif text-2xl sm:text-3xl text-charcoal font-semibold" data-pt="wiz_title">
+                    Plan my trip in three questions
+                  </h2>
+                  <p class="text-xs sm:text-sm text-stone-500 font-normal" data-pt="wiz_sub">
+                    Days and group • Travel vibe • Stay style
                   </p>
                 </div>
               </div>
 
               <!-- Wizard Progress Stepper Tabs -->
-              <div class="flex items-center bg-stone-100 p-1 rounded-full text-xs font-mono self-start sm:self-center">
-                <button type="button" onclick="PlannerApp.setWizardStep(1)" id="wizard-nav-1" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-charcoal text-white">
-                  <span>01</span> <span data-pt="step1">Who &amp; days</span>
+              <div class="flex items-center bg-stone-100 p-1.5 rounded-full text-xs font-mono self-start sm:self-center">
+                <button type="button" onclick="PlannerApp.setWizardStep(1)" id="wizard-nav-1" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-charcoal text-white transition cursor-pointer">
+                  <span>01</span> <span data-pt="step1">Duration &amp; group</span>
                 </button>
-                <button type="button" onclick="PlannerApp.setWizardStep(2)" id="wizard-nav-2" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-stone-500 hover:text-charcoal">
-                  <span>02</span> <span data-pt="step2">Traveller type</span>
+                <button type="button" onclick="PlannerApp.setWizardStep(2)" id="wizard-nav-2" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-stone-500 hover:text-charcoal transition cursor-pointer">
+                  <span>02</span> <span data-pt="step2">Travel vibe</span>
                 </button>
-                <button type="button" onclick="PlannerApp.setWizardStep(3)" id="wizard-nav-3" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-stone-500 hover:text-charcoal">
+                <button type="button" onclick="PlannerApp.setWizardStep(3)" id="wizard-nav-3" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-stone-500 hover:text-charcoal transition cursor-pointer">
                   <span>03</span> <span data-pt="step3">Stay &amp; plan</span>
                 </button>
               </div>
             </div>
 
-            <!-- STEP 1 PANE (0-20s): WHO & HOW LONG -->
-            <div id="wizard-step-pane-1" class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- STEP 1 PANE: DURATION & GROUP -->
+            <div id="wizard-step-pane-1" class="space-y-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
+                <!-- Duration Selection -->
                 <div class="space-y-3">
-                  <span class="text-xs font-mono uppercase tracking-wider text-stone-500 block" data-pt="q_days">A. How many days will you stay?</span>
-                  <div class="grid grid-cols-3 gap-2">
-                    <button type="button" onclick="PlannerApp.setDays(2); PlannerApp.setWizardStep(2);" class="p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-center transition cursor-pointer">
-                      <span class="block text-sm font-bold text-charcoal" data-pt="d2">2 Days</span>
-                      <span class="block text-[10px] text-stone-400 font-mono" data-pt="d2_sub">Weekend</span>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono uppercase tracking-wider text-stone-500 font-semibold block" data-pt="q_days">1. Trip duration</span>
+                    <span class="text-xs font-mono text-terracotta-600 font-bold" id="wizard-duration-feedback">3 Days (Classic)</span>
+                  </div>
+                  
+                  <div class="grid grid-cols-3 gap-2.5">
+                    <button type="button" onclick="PlannerApp.setDays(2);" data-days="2" class="wizard-duration-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-center transition cursor-pointer">
+                      <span class="block text-sm font-bold" data-pt="d2">2 Days</span>
+                      <span class="block text-[10px] text-stone-400 font-mono mt-0.5 btn-subtext" data-pt="d2_sub">Weekend</span>
                     </button>
-                    <button type="button" onclick="PlannerApp.setDays(3); PlannerApp.setWizardStep(2);" class="p-3 rounded-2xl border border-charcoal bg-charcoal text-white text-center transition cursor-pointer">
+                    <button type="button" onclick="PlannerApp.setDays(3);" data-days="3" class="wizard-duration-btn p-3 rounded-2xl border-2 border-charcoal bg-charcoal text-white text-center transition cursor-pointer shadow-sm">
                       <span class="block text-sm font-bold" data-pt="d3">3 Days</span>
-                      <span class="block text-[10px] text-stone-300 font-mono" data-pt="d3_sub">Classic</span>
+                      <span class="block text-[10px] text-stone-300 font-mono mt-0.5 btn-subtext" data-pt="d3_sub">Classic</span>
                     </button>
-                    <button type="button" onclick="PlannerApp.setDays(5); PlannerApp.setWizardStep(2);" class="p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-center transition cursor-pointer">
-                      <span class="block text-sm font-bold text-charcoal" data-pt="d5">5 Days</span>
-                      <span class="block text-[10px] text-stone-400 font-mono" data-pt="d5_sub">Coast &amp; island</span>
+                    <button type="button" onclick="PlannerApp.setDays(5);" data-days="5" class="wizard-duration-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-center transition cursor-pointer">
+                      <span class="block text-sm font-bold" data-pt="d5">5 Days</span>
+                      <span class="block text-[10px] text-stone-400 font-mono mt-0.5 btn-subtext" data-pt="d5_sub">Coast &amp; island</span>
                     </button>
+                  </div>
+
+                  <!-- Custom Days Stepper -->
+                  <div class="flex items-center justify-between bg-stone-50 border border-stone-200 rounded-2xl px-4 py-2 mt-2">
+                    <span class="text-xs font-medium text-stone-600" data-pt="custom_days">Custom days:</span>
+                    <div class="flex items-center gap-2">
+                      <button type="button" onclick="PlannerApp.stepDays(-1)" class="w-8 h-8 rounded-xl bg-white border border-stone-200 hover:border-charcoal text-charcoal font-bold flex items-center justify-center transition cursor-pointer shadow-xs">-</button>
+                      <span id="planner-custom-days-val" class="font-mono text-sm font-bold text-charcoal w-6 text-center">3</span>
+                      <button type="button" onclick="PlannerApp.stepDays(1)" class="w-8 h-8 rounded-xl bg-white border border-stone-200 hover:border-charcoal text-charcoal font-bold flex items-center justify-center transition cursor-pointer shadow-xs">+</button>
+                    </div>
                   </div>
                 </div>
 
+                <!-- Group / Party Selection -->
                 <div class="space-y-3">
-                  <span class="text-xs font-mono uppercase tracking-wider text-stone-500 block" data-pt="q_who">B. Who are you traveling with?</span>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono uppercase tracking-wider text-stone-500 font-semibold block" data-pt="q_who">2. Who are you traveling with?</span>
+                    <span class="text-xs font-mono text-stone-600 font-medium" id="wizard-group-feedback">2 Adults</span>
+                  </div>
+
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-                    <button type="button" onclick="PlannerApp.stepAdults(1 - PlannerApp.getState().adults); PlannerApp.stepKids(-PlannerApp.getState().kids); PlannerApp.setWizardStep(2);" class="p-2.5 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-xs font-semibold text-charcoal transition cursor-pointer" data-pt="who_solo">
-                      🚶 Solo
+                    <button type="button" onclick="PlannerApp.setPax(1, 0);" data-pax="solo" class="wizard-pax-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-xs font-semibold transition cursor-pointer">
+                      <span class="block text-base mb-0.5">🚶</span>
+                      <span data-pt="who_solo">Solo</span>
                     </button>
-                    <button type="button" onclick="PlannerApp.stepAdults(2 - PlannerApp.getState().adults); PlannerApp.stepKids(-PlannerApp.getState().kids); PlannerApp.setWizardStep(2);" class="p-2.5 rounded-2xl border border-charcoal bg-charcoal text-white text-xs font-semibold transition cursor-pointer" data-pt="who_couple">
-                      👫 Couple
+                    <button type="button" onclick="PlannerApp.setPax(2, 0);" data-pax="couple" class="wizard-pax-btn p-3 rounded-2xl border-2 border-charcoal bg-charcoal text-white text-xs font-semibold transition cursor-pointer shadow-sm">
+                      <span class="block text-base mb-0.5">👫</span>
+                      <span data-pt="who_couple">Couple</span>
                     </button>
-                    <button type="button" onclick="PlannerApp.stepAdults(2 - PlannerApp.getState().adults); PlannerApp.stepKids(2 - PlannerApp.getState().kids); PlannerApp.setWizardStep(2);" class="p-2.5 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-xs font-semibold text-charcoal transition cursor-pointer" data-pt="who_family">
-                      👨‍👩‍👧‍👦 Family
+                    <button type="button" onclick="PlannerApp.setPax(2, 2);" data-pax="family" class="wizard-pax-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-xs font-semibold transition cursor-pointer">
+                      <span class="block text-base mb-0.5">👨‍👩‍👧‍👦</span>
+                      <span data-pt="who_family">Family</span>
                     </button>
-                    <button type="button" onclick="PlannerApp.stepAdults(6 - PlannerApp.getState().adults); PlannerApp.stepKids(-PlannerApp.getState().kids); PlannerApp.setWizardStep(2);" class="p-2.5 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-xs font-semibold text-charcoal transition cursor-pointer" data-pt="who_friends">
-                      👥 Friends (6)
+                    <button type="button" onclick="PlannerApp.setPax(6, 0);" data-pax="friends" class="wizard-pax-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-xs font-semibold transition cursor-pointer">
+                      <span class="block text-base mb-0.5">👥</span>
+                      <span data-pt="who_friends">Friends (6)</span>
                     </button>
+                  </div>
+
+                  <!-- Guest Adjuster Steppers -->
+                  <div class="grid grid-cols-2 gap-2 mt-2">
+                    <div class="bg-stone-50 border border-stone-200 rounded-2xl p-2.5 flex items-center justify-between">
+                      <div>
+                        <span class="text-[10px] font-mono uppercase text-stone-400 block" data-pt="adults_label">Adults (12+)</span>
+                        <span id="planner-adults-val" class="font-mono text-sm font-bold text-charcoal">2</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <button type="button" onclick="PlannerApp.stepAdults(-1)" class="w-7 h-7 rounded-lg bg-white border border-stone-200 hover:border-charcoal text-xs font-bold text-charcoal flex items-center justify-center transition cursor-pointer">-</button>
+                        <button type="button" onclick="PlannerApp.stepAdults(1)" class="w-7 h-7 rounded-lg bg-white border border-stone-200 hover:border-charcoal text-xs font-bold text-charcoal flex items-center justify-center transition cursor-pointer">+</button>
+                      </div>
+                    </div>
+
+                    <div class="bg-stone-50 border border-stone-200 rounded-2xl p-2.5 flex items-center justify-between">
+                      <div>
+                        <span class="text-[10px] font-mono uppercase text-stone-400 block" data-pt="kids_label">Kids (under 12)</span>
+                        <span id="planner-kids-val" class="font-mono text-sm font-bold text-charcoal">0</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <button type="button" onclick="PlannerApp.stepKids(-1)" class="w-7 h-7 rounded-lg bg-white border border-stone-200 hover:border-charcoal text-xs font-bold text-charcoal flex items-center justify-center transition cursor-pointer">-</button>
+                        <button type="button" onclick="PlannerApp.stepKids(1)" class="w-7 h-7 rounded-lg bg-white border border-stone-200 hover:border-charcoal text-xs font-bold text-charcoal flex items-center justify-center transition cursor-pointer">+</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-[11px] font-mono text-stone-500 bg-stone-50/80 border border-stone-200/80 rounded-xl px-3 py-1.5 flex items-center justify-between">
+                    <span><span data-pt="rooms_label">Rooms needed:</span> <strong id="planner-rooms-count" class="text-charcoal font-bold">1 Room</strong></span>
+                    <span><span data-pt="vehicle_label">Vehicle:</span> <strong id="planner-vehicle-tag" class="text-charcoal font-bold">Tomtom / CNG</strong></span>
                   </div>
                 </div>
 
               </div>
 
-              <div class="flex items-center justify-end pt-2">
-                <button type="button" onclick="PlannerApp.setWizardStep(2)" class="px-6 py-2.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold uppercase tracking-wider transition cursor-pointer" data-pt="next_persona">
-                  Next: traveller type ➔
+              <!-- Step 1 Navigation -->
+              <div class="flex items-center justify-end pt-4 border-t border-stone-100">
+                <button type="button" onclick="PlannerApp.setWizardStep(2)" class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold uppercase tracking-wider transition cursor-pointer shadow-md">
+                  <span data-pt="next_persona">Next: choose your travel vibe</span>
+                  <span>➔</span>
                 </button>
               </div>
             </div>
 
-            <!-- STEP 2 PANE (20-40s): TRAVELER ARCHETYPES -->
+            <!-- STEP 2 PANE: TRAVEL PERSONAS -->
             <div id="wizard-step-pane-2" class="hidden space-y-6">
-              <span class="text-xs font-mono uppercase tracking-wider text-stone-500 block" data-pt="persona_title">Choose your traveller type</span>
+              <div>
+                <span class="text-xs font-mono uppercase tracking-wider text-stone-500 font-semibold block" data-pt="persona_title">Choose your travel vibe</span>
+                <p class="text-xs text-stone-500 mt-0.5" data-pt="persona_lead">We pick activities, a route and a beach area to match.</p>
+              </div>
               
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                <button type="button" onclick="PlannerApp.selectArchetype('wave_hunter'); PlannerApp.setWizardStep(3);" data-arc="wave_hunter" class="archetype-card-btn p-4 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+                
+                <button type="button" onclick="PlannerApp.selectArchetype('wave_hunter')" data-arc="wave_hunter" class="archetype-card-btn p-5 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer group">
                   <div>
-                    <span class="text-2xl block mb-2">🏄</span>
-                    <h4 class="text-xs font-bold text-charcoal" data-pt="arc_wave_hunter">The Wave Hunter</h4>
-                    <p class="text-[10px] text-stone-500 mt-1" data-pt="arc_wave_hunter_desc">Parasailing, jet ski &amp; the Marine Drive.</p>
+                    <span class="text-3xl block mb-2 group-hover:scale-110 transition-transform">🏄</span>
+                    <h4 class="text-sm font-bold text-charcoal" data-pt="arc_wave_hunter">The Wave Hunter</h4>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed" data-pt="arc_wave_hunter_desc">Parasailing, jet ski &amp; the Marine Drive.</p>
                   </div>
-                  <span class="text-[9px] font-mono font-bold text-terracotta-600 mt-3 block" data-pt="arc_wave_hunter_tag">Adventure</span>
+                  <span class="text-[10px] font-mono font-bold text-terracotta-600 mt-4 block" data-pt="arc_wave_hunter_tag">Adventure</span>
                 </button>
 
-                <button type="button" onclick="PlannerApp.selectArchetype('quiet_coral'); PlannerApp.setWizardStep(3);" data-arc="quiet_coral" class="archetype-card-btn p-4 rounded-2xl border border-charcoal bg-stone-50 text-left transition flex flex-col justify-between cursor-pointer">
+                <button type="button" onclick="PlannerApp.selectArchetype('quiet_coral')" data-arc="quiet_coral" class="archetype-card-btn p-5 rounded-2xl border-2 border-charcoal bg-stone-50 text-left transition flex flex-col justify-between cursor-pointer group shadow-sm">
                   <div>
-                    <span class="text-2xl block mb-2">🧘</span>
-                    <h4 class="text-xs font-bold text-charcoal" data-pt="arc_quiet_coral">The Quiet Coral</h4>
-                    <p class="text-[10px] text-stone-500 mt-1" data-pt="arc_quiet_coral_desc">Quiet Inani beach, low-tide walk &amp; cafes.</p>
+                    <span class="text-3xl block mb-2 group-hover:scale-110 transition-transform">🧘</span>
+                    <h4 class="text-sm font-bold text-charcoal" data-pt="arc_quiet_coral">Quiet Coral</h4>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed" data-pt="arc_quiet_coral_desc">Quiet Inani beach, low-tide walk &amp; cafes.</p>
                   </div>
-                  <span class="text-[9px] font-mono font-bold text-sage-700 mt-3 block" data-pt="arc_quiet_coral_tag">Calm</span>
+                  <span class="text-[10px] font-mono font-bold text-sage-700 mt-4 block" data-pt="arc_quiet_coral_tag">Calm</span>
                 </button>
 
-                <button type="button" onclick="PlannerApp.selectArchetype('foodie_hunter'); PlannerApp.setWizardStep(3);" data-arc="foodie_hunter" class="archetype-card-btn p-4 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer">
+                <button type="button" onclick="PlannerApp.selectArchetype('foodie_hunter')" data-arc="foodie_hunter" class="archetype-card-btn p-5 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer group">
                   <div>
-                    <span class="text-2xl block mb-2">🍤</span>
-                    <h4 class="text-xs font-bold text-charcoal" data-pt="arc_foodie_hunter">The Bhorta Foodie</h4>
-                    <p class="text-[10px] text-stone-500 mt-1" data-pt="arc_foodie_hunter_desc">Seafood, shutki bhorta &amp; night BBQ.</p>
+                    <span class="text-3xl block mb-2 group-hover:scale-110 transition-transform">🍤</span>
+                    <h4 class="text-sm font-bold text-charcoal" data-pt="arc_foodie_hunter">Seafood Foodie</h4>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed" data-pt="arc_foodie_hunter_desc">Seafood, shutki bhorta &amp; night BBQ.</p>
                   </div>
-                  <span class="text-[9px] font-mono font-bold text-amber-700 mt-3 block" data-pt="arc_foodie_hunter_tag">Seafood</span>
+                  <span class="text-[10px] font-mono font-bold text-amber-700 mt-4 block" data-pt="arc_foodie_hunter_tag">Seafood</span>
                 </button>
 
-                <button type="button" onclick="PlannerApp.selectArchetype('family_leader'); PlannerApp.setWizardStep(3);" data-arc="family_leader" class="archetype-card-btn p-4 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer">
+                <button type="button" onclick="PlannerApp.selectArchetype('family_leader')" data-arc="family_leader" class="archetype-card-btn p-5 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer group">
                   <div>
-                    <span class="text-2xl block mb-2">👨‍👩‍👧‍👦</span>
-                    <h4 class="text-xs font-bold text-charcoal" data-pt="arc_family_leader">Family Leader</h4>
-                    <p class="text-[10px] text-stone-500 mt-1" data-pt="arc_family_leader_desc">Shallow beaches, aquarium &amp; an easy pace.</p>
+                    <span class="text-3xl block mb-2 group-hover:scale-110 transition-transform">👨‍👩‍👧‍👦</span>
+                    <h4 class="text-sm font-bold text-charcoal" data-pt="arc_family_leader">Family Leader</h4>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed" data-pt="arc_family_leader_desc">Shallow beaches, aquarium &amp; an easy pace.</p>
                   </div>
-                  <span class="text-[9px] font-mono font-bold text-blue-700 mt-3 block" data-pt="arc_family_leader_tag">Family</span>
+                  <span class="text-[10px] font-mono font-bold text-blue-700 mt-4 block" data-pt="arc_family_leader_tag">Family</span>
                 </button>
 
-                <button type="button" onclick="PlannerApp.selectArchetype('ocean_romance'); PlannerApp.setWizardStep(3);" data-arc="ocean_romance" class="archetype-card-btn p-4 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer">
+                <button type="button" onclick="PlannerApp.selectArchetype('ocean_romance')" data-arc="ocean_romance" class="archetype-card-btn p-5 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer group">
                   <div>
-                    <span class="text-2xl block mb-2">💖</span>
-                    <h4 class="text-xs font-bold text-charcoal" data-pt="arc_ocean_romance">Ocean Romance</h4>
-                    <p class="text-[10px] text-stone-500 mt-1" data-pt="arc_ocean_romance_desc">Sea-view room, sunsets &amp; a beach dinner.</p>
+                    <span class="text-3xl block mb-2 group-hover:scale-110 transition-transform">💖</span>
+                    <h4 class="text-sm font-bold text-charcoal" data-pt="arc_ocean_romance">Ocean Romance</h4>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed" data-pt="arc_ocean_romance_desc">Sea-view room, sunsets &amp; a beach dinner.</p>
                   </div>
-                  <span class="text-[9px] font-mono font-bold text-rose-700 mt-3 block" data-pt="arc_ocean_romance_tag">Couples</span>
+                  <span class="text-[10px] font-mono font-bold text-rose-700 mt-4 block" data-pt="arc_ocean_romance_tag">Couples</span>
                 </button>
+
               </div>
 
-              <div class="flex items-center justify-between pt-2">
-                <button type="button" onclick="PlannerApp.setWizardStep(1)" class="text-xs font-mono text-stone-500 hover:text-charcoal cursor-pointer" data-pt="back_step1">
-                  ← Back to step 1
+              <!-- Step 2 Navigation -->
+              <div class="flex items-center justify-between pt-4 border-t border-stone-100">
+                <button type="button" onclick="PlannerApp.setWizardStep(1)" class="text-xs font-mono font-semibold text-stone-500 hover:text-charcoal cursor-pointer" data-pt="back_step1">
+                  ← Back to duration &amp; group
                 </button>
-                <button type="button" onclick="PlannerApp.setWizardStep(3)" class="px-6 py-2.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold uppercase tracking-wider transition cursor-pointer" data-pt="next_budget">
-                  Next: budget &amp; stay ➔
+                <button type="button" onclick="PlannerApp.setWizardStep(3)" class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-charcoal hover:bg-black text-white text-xs font-semibold uppercase tracking-wider transition cursor-pointer shadow-md">
+                  <span data-pt="next_budget">Next: stay style</span>
+                  <span>➔</span>
                 </button>
               </div>
             </div>
 
-            <!-- STEP 3 PANE (40-60s): BUDGET & REVEAL -->
-            <div id="wizard-step-pane-3" class="hidden space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- STEP 3 PANE: STAY STYLE & REVEAL -->
+            <div id="wizard-step-pane-3" class="hidden space-y-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
+                <!-- Stay Tier Selection -->
                 <div class="space-y-3">
-                  <span class="text-xs font-mono uppercase tracking-wider text-stone-500 block" data-pt="stay_title">Select your stay style</span>
-                  <div class="space-y-2">
-                    <button type="button" onclick="PlannerApp.setBudgetTier('comfort'); PlannerApp.setHotelType('34star');" class="w-full p-3 rounded-2xl border border-charcoal bg-stone-50 text-left transition flex items-center justify-between cursor-pointer">
+                  <span class="text-xs font-mono uppercase tracking-wider text-stone-500 font-semibold block" data-pt="stay_title">Select your stay style</span>
+                  <div class="space-y-2.5">
+                    
+                    <button type="button" onclick="PlannerApp.setBudgetTier('comfort'); PlannerApp.setHotelType('34star');" data-tier="comfort" class="wizard-tier-btn w-full p-4 rounded-2xl border-2 border-charcoal bg-stone-100 text-left transition flex items-center justify-between cursor-pointer shadow-sm">
                       <div>
-                        <span class="text-xs font-bold text-charcoal block" data-pt="stay_comfort">3-4★ Beachfront comfort</span>
-                        <span class="text-[10px] text-stone-500" data-pt="stay_comfort_sub">Hotel Sea Crown / Prime Park (sea-view AC)</span>
+                        <div class="flex items-center gap-2">
+                          <span class="text-xs font-bold text-charcoal block" data-pt="stay_comfort">3-4★ Beachfront comfort</span>
+                          <span class="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-terracotta-100 text-terracotta-800" data-pt="stay_popular">Popular</span>
+                        </div>
+                        <span class="text-xs text-stone-500 mt-0.5 block" data-pt="stay_comfort_sub">Hotel Sea Crown / Prime Park (sea-view AC)</span>
                       </div>
                       <span class="text-xs font-mono font-bold text-charcoal" data-tier-from="comfort"></span>
                     </button>
-                    <button type="button" onclick="PlannerApp.setBudgetTier('luxury'); PlannerApp.setHotelType('5star');" class="w-full p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex items-center justify-between cursor-pointer">
+
+                    <button type="button" onclick="PlannerApp.setBudgetTier('luxury'); PlannerApp.setHotelType('5star');" data-tier="luxury" class="wizard-tier-btn w-full p-4 rounded-2xl border border-stone-200 hover:border-charcoal bg-white text-left transition flex items-center justify-between cursor-pointer">
                       <div>
                         <span class="text-xs font-bold text-charcoal block" data-pt="stay_luxury">5★ Beach resort</span>
-                        <span class="text-[10px] text-stone-500" data-pt="stay_luxury_sub">Sayeman Beach Resort / Royal Tulip</span>
+                        <span class="text-xs text-stone-500 mt-0.5 block" data-pt="stay_luxury_sub">Sayeman Beach Resort / Royal Tulip</span>
                       </div>
                       <span class="text-xs font-mono font-bold text-charcoal" data-tier-from="luxury"></span>
                     </button>
-                    <button type="button" onclick="PlannerApp.setBudgetTier('backpacker'); PlannerApp.setHotelType('budget');" class="w-full p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex items-center justify-between cursor-pointer">
+
+                    <button type="button" onclick="PlannerApp.setBudgetTier('backpacker'); PlannerApp.setHotelType('budget');" data-tier="backpacker" class="wizard-tier-btn w-full p-4 rounded-2xl border border-stone-200 hover:border-charcoal bg-white text-left transition flex items-center justify-between cursor-pointer">
                       <div>
                         <span class="text-xs font-bold text-charcoal block" data-pt="stay_budget">Economy AC</span>
-                        <span class="text-[10px] text-stone-500" data-pt="stay_budget_sub">Guest house near Dolphin Mor</span>
+                        <span class="text-xs text-stone-500 mt-0.5 block" data-pt="stay_budget_sub">Guest house near Dolphin Mor</span>
                       </div>
                       <span class="text-xs font-mono font-bold text-charcoal" data-tier-from="backpacker"></span>
                     </button>
+
                   </div>
                 </div>
 
-                <div class="space-y-3 flex flex-col justify-between">
+                <!-- Custom Trip Name & Reveal CTA -->
+                <div class="space-y-4 flex flex-col justify-between">
                   <div>
-                    <span class="text-xs font-mono uppercase tracking-wider text-stone-500 block" data-pt="trip_name_label">Trip name</span>
+                    <span class="text-xs font-mono uppercase tracking-wider text-stone-500 font-semibold block" data-pt="trip_name_label">Trip name (optional)</span>
                     <input 
                       type="text" 
+                      id="planner-traveler-name"
                       value="" 
                       oninput="PlannerApp.setTravelerName(this.value)" 
                       placeholder="My Coastal Journey" data-pt-placeholder="trip_default" 
-                      class="w-full mt-1.5 bg-stone-50 border border-stone-200 text-charcoal text-xs font-medium rounded-xl p-3 focus:border-charcoal outline-none transition"
+                      class="w-full mt-2 bg-stone-50 border border-stone-200 text-charcoal text-xs font-medium rounded-2xl p-3.5 focus:border-charcoal outline-none transition"
                     />
-                    <p class="text-[11px] text-stone-400 mt-1" data-pt="trip_name_hint">Printed on your phone wallpaper and itinerary pass.</p>
+                    <p class="text-[11px] text-stone-400 mt-1.5" data-pt="trip_name_hint">Printed on your phone wallpaper and itinerary pass.</p>
                   </div>
 
                   <!-- The Master Reveal CTA Button -->
-                  <div class="pt-3">
+                  <div class="pt-2">
                     <a 
                       href="#planner-budget-meter" 
-                      onclick="PlannerApp.setWizardStep(1);" 
-                      class="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-sm uppercase tracking-wider transition shadow-lg cursor-pointer"
+                      class="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-sm uppercase tracking-wider transition shadow-lg cursor-pointer group"
                     >
-                      <span data-pt="reveal">Show my plan ➔</span>
+                      <span data-pt="reveal">Show my itinerary &amp; budget ➔</span>
                     </a>
                   </div>
                 </div>
 
               </div>
 
-              <div class="flex items-center justify-between pt-2 border-t border-stone-100">
-                <button type="button" onclick="PlannerApp.setWizardStep(2)" class="text-xs font-mono text-stone-500 hover:text-charcoal cursor-pointer" data-pt="back_persona">
-                  ← Back to traveller type
+              <!-- Step 3 Navigation -->
+              <div class="flex items-center justify-between pt-4 border-t border-stone-100">
+                <button type="button" onclick="PlannerApp.setWizardStep(2)" class="text-xs font-mono font-semibold text-stone-500 hover:text-charcoal cursor-pointer" data-pt="back_persona">
+                  ← Back to travel vibe
                 </button>
                 <span class="text-[11px] font-mono text-stone-400" data-pt="wiz_note">Prices are estimates</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- TOP CONTROLS & PARAMETERS SUITE (CARD) -->
-          <div class="bg-white rounded-3xl p-6 sm:p-10 border border-stone-200/90 shadow-sm space-y-8">
-            
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-stone-200 gap-4">
-              <div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-widest bg-terracotta-50 text-terracotta-700 font-semibold mb-2" data-pt="planner_kicker">
-                  Route &amp; budget planner
-                </span>
-                <h2 class="font-serif text-2xl sm:text-3xl text-charcoal font-normal tracking-tight" data-pt="planner_title">
-                  Adjust your plan
-                </h2>
-                <p class="text-xs sm:text-sm text-stone-500 font-normal mt-1" data-pt="planner_lead">
-                  Choose your trip details. The planner suggests a hotel, food and transport, and adds up an estimated budget.
-                </p>
-              </div>
-
-              <!-- Quick Reset / Season Multiplier Indicator -->
-              <div class="flex items-center gap-3">
-                <div class="text-right">
-                  <span class="text-[10px] font-mono uppercase tracking-wider text-stone-400 block" data-pt="season_label">Season multiplier</span>
-                  <span id="planner-season-badge" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-100 text-stone-700" data-pt="season_std">
-                    Standard season (1.0x)
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- The Parameters Form Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-
-              <!-- PARAMETER 1: TRIP DURATION (Custom + Presets) -->
-              <div class="space-y-3">
-                <label class="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-stone-500">
-                  <span data-pt="p_days">1. Trip duration</span>
-                  <span id="param-days-label" class="font-bold text-charcoal font-sans text-sm">3 Days (Classic)</span>
-                </label>
-                
-                <!-- Presets -->
-                <div class="grid grid-cols-3 gap-2">
-                  <button type="button" onclick="PlannerApp.setDays(2)" class="planner-duration-btn py-2 px-3 rounded-xl text-xs font-semibold border border-stone-200 hover:border-charcoal transition text-center" data-days="2" data-pt="d2">
-                    2 Days
-                  </button>
-                  <button type="button" onclick="PlannerApp.setDays(3)" class="planner-duration-btn py-2 px-3 rounded-xl text-xs font-semibold border border-charcoal bg-charcoal text-white transition text-center" data-days="3" data-pt="d3">
-                    3 Days
-                  </button>
-                  <button type="button" onclick="PlannerApp.setDays(5)" class="planner-duration-btn py-2 px-3 rounded-xl text-xs font-semibold border border-stone-200 hover:border-charcoal transition text-center" data-days="5" data-pt="d5">
-                    5 Days
-                  </button>
-                </div>
-
-                <!-- Custom Day Stepper -->
-                <div class="flex items-center justify-between bg-stone-50 border border-stone-200 rounded-xl px-3 py-1.5">
-                  <span class="text-xs font-medium text-stone-600" data-pt="custom_days">Custom days:</span>
-                  <div class="flex items-center gap-2">
-                    <button type="button" onclick="PlannerApp.stepDays(-1)" class="w-7 h-7 rounded-lg bg-white border border-stone-200 hover:border-charcoal text-charcoal font-bold flex items-center justify-center transition">-</button>
-                    <span id="planner-custom-days-val" class="font-mono text-sm font-bold text-charcoal w-6 text-center">3</span>
-                    <button type="button" onclick="PlannerApp.stepDays(1)" class="w-7 h-7 rounded-lg bg-white border border-stone-200 hover:border-charcoal text-charcoal font-bold flex items-center justify-center transition">+</button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- PARAMETER 2: TRAVELERS (Adults + Kids) -->
-              <div class="space-y-3">
-                <label class="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-stone-500">
-                  <span data-pt="p_group">2. Travellers &amp; group</span>
-                  <span id="param-travelers-label" class="font-bold text-charcoal font-sans text-sm">2 Adults, 0 Kids</span>
-                </label>
-
-                <div class="grid grid-cols-2 gap-2">
-                  <!-- Adults -->
-                  <div class="bg-stone-50 border border-stone-200 rounded-xl p-2.5 flex items-center justify-between">
-                    <div>
-                      <span class="text-[10px] font-mono uppercase text-stone-400 block" data-pt="adults_label">Adults (12+)</span>
-                      <span id="planner-adults-val" class="font-mono text-base font-bold text-charcoal">2</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="PlannerApp.stepAdults(-1)" class="w-6 h-6 rounded bg-white border border-stone-200 text-xs font-bold text-charcoal flex items-center justify-center">-</button>
-                      <button type="button" onclick="PlannerApp.stepAdults(1)" class="w-6 h-6 rounded bg-white border border-stone-200 text-xs font-bold text-charcoal flex items-center justify-center">+</button>
-                    </div>
-                  </div>
-
-                  <!-- Kids -->
-                  <div class="bg-stone-50 border border-stone-200 rounded-xl p-2.5 flex items-center justify-between">
-                    <div>
-                      <span class="text-[10px] font-mono uppercase text-stone-400 block" data-pt="kids_label">Kids (under 12)</span>
-                      <span id="planner-kids-val" class="font-mono text-base font-bold text-charcoal">0</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="PlannerApp.stepKids(-1)" class="w-6 h-6 rounded bg-white border border-stone-200 text-xs font-bold text-charcoal flex items-center justify-center">-</button>
-                      <button type="button" onclick="PlannerApp.stepKids(1)" class="w-6 h-6 rounded bg-white border border-stone-200 text-xs font-bold text-charcoal flex items-center justify-center">+</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="text-[11px] font-mono text-stone-400 flex items-center justify-between px-1">
-                  <span><span data-pt="rooms_label">Rooms needed:</span> <strong id="planner-rooms-count" class="text-charcoal font-bold">1 Room</strong></span>
-                  <span><span data-pt="vehicle_label">Vehicle:</span> <strong id="planner-vehicle-tag" class="text-charcoal font-bold">Tomtom / CNG</strong></span>
-                </div>
-              </div>
-
-              <!-- PARAMETER 3: BUDGET TIER -->
-              <div class="space-y-3">
-                <label class="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-stone-500">
-                  <span data-pt="p_tier">3. Budget tier</span>
-                  <span id="param-budget-tier-label" class="font-bold text-charcoal font-sans text-sm">Comfort (Standard)</span>
-                </label>
-                
-                <div class="grid grid-cols-3 gap-2">
-                  <button type="button" onclick="PlannerApp.setBudgetTier('backpacker')" class="planner-budget-btn p-2 rounded-xl border border-stone-200 hover:border-charcoal text-center transition" data-tier="backpacker">
-                    <span class="block text-xs font-bold text-charcoal" data-pt="tier_backpacker">Economy</span>
-                    <span class="block text-[10px] text-stone-400 font-mono mt-0.5" data-tier-from="backpacker"></span>
-                  </button>
-                  <button type="button" onclick="PlannerApp.setBudgetTier('comfort')" class="planner-budget-btn p-2 rounded-xl border border-charcoal bg-charcoal text-white text-center transition" data-tier="comfort">
-                    <span class="block text-xs font-bold" data-pt="tier_comfort">Comfort</span>
-                    <span class="block text-[10px] text-stone-300 font-mono mt-0.5" data-tier-from="comfort"></span>
-                  </button>
-                  <button type="button" onclick="PlannerApp.setBudgetTier('luxury')" class="planner-budget-btn p-2 rounded-xl border border-stone-200 hover:border-charcoal text-center transition" data-tier="luxury">
-                    <span class="block text-xs font-bold text-charcoal" data-pt="tier_luxury">5★ Luxury</span>
-                    <span class="block text-[10px] text-stone-400 font-mono mt-0.5" data-tier-from="luxury"></span>
-                  </button>
-                </div>
-
-                <div class="text-[11px] font-mono text-stone-500 bg-stone-50 border border-stone-200 rounded-xl px-3 py-1.5 flex items-center justify-between">
-                  <span data-pt="quality_label">Food &amp; stay:</span>
-                  <span id="planner-tier-desc" class="font-medium text-charcoal">AC Deluxe Hotel + Seafood Feasts</span>
-                </div>
-              </div>
-
-              <!-- PARAMETER 4: PREFERRED PLACE / HUB -->
-              <div class="space-y-3">
-                <label class="block text-xs font-mono uppercase tracking-wider text-stone-500" data-pt="p_hub">
-                  4. Preferred stay area
-                </label>
-                <select id="planner-base-hub" onchange="PlannerApp.setBaseHub(this.value)" class="w-full bg-stone-50 border border-stone-200 text-charcoal text-xs font-medium rounded-xl p-2.5 focus:border-charcoal outline-none transition cursor-pointer">
-                  <option value="any" data-pt="hub_any">Any area</option>
-                  <option value="kolatoli" data-pt="hub_kolatoli">🌊 Kolatoli / Sugandha (busy beachfront, food stalls)</option>
-                  <option value="inani" data-pt="hub_inani">🪸 Marine Drive / Inani (quiet beach, resorts)</option>
-                  <option value="laboni" data-pt="hub_laboni">🌅 Laboni Point (old beach &amp; Burmese market)</option>
-                </select>
-                <p class="text-[11px] text-stone-400" data-pt="hub_note">Staying near the places you visit cuts transport costs.</p>
-              </div>
-
-              <!-- PARAMETER 5: HOTEL CATEGORY -->
-              <div class="space-y-3">
-                <label class="block text-xs font-mono uppercase tracking-wider text-stone-500" data-pt="p_hotel">
-                  5. Hotel category
-                </label>
-                <select id="planner-hotel-type" onchange="PlannerApp.setHotelType(this.value)" class="w-full bg-stone-50 border border-stone-200 text-charcoal text-xs font-medium rounded-xl p-2.5 focus:border-charcoal outline-none transition cursor-pointer">
-                  <option value="auto" data-pt="ht_auto">Match my budget tier</option>
-                  <option value="34star" data-pt="ht_34star">3-4★ sea-view hotel (Sea Crown, Prime Park)</option>
-                  <option value="5star" data-pt="ht_5star">5★ beach resort (Sayeman, Royal Tulip)</option>
-                  <option value="eco" data-pt="ht_eco">Eco cottage (Mermaid Eco Resort)</option>
-                  <option value="budget" data-pt="ht_budget">Economy guest house (Kolatoli Dolphin Mor)</option>
-                </select>
-                <p class="text-[11px] text-stone-400" data-pt="hotel_note">The nightly rate feeds into the estimated budget.</p>
-              </div>
-
-              <!-- PARAMETER 6: TRIP TITLE / TRAVELER NAME (CUSTOM INPUT) -->
-              <div class="space-y-3">
-                <label class="block text-xs font-mono uppercase tracking-wider text-stone-500" data-pt="p_name">
-                  6. Trip name (printed on the pass)
-                </label>
-                <input 
-                  type="text" 
-                  id="planner-traveler-name" 
-                  value="" 
-                  oninput="PlannerApp.setTravelerName(this.value)" 
-                  placeholder="My Coastal Journey" data-pt-placeholder="trip_default" 
-                  class="w-full bg-stone-50 border border-stone-200 text-charcoal text-xs font-medium rounded-xl p-2.5 focus:border-charcoal outline-none transition"
-                />
-                <p class="text-[11px] text-stone-400" data-pt="p_name_hint">Printed on your downloadable itinerary pass.</p>
-              </div>
-
-            </div>
-
-            <!-- PARAMETER 7: VACATION VIBE (VISUAL SELECTOR) -->
-            <div class="space-y-3 pt-2 border-t border-stone-100">
-              <label class="block text-xs font-mono uppercase tracking-wider text-stone-500" data-pt="p_vibe">
-                7. Choose your trip vibe
-              </label>
-              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-                
-                <button type="button" onclick="PlannerApp.setVibe('relaxing')" class="planner-vibe-btn p-3 rounded-2xl border border-charcoal bg-charcoal text-white text-left transition" data-vibe="relaxing">
-                  <span class="text-xl block mb-1">🌿</span>
-                  <span class="text-xs font-bold block" data-pt="vibe_relaxing">Relaxing</span>
-                  <span class="text-[10px] text-stone-300 block" data-pt="vibe_relaxing_sub">Beach time &amp; breeze</span>
-                </button>
-
-                <button type="button" onclick="PlannerApp.setVibe('adventure')" class="planner-vibe-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition" data-vibe="adventure">
-                  <span class="text-xl block mb-1">🏄</span>
-                  <span class="text-xs font-bold text-charcoal block" data-pt="vibe_adventure">Adventure</span>
-                  <span class="text-[10px] text-stone-400 block" data-pt="vibe_adventure_sub">Parasailing &amp; jet ski</span>
-                </button>
-
-                <button type="button" onclick="PlannerApp.setVibe('romantic')" class="planner-vibe-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition" data-vibe="romantic">
-                  <span class="text-xl block mb-1">💖</span>
-                  <span class="text-xs font-bold text-charcoal block" data-pt="vibe_romantic">Romantic</span>
-                  <span class="text-[10px] text-stone-400 block" data-pt="vibe_romantic_sub">Couples &amp; sunsets</span>
-                </button>
-
-                <button type="button" onclick="PlannerApp.setVibe('family')" class="planner-vibe-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition" data-vibe="family">
-                  <span class="text-xl block mb-1">👨‍👩‍👧‍👦</span>
-                  <span class="text-xs font-bold text-charcoal block" data-pt="vibe_family">Family</span>
-                  <span class="text-[10px] text-stone-400 block" data-pt="vibe_family_sub">Easy beaches &amp; aquarium</span>
-                </button>
-
-                <button type="button" onclick="PlannerApp.setVibe('foodie')" class="planner-vibe-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition" data-vibe="foodie">
-                  <span class="text-xl block mb-1">🍤</span>
-                  <span class="text-xs font-bold text-charcoal block" data-pt="vibe_foodie">Seafood Tour</span>
-                  <span class="text-[10px] text-stone-400 block" data-pt="vibe_foodie_sub">BBQ &amp; bhorta</span>
-                </button>
-
-                <button type="button" onclick="PlannerApp.setVibe('culture')" class="planner-vibe-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition" data-vibe="culture">
-                  <span class="text-xl block mb-1">🏛️</span>
-                  <span class="text-xs font-bold text-charcoal block" data-pt="vibe_culture">Culture</span>
-                  <span class="text-[10px] text-stone-400 block" data-pt="vibe_culture_sub">Moheshkhali &amp; pagodas</span>
-                </button>
-
-              </div>
-            </div>
-
-            <!-- PARAMETER 8: MUST-DO ACTIVITIES CHECKLIST -->
-            <div class="space-y-3 pt-2 border-t border-stone-100">
-              <div class="flex items-center justify-between">
-                <label class="block text-xs font-mono uppercase tracking-wider text-stone-500" data-pt="p_acts">
-                  8. Optional activities (changes the budget)
-                </label>
-                <span class="text-[11px] font-mono text-terracotta-600 font-semibold" data-pt="acts_note">Updates the total</span>
-              </div>
-              <div class="flex flex-wrap gap-2" id="planner-activities-checklist">
-                <!-- Injected via PlannerApp.renderActivityCheckboxes() -->
               </div>
             </div>
 
@@ -784,6 +622,14 @@
 
               <!-- Right: Action Buttons -->
               <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+                <a 
+                  href="#sixty-sec-wizard-card" 
+                  onclick="PlannerApp.setWizardStep(1);"
+                  class="flex items-center gap-1.5 px-3.5 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 font-semibold text-xs uppercase tracking-wider transition shadow cursor-pointer"
+                >
+                  <span data-pt="edit_choices">✏️ Edit choices</span>
+                </a>
+
                 <button 
                   type="button" 
                   onclick="PlannerApp.downloadVisualPass()" 
@@ -793,16 +639,16 @@
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                   </svg>
-                  <span data-pt="btn_pass">Itinerary pass (PNG)</span>
+                  <span data-pt="btn_pass">Itinerary pass</span>
                 </button>
 
                 <button 
                   type="button" 
                   onclick="PlannerApp.downloadPhonePass()" 
                   id="btn-download-phone-pass"
-                  class="flex items-center gap-1.5 px-4 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 font-semibold text-xs uppercase tracking-wider transition shadow cursor-pointer"
+                  class="flex items-center gap-1.5 px-3.5 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 font-semibold text-xs uppercase tracking-wider transition shadow cursor-pointer"
                 >
-                  <span data-pt="btn_phone">📱 Phone wallpaper</span>
+                  <span data-pt="btn_phone">📱 Wallpaper</span>
                 </button>
 
                 <a 
@@ -823,6 +669,25 @@
           <!-- CURATED ITINERARY SCHEDULE & RECOMMENDATION CARDS -->
           <div id="planner-results-wrapper" class="space-y-8">
             
+            <!-- Optional Thrills & Custom Activities Checkbox Bar -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-stone-100">
+                <div>
+                  <span class="text-xs font-mono uppercase tracking-wider text-terracotta-600 font-bold block" data-pt="acts_kicker">Optional activities</span>
+                  <h3 class="font-serif text-xl sm:text-2xl text-charcoal font-semibold" data-pt="acts_title">Customise your activities</h3>
+                </div>
+                <span class="text-xs font-mono text-stone-500 bg-stone-50 px-3 py-1 rounded-full border border-stone-200 self-start sm:self-center" data-pt="acts_note">
+                  Updates the total
+                </span>
+              </div>
+              <p class="text-xs text-stone-500" data-pt="acts_lead">
+                Tick an activity to add it to your plan and to the estimated budget.
+              </p>
+              <div class="flex flex-wrap gap-2.5 pt-1" id="planner-activities-checklist">
+                <!-- Injected via PlannerApp.renderActivityCheckboxes() -->
+              </div>
+            </div>
+
             <!-- Stay & Dining Curated Suggestions Card -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               
@@ -892,9 +757,11 @@
 
           </div>
 
-          <!-- OFFICIAL VISUAL ITINERARY PASS CONTAINER (TARGET FOR HTML2CANVAS EXPORT) -->
-          <div class="overflow-x-auto pb-4">
-            <div id="visual-pass-export-card" class="min-w-[680px] max-w-[800px] mx-auto bg-[#111827] text-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-stone-800 space-y-6 relative overflow-hidden font-sans">
+          <!-- OFFSCREEN PASS RENDER CONTAINER (ACCESSIBLE TO HTML2CANVAS FOR CRISP 2X EXPORT WITHOUT CLUTTERING VISUAL UI) -->
+          <div style="position: fixed; left: -9999px; top: 0; pointer-events: none;" aria-hidden="true">
+            
+            <!-- ITINERARY PASS CARD (TARGET FOR HTML2CANVAS EXPORT) -->
+            <div id="visual-pass-export-card" class="w-[800px] bg-[#111827] text-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-stone-800 space-y-6 relative overflow-hidden font-sans">
               
               <!-- Decorative Glow -->
               <div class="absolute -top-24 -right-24 w-72 h-72 bg-terracotta-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -956,18 +823,9 @@
               </div>
 
             </div>
-          </div>
 
-          <!-- ================================================================
-               OFFICIAL 9:16 SMARTPHONE LOCKSCREEN PASS (FOR HTML2CANVAS EXPORT)
-               ================================================================ -->
-          <div class="overflow-x-auto pb-4 pt-6">
-            <div class="text-center mb-3">
-              <span class="text-xs font-mono uppercase tracking-widest text-stone-500 font-semibold" data-pt="phone_heading">
-                📱 Phone wallpaper (9:16)
-              </span>
-            </div>
-            <div id="phone-lockscreen-pass-card" class="w-[360px] h-[640px] mx-auto bg-gradient-to-b from-[#0B2135] via-[#0E2A47] to-[#111827] text-white rounded-3xl p-6 shadow-2xl border border-stone-800 flex flex-col justify-between relative overflow-hidden font-sans">
+            <!-- 9:16 PHONE WALLPAPER PASS (FOR HTML2CANVAS EXPORT) -->
+            <div id="phone-lockscreen-pass-card" class="w-[360px] h-[640px] bg-gradient-to-b from-[#0B2135] via-[#0E2A47] to-[#111827] text-white rounded-3xl p-6 shadow-2xl border border-stone-800 flex flex-col justify-between relative overflow-hidden font-sans">
               <!-- Glow Accents -->
               <div class="absolute -top-12 -right-12 w-48 h-48 bg-terracotta-500/20 rounded-full blur-3xl pointer-events-none"></div>
               <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-teal-500/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -1008,6 +866,7 @@
               </div>
 
             </div>
+
           </div>
 
         </div>

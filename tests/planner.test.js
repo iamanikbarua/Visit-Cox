@@ -142,3 +142,13 @@ test('transport calculator shows fares from TRANSPORT_DATA / PRICE_BOOK', () => 
   const ramu = ev(`TRANSPORT_DATA.find(f => f.id === 'town-to-ramu')`);
   assert.ok(ev(`document.getElementById('calc-fare-text').innerHTML`).includes(ev(`formatPriceRange(${ramu.minBDT}, ${ramu.maxBDT})`)));
 });
+
+test('wizard setPax uses the same clamps; activity names follow the language', () => {
+  const ev = planner();
+  ev('PlannerApp.setPax(99, -4)');
+  const s = ev('PlannerApp.getState()');
+  assert.deepStrictEqual([s.adults, s.kids], [20, 0]);
+  for (const a of ev('PLANNER_CATALOG.activities')) assert.ok(ev(`PLANNER_TEXT.bn.act_${a.id}`), a.id);
+  ev('var AppState = { lang: "bn" }; PlannerApp.refresh()');
+  assert.match(ev(`document.getElementById('planner-activities-checklist').innerHTML`), /মেরিন ড্রাইভ/);
+});

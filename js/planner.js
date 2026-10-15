@@ -18,31 +18,31 @@ const PLANNER_TEXT = {
     hero_kicker: "Trip planner (2, 3 & 5 days)",
     hero_title: "Plan your trip.",
     hero_lead: "Build a day-by-day plan with an estimated budget for stay, food, transport and activities. Prices are approximate; check them locally. Save the plan as an image or print it.",
-    wiz_title: "Quick start: three questions",
-    wiz_sub: "Days and group • Traveller type • Stay style",
-    step1: "Who & days", step2: "Traveller type", step3: "Stay & plan",
-    q_days: "A. How many days will you stay?",
+    wiz_title: "Plan my trip in three questions",
+    wiz_sub: "Days and group • Travel vibe • Stay style",
+    step1: "Duration & group", step2: "Travel vibe", step3: "Stay & plan",
+    q_days: "1. Trip duration",
     d2: "2 Days", d2_sub: "Weekend", d3: "3 Days", d3_sub: "Classic", d5: "5 Days", d5_sub: "Coast & island",
-    q_who: "B. Who are you traveling with?",
-    who_solo: "🚶 Solo", who_couple: "👫 Couple", who_family: "👨‍👩‍👧‍👦 Family", who_friends: "👥 Friends (6)",
-    next_persona: "Next: traveller type ➔",
-    persona_title: "Choose your traveller type",
+    q_who: "2. Who are you traveling with?",
+    who_solo: "Solo", who_couple: "Couple", who_family: "Family", who_friends: "Friends (6)",
+    next_persona: "Next: choose your travel vibe",
+    persona_title: "Choose your travel vibe",
     arc_wave_hunter: "The Wave Hunter", arc_wave_hunter_desc: "Parasailing, jet ski & the Marine Drive.", arc_wave_hunter_tag: "Adventure",
-    arc_quiet_coral: "The Quiet Coral", arc_quiet_coral_desc: "Quiet Inani beach, low-tide walk & cafes.", arc_quiet_coral_tag: "Calm",
-    arc_foodie_hunter: "The Bhorta Foodie", arc_foodie_hunter_desc: "Seafood, shutki bhorta & night BBQ.", arc_foodie_hunter_tag: "Seafood",
+    arc_quiet_coral: "Quiet Coral", arc_quiet_coral_desc: "Quiet Inani beach, low-tide walk & cafes.", arc_quiet_coral_tag: "Calm",
+    arc_foodie_hunter: "Seafood Foodie", arc_foodie_hunter_desc: "Seafood, shutki bhorta & night BBQ.", arc_foodie_hunter_tag: "Seafood",
     arc_family_leader: "Family Leader", arc_family_leader_desc: "Shallow beaches, aquarium & an easy pace.", arc_family_leader_tag: "Family",
     arc_ocean_romance: "Ocean Romance", arc_ocean_romance_desc: "Sea-view room, sunsets & a beach dinner.", arc_ocean_romance_tag: "Couples",
-    back_step1: "← Back to step 1", next_budget: "Next: budget & stay ➔",
+    back_step1: "← Back to duration & group", next_budget: "Next: stay style",
     stay_title: "Select your stay style",
     stay_comfort: "3-4★ Beachfront comfort", stay_comfort_sub: "Hotel Sea Crown / Prime Park (sea-view AC)",
     stay_luxury: "5★ Beach resort", stay_luxury_sub: "Sayeman Beach Resort / Royal Tulip",
     stay_budget: "Economy AC", stay_budget_sub: "Guest house near Dolphin Mor",
     from_night: "from ৳{n}/night",
-    trip_name_label: "Trip name",
+    trip_name_label: "Trip name (optional)",
     trip_name_hint: "Printed on your phone wallpaper and itinerary pass.",
     trip_default: "My Coastal Journey",
-    reveal: "Show my plan ➔",
-    back_persona: "← Back to traveller type",
+    reveal: "Show my itinerary & budget ➔",
+    back_persona: "← Back to travel vibe",
     wiz_note: "Prices are estimates",
     planner_kicker: "Route & budget planner",
     planner_title: "Adjust your plan",
@@ -76,6 +76,20 @@ const PLANNER_TEXT = {
     vibe_family: "Family", vibe_family_sub: "Easy beaches & aquarium",
     vibe_foodie: "Seafood Tour", vibe_foodie_sub: "BBQ & bhorta",
     vibe_culture: "Culture", vibe_culture_sub: "Moheshkhali & pagodas",
+    persona_lead: "We pick activities, a route and a beach area to match.",
+    stay_popular: "Popular",
+    edit_choices: "✏️ Edit choices",
+    acts_kicker: "Optional activities",
+    acts_title: "Customise your activities",
+    acts_lead: "Tick an activity to add it to your plan and to the estimated budget.",
+    act_marine_drive: "Marine Drive (80 km) open ride",
+    act_inani_coral: "Inani coral beach walk",
+    act_parasailing: "Beach parasailing",
+    act_jetski: "Jet ski (10 min ride)",
+    act_moheshkhali: "Moheshkhali speedboat & Adinath Temple",
+    act_fish_world: "Radiant Fish World aquarium",
+    act_himchari_hill: "Himchari National Park viewpoint (waterfall in monsoon only)",
+    act_night_bbq: "Sugandha fresh-fish BBQ dinner",
     p_acts: "8. Optional activities (changes the budget)", acts_note: "Updates the total",
     budget_kicker: "Estimated budget",
     approx: "estimate, as of Oct 2026",
@@ -83,7 +97,7 @@ const PLANNER_TEXT = {
     days_nights: "{d} Days / {n} Nights", days_short: "{d} Days",
     guest_1: "1 Guest", guests_n: "{n} Guests",
     cost_stay: "🏨 Stay", cost_food: "🍽️ Dining", cost_transit: "🛺 Transport", cost_act: "🎟️ Activities",
-    btn_pass: "Itinerary pass (PNG)", btn_phone: "📱 Phone wallpaper", whatsapp: "💬 WhatsApp",
+    btn_pass: "Itinerary pass", btn_phone: "📱 Wallpaper", whatsapp: "💬 WhatsApp",
     busy_pass: "Making pass...", busy_phone: "Making wallpaper...",
     export_no_lib: "The image export library did not load (offline or blocked).",
     export_failed: "The image export failed.",
@@ -101,7 +115,6 @@ const PLANNER_TEXT = {
     pass_budget: "Est. total budget", pass_base: "Base area", pass_hotel: "Stay", pass_transit: "Transport", pass_vibe: "Vibe",
     base_inani: "Inani / Marine Drive", base_laboni: "Laboni Point", base_kolatoli: "Kolatoli",
     estimates: "Prices are estimates, as of Oct 2026",
-    phone_heading: "📱 Phone wallpaper (9:16)",
     phone_brand: "Visit Cox • Trip pass",
     phone_stay: "Stay",
     day_tag: "DAY {d}",
@@ -116,30 +129,30 @@ const PLANNER_TEXT = {
     hero_kicker: "ট্রিপ প্ল্যানার (২, ৩ ও ৫ দিন)",
     hero_title: "আপনার ভ্রমণ সাজান।",
     hero_lead: "থাকা, খাওয়া, যাতায়াত ও অ্যাক্টিভিটির আনুমানিক খরচসহ দিনভিত্তিক পরিকল্পনা তৈরি করুন। দাম আনুমানিক; স্থানীয়ভাবে যাচাই করে নিন। পরিকল্পনাটি ছবি হিসেবে সেভ বা প্রিন্ট করতে পারবেন।",
-    wiz_title: "দ্রুত শুরু: তিনটি প্রশ্ন",
+    wiz_title: "তিনটি প্রশ্নে ভ্রমণ সাজান",
     wiz_sub: "দিন ও দল • ভ্রমণের ধরন • থাকার ধরন",
-    step1: "কে ও কত দিন", step2: "ভ্রমণের ধরন", step3: "থাকা ও পরিকল্পনা",
-    q_days: "ক. কত দিন থাকবেন?",
+    step1: "মেয়াদ ও দল", step2: "ভ্রমণের ধরন", step3: "থাকা ও পরিকল্পনা",
+    q_days: "১. ভ্রমণের মেয়াদ",
     d2: "২ দিন", d2_sub: "সাপ্তাহিক ছুটি", d3: "৩ দিন", d3_sub: "সাধারণ", d5: "৫ দিন", d5_sub: "সৈকত ও দ্বীপ",
-    q_who: "খ. কার সাথে যাচ্ছেন?",
-    who_solo: "🚶 একা", who_couple: "👫 দম্পতি", who_family: "👨‍👩‍👧‍👦 পরিবার", who_friends: "👥 বন্ধুরা (৬ জন)",
-    next_persona: "পরের ধাপ: ভ্রমণের ধরন ➔",
+    q_who: "২. কার সাথে যাচ্ছেন?",
+    who_solo: "একা", who_couple: "দম্পতি", who_family: "পরিবার", who_friends: "বন্ধুরা (৬ জন)",
+    next_persona: "পরের ধাপ: ভ্রমণের ধরন",
     persona_title: "আপনার ভ্রমণের ধরন বেছে নিন",
     arc_wave_hunter: "ঢেউপ্রেমী", arc_wave_hunter_desc: "প্যারাসেইলিং, জেট স্কি ও মেরিন ড্রাইভ।", arc_wave_hunter_tag: "রোমাঞ্চ",
     arc_quiet_coral: "নিরিবিলি প্রবাল", arc_quiet_coral_desc: "শান্ত ইনানী সৈকত, ভাটায় হাঁটা ও ক্যাফে।", arc_quiet_coral_tag: "শান্ত",
     arc_foodie_hunter: "ভর্তা-প্রেমী", arc_foodie_hunter_desc: "সামুদ্রিক মাছ, শুঁটকি ভর্তা ও রাতের বারবিকিউ।", arc_foodie_hunter_tag: "সামুদ্রিক খাবার",
     arc_family_leader: "পরিবার নিয়ে", arc_family_leader_desc: "অগভীর সৈকত, অ্যাকুয়ারিয়াম ও ধীরেসুস্থে ঘোরা।", arc_family_leader_tag: "পরিবার",
     arc_ocean_romance: "সমুদ্র ও রোমান্স", arc_ocean_romance_desc: "সমুদ্রমুখী রুম, সূর্যাস্ত ও সৈকতে রাতের খাবার।", arc_ocean_romance_tag: "দম্পতি",
-    back_step1: "← প্রথম ধাপে ফিরুন", next_budget: "পরের ধাপ: বাজেট ও থাকা ➔",
+    back_step1: "← মেয়াদ ও দলে ফিরুন", next_budget: "পরের ধাপ: থাকার ধরন",
     stay_title: "থাকার ধরন বেছে নিন",
     stay_comfort: "৩-৪★ সৈকতের পাশে আরামদায়ক", stay_comfort_sub: "হোটেল সি ক্রাউন / প্রাইম পার্ক (সমুদ্রমুখী এসি)",
     stay_luxury: "৫★ বিচ রিসোর্ট", stay_luxury_sub: "সায়েমান বিচ রিসোর্ট / রয়্যাল টিউলিপ",
     stay_budget: "সাশ্রয়ী এসি", stay_budget_sub: "ডলফিন মোড়ের কাছে গেস্ট হাউস",
     from_night: "প্রতি রাত ৳{n} থেকে",
-    trip_name_label: "ভ্রমণের নাম",
+    trip_name_label: "ভ্রমণের নাম (ঐচ্ছিক)",
     trip_name_hint: "ফোন ওয়ালপেপার ও ভ্রমণ পাসে ছাপা হবে।",
     trip_default: "আমার সৈকত ভ্রমণ",
-    reveal: "আমার পরিকল্পনা দেখুন ➔",
+    reveal: "আমার ভ্রমণসূচি ও বাজেট দেখুন ➔",
     back_persona: "← ভ্রমণের ধরনে ফিরুন",
     wiz_note: "দাম আনুমানিক",
     planner_kicker: "রুট ও বাজেট প্ল্যানার",
@@ -174,6 +187,20 @@ const PLANNER_TEXT = {
     vibe_family: "পরিবার", vibe_family_sub: "সহজ সৈকত ও অ্যাকুয়ারিয়াম",
     vibe_foodie: "সামুদ্রিক খাবার", vibe_foodie_sub: "বারবিকিউ ও ভর্তা",
     vibe_culture: "সংস্কৃতি", vibe_culture_sub: "মহেশখালী ও প্যাগোডা",
+    persona_lead: "মিল রেখে অ্যাক্টিভিটি, রুট ও সৈকত এলাকা বেছে দেওয়া হবে।",
+    stay_popular: "জনপ্রিয়",
+    edit_choices: "✏️ পছন্দ বদলান",
+    acts_kicker: "ঐচ্ছিক অ্যাক্টিভিটি",
+    acts_title: "অ্যাক্টিভিটি বেছে নিন",
+    acts_lead: "কোনো অ্যাক্টিভিটিতে টিক দিলে তা পরিকল্পনা ও আনুমানিক বাজেটে যোগ হবে।",
+    act_marine_drive: "মেরিন ড্রাইভ (৮০ কিমি) ভ্রমণ",
+    act_inani_coral: "ইনানী প্রবাল সৈকতে হাঁটা",
+    act_parasailing: "সৈকতে প্যারাসেইলিং",
+    act_jetski: "জেট স্কি (১০ মিনিট)",
+    act_moheshkhali: "মহেশখালী স্পিডবোট ও আদিনাথ মন্দির",
+    act_fish_world: "রেডিয়েন্ট ফিশ ওয়ার্ল্ড অ্যাকুয়ারিয়াম",
+    act_himchari_hill: "হিমছড়ি জাতীয় উদ্যান ভিউপয়েন্ট (ঝরনা শুধু বর্ষায়)",
+    act_night_bbq: "সুগন্ধা সৈকতে তাজা মাছের বারবিকিউ",
     p_acts: "৮. ঐচ্ছিক অ্যাক্টিভিটি (বাজেট বদলায়)", acts_note: "মোট খরচ বদলায়",
     budget_kicker: "আনুমানিক বাজেট",
     approx: "আনুমানিক, অক্টোবর ২০২৬ অনুযায়ী",
@@ -181,7 +208,7 @@ const PLANNER_TEXT = {
     days_nights: "{d} দিন / {n} রাত", days_short: "{d} দিন",
     guest_1: "১ জন অতিথি", guests_n: "{n} জন অতিথি",
     cost_stay: "🏨 থাকা", cost_food: "🍽️ খাবার", cost_transit: "🛺 যাতায়াত", cost_act: "🎟️ অ্যাক্টিভিটি",
-    btn_pass: "ভ্রমণ পাস (PNG)", btn_phone: "📱 ফোন ওয়ালপেপার", whatsapp: "💬 হোয়াটসঅ্যাপ",
+    btn_pass: "ভ্রমণ পাস", btn_phone: "📱 ওয়ালপেপার", whatsapp: "💬 হোয়াটসঅ্যাপ",
     busy_pass: "পাস তৈরি হচ্ছে...", busy_phone: "ওয়ালপেপার তৈরি হচ্ছে...",
     export_no_lib: "ছবি তৈরির লাইব্রেরি লোড হয়নি (অফলাইন বা ব্লক করা)।",
     export_failed: "ছবি তৈরি করা যায়নি।",
@@ -199,7 +226,6 @@ const PLANNER_TEXT = {
     pass_budget: "আনুমানিক মোট বাজেট", pass_base: "যে এলাকায় থাকবেন", pass_hotel: "থাকা", pass_transit: "যাতায়াত", pass_vibe: "মেজাজ",
     base_inani: "ইনানী / মেরিন ড্রাইভ", base_laboni: "লাবণী পয়েন্ট", base_kolatoli: "কলাতলী",
     estimates: "দাম আনুমানিক, অক্টোবর ২০২৬ অনুযায়ী",
-    phone_heading: "📱 ফোন ওয়ালপেপার (৯:১৬)",
     phone_brand: "Visit Cox • ভ্রমণ পাস",
     phone_stay: "থাকা",
     day_tag: "দিন {d}",
@@ -847,11 +873,11 @@ const PlannerApp = (function () {
     state.calculatedBudget = budget;
     state.selectedHotel = hotel;
 
-    const daysLabel = document.getElementById("param-days-label");
-    if (daysLabel) daysLabel.textContent = pt("days_label", { n: state.days, kind: pt(state.days === 2 ? "kind_weekend" : state.days === 3 ? "kind_classic" : "kind_extended") });
-
-    const travelersLabel = document.getElementById("param-travelers-label");
-    if (travelersLabel) travelersLabel.textContent = state.kids > 0 ? pt("travelers_kids", { a: state.adults, k: state.kids }) : pt("travelers", { a: state.adults });
+    // The removed parameter form used param-*-label; the wizard shows the same text in its feedback chips.
+    const daysText = pt("days_label", { n: state.days, kind: pt(state.days === 2 ? "kind_weekend" : state.days === 3 ? "kind_classic" : "kind_extended") });
+    const travelersText = state.kids > 0 ? pt("travelers_kids", { a: state.adults, k: state.kids }) : pt("travelers", { a: state.adults });
+    ["param-days-label", "wizard-duration-feedback"].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = daysText; });
+    ["param-travelers-label", "wizard-group-feedback"].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = travelersText; });
 
     const customDaysVal = document.getElementById("planner-custom-days-val");
     if (customDaysVal) customDaysVal.textContent = plannerNum(state.days);
@@ -872,6 +898,49 @@ const PlannerApp = (function () {
     if (tierLabel) tierLabel.textContent = pt("tier_" + state.budgetTier);
     const tierDesc = document.getElementById("planner-tier-desc");
     if (tierDesc) tierDesc.textContent = pt("tierdesc_" + state.budgetTier);
+
+    // Wizard Duration Buttons (01 Duration)
+    document.querySelectorAll(".wizard-duration-btn").forEach(btn => {
+      const d = parseInt(btn.dataset.days);
+      if (d === state.days) {
+        btn.className = "wizard-duration-btn p-3 rounded-2xl border-2 border-charcoal bg-charcoal text-white text-center transition cursor-pointer shadow-sm";
+      } else {
+        btn.className = "wizard-duration-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-center transition cursor-pointer";
+      }
+    });
+
+    // Wizard Pax Buttons (01 Group)
+    document.querySelectorAll(".wizard-pax-btn").forEach(btn => {
+      const p = btn.dataset.pax;
+      const isMatch = (p === 'solo' && state.adults === 1 && state.kids === 0) ||
+                      (p === 'couple' && state.adults === 2 && state.kids === 0) ||
+                      (p === 'family' && state.adults === 2 && state.kids === 2) ||
+                      (p === 'friends' && state.adults >= 4);
+      if (isMatch) {
+        btn.className = "wizard-pax-btn p-3 rounded-2xl border-2 border-charcoal bg-charcoal text-white text-xs font-semibold transition cursor-pointer shadow-sm";
+      } else {
+        btn.className = "wizard-pax-btn p-3 rounded-2xl border border-stone-200 hover:border-charcoal bg-stone-50 text-stone-700 text-xs font-semibold transition cursor-pointer";
+      }
+    });
+
+    // Wizard Tier Buttons (03 Stay)
+    document.querySelectorAll(".wizard-tier-btn").forEach(btn => {
+      const t = btn.dataset.tier;
+      if (t === state.budgetTier) {
+        btn.className = "wizard-tier-btn w-full p-4 rounded-2xl border-2 border-charcoal bg-stone-100 text-left transition flex items-center justify-between cursor-pointer shadow-sm";
+      } else {
+        btn.className = "wizard-tier-btn w-full p-4 rounded-2xl border border-stone-200 hover:border-charcoal bg-white text-left transition flex items-center justify-between cursor-pointer";
+      }
+    });
+
+    // Archetype Card Buttons (02 Vibe)
+    document.querySelectorAll(".archetype-card-btn").forEach(btn => {
+      if (btn.dataset.arc === state.selectedArchetype) {
+        btn.className = "archetype-card-btn p-5 rounded-2xl border-2 border-charcoal bg-stone-50 text-left transition flex flex-col justify-between cursor-pointer group shadow-sm";
+      } else {
+        btn.className = "archetype-card-btn p-5 rounded-2xl border border-stone-200 hover:border-charcoal text-left transition flex flex-col justify-between cursor-pointer group";
+      }
+    });
 
     document.querySelectorAll(".planner-duration-btn").forEach(btn => {
       const d = parseInt(btn.dataset.days);
@@ -1155,7 +1224,7 @@ const PlannerApp = (function () {
             onchange="PlannerApp.toggleActivity(this.value)" 
             class="rounded text-charcoal focus:ring-0 cursor-pointer"
           />
-          <span>${plannerEsc(act.name)}</span>
+          <span>${plannerEsc(pt("act_" + act.id))}</span>
           ${act.costPerPerson > 0 ? `<span class="text-[10px] font-mono text-stone-400 font-normal">(+৳${plannerNum(act.costPerPerson)})</span>` : ''}
         </label>
       `;
@@ -1229,7 +1298,7 @@ const PlannerApp = (function () {
     if (typeof confirm === 'function' && confirm(reason + " " + pt("export_print"))) window.print();
   }
 
-  function exportCard(cardId, btnId, busyText, background, fileName) {
+  function exportCard(cardId, btnId, busyText, background, fileName, width) {
     const card = document.getElementById(cardId);
     if (!card) return;
     if (typeof html2canvas === 'undefined') {
@@ -1246,8 +1315,12 @@ const PlannerApp = (function () {
       useCORS: true,
       backgroundColor: background,
       logging: false,
+      windowWidth: width,
       // html2canvas cuts descenders on tight line-heights and overflow:hidden text; loosen them in the clone only.
       onclone: doc => {
+        // The cards live in an offscreen container; put it back in flow inside the clone.
+        const holder = doc.getElementById(cardId) && doc.getElementById(cardId).parentElement;
+        if (holder) { holder.style.position = "static"; holder.style.left = "auto"; holder.style.top = "auto"; }
         const style = doc.createElement("style");
         // It also cannot blur, so the glow blobs would print as solid circles.
         style.textContent = `#${cardId} h2, #${cardId} h3, #${cardId} p, #${cardId} span { line-height: 1.45 !important; padding-bottom: 2px; }
@@ -1276,12 +1349,12 @@ const PlannerApp = (function () {
 
   function downloadVisualPass() {
     exportCard("visual-pass-export-card", "btn-download-pass", pt("busy_pass"), "#111827",
-      `${safeName("Visit-Cox-Itinerary")}-${state.days}-Days-Pass.png`);
+      `${safeName("Visit-Cox-Itinerary")}-${state.days}-Days-Pass.png`, 1200);
   }
 
   function downloadPhonePass() {
     exportCard("phone-lockscreen-pass-card", "btn-download-phone-pass", pt("busy_phone"), "#0B2135",
-      `${safeName("Visit-Cox")}-Phone-LockScreen-9-16.png`);
+      `${safeName("Visit-Cox")}-Phone-LockScreen-9-16.png`, 600);
   }
 
   // URL PARAMETER PARSER (CONNECTS INDEX.HTML QUICK-PICK TO ITINERARY.HTML)
@@ -1310,6 +1383,11 @@ const PlannerApp = (function () {
     closeDriverCard: closeDriverCard,
     setDays: function (d) {
       state.days = clampDays(d, state.days);
+      renderAll();
+    },
+    setPax: function (adults, kids) {
+      state.adults = clampAdults(adults, state.adults);
+      state.kids = clampKids(kids, state.kids);
       renderAll();
     },
     stepDays: function (delta) {

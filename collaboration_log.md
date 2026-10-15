@@ -25,3 +25,10 @@
 * **Driver Anti-Scam Shield:** Added 1-tap Bengali `driver-anti-scam-modal` with official rate caps and 24/7 Tourist Police hotline (01320-169999).
 * **Dual Exporter:** Added 1-click downloads for both Horizontal Boarding Pass and 9:16 Smartphone Lock-Screen Wallpaper (`html2canvas` 2x resolution).
 * **Tide & Sunset Sync:** Injected intelligent timing badges (Inani low tide coral walk, Sugandha golden hour sunset, fresh evening catch BBQ).
+* **Sprint 3.1 UX Overhaul (User-Friendliness & Professional Polish):**
+  - Eliminated confusing 235-line duplicate parameter form that was competing with the 60s wizard.
+  - Fixed wizard step-skipping bug so travelers can choose duration and group size naturally before moving to personas.
+  - Added real-time visual feedback: selected pill highlights (`bg-charcoal text-white`) across days, groups, stay tiers, and personas.
+  - Moved `#visual-pass-export-card` and `#phone-lockscreen-pass-card` into an offscreen render container (`position: fixed; left: -9999px`) so the webpage has zero visual clutter while retaining crisp 2x `html2canvas` export.
+  - Injected an interactive "Optional Thrills & Custom Activities" checklist directly inside `#planner-results-wrapper` with dynamic live cost recalculation.
+  - Added a 1-click `✏️ Edit Choices` button in the sticky budget bar for instant adjustment.
