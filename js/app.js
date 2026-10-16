@@ -2522,13 +2522,14 @@ async function fetchTravelAssistantReply(userText) {
   ];
 
   const matchedSpots = spotKnowledge.filter(sp => sp.keys.some(k => q.includes(k)));
+  // sp.body is HTML written in this file (no user input), so it is inserted as-is; titles stay escaped.
   if (matchedSpots.length > 0) {
     const blocks = matchedSpots
       .map(
         sp => `
         <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-200/80 space-y-1.5">
           <div class="font-extrabold text-ocean-950 text-xs sm:text-sm">${escapeHTML(sp.title[lang])}</div>
-          <div class="text-xs text-slate-700 leading-relaxed">${escapeHTML(sp.body[lang])}</div>
+          <div class="text-xs text-slate-700 leading-relaxed">${sp.body[lang]}</div>
           <div class="pt-1 flex flex-wrap gap-1.5">
             <a href="itinerary.html" class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-[11px] font-bold transition">
               ${lang === 'en' ? 'Plan a Trip' : 'ট্রিপ প্ল্যান করুন'}

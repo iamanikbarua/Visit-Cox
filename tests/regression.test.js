@@ -164,3 +164,11 @@ test('admin.js is gone and no page loads it', () => {
   assert.ok(!fs.existsSync(path.join(root, 'js/admin.js')), 'js/admin.js still exists');
   assert.deepStrictEqual(filesContaining('src="js/admin.js'), []);
 });
+
+test('chatbot spot answers render their formatting, not literal tags', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const html = await ev(`fetchTravelAssistantReply('How do I get to Himchari?')`);
+  assert.match(html, /<strong>Why Visit:<\/strong>/);
+  assert.doesNotMatch(html, /&lt;strong&gt;|&lt;br/);
+});
