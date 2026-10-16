@@ -51,3 +51,11 @@ Closed the "Agent follow-ups" in `todo.md`. Code commit: `a399655`.
 - **Bangla for the static pages:** see `todo.md`. New `js/page-text.js` and `tests/page-text.test.js`; quick-pick cards follow the language and re-render on a toggle.
 - Proof: `scripts/check.sh` passes all 6 steps, 49 node tests. Headless Chrome on 10 pages in বাংলা mode: 0 page errors. Not checked: a native speaker's read of the Bangla; the 404 page in বাংলা mode (its `<base>` points at the live site, so it works only after deploy).
 
+
+## Update 6 (2026-10-16): Update 5 reviewed, committed and checked live
+
+Commits: `d6c8874` (chatbot fix), `8528903` (Bangla page text), `2ce426f` (update 5 docs).
+- Review: `renderPageText()` only sets `nodeValue`, so it writes text and never HTML. The chatbot inserts only the spot bodies from `js/app.js` as HTML, and their only interpolations are price formatters. Titles and anything the user types stay escaped. The numbers in all 384 Bangla strings match the English ones; the 6 that differ are spelled-out years or 24h times turned into 12h.
+- Fixed on top: `blog.html` always opened in English and never saved the toggle. It now saves the language and opens in বাংলা when it was chosen on another page. `<html lang>` stayed `en` on a first load in বাংলা mode; `renderAll()` now sets it. The `?v=` tags on `app.js` and `quickpick.js` were bumped so cached copies refresh.
+- Proof: `scripts/check.sh` passes all 6 steps with 49 node tests. Headless Chrome locally on 10 pages × 2 languages: 0 page errors. After the Pages deploy (run 38929473112, success), live: the 404 page in বাংলা mode is fully Bangla (10 Bangla blocks, 0 English) with 0 page errors, and the home, blog, food and planner pages have 0 page errors in both languages. On the live home page, toggling বাংলা then English swaps the quick-pick cards and the hero both ways, and the Himchari chatbot answer renders `<strong>`, not literal tags.
+- Not done: the Bangla is agent-translated and not proofread. Blog post bodies are still partly English in বাংলা mode (20 blocks), and so is the itinerary chrome (8 blocks).
