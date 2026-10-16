@@ -44,3 +44,10 @@ Closed the "Agent follow-ups" in `todo.md`. Code commit: `a399655`.
 - Tap targets: the `pointer: coarse` block in `css/styles.css` now covers button width, standalone and card links, tel links, checkbox labels and the range slider. Small targets at 375 px went from 105 to 3. The 3 left are links inside sentences on `privacy.html`, which WCAG exempts.
 - Proof: `scripts/check.sh` passes all 6 steps with 45 node tests. The new test loads the real planner in বাংলা mode and asserts there is no English in the schedule, the passes or the hotel and dining copy. Headless Chrome shows 0 page errors on all 11 pages. English text blocks on the planner page in বাংলা mode went from 89 to 29 (brand names and site chrome). Screenshots were checked at 375x812.
 - Not done: the GTM re-score, which waits on the owner items. Bangla for the static HTML text (nav, heroes, footers, home quick-pick cards) is a new follow-up in `todo.md`.
+
+## Update 5 (2026-10-16, agent round)
+
+- **Chatbot bug fixed:** spot answers (Himchari, Inani, Moheshkhali...) showed raw `<strong>` and `<br/>` tags as text, because `031b33a` escaped the authored answer HTML. Bodies are constants in `js/app.js`, not user input, so they are inserted as-is again; titles stay escaped. Regression test in `tests/regression.test.js` (fails on the old code).
+- **Bangla for the static pages:** see `todo.md`. New `js/page-text.js` and `tests/page-text.test.js`; quick-pick cards follow the language and re-render on a toggle.
+- Proof: `scripts/check.sh` passes all 6 steps, 49 node tests. Headless Chrome on 10 pages in বাংলা mode: 0 page errors. Not checked: a native speaker's read of the Bangla; the 404 page in বাংলা mode (its `<base>` points at the live site, so it works only after deploy).
+
