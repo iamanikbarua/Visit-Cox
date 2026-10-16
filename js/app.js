@@ -3234,6 +3234,7 @@ function renderAll() {
     renderBlogSection();
   }
   if (typeof PlannerApp !== 'undefined') PlannerApp.refresh();
+  if (typeof QuickTripPick !== 'undefined') QuickTripPick.refresh();
   runFareCalculation();
   // Bilingual "prices are estimates" lines: show only the span for the current language.
   document.querySelectorAll('.vc-approx [lang]').forEach(el => { el.hidden = el.lang !== AppState.lang; });
@@ -3241,6 +3242,8 @@ function renderAll() {
   const hotelsTrack = document.getElementById('hotels-grid');
   if (hotelsTrack) initHorizontalDragScroll(hotelsTrack);
   initScrollReveal();
+  if (typeof renderPageText === 'function') renderPageText(AppState.lang);
+  document.documentElement.lang = AppState.lang; // also on first load, when the saved language is bn
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -266,6 +266,7 @@
   </footer>
 
   <!-- Data & Blog Scripts -->
+  <script src="js/page-text.js?v=20261016"></script>
   <script src="js/data.js?v=20261015b"></script>
   <script>
     // Minimal AppState & renderAll shim for standalone blog.html page
@@ -278,6 +279,7 @@
 
     function switchBlogPageLang(lang) {
       window.AppState.lang = lang;
+      try { localStorage.setItem('visit_cox_lang', lang); } catch (e) { /* storage blocked: this view only */ }
       document.documentElement.lang = lang;
       const isEN = lang === 'en';
 
@@ -316,8 +318,15 @@
       if (typeof renderBlogSection === 'function') {
         renderBlogSection();
       }
+      if (typeof renderPageText === 'function') renderPageText(lang);
     }
   </script>
   <script src="js/blog.js?v=20261015"></script>
+  <script>
+    // Open in the language chosen on the other pages; registered after blog.js so its init runs first.
+    document.addEventListener('DOMContentLoaded', () => {
+      try { if (localStorage.getItem('visit_cox_lang') === 'bn') switchBlogPageLang('bn'); } catch (e) { /* storage blocked: stay English */ }
+    });
+  </script>
 </body>
 </html>
