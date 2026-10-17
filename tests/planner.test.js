@@ -156,14 +156,14 @@ test('wizard setPax uses the same clamps; activity names follow the language', (
 test('বাংলা mode: planner hotel/dining copy, schedule and passes render without English', () => {
   const ev = planner('?days=7');
   const missing = ev(`[
-    ...PLANNER_CATALOG.hotels.flatMap(h => ['location', 'why'].filter(k => !(h.bn && h.bn[k])).map(k => h.id + '.' + k)),
-    ...PLANNER_CATALOG.dining.flatMap(d => ['cuisine', 'location', 'why'].filter(k => !(d.bn && d.bn[k])).map(k => d.id + '.' + k)),
+    ...PLANNER_CATALOG.hotels.flatMap(h => ['name', 'location', 'why'].filter(k => !(h.bn && h.bn[k])).map(k => h.id + '.' + k)),
+    ...PLANNER_CATALOG.dining.flatMap(d => ['name', 'cuisine', 'location', 'why'].filter(k => !(d.bn && d.bn[k])).map(k => d.id + '.' + k)),
   ]`);
   assert.strictEqual(missing.join(), '');
   ev('var AppState = { lang: "bn", currency: "BDT" }');
   ev('PlannerApp.refresh()');
   const text = (id) => String(ev(`document.getElementById('${id}').innerHTML || document.getElementById('${id}').textContent`)).replace(/<[^>]*>/g, ' ');
-  for (const id of ['planner-daily-schedule', 'pass-condensed-timeline', 'phone-pass-timeline', 'rec-hotel-why', 'rec-hotel-location', 'rec-dining-why', 'rec-dining-spots']) {
+  for (const id of ['planner-daily-schedule', 'pass-condensed-timeline', 'phone-pass-timeline', 'rec-hotel-name', 'rec-dining-name', 'rec-hotel-why', 'rec-hotel-location', 'rec-dining-why', 'rec-dining-spots']) {
     const t = text(id);
     assert.ok(t.trim(), `${id} is empty`);
     assert.doesNotMatch(t, /[A-Za-z]{3,}/, `${id} still has English: ${t.match(/[^।]*[A-Za-z]{3,}[^।]*/)}`);

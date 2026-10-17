@@ -146,7 +146,7 @@ const PLANNER_TEXT = {
     back_step1: "← মেয়াদ ও দলে ফিরুন", next_budget: "পরের ধাপ: থাকার ধরন",
     stay_title: "থাকার ধরন বেছে নিন",
     stay_comfort: "৩-৪★ সৈকতের পাশে আরামদায়ক", stay_comfort_sub: "হোটেল সি ক্রাউন / প্রাইম পার্ক (সমুদ্রমুখী এসি)",
-    stay_luxury: "৫★ বিচ রিসোর্ট", stay_luxury_sub: "সায়েমান বিচ রিসোর্ট / রয়্যাল টিউলিপ",
+    stay_luxury: "৫★ বিচ রিসোর্ট", stay_luxury_sub: "সায়মন বিচ রিসোর্ট / রয়্যাল টিউলিপ",
     stay_budget: "সাশ্রয়ী এসি", stay_budget_sub: "ডলফিন মোড়ের কাছে গেস্ট হাউস",
     from_night: "প্রতি রাত ৳{n} থেকে",
     trip_name_label: "ভ্রমণের নাম (ঐচ্ছিক)",
@@ -176,7 +176,7 @@ const PLANNER_TEXT = {
     hub_note: "যেখানে ঘুরবেন তার কাছে থাকলে যাতায়াত খরচ কমে।",
     p_hotel: "৫. হোটেলের ধরন",
     ht_auto: "বাজেট স্তর অনুযায়ী", ht_34star: "৩-৪★ সমুদ্রমুখী হোটেল (সি ক্রাউন, প্রাইম পার্ক)",
-    ht_5star: "৫★ বিচ রিসোর্ট (সায়েমান, রয়্যাল টিউলিপ)", ht_eco: "ইকো কটেজ (মারমেইড ইকো রিসোর্ট)",
+    ht_5star: "৫★ বিচ রিসোর্ট (সায়মন, রয়্যাল টিউলিপ)", ht_eco: "ইকো কটেজ (মারমেইড ইকো রিসোর্ট)",
     ht_budget: "সাশ্রয়ী গেস্ট হাউস (কলাতলী ডলফিন মোড়)",
     hotel_note: "প্রতি রাতের ভাড়া আনুমানিক বাজেটে যোগ হয়।",
     p_name: "৬. ভ্রমণের নাম (পাসে ছাপা হবে)", p_name_hint: "ডাউনলোড করা ভ্রমণ পাসে ছাপা হবে।",
@@ -331,7 +331,7 @@ const PLANNER_CATALOG = {
       stars: 5,
       location: "Marine Drive, Kolatoli Beach",
       why: "Premier beachfront 5-star with infinity pool overlooking the Bay of Bengal and private lounge.",
-      bn: {"location": "মেরিন ড্রাইভ, কলাতলী সৈকত", "why": "বঙ্গোপসাগরমুখী ইনফিনিটি পুল ও প্রাইভেট লাউঞ্জসহ সৈকতঘেঁষা প্রথম সারির ৫-তারকা রিসোর্ট।"},
+      bn: {"name": "সায়মন বিচ রিসোর্ট", "location": "মেরিন ড্রাইভ, কলাতলী সৈকত", "why": "বঙ্গোপসাগরমুখী ইনফিনিটি পুল ও প্রাইভেট লাউঞ্জসহ সৈকতঘেঁষা প্রথম সারির ৫-তারকা রিসোর্ট।"},
       amenities: ["Ocean View Balcony", "Infinity Pool", "Buffet Breakfast", "Private Beach Access"]
     },
     {
@@ -342,7 +342,7 @@ const PLANNER_CATALOG = {
       stars: 5,
       location: "Jaliapalong, Inani Beach",
       why: "Massive ultra-luxury beachfront escape with private water park, 5 specialty restaurants, and secluded coral sands.",
-      bn: {"location": "জালিয়াপালং, ইনানী সৈকত", "why": "নিজস্ব ওয়াটার পার্ক, ৫টি বিশেষ রেস্তোরাঁ ও নিরিবিলি প্রবাল-বালুর সৈকতসহ বিশাল অতি-বিলাসবহুল সৈকত রিসোর্ট।"},
+      bn: {"name": "রয়্যাল টিউলিপ সি পার্ল বিচ রিসোর্ট", "location": "জালিয়াপালং, ইনানী সৈকত", "why": "নিজস্ব ওয়াটার পার্ক, ৫টি বিশেষ রেস্তোরাঁ ও নিরিবিলি প্রবাল-বালুর সৈকতসহ বিশাল অতি-বিলাসবহুল সৈকত রিসোর্ট।"},
       amenities: ["Water Park", "Private Beach", "Spa & Wellness", "Kids Zone"]
     },
     {
@@ -353,7 +353,7 @@ const PLANNER_CATALOG = {
       stars: 5,
       location: "Pechardwip, Marine Drive",
       why: "Iconic organic boutique beach villas nestled directly where lush hills meet pristine waves.",
-      bn: {"location": "পেঁচারদ্বীপ, মেরিন ড্রাইভ", "why": "সবুজ পাহাড় যেখানে নির্মল ঢেউয়ের সঙ্গে মিশেছে, ঠিক সেখানে পরিচিত অর্গানিক বুটিক বিচ ভিলা।"},
+      bn: {"name": "মারমেইড বিচ রিসোর্ট", "location": "পেঁচারদ্বীপ, মেরিন ড্রাইভ", "why": "সবুজ পাহাড় যেখানে নির্মল ঢেউয়ের সঙ্গে মিশেছে, ঠিক সেখানে পরিচিত অর্গানিক বুটিক বিচ ভিলা।"},
       amenities: ["Private Beach Villas", "Artisanal Organic Dining", "Kayaking", "Sunset Lounge"]
     },
     {
@@ -364,7 +364,7 @@ const PLANNER_CATALOG = {
       stars: 3,
       location: "Kolatoli Beach Front",
       why: "Best-value true seafront hotel. Step right out onto the sands without crossing roads.",
-      bn: {"location": "কলাতলী সৈকতের সামনে", "why": "দামের তুলনায় সেরা, একেবারে সমুদ্রের সামনের হোটেল। রাস্তা পার না হয়েই সরাসরি বালুতে নামা যায়।"},
+      bn: {"name": "হোটেল সি ক্রাউন", "location": "কলাতলী সৈকতের সামনে", "why": "দামের তুলনায় সেরা, একেবারে সমুদ্রের সামনের হোটেল। রাস্তা পার না হয়েই সরাসরি বালুতে নামা যায়।"},
       amenities: ["Direct Beachfront", "Sea View AC Rooms", "Beachside Cafe", "24/7 Security"]
     },
     {
@@ -375,7 +375,7 @@ const PLANNER_CATALOG = {
       stars: 3,
       location: "Kolatoli Central",
       why: "Highly rated modern comfort hotel with spotless AC deluxe suites and excellent service.",
-      bn: {"location": "কলাতলী কেন্দ্র", "why": "ঝকঝকে এসি ডিলাক্স স্যুট ও চমৎকার সেবাসহ উচ্চ রেটিংয়ের আধুনিক আরামদায়ক হোটেল।"},
+      bn: {"name": "হোটেল প্রাইম পার্ক", "location": "কলাতলী কেন্দ্র", "why": "ঝকঝকে এসি ডিলাক্স স্যুট ও চমৎকার সেবাসহ উচ্চ রেটিংয়ের আধুনিক আরামদায়ক হোটেল।"},
       amenities: ["AC Deluxe Suites", "Rooftop Restaurant", "Free High-Speed WiFi"]
     },
     {
@@ -386,7 +386,7 @@ const PLANNER_CATALOG = {
       stars: 4,
       location: "Main Road, Kolatoli",
       why: "Renowned 4-star hospitality with swimming pool, multiple banquet halls, and panoramic views.",
-      bn: {"location": "মেইন রোড, কলাতলী", "why": "সুইমিং পুল, একাধিক ব্যাংকুয়েট হল ও প্যানোরামিক দৃশ্যসহ পরিচিত ৪-তারকা হোটেল।"},
+      bn: {"name": "দ্য ওশান প্যারাডাইস হোটেল অ্যান্ড রিসোর্ট", "location": "মেইন রোড, কলাতলী", "why": "সুইমিং পুল, একাধিক ব্যাংকুয়েট হল ও প্যানোরামিক দৃশ্যসহ পরিচিত ৪-তারকা হোটেল।"},
       amenities: ["Swimming Pool", "Rooftop BBQ", "Gym & Spa"]
     },
     {
@@ -397,7 +397,7 @@ const PLANNER_CATALOG = {
       stars: 3,
       location: "Pechardwip, Marine Drive",
       why: "Tranquil bamboo bungalows surrounded by canals, lotus ponds, and organic gardens.",
-      bn: {"location": "পেঁচারদ্বীপ, মেরিন ড্রাইভ", "why": "খাল, পদ্মপুকুর ও অর্গানিক বাগানে ঘেরা শান্ত বাঁশের বাংলো।"},
+      bn: {"name": "মারমেইড ইকো রিসোর্ট", "location": "পেঁচারদ্বীপ, মেরিন ড্রাইভ", "why": "খাল, পদ্মপুকুর ও অর্গানিক বাগানে ঘেরা শান্ত বাঁশের বাংলো।"},
       amenities: ["Eco Bamboo Cottages", "Canal Boat Rides", "Organic Farm Food"]
     },
     {
@@ -408,7 +408,7 @@ const PLANNER_CATALOG = {
       stars: 2,
       location: "Kolatoli Dolphin Mor 2nd Line",
       why: "Clean, reliable budget AC guest house within 4 minutes walking distance to the sea.",
-      bn: {"location": "কলাতলী ডলফিন মোড়, দ্বিতীয় লাইন", "why": "সমুদ্র থেকে হেঁটে ৪ মিনিটের মধ্যে পরিচ্ছন্ন, নির্ভরযোগ্য সাশ্রয়ী এসি গেস্ট হাউস।"},
+      bn: {"name": "হোটেল কোস্টাল পিস / ব্লু ওশান", "location": "কলাতলী ডলফিন মোড়, দ্বিতীয় লাইন", "why": "সমুদ্র থেকে হেঁটে ৪ মিনিটের মধ্যে পরিচ্ছন্ন, নির্ভরযোগ্য সাশ্রয়ী এসি গেস্ট হাউস।"},
       amenities: ["Clean Attached Bath", "AC Available", "24hr Power Backup"]
     },
     {
@@ -419,7 +419,7 @@ const PLANNER_CATALOG = {
       stars: 2,
       location: "Old Laboni Point Road",
       why: "Affordable base right next to the historic beach and Rakhine weaving shops.",
-      bn: {"location": "পুরোনো লাবণী পয়েন্ট রোড", "why": "ঐতিহাসিক সৈকত ও রাখাইন তাঁতের দোকানের ঠিক পাশে সাশ্রয়ী থাকার জায়গা।"},
+      bn: {"name": "হোটেল লাবণী ভিস্তা", "location": "পুরোনো লাবণী পয়েন্ট রোড", "why": "ঐতিহাসিক সৈকত ও রাখাইন তাঁতের দোকানের ঠিক পাশে সাশ্রয়ী থাকার জায়গা।"},
       amenities: ["Attached Bath", "Walking Distance to Beach & Markets"]
     }
   ],
@@ -432,7 +432,7 @@ const PLANNER_CATALOG = {
       cuisine: "Authentic Bengali & Seafood",
       location: "Hotel Motel Zone & Kolatoli",
       why: "Legendary 12-item shutki and vegetable bhorta platter, fresh crispy Loitta fry, and Coral fish curry.",
-      bn: {"cuisine": "খাঁটি বাঙালি ও সামুদ্রিক খাবার", "location": "হোটেল-মোটেল জোন ও কলাতলী", "why": "বিখ্যাত ১২ পদের শুঁটকি ও সবজি ভর্তার প্ল্যাটার, তাজা মচমচে লইট্যা ফ্রাই ও কোরাল মাছের তরকারি।"},
+      bn: {"name": "পৌষী রেস্তোরাঁ ও ঝাউবন", "cuisine": "খাঁটি বাঙালি ও সামুদ্রিক খাবার", "location": "হোটেল-মোটেল জোন ও কলাতলী", "why": "বিখ্যাত ১২ পদের শুঁটকি ও সবজি ভর্তার প্ল্যাটার, তাজা মচমচে লইট্টা ফ্রাই ও কোরাল মাছের তরকারি।"},
       highlights: ["Loitta Fry", "Chitol Macher Muitha", "12 Bhorta Platter"]
     },
     {
@@ -442,7 +442,7 @@ const PLANNER_CATALOG = {
       cuisine: "Live Charcoal Grilled Fish",
       location: "Sugandha Beach Point",
       why: "Pick your own live fresh catch (Rupchanda, Koral, Crab, Tiger Prawn) grilled on open charcoal embers.",
-      bn: {"cuisine": "কয়লায় গ্রিল করা জ্যান্ত মাছ", "location": "সুগন্ধা বিচ পয়েন্ট", "why": "নিজের পছন্দের তাজা মাছ (রূপচাঁদা, কোরাল, কাঁকড়া, বাগদা চিংড়ি) বেছে নিন; খোলা কয়লার আগুনে গ্রিল করা হয়।"},
+      bn: {"name": "সুগন্ধা লাইভ ফিশ নাইট বারবিকিউ", "cuisine": "কয়লায় গ্রিল করা জ্যান্ত মাছ", "location": "সুগন্ধা বিচ পয়েন্ট", "why": "নিজের পছন্দের তাজা মাছ (রূপচাঁদা, কোরাল, কাঁকড়া, বাগদা চিংড়ি) বেছে নিন; খোলা কয়লার আগুনে গ্রিল করা হয়।"},
       highlights: ["Charcoal Rupchanda", "Spicy Crab Fry", "Garlic Butter Squid"]
     },
     {
@@ -452,7 +452,7 @@ const PLANNER_CATALOG = {
       cuisine: "Gourmet Oceanfront & Artisanal Italian",
       location: "Marine Drive & Pechardwip",
       why: "Romantic sea-breeze dining with wood-fired sourdough pizza, grilled whole lobster, and fresh tender coconuts.",
-      bn: {"cuisine": "সমুদ্রমুখী গুরমে ও হাতে তৈরি ইতালীয় খাবার", "location": "মেরিন ড্রাইভ ও পেঁচারদ্বীপ", "why": "সমুদ্রের হাওয়ায় রোমান্টিক খাবার: কাঠের চুলায় সাওয়ারডো পিৎজা, আস্ত গ্রিলড লবস্টার ও তাজা কচি ডাব।"},
+      bn: {"name": "মারমেইড বিচ ক্যাফে ও তারবুশ", "cuisine": "সমুদ্রমুখী গুরমে ও হাতে তৈরি ইতালীয় খাবার", "location": "মেরিন ড্রাইভ ও পেঁচারদ্বীপ", "why": "সমুদ্রের হাওয়ায় রোমান্টিক খাবার: কাঠের চুলায় সাওয়ারডো পিৎজা, আস্ত গ্রিলড লবস্টার ও তাজা কচি ডাব।"},
       highlights: ["Wood-fired Seafood Pizza", "Grilled Sea Lobster", "Sunset Cocktails"]
     },
     {
@@ -462,7 +462,7 @@ const PLANNER_CATALOG = {
       cuisine: "Everyday Traditional Bengali",
       location: "Dolphin Mor & Main Road",
       why: "Delicious steaming hot rice with dal, shutki bhorta, and local fish curry at rock-bottom local prices.",
-      bn: {"cuisine": "প্রতিদিনের ঐতিহ্যবাহী বাঙালি খাবার", "location": "ডলফিন মোড় ও মেইন রোড", "why": "স্থানীয় সবচেয়ে কম দামে গরম ভাতের সঙ্গে ডাল, শুঁটকি ভর্তা ও স্থানীয় মাছের তরকারি।"},
+      bn: {"name": "নিরিবিলি ও সেন্ট্রাল ভাতের দোকান", "cuisine": "প্রতিদিনের ঐতিহ্যবাহী বাঙালি খাবার", "location": "ডলফিন মোড় ও মেইন রোড", "why": "স্থানীয় সবচেয়ে কম দামে গরম ভাতের সঙ্গে ডাল, শুঁটকি ভর্তা ও স্থানীয় মাছের তরকারি।"},
       highlights: ["Shutki Bhorta", "Machher Jhol", "Dal & Rice"]
     }
   ],
@@ -546,7 +546,7 @@ function buildWhatsAppPlannerPayload(state) {
   const children = state.kids || 0;
   const vibe = state.vibe || "relaxing";
   const budgetTier = state.budgetTier || "comfort";
-  const hotelName = state.selectedHotel?.name || "-";
+  const hotelName = state.selectedHotel ? pl(state.selectedHotel, "name") : "-";
   const totalBDT = state.calculatedBudget?.totalBDT || 0;
   const travelerName = state.travelerName || pt("trip_default");
   const travelers = children > 0 ? pt("travelers_kids", { a: adults, k: children }) : pt("travelers", { a: adults });
@@ -764,7 +764,7 @@ const PlannerApp = (function () {
           },
           { 
             time: "01:00 PM", 
-            act: "Seafood Lunch Feast at Poushee / Local Dhaba", bn: {"act": "পৌষী / স্থানীয় খাবারের হোটেলে সামুদ্রিক খাবারে দুপুরের খাবার", "tip": "বিখ্যাত মচমচে লইট্যা ফ্রাই ও ১০ রকমের শুঁটকি ভর্তা চেখে দেখুন।", "badge": "🍤 খাঁটি স্বাদ"}, 
+            act: "Seafood Lunch Feast at Poushee / Local Dhaba", bn: {"act": "পৌষী / স্থানীয় খাবারের হোটেলে সামুদ্রিক খাবারে দুপুরের খাবার", "tip": "বিখ্যাত মচমচে লইট্টা ফ্রাই ও ১০ রকমের শুঁটকি ভর্তা চেখে দেখুন।", "badge": "🍤 খাঁটি স্বাদ"}, 
             tip: "Try legendary crispy Loitta fry and 10 types of shutki bhorta.",
             badge: "🍤 Authentic Taste"
           },
@@ -1031,7 +1031,7 @@ const PlannerApp = (function () {
 
     if (hotel) {
       const hName = document.getElementById("rec-hotel-name");
-      if (hName) hName.textContent = hotel.name;
+      if (hName) hName.textContent = pl(hotel, "name");
 
       const hLoc = document.getElementById("rec-hotel-location");
       if (hLoc) hLoc.textContent = `${pl(hotel, "location")} • ${'★'.repeat(hotel.stars)}`;
@@ -1048,7 +1048,7 @@ const PlannerApp = (function () {
 
     if (dining) {
       const dName = document.getElementById("rec-dining-name");
-      if (dName) dName.textContent = dining.name;
+      if (dName) dName.textContent = pl(dining, "name");
 
       const dSpots = document.getElementById("rec-dining-spots");
       if (dSpots) dSpots.textContent = `${pl(dining, "location")} • ${pl(dining, "cuisine")}`;
@@ -1165,7 +1165,7 @@ const PlannerApp = (function () {
     if (baseEl) baseEl.textContent = pt(state.baseHub === 'inani' ? 'base_inani' : state.baseHub === 'laboni' ? 'base_laboni' : 'base_kolatoli');
 
     const hotelEl = document.getElementById("pass-hotel");
-    if (hotelEl) hotelEl.textContent = hotel ? hotel.name : '-';
+    if (hotelEl) hotelEl.textContent = hotel ? pl(hotel, 'name') : '-';
 
     const transitEl = document.getElementById("pass-transit");
     if (transitEl) transitEl.textContent = vehicleText(budget);
@@ -1226,7 +1226,7 @@ const PlannerApp = (function () {
     if (pMeta) pMeta.textContent = `${pt("days_short", { d: state.days })} • ${guestsText()} • ৳${plannerNum(budget.totalBDT)}`;
 
     const pHotel = document.getElementById("phone-pass-hotel");
-    if (pHotel) pHotel.textContent = hotel ? hotel.name : "-";
+    if (pHotel) pHotel.textContent = hotel ? pl(hotel, "name") : "-";
 
     const pTimeline = document.getElementById("phone-pass-timeline");
     if (pTimeline) {

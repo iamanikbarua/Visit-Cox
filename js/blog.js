@@ -22,12 +22,12 @@ const DEFAULT_BLOG_POSTS = [
       bn: 'মেরিন ড্রাইভে বাইক ও চান্দের গাড়ি ভ্রমণ গাইড: কলাতলী থেকে শামলাপুর (৮০ কিমি)'
     },
     category: 'Adventure & Routes',
-    author: 'Anik Barua',
-    date: 'October 2026',
-    readTime: '4 min read',
+    author: { en: 'Anik Barua', bn: 'অনিক বড়ুয়া' },
+    date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
+    readTime: { en: '4 min read', bn: '৪ মিনিটে পড়া' },
     image: 'assets/images/inani-beach.jpg',
     likes: 42,
-    tags: ['Marine Drive', 'Bike Rental', 'Inani Beach', 'Himchari', 'Shamlapur'],
+    tags: [{ en: 'Marine Drive', bn: 'মেরিন ড্রাইভ' }, { en: 'Bike Rental', bn: 'বাইক ভাড়া' }, { en: 'Inani Beach', bn: 'ইনানী সৈকত' }, { en: 'Himchari', bn: 'হিমছড়ি' }, { en: 'Shamlapur', bn: 'শামলাপুর' }],
     summary: {
       en: 'Everything you need to know about renting a bike (1,500 BDT/day) or reserving an open-top Chander Gari jeep along the 80 km ocean-and-hill highway.',
       bn: '৮০ কিমি দীর্ঘ মেরিন ড্রাইভ সড়কে বাইক ভাড়া (১৫০০ টাকা/দিন) বা খোলা ছাদের চান্দের গাড়িতে ভ্রমণের সম্পূর্ণ রুট ও টিপস।'
@@ -71,12 +71,12 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
       bn: 'কক্সবাজারের সেরা খাবার ও সি-ফুড গাইড: পৌষী, ঝাউবন ও সুগন্ধা লাইভ ফিশ ফ্রাই'
     },
     category: 'Food & Seafood',
-    author: 'Anik Barua',
-    date: 'October 2026',
-    readTime: '3 min read',
+    author: { en: 'Anik Barua', bn: 'অনিক বড়ুয়া' },
+    date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
+    readTime: { en: '3 min read', bn: '৩ মিনিটে পড়া' },
     image: 'assets/images/hotel-sea-crown.jpg',
     likes: 35,
-    tags: ['Poushee Restaurant', 'Seafood', 'Sugandha Beach', 'Loitta Fry', 'Food Guide'],
+    tags: [{ en: 'Poushee Restaurant', bn: 'পৌষী রেস্তোরাঁ' }, { en: 'Seafood', bn: 'সামুদ্রিক খাবার' }, { en: 'Sugandha Beach', bn: 'সুগন্ধা সৈকত' }, { en: 'Loitta Fry', bn: 'লইট্যা ফ্রাই' }, { en: 'Food Guide', bn: 'খাবারের গাইড' }],
     summary: {
       en: 'From 25+ local bhartas and crispy Loitta fry at Poushee (~450 BDT) to evening live grilled crab and red snapper by the waves at Sugandha Point.',
       bn: 'ঝাউতলার পৌষী রেস্তোরাঁর ২৫+ পদের ভর্তা ও লইট্টা ফ্রাই (~৪৫০ টাকা) থেকে শুরু করে সুগন্ধা সৈকতের গরম গরম কাঁকড়া ও রূপচাঁদা বারবিকিউ।'
@@ -109,18 +109,18 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     id: 'blog-moheshkhali-sonadia-island',
     title: {
       en: 'Moheshkhali & Sonadia Island Hopping: Speedboat Fares, Kasturi Ghat & Best Season',
-      bn: 'মহেশখালী ও সোনাদিয়া দ্বীপ ভ্রমণ: কস্তুরাঘাট স্পিডবোট ভাড়া ও আদিনাথ মন্দির গাইড'
+      bn: 'মহেশখালী ও সোনাদিয়া দ্বীপ ভ্রমণ: কস্তুরী ঘাট স্পিডবোট ভাড়া ও আদিনাথ মন্দির গাইড'
     },
     category: 'Island Hopping',
-    author: 'Anik Barua',
-    date: 'October 2026',
-    readTime: '4 min read',
+    author: { en: 'Anik Barua', bn: 'অনিক বড়ুয়া' },
+    date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
+    readTime: { en: '4 min read', bn: '৪ মিনিটে পড়া' },
     image: 'assets/images/moheshkhali.jpg',
     likes: 29,
-    tags: ['Moheshkhali', 'Sonadia Island', 'Speedboat', 'Kasturi Ghat', 'Adinath Temple'],
+    tags: [{ en: 'Moheshkhali', bn: 'মহেশখালী' }, { en: 'Sonadia Island', bn: 'সোনাদিয়া দ্বীপ' }, { en: 'Speedboat', bn: 'স্পিডবোট' }, { en: 'Kasturi Ghat', bn: 'কস্তুরী ঘাট' }, { en: 'Adinath Temple', bn: 'আদিনাথ মন্দির' }],
     summary: {
       en: 'How to take the 80–100 BDT speedboat from Kasturi Ghat to Bangladesh’s only hilly island, visit Mainak Hill’s Adinath Temple, and camp on Sonadia Island.',
-      bn: 'শহরের কস্তুরাঘাট থেকে মাত্র ৮০-১০০ টাকায় স্পিডবোটে মহেশখালী দ্বীপ, মৈনাক পাহাড়ের আদিনাথ মন্দির এবং নির্জন সোনাদিয়া দ্বীপ ভ্রমণের বিস্তারিত।'
+      bn: 'শহরের কস্তুরী ঘাট থেকে মাত্র ৮০-১০০ টাকায় স্পিডবোটে মহেশখালী দ্বীপ, মৈনাক পাহাড়ের আদিনাথ মন্দির এবং নির্জন সোনাদিয়া দ্বীপ ভ্রমণের বিস্তারিত।'
     },
     content: {
       en: `Want to escape the main beach crowd and explore untouched islands, mangrove channels, and hilltop temples? Moheshkhali and Sonadia Island are just across the Bakkhali river estuary.
@@ -137,8 +137,8 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 • Famous for red ghost crabs, pine forests, and winter beach camping. Best visited between November and February when the sea channel is calm and dry.`,
       bn: `মূল সৈকতের কোলাহল ছেড়ে নির্জন দ্বীপ, প্যারাবন ও পাহাড়ি মন্দির দেখতে চাইলে মহেশখালী ও সোনাদিয়া দ্বীপ সেরা গন্তব্য।
 
-১. কীভাবে যাবেন (কস্তুরাঘাট / ৬ নং ঘাট):
-• কলাতলী বা লাবণী থেকে টমটমে করে শহরের কস্তুরাঘাট বা ৬ নং ঘাটে যান (ভাড়া ২০-৩০ টাকা)।
+১. কীভাবে যাবেন (কস্তুরী ঘাট / ৬ নং ঘাট):
+• কলাতলী বা লাবণী থেকে টমটমে করে শহরের কস্তুরী ঘাট বা ৬ নং ঘাটে যান (ভাড়া ২০-৩০ টাকা)।
 • সেখান থেকে স্পিডবোটে প্রায় ৩০ মিনিটে (ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা) মহেশখালীর গোরকঘাটায় পৌঁছানো যায় (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬), ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা (আনুমানিক, অক্টোবর ২০২৬; ঘাটে জেনে নিন)। ওঠার আগে লাইফজ্যাকেট চেয়ে নিন, ঘাটে বাড়তি টোল দেবেন না।
 
 ২. কী কী দেখবেন:
@@ -152,12 +152,12 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
       bn: 'প্রথমবার কক্সবাজার ভ্রমণের টিপস: টমটম ভাড়া, লাইফগার্ড পতাকা ও সেরা হোটেল'
     },
     category: 'Local Tips & Safety',
-    author: 'Anik Barua',
-    date: 'October 2026',
-    readTime: '3 min read',
+    author: { en: 'Anik Barua', bn: 'অনিক বড়ুয়া' },
+    date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
+    readTime: { en: '3 min read', bn: '৩ মিনিটে পড়া' },
     image: 'assets/images/himchari.jpg',
     likes: 51,
-    tags: ['Safety Tips', 'Tomtom Fares', 'Hotels', 'Tourist Police', 'Budget'],
+    tags: [{ en: 'Safety Tips', bn: 'নিরাপত্তার টিপস' }, { en: 'Tomtom Fares', bn: 'টমটমের ভাড়া' }, { en: 'Hotels', bn: 'হোটেল' }, { en: 'Tourist Police', bn: 'ট্যুরিস্ট পুলিশ' }, { en: 'Budget', bn: 'বাজেট' }],
     summary: {
       en: 'Avoid overpaying and stay safe: typical Tomtom fares (estimates, Oct 2026), green vs. red lifeguard flags, hotel zone comparison, and 24/7 emergency numbers.',
       bn: 'নিরাপদ ও সাশ্রয়ী ভ্রমণের জন্য জেনে নিন টমটমের সাধারণ ভাড়া (আনুমানিক, অক্টোবর ২০২৬), সৈকতের লাল-সবুজ পতাকার নিয়ম এবং জরুরি ট্যুরিস্ট পুলিশ নাম্বার।'
@@ -180,7 +180,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
       bn: `প্রথমবার কক্সবাজার ভ্রমণে গেলে নিচের টিপসগুলো আপনার খরচ বাঁচাবে এবং ভ্রমণকে নিরাপদ রাখবে:
 
 ১. কোন জোনে হোটেল নেবেন?
-• সুগন্ধা পয়েন্ট: সরাসরি সৈকত সংলগ্ন হোটেল (যেমন: হোটেল সী ক্রাউন) ও ফিশ ফ্রাই মার্কেটের জন্য সেরা।
+• সুগন্ধা পয়েন্ট: সরাসরি সৈকত সংলগ্ন হোটেল (যেমন: হোটেল সি ক্রাউন) ও ফিশ ফ্রাই মার্কেটের জন্য সেরা।
 • লাবণী পয়েন্ট: বার্মিজ মার্কেট ও সুইমিং পুলসহ ফ্যামিলি হোটেলের (যেমন: হোটেল কল্লোল) জন্য আদর্শ।
 • কলাতলী ও ইকো পার্ক: সাশ্রয়ী বাজেটে ভালো হোটেল (প্রাইম পার্ক, হোয়াইট অর্কিড) ও মেরিন ড্রাইভের প্রবেশমুখ।
 
@@ -240,8 +240,8 @@ function getFilteredBlogPosts() {
     const sumBn = getLocalizedField(post.summary, 'bn').toLowerCase();
     const bodyEn = getLocalizedField(post.content, 'en').toLowerCase();
     const bodyBn = getLocalizedField(post.content, 'bn').toLowerCase();
-    const tagsStr = (post.tags || []).join(' ').toLowerCase();
-    const authorStr = (post.author || '').toLowerCase();
+    const tagsStr = (post.tags || []).map(t => t.en + ' ' + t.bn).join(' ').toLowerCase();
+    const authorStr = [post.author?.en, post.author?.bn].join(' ').toLowerCase();
 
     return (
       titleEn.includes(q) ||
@@ -355,7 +355,7 @@ function renderBlogSection() {
         .slice(0, 3)
         .map(
           t =>
-            `<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold">#${t}</span>`
+            `<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold">#${t[lang]}</span>`
         )
         .join('');
 
@@ -383,8 +383,8 @@ function renderBlogSection() {
               </span>
 
               <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-sky-100 font-semibold">
-                <span>✍️ ${post.author || 'Traveler'} • ${post.date || 'Oct 2026'}</span>
-                <span>⏱ ${post.readTime || '3 min read'}</span>
+                <span>✍️ ${getLocalizedField(post.author, lang) || 'Traveler'} • ${getLocalizedField(post.date, lang) || 'Oct 2026'}</span>
+                <span>⏱ ${getLocalizedField(post.readTime, lang) || '3 min read'}</span>
               </div>
             </div>
 
@@ -472,7 +472,7 @@ function openBlogReaderModal(postId) {
   const tagsHTML = (post.tags || [])
     .map(
       t =>
-        `<span class="px-3 py-1 rounded-full bg-sky-50 text-sky-800 border border-sky-200 text-xs font-bold">#${t}</span>`
+        `<span class="px-3 py-1 rounded-full bg-sky-50 text-sky-800 border border-sky-200 text-xs font-bold">#${t[lang]}</span>`
     )
     .join('');
 
@@ -503,9 +503,9 @@ function openBlogReaderModal(postId) {
           ${title}
         </h2>
         <div class="flex flex-wrap items-center gap-3 text-xs text-sky-200 mt-2">
-          <span>✍️ <strong>${post.author || 'Traveler'}</strong></span>
-          <span>• 📅 ${post.date || 'October 2026'}</span>
-          <span>• ⏱ ${post.readTime || '3 min read'}</span>
+          <span>✍️ <strong>${getLocalizedField(post.author, lang) || 'Traveler'}</strong></span>
+          <span>• 📅 ${getLocalizedField(post.date, lang) || 'October 2026'}</span>
+          <span>• ⏱ ${getLocalizedField(post.readTime, lang) || '3 min read'}</span>
         </div>
       </div>
     </div>
