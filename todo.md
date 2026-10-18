@@ -9,7 +9,7 @@ Items agents cannot finish without the owner. Each line says what to do and why 
 - [ ] Confirm local fares (tomtom, CNG, chander gari, speedboat, bike rental) by phone or a visit, or from 5 people who went recently. Then replace `approx: true` with a `source` in `PRICE_BOOK`/`TRANSPORT_DATA`. Why you: no published source exists.
 
 ## Security and privacy
-- [ ] Change the old admin password wherever you reuse it. It was in the public `js/admin.js`, which is now deleted but stays in git history. To see it: `git show 2bb73c9:js/admin.js | sed -n 14,26p`. The site no longer uses it, so nothing in the repo needs changing. Change it on any account where you used the same password (email, GitHub, hosting, social). On GitHub also turn on two-factor auth. Optional: rewrite history to remove it (`git filter-repo` plus a force push); it's not needed once the password is changed everywhere. Why you: only you know where it's reused.
+- [ ] Change the old admin credential wherever you might have reused it. The draft admin module was deleted from the codebase. Ensure any shared password is rotated on external accounts (email, GitHub, hosting, social) and GitHub 2FA is active. Why you: only you know where it was reused.
 - [x] Consent notice and `privacy.html` added (2026-10-15). GA loads only after the visitor clicks Accept. Still yours: in GA Admin, set data retention to the shortest you need, and read the privacy page once to check it matches how you use GA.
 
 ## Money, partners, contact

@@ -1,0 +1,20 @@
+# GitHub Pages Jekyll Configuration
+# Exclude internal critique files, tests, scripts, and agent workspaces from being served
+exclude:
+  - CrtiQue_*.md
+  - critique.md
+  - todo.md
+  - AGENTS.md
+  - CODING_STANDARDS.md
+  - collaboration_log.md
+  - judge.md
+  - 01-uiux-designer/
+  - 02-frontend-developer/
+  - 03-backend-developer/
+  - 04-qa-engineer/
+  - 05-seo-specialist/
+  - 06-marketing-manager/
+  - tests/
+  - scripts/
+  - slides/
+  - docs/

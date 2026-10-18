@@ -899,7 +899,7 @@ function openHotelFacilitiesModal(hotelId) {
   if (nameEl) nameEl.textContent = hotel.name[AppState.lang];
   if (starsBadge) starsBadge.textContent = `${starStars} ${starLabel}`;
   if (spotBadge) spotBadge.textContent = `📍 ${spotName}`;
-  if (ratingBadge) ratingBadge.textContent = `★ ${hotel.rating} / 5.0`;
+  if (ratingBadge) ratingBadge.textContent = isBn ? 'তালিকাভুক্ত' : 'Listed'; // hotel.rating has no source
   if (locationText) locationText.textContent = hotel.location[AppState.lang];
 
   // Facilities list
@@ -2214,7 +2214,7 @@ function buildSingleHotelChatCard(hotel, lang) {
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-1">
             <strong class="text-slate-900 text-xs sm:text-sm truncate">${escapeHTML(hotel.name[lang])}</strong>
-            <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-extrabold shrink-0">★ ${escapeHTML(hotel.rating)}</span>
+            <span class="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 text-[10px] font-medium shrink-0">${lang === 'bn' ? 'তালিকাভুক্ত' : 'Listed'}</span>
           </div>
           <div class="text-xs font-extrabold text-teal-700">${priceStr} <span class="font-normal text-slate-500">/${lang === 'en' ? 'night' : 'রাত'}</span></div>
         </div>

@@ -26,7 +26,6 @@ const DEFAULT_BLOG_POSTS = [
     date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
     readTime: { en: '4 min read', bn: '৪ মিনিটে পড়া' },
     image: 'assets/images/inani-beach.jpg',
-    likes: 42,
     tags: [{ en: 'Marine Drive', bn: 'মেরিন ড্রাইভ' }, { en: 'Bike Rental', bn: 'বাইক ভাড়া' }, { en: 'Inani Beach', bn: 'ইনানী সৈকত' }, { en: 'Himchari', bn: 'হিমছড়ি' }, { en: 'Shamlapur', bn: 'শামলাপুর' }],
     summary: {
       en: 'Everything you need to know about renting a bike (1,500 BDT/day) or reserving an open-top Chander Gari jeep along the 80 km ocean-and-hill highway.',
@@ -75,7 +74,6 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
     readTime: { en: '3 min read', bn: '৩ মিনিটে পড়া' },
     image: 'assets/images/hotel-sea-crown.jpg',
-    likes: 35,
     tags: [{ en: 'Poushee Restaurant', bn: 'পৌষী রেস্তোরাঁ' }, { en: 'Seafood', bn: 'সামুদ্রিক খাবার' }, { en: 'Sugandha Beach', bn: 'সুগন্ধা সৈকত' }, { en: 'Loitta Fry', bn: 'লইট্যা ফ্রাই' }, { en: 'Food Guide', bn: 'খাবারের গাইড' }],
     summary: {
       en: 'From 25+ local bhartas and crispy Loitta fry at Poushee (~450 BDT) to evening live grilled crab and red snapper by the waves at Sugandha Point.',
@@ -116,7 +114,6 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
     readTime: { en: '4 min read', bn: '৪ মিনিটে পড়া' },
     image: 'assets/images/moheshkhali.jpg',
-    likes: 29,
     tags: [{ en: 'Moheshkhali', bn: 'মহেশখালী' }, { en: 'Sonadia Island', bn: 'সোনাদিয়া দ্বীপ' }, { en: 'Speedboat', bn: 'স্পিডবোট' }, { en: 'Kasturi Ghat', bn: 'কস্তুরী ঘাট' }, { en: 'Adinath Temple', bn: 'আদিনাথ মন্দির' }],
     summary: {
       en: 'How to take the 80–100 BDT speedboat from Kasturi Ghat to Bangladesh’s only hilly island, visit Mainak Hill’s Adinath Temple, and camp on Sonadia Island.',
@@ -156,7 +153,6 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     date: { en: 'October 2026', bn: 'অক্টোবর ২০২৬' },
     readTime: { en: '3 min read', bn: '৩ মিনিটে পড়া' },
     image: 'assets/images/himchari.jpg',
-    likes: 51,
     tags: [{ en: 'Safety Tips', bn: 'নিরাপত্তার টিপস' }, { en: 'Tomtom Fares', bn: 'টমটমের ভাড়া' }, { en: 'Hotels', bn: 'হোটেল' }, { en: 'Tourist Police', bn: 'ট্যুরিস্ট পুলিশ' }, { en: 'Budget', bn: 'বাজেট' }],
     summary: {
       en: 'Avoid overpaying and stay safe: typical Tomtom fares (estimates, Oct 2026), green vs. red lifeguard flags, hotel zone comparison, and 24/7 emergency numbers.',
@@ -407,14 +403,10 @@ function renderBlogSection() {
 
           <!-- Card Footer -->
           <div class="px-5 sm:px-6 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-            <button
-              type="button"
-              onclick="likeBlogPost('${post.id}')"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-extrabold transition cursor-pointer"
-            >
-              <span>❤️</span>
-              <span>${post.likes || 0}</span>
-            </button>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 text-stone-600 text-xs font-medium">
+              <span>📖</span>
+              <span>${lang === 'bn' ? 'ভ্রমণ সহায়িকা' : 'Travel Guide'}</span>
+            </span>
 
             <div class="flex items-center gap-2">
               <button
@@ -523,13 +515,6 @@ function openBlogReaderModal(postId) {
         <div class="flex items-center gap-2">
           <button
             type="button"
-            onclick="likeBlogPost('${post.id}', true)"
-            class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold text-xs flex items-center gap-1.5 border border-rose-200 transition cursor-pointer"
-          >
-            <span>❤️ ${lang === 'en' ? 'Helpful' : 'পছন্দ হয়েছে'} (${post.likes || 0})</span>
-          </button>
-          <button
-            type="button"
             onclick="shareBlogPost('${post.id}')"
             class="px-4 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 font-extrabold text-xs flex items-center gap-1.5 border border-sky-200 transition cursor-pointer"
           >
@@ -559,16 +544,6 @@ function closeBlogReaderModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
-  }
-}
-
-function likeBlogPost(postId, fromModal) {
-  const post = BlogState.posts.find(p => p.id === postId);
-  if (!post) return;
-  post.likes = (Number(post.likes) || 0) + 1;
-  renderBlogSection();
-  if (fromModal) {
-    openBlogReaderModal(postId);
   }
 }
 
