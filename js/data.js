@@ -2519,14 +2519,19 @@ let FAQ_DATA = [
   {
     id: "faq-8",
     question: {
-      en: "How long does it take to reach Saint Martin's Island?",
-      bn: "সেন্টমার্টিন দ্বীপে যেতে কত সময় লাগে?"
+      en: "How do I get to Saint Martin's Island?",
+      bn: "সেন্টমার্টিন দ্বীপে কীভাবে যাব?"
     },
     answer: {
-      en: "From Teknaf jetty: about 2 hours by speedboat, 3.5 hours by ship or 6.5 hours by engine boat. A ship from Cox's Bazar 6 No. Ghat takes about 6.5 hours; 3-4 tourist ships run a day in season. Watch for overloaded boats, touts and hotel booking fraud: book only with known operators and pay after you see the confirmation (Tourist Police, Oct 2026).",
-      bn: "টেকনাফ জেটি থেকে স্পিডবোটে প্রায় ২ ঘণ্টা, জাহাজে প্রায় সাড়ে ৩ ঘণ্টা, ইঞ্জিনচালিত নৌকায় প্রায় সাড়ে ৬ ঘণ্টা। কক্সবাজারের ৬ নং ঘাট থেকে জাহাজে প্রায় সাড়ে ৬ ঘণ্টা; মৌসুমে দিনে ৩-৪টি পর্যটক জাহাজ চলে। অতিরিক্ত যাত্রী বোঝাই নৌকা, দালাল ও হোটেল বুকিং প্রতারণা থেকে সাবধান: শুধু পরিচিত অপারেটরের মাধ্যমে বুক করুন, কনফার্মেশন দেখে তারপর টাকা দিন (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
+      en: "Tourist ships leave only from Cox's Bazar (BIWTA jetty at Nuniachhara) and take about 5-7 hours each way. Speedboats, trawlers and ships from Teknaf are not allowed for tourists. Under the 2025-26 rules (Ministry of Environment notice, 22 Oct 2025), November is day trips only, overnight stays are allowed in December and January, the island is closed to tourists from February to October, and visitors are capped at 2,000 a day. Buy tickets only through a portal approved by the Bangladesh Tourism Board: each ticket carries a travel pass with a QR code, and tickets without one are invalid. In 2025 the ships started only on 1 December, because a same-day return is hardly possible. In Oct 2026 the government said it will review the season, the daily cap and the departure point for 2026-27, so rules change each season: check the latest notice before you book. Beware of touts and hotel booking fraud (UNB, The Daily Star, Tourist Police; as of Oct 2026).",
+      bn: "পর্যটকবাহী জাহাজ ছাড়ে শুধু কক্সবাজারের নুনিয়ারছড়া বিআইডব্লিউটিএ ঘাট থেকে, এক দিকে সময় লাগে প্রায় ৫-৭ ঘণ্টা। টেকনাফ থেকে স্পিডবোট, ট্রলার বা জাহাজে পর্যটকদের যাওয়ার অনুমতি নেই। ২০২৫-২৬ মৌসুমের নিয়মে (পরিবেশ মন্ত্রণালয়ের প্রজ্ঞাপন, ২২ অক্টোবর ২০২৫) নভেম্বরে শুধু দিনে গিয়ে সেদিনই ফিরতে হয়, ডিসেম্বর ও জানুয়ারিতে রাতে থাকা যায়, ফেব্রুয়ারি থেকে অক্টোবর পর্যটকদের জন্য দ্বীপ বন্ধ থাকে, আর দিনে সর্বোচ্চ ২,০০০ জন যেতে পারেন। টিকিট কিনুন শুধু বাংলাদেশ ট্যুরিজম বোর্ড অনুমোদিত পোর্টাল থেকে: প্রতিটি টিকিটে কিউআর কোডসহ ট্রাভেল পাস থাকে, কিউআর কোড ছাড়া টিকিট অবৈধ। একই দিনে আসা-যাওয়া প্রায় অসম্ভব বলে ২০২৫ সালে জাহাজ চলা শুরু হয় ১ ডিসেম্বর থেকে। ২০২৬-২৭ মৌসুমের সময়, দৈনিক পর্যটকের সীমা ও জাহাজ ছাড়ার জায়গা পুনর্বিবেচনা করা হবে বলে সরকার অক্টোবর ২০২৬-এ জানিয়েছে; নিয়ম প্রতি মৌসুমে বদলায়, তাই বুকিংয়ের আগে সর্বশেষ প্রজ্ঞাপন দেখে নিন। দালাল ও হোটেল বুকিং প্রতারণা থেকে সাবধান (ইউএনবি, দ্য ডেইলি স্টার, ট্যুরিস্ট পুলিশ; অক্টোবর ২০২৬ অনুযায়ী)।"
     },
-    ...TOURIST_POLICE_SOURCE
+    // Also: thedailystar.net/business/news/tourists-can-visit-st-martins-nov-it-really-opens-dec-4020431 (27 Oct 2025),
+    // tbsnews.net/bangladesh/saint-martin-trips-finally-resume-under-strict-rules-1298631 (30 Nov 2025),
+    // thedailystar.net/business/news/govt-reassess-tourist-limits-season-saint-martins-minister-4297801 (13 Oct 2026).
+    source: "Ministry of Environment, Forest and Climate Change notice of 22 Oct 2025 as reported by UNB (5 Nov 2025) and The Daily Star; 2026-27 review: The Daily Star, 13 Oct 2026; fraud warning: Tourist Police, Cox's Bazar Region",
+    sourceUrl: "https://www.dhakatribune.com/bangladesh/nation/395620/how-to-visit-saint-martin%E2%80%99s-island-in-tourist",
+    asOf: "2026-10-19"
   }
 ];
 

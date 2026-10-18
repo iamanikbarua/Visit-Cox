@@ -59,3 +59,44 @@ Commits: `d6c8874` (chatbot fix), `8528903` (Bangla page text), `2ce426f` (updat
 - Fixed on top: `blog.html` always opened in English and never saved the toggle. It now saves the language and opens in বাংলা when it was chosen on another page. `<html lang>` stayed `en` on a first load in বাংলা mode; `renderAll()` now sets it. The `?v=` tags on `app.js` and `quickpick.js` were bumped so cached copies refresh.
 - Proof: `scripts/check.sh` passes all 6 steps with 49 node tests. Headless Chrome locally on 10 pages × 2 languages: 0 page errors. After the Pages deploy (run 38929473112, success), live: the 404 page in বাংলা mode is fully Bangla (10 Bangla blocks, 0 English) with 0 page errors, and the home, blog, food and planner pages have 0 page errors in both languages. On the live home page, toggling বাংলা then English swaps the quick-pick cards and the hero both ways, and the Himchari chatbot answer renders `<strong>`, not literal tags.
 - Not done: the Bangla is agent-translated and not proofread. In বাংলা mode, English remains in the blog post meta (author, date, read time, tags: 20 blocks) and on the planner (brand and hotel names, plus the footer sentence "An independent, non-commercial guide...").
+
+## Update 7 (2026-10-19, review round)
+
+No new commits since `572e8af` (that commit and `7cad42d` were not logged here: Bangla blog meta and planner names; meta CSP, SRI on the export libraries, Jekyll excludes, unsourced hotel ratings and blog likes no longer shown). This round checked the live site and the code; nothing was changed apart from this section and one `todo.md` line.
+
+Status of what was still open:
+- Hotels show other buildings' photos: **open.** 12 of 16 hotels use a photo that is not theirs (`js/data.js:447`, `:511`, `:573`, `:635`...). 8 of them show another hotel from the same list: on the live hotels page Ocean Paradise shows Prime Park's dining room.
+- No way to report a wrong price, and prices are unconfirmed: **open.** Still no form, mailto or feedback link anywhere. Spot check of 6 facts: Sayeman's phone matches its website; Sea Pearl's (`js/data.js:508`) is not on seapearlcoxsbazar.com, which lists 01887-660066; Long Beach's (`:814`) differs from the number on Booking.com and HotelsCombined (01730-338907); Radiant Fish World ৳350 vs about ৳300 in recent reviews; Moheshkhali speedboat ৳80-100 matches older reports; the Himchari entry fee is ৳50 in `PRICE_BOOK` (`js/data.js:2570`) but "~৳120" in the chatbot (`js/app.js:2410`).
+- Ownership and the old admin password: **open, and wider.** The repo's homepage field points to `visitcox.vercel.app`, which redirects to **coxbazar.xyz** (registered 2026-10-12, owner hidden). The old `js/admin.js` is still downloadable from commit `2bb73c9` on raw.githubusercontent.com.
+- Internal files off the public site: **partly.** They return 404 on github.io, but coxbazar.xyz is a Vercel copy that ignores `_config.yml`, so `todo.md`, `judge.md`, `AGENTS.md`, `CrtiQue_Oct15.md`, `tests/`, `scripts/` and the role briefs are all public there (HTTP 200).
+- Still working: no Google request before consent and GA after Accept; the WhatsApp button stays hidden; both pass exports download (1600x1260 and 720x1280 PNG) with 0 page errors; no horizontal scroll at 375 px; Bangla mode leaves 2 English blocks on the home page; the 404 page works; `scripts/check.sh` passes all 6 steps (58 tests).
+
+Bugs found:
+1. **Saint Martin's advice is out of date (high).** The FAQ (`js/data.js:2526`) gives a 2-hour speedboat from Teknaf, and the chatbot (`js/app.js:2556`) says ships run "from Cox's Bazar or Teknaf". Under the 2025-26 rules (UNB, Dhaka Tribune, bdnews24) ships leave only from Cox's Bazar (Nuniya Chhara BIWTA ghat), Teknaf routes and speedboats are banned, a travel pass is needed, November is day trips only, and the island is closed February to October.
+2. **The second host leaks internal files (medium).** See above. Fix: one host, or a `.vercelignore` with the same list as `_config.yml`.
+3. **Place photos carry a "✓" credit for a different place (medium).** At least 11 of 24 places reuse another place's photo, and `js/app.js:1146` prints "✓ Wikimedia Commons (Kutubdia)" over the Adinath Temple photo from Moheshkhali (`js/data.js:1575`). Same for Teknaf (`:1597`, Himchari photo), Dulhazra (`:1619`), Aggamedha (`:1641`) and the Rakhine handloom village (`:1810`). The credits give no author or licence, which CC BY-SA requires.
+4. **The language switch is almost invisible (medium).** The inactive "বাংলা" and "$ USD" pills use `text-sky-100` (`js/app.js:126`, `:131`, `:138`) on the cream header, about 1.1:1 contrast. The Bangla audience cannot see the button that serves them.
+5. **Two hotel phone numbers do not match public listings (medium).** Sea Pearl and Long Beach, above.
+6. Low: the phone pass breaks "01887-878787" across two lines; `jspdf` 2.5.1 loads on `itinerary.html:114` but nothing uses it; `privacy.html:214` says the site is hosted only on GitHub Pages; the Himchari price contradiction above.
+
+Remaining gaps, most important first:
+1. Who owns the brand, domain, Vercel project, GA property and repo is still unsettled, and there are now two live hosts with the canonical on github.io.
+2. Wrong or unconfirmed facts with no way for visitors to correct them (Saint Martin's, phones, fares).
+3. Photos: wrong hotels, wrong places under a ✓, no licence credits.
+4. Bangla pages cannot be found from search: no hreflang, no `/bn/` URLs, no per-post blog URLs, no Search Console.
+5. The planner budget leaves out getting to Cox's Bazar, the biggest cost for most visitors.
+6. No revenue path. "Reserve ➔" on hotel cards only opens Call and Website. ShareTrip and GoZayaan book hotels and buses, Tripadvisor has reviews, Facebook groups have fresh prices; the only edge here is fair fares and the lock-screen pass, and nobody has seen it.
+7. No users and no measurement: the Facebook-group test has not run, there are no planner or export events, and GA mixes two hosts.
+8. Page weight: the home page is 824 KB on a first visit, and Tailwind compiles CSS on the phone.
+9. UI: two visual styles, 36 text elements under 12 px on the home page at 375 px, brand name drift.
+10. Legal: no LICENSE and no named owner behind "All Rights Reserved".
+
+Next steps, in order:
+1. Owner: agree with iamanikbarua who owns coxbazar.xyz, the Vercel project, GA and the repo, and pick one host. Rotate the old admin password wherever it was used.
+2. Agent: fix Saint Martin's in the FAQ and chatbot (en and bn, with source and date), the Himchari price, the toggle contrast, the pass number wrap; drop the unused jsPDF tag.
+3. Agent: give the 12 hotels a labelled placeholder instead of another hotel's photo, and point each place credit at its real file with author and licence, or drop the ✓.
+4. Agent, after step 1: `.vercelignore` or delete the Vercel project; canonical, sitemap and privacy hosting text to match the chosen host.
+5. Owner: confirm the 16 hotel phones (start with Sea Pearl and Long Beach) and the local fares. Agent: add a "Report a price" link on fares, hotels and planner totals.
+6. Owner: run the Facebook-group test and verify Search Console. Agent: add cookie-free counts for planner completed and pass exported.
+
+Fixed after this review (not committed yet): bug 1, Saint Martin's. `faq-8` in `js/data.js` (en and bn), its copy in the `index.html` FAQ JSON-LD, and the chatbot (`js/app.js`, which now shows the FAQ text in both languages and also matches "St. Martin" and "সেন্ট মার্টিন") now say: ships only from the Cox's Bazar BIWTA jetty at Nuniachhara, no Teknaf speedboats, trawlers or ships for tourists, November day trips only, overnight stays December-January, closed February-October, 2,000 a day, tickets with a QR travel pass from a Bangladesh Tourism Board approved portal, and that the 2026-27 rules are under review. `source`, `sourceUrl` and `asOf: 2026-10-19` on the entry; sources: UNB via Dhaka Tribune (5 Nov 2025), The Daily Star (27 Oct 2025 and 13 Oct 2026), TBS (30 Nov 2025). New regression test; `scripts/check.sh` passes (51 tests).

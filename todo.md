@@ -15,7 +15,7 @@ Items agents cannot finish without the owner. Each line says what to do and why 
 ## Money, partners, contact
 - [ ] WhatsApp number for trip requests. Put it in `SITE_CONTACT.whatsapp` (`js/data.js`, format `8801XXXXXXXXX`); the button stays hidden until then. Why you: it is your phone and your promise to answer.
 - [ ] Partners (hotels, tour operators) and how any commission is shown to users. Why you: contracts and disclosure.
-- [ ] Domain: is `visitcox.com` (or another) yours? If yes, point it at GitHub Pages and update canonicals, `og:url`, `sitemap.xml`, `robots.txt` and the 404 `<base>`. Why you: purchase and DNS.
+- [ ] Domain and second host: `coxbazar.xyz` (registered 2026-10-12, owner hidden) already serves this repo from Vercel (`visitcox.vercel.app` redirects there; it is the repo's homepage link), and it also serves `todo.md`, `judge.md`, `CrtiQue_Oct15.md`, `tests/` and the role folders, because Vercel ignores `_config.yml`. Confirm who owns the domain and the Vercel project, then keep one host: either delete the Vercel project, or make coxbazar.xyz canonical (canonicals, `og:url`, `sitemap.xml`, `robots.txt`, the 404 `<base>`, `privacy.html` hosting text) and add a `.vercelignore`. Why you: purchase, DNS and the Vercel account (checked 2026-10-19).
 
 ## Legal
 - [ ] Image permissions: hotel and business photos (kollol, sea-crown, prime-park, white-orchid, radiant-fish-world, kolatoli-eco) need the owners' OK. Place photos (hero, himchari, inani, moheshkhali, najirartek, ramu, shamlapur, sonadia) look like Wikimedia or stock and need attribution or replacement. Why you: licensing.

@@ -2547,13 +2547,14 @@ async function fetchTravelAssistantReply(userText) {
   }
 
   // Saint Martin / Teknaf / Patuartek specific query
-  if (q.includes('saint martin') || q.includes('st martin') || q.includes('সেন্টমার্টিন') || q.includes('টেকনাফ') || q.includes('teknaf') || q.includes('patuartek') || q.includes('পাটুয়ারটেক')) {
+  if (q.includes('martin') || q.includes('মার্টিন') || q.includes('টেকনাফ') || q.includes('teknaf') || q.includes('patuartek') || q.includes('পাটুয়ারটেক')) {
+    const stMartin = escapeHTML(FAQ_DATA.find(f => f.id === 'faq-8').answer[lang]); // one source: the sourced FAQ in data.js
     return lang === 'en'
       ? `
         <div>🚢 <strong>Teknaf, Patuartek & Saint Martin's Island Info:</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>Marine Drive to Teknaf:</strong> The scenic Marine Drive runs a full <strong>80 km</strong> from Kolatoli through Himchari (18 km), Inani (32 km), Patuartek, and Shamlapur (45 km) down to Teknaf.<br/>
-          • <strong>Saint Martin's Ships:</strong> Tourist ships operate seasonally (typically winter months, subject to official Bangladesh Govt. ecological directives) from Cox's Bazar (BIWTA Ghat) or Teknaf.<br/>
+          • <strong>Saint Martin's Island:</strong> ${stMartin}<br/>
           • <strong>Best Alternative Island Trips Year-Round:</strong> Visit <strong>Moheshkhali Island</strong> (about 30 min by speedboat from Kasturi Ghat, ${formatPriceRange(80, 100)}) or <strong>Sonadia Island</strong>!
         </div>
         ${buildChatFollowUpChips(['Moheshkhali Island info', 'Sonadia Island camping', '5-Day Bike & Island Plan'])}
@@ -2562,6 +2563,7 @@ async function fetchTravelAssistantReply(userText) {
         <div>🚢 <strong>টেকনাফ, পাটুয়ারটেক ও সেন্টমার্টিন তথ্য:</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>মেরিন ড্রাইভ (৮০ কিমি):</strong> কলাতলী থেকে হিমছড়ি (১৮ কিমি), ইনানী (৩২ কিমি), পাটুয়ারটেক ও শামলাপুর (৪৫ কিমি) হয়ে টেকনাফ পর্যন্ত ৮০ কিমি দীর্ঘ।<br/>
+          • <strong>সেন্টমার্টিন দ্বীপ:</strong> ${stMartin}<br/>
           • <strong>দ্বীপ ভ্রমণ বিকল্প:</strong> কস্তুরাঘাট থেকে প্রায় ৩০ মিনিটে <strong>মহেশখালী দ্বীপ</strong> (${formatPriceRange(80, 100)}) এবং <strong>সোনাদিয়া দ্বীপ</strong> সহজেই ভ্রমণ করতে পারেন।
         </div>
         ${buildChatFollowUpChips(['মহেশখালী দ্বীপ ভ্রমণ', 'সোনাদিয়া দ্বীপ ক্যাম্পিং', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}

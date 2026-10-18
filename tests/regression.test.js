@@ -172,3 +172,17 @@ test('chatbot spot answers render their formatting, not literal tags', async () 
   assert.match(html, /<strong>Why Visit:<\/strong>/);
   assert.doesNotMatch(html, /&lt;strong&gt;|&lt;br/);
 });
+
+test("Saint Martin's advice: ships from Cox's Bazar only, sourced, and the chatbot uses it in both languages", async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const faq = ev(`FAQ_DATA.find((f) => f.id === 'faq-8')`);
+  assert.ok(faq.source && faq.sourceUrl && faq.asOf, 'faq-8 needs source, sourceUrl, asOf');
+  assert.match(faq.answer.en, /only from Cox's Bazar/);
+  assert.match(faq.answer.bn, /শুধু কক্সবাজারের/);
+  for (const [lang, q] of [['en', 'St. Martin ship'], ['bn', 'সেন্ট মার্টিন যাব কীভাবে']]) {
+    ev(`AppState.lang = '${lang}'`);
+    const html = await ev(`fetchTravelAssistantReply(${JSON.stringify(q)})`);
+    assert.ok(html.includes(ev('escapeHTML')(faq.answer[lang])), `${lang} chatbot answer is not the FAQ text`);
+  }
+});
