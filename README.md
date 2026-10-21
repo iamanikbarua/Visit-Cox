@@ -49,7 +49,7 @@ scripts/check.sh              # JS syntax, node tests, local links, JSON-LD, str
 node --test 'tests/*.test.js' # tests only
 ```
 
-`scripts/check.sh` must exit 0 before a commit. Needs Node 18+. Tailwind only sees class names written out in full in `*.html` and `js/*.js`; never build one from pieces (`'bg-' + color`). Commit `css/tailwind.css` with the change that needs it.
+`scripts/check.sh` must exit 0 before a commit; GitHub Actions (`.github/workflows/check.yml`) also runs it on every push and pull request. Needs Node 22+ (`node --test` with a glob; CI uses Node 24). Tailwind only sees class names written out in full in `*.html` and `js/*.js`; never build one from pieces (`'bg-' + color`). Commit `css/tailwind.css` with the change that needs it.
 
 ## Not yet decided (owner)
 

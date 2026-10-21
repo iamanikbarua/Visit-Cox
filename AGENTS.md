@@ -35,4 +35,4 @@ Read before any change: this file, `CODING_STANDARDS.md`, the last section of `j
 - **Git.** Agents do not commit or push. The main agent reviews diffs, runs the gate, commits and pushes.
 
 ## Checks
-`scripts/check.sh` runs: JS syntax for every `js/*.js`, `node --test tests/`, local link/asset references in `*.html`, JSON-LD, stray files, secret patterns, and that `css/tailwind.css` matches a fresh build (it rebuilds the file when stale; commit the result). Exit 0 or the work is not done.
+`scripts/check.sh` runs: JS syntax for every `js/*.js`, `node --test tests/`, local link/asset references in `*.html`, JSON-LD, stray files, secret patterns, and that `css/tailwind.css` matches a fresh build (it rebuilds the file when stale; commit the result). Exit 0 or the work is not done. CI (`.github/workflows/check.yml`, Node 24, `npm ci` then `scripts/check.sh`) runs it on every push and pull request.
