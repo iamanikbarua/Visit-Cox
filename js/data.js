@@ -1348,8 +1348,25 @@ let HOTELS_DATA = [
 
 /* --------------------------------------------------------------------------
  * 3. DESTINATIONS & SIGHTSEEING DATA (5 Iconic Spots + 4 Hidden Gems)
- *    Photographs from Wikimedia Commons
  * -------------------------------------------------------------------------- */
+
+// Place photo credits, keyed by image path (CrtiQue_Oct21 H4). Author and licence from the
+// Wikimedia Commons API; each local file was matched to its Commons file by pixel correlation (2026-10-22).
+// ofIds: the entries the photo really shows; any other entry using it says which place the photo shows.
+// hero-coxs-bazar.jpg has no known source, so entries using it show no credit (owner: todo.md, image permissions).
+const COMMONS = 'https://commons.wikimedia.org/wiki/File:';
+const PHOTO_CREDITS = {
+  'assets/images/himchari.jpg': { shows: { en: 'Himchari', bn: 'হিমছড়ি' }, ofIds: ['himchari-national-park'], author: 'Moheen Reeyad', license: 'CC BY-SA 4.0', url: COMMONS + 'Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg' },
+  'assets/images/inani-beach.jpg': { shows: { en: 'Inani Beach', bn: 'ইনানী সৈকত' }, ofIds: ['inani-beach'], author: 'Moheen Reeyad', license: 'CC BY-SA 4.0', url: COMMONS + 'Inani_Beach_(135005).jpg' },
+  'assets/images/moheshkhali.jpg': { shows: { en: 'Adinath Temple, Moheshkhali', bn: 'আদিনাথ মন্দির, মহেশখালী' }, ofIds: ['moheshkhali-island'], author: 'Salim Khandoker', license: 'CC BY-SA 3.0', url: COMMONS + 'Adinath_Temple,_Moheshkhali_.jpg' },
+  'assets/images/radiant-fish-world.jpg': { shows: { en: 'a guitarfish in an aquarium in Bangladesh', bn: 'বাংলাদেশের একটি অ্যাকোয়ারিয়ামে গিটারফিশ' }, ofIds: [], author: 'Kryesmin', license: 'CC0', url: COMMONS + 'Rhinobatos_rhinobatos_in_Bangladesh_aquarium.jpg' },
+  'assets/images/ramu-buddha.jpg': { shows: { en: 'the 100 ft Buddha, Ramu', bn: 'রামুর ১০০ ফুট বুদ্ধ মূর্তি' }, ofIds: ['100-feet-buddha-ramu'], author: 'RockyMasum', license: 'CC BY-SA 4.0', url: COMMONS + 'Bhuvan_shanti_100_feet_lion_bed_statue_of_Gautama_Buddha.jpg' },
+  'assets/images/sonadia-island.jpg': { shows: { en: 'Sonadia Beach', bn: 'সোনাদিয়া সৈকত' }, ofIds: ['sonadia-island'], author: 'Zislam1968', license: 'CC BY-SA 4.0', url: COMMONS + 'Sonadia_Beach,_(photo-Zahirul_Islam-MLA).jpg' },
+  'assets/images/shamlapur-sampan.jpg': { shows: { en: "a sampan on Cox's Bazar beach", bn: 'কক্সবাজার সৈকতে একটি সাম্পান' }, ofIds: [], author: 'Syedhasibulhasan', license: 'CC BY-SA 4.0', url: COMMONS + 'A_Sampan_boat_anchored_in_the_Cox%27s_Bazar_sea_beach.jpg' },
+  'assets/images/najirartek-shutki.jpg': { shows: { en: 'fish drying at Nazirartek', bn: 'নাজিরারটেকে শুঁটকি শুকানো' }, ofIds: ['najirartek-dried-fish-hub'], author: 'Ayman Nakib Badhan', license: 'CC BY-SA 4.0', url: COMMONS + 'Fish_drying_at_Nazirartek,Cox%27s_Bazar.jpg' },
+  'assets/images/kolatoli-eco.jpg': { shows: { en: 'Kolatoli Beach', bn: 'কলাতলী সৈকত' }, ofIds: ['kolatoli-sunset-point'], author: 'Thomas Faraday', license: 'CC BY-SA 4.0', url: COMMONS + 'Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg' }
+};
+
 let DESTINATIONS_DATA = [
   {
     id: "himchari-national-park",
@@ -1369,8 +1386,6 @@ let DESTINATIONS_DATA = [
       en: "About 10 km south of the Cox's Bazar bus stand on Marine Drive (Tourist Police, Oct 2026). Easybike and CNG drivers may overcharge and isolated spots carry a snatching risk: agree the fare first and stay in busy areas.",
       bn: "মেরিন ড্রাইভ ধরে কক্সবাজার বাসস্ট্যান্ড থেকে প্রায় ১০ কিমি দক্ষিণে (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)। ইজিবাইক ও সিএনজি চালকেরা বাড়তি ভাড়া চাইতে পারেন, নির্জন জায়গায় ছিনতাইয়ের ঝুঁকি আছে: আগে ভাড়া ঠিক করুন, লোকজন আছে এমন জায়গায় থাকুন।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
-    sourceName: "Wikimedia Commons (Moheen Reeyad)",
     image: "assets/images/himchari.jpg"
   },
   {
@@ -1391,8 +1406,6 @@ let DESTINATIONS_DATA = [
       en: "About 24 km south of the Cox's Bazar bus stand on Marine Drive (Tourist Police, Oct 2026). Easybike and CNG drivers may overcharge and isolated spots carry a snatching risk: agree the fare first and stay in busy areas.",
       bn: "মেরিন ড্রাইভ ধরে কক্সবাজার বাসস্ট্যান্ড থেকে প্রায় ২৪ কিমি দক্ষিণে, উখিয়া উপজেলা (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)। ইজিবাইক ও সিএনজি চালকেরা বাড়তি ভাড়া চাইতে পারেন, নির্জন জায়গায় ছিনতাইয়ের ঝুঁকি আছে: আগে ভাড়া ঠিক করুন, লোকজন আছে এমন জায়গায় থাকুন।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Inani_Beach_(135005).jpg",
-    sourceName: "Wikimedia Commons (Inani Beach)",
     image: "assets/images/inani-beach.jpg"
   },
   {
@@ -1413,8 +1426,6 @@ let DESTINATIONS_DATA = [
       en: "From 6 No. Ghat (Kasturi Ghat) to Gorakghata: about 30 min by speedboat, about 1 hour by engine boat or sampan. Adinath Temple is about 500 m from the ghat. Watch for extra tolls at the ghats and unprofessional guides (Tourist Police, Oct 2026).",
       bn: "৬ নং ঘাট (কস্তুরাঘাট) থেকে গোরকঘাটা: স্পিডবোটে প্রায় ৩০ মিনিট, ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা। ঘাট থেকে আদিনাথ মন্দির প্রায় ৫০০ মিটার। ঘাটে বাড়তি টোল ও অদক্ষ গাইড থেকে সাবধান (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
-    sourceName: "Wikimedia Commons (Adinath Temple)",
     image: "assets/images/moheshkhali.jpg"
   },
   {
@@ -1435,8 +1446,6 @@ let DESTINATIONS_DATA = [
       en: "Located in Jhautola town center, about 5 km from the bus stand and 1.5 km from the airport. Open 9:00 AM to 11:00 PM (Tourist Police, Oct 2026).",
       bn: "কক্সবাজার শহরের ঝাউতলায়, বাসস্ট্যান্ড থেকে প্রায় ৫ কিমি ও বিমানবন্দর থেকে দেড় কিমি। খোলা সকাল ৯টা থেকে রাত ১১টা (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Rhinobatos_rhinobatos_in_Bangladesh_aquarium.jpg",
-    sourceName: "Wikimedia Commons (Bangladesh Aquarium)",
     image: "assets/images/radiant-fish-world.jpg"
   },
   {
@@ -1457,8 +1466,6 @@ let DESTINATIONS_DATA = [
       en: "16 km east on the highway.",
       bn: "চট্টগ্রাম-কক্সবাজার মহাসড়ক ধরে ১৬ কিমি পূর্বে রামু উপজেলায়।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Bhuvan_shanti_100_feet_lion_bed_statue_of_Gautama_Buddha.jpg",
-    sourceName: "Wikimedia Commons (Ramu 100ft Buddha)",
     image: "assets/images/ramu-buddha.jpg"
   },
   {
@@ -1479,8 +1486,6 @@ let DESTINATIONS_DATA = [
       en: "In town at the end of Sea Beach Road, about 2 km from the bus stand. The water is deeper here with rip currents, and people have drowned: swim only where lifeguards are, follow loudspeaker warnings and stay out in rough weather (Tourist Police, Oct 2026).",
       bn: "শহরে সি বিচ রোডের মাথায়, বাসস্ট্যান্ড থেকে প্রায় ২ কিমি। এখানে পানি গভীর ও রিপ কারেন্ট আছে, ডুবে মৃত্যুর ঘটনাও ঘটেছে: শুধু লাইফগার্ড যেখানে আছেন সেখানে নামুন, মাইকের সতর্কবার্তা মানুন, উত্তাল সাগরে নামবেন না (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Laboni_beach.jpg",
-    sourceName: "Wikimedia Commons (Laboni Beach)",
     image: "assets/images/hero-coxs-bazar.jpg"
   },
   {
@@ -1501,8 +1506,6 @@ let DESTINATIONS_DATA = [
       en: "About 4 km from the bus stand, a 5-min walk from Kolatoli junction. Very crowded on holidays and children get separated: agree a meeting point (Tourist Police run lost-and-found by loudspeaker). Say no firmly to persistent hawkers, massage boys and photographers; patrols handle harassment. No quicksand, generally safe for bathing (Tourist Police, Oct 2026).",
       bn: "বাসস্ট্যান্ড থেকে প্রায় ৪ কিমি, কলাতলী মোড় থেকে ৫ মিনিটের পথ। ছুটির দিনে প্রচণ্ড ভিড় হয়, শিশুরা হারিয়ে যায়: আগে থেকে একটা দেখা করার জায়গা ঠিক করুন (ট্যুরিস্ট পুলিশ মাইকে হারানো-প্রাপ্তির ঘোষণা দেয়)। নাছোড় হকার, ম্যাসাজ বয় ও ফটোগ্রাফারদের দৃঢ়ভাবে না বলুন; হয়রানি হলে টহল পুলিশ ব্যবস্থা নেয়। চোরাবালি নেই, গোসলের জন্য সাধারণত নিরাপদ (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Sugandha_Beach,_Cox%27s_Bazar.jpg",
-    sourceName: "Wikimedia Commons (Sugandha Beach)",
     image: "assets/images/hero-coxs-bazar.jpg"
   },
   {
@@ -1523,8 +1526,6 @@ let DESTINATIONS_DATA = [
       en: "Kolatoli Circle (Dolphin Mor), start of Marine Drive, about 3 km from the bus stand. Snatching risk on quiet stretches: keep valuables close (Tourist Police, Oct 2026).",
       bn: "কলাতলী গোলচত্বর (ডলফিন মোড়), মেরিন ড্রাইভের শুরুতে, বাসস্ট্যান্ড থেকে প্রায় ৩ কিমি। নির্জন অংশে ছিনতাইয়ের ঝুঁকি আছে: দামি জিনিস কাছে রাখুন (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg",
-    sourceName: "Wikimedia Commons (Kolatoli Beach)",
     image: "assets/images/hero-coxs-bazar.jpg"
   },
   {
@@ -1545,8 +1546,6 @@ let DESTINATIONS_DATA = [
       en: "On Marine Drive between Kolatoli and Himchari, about 5 km from the bus stand (Tourist Police, Oct 2026).",
       bn: "মেরিন ড্রাইভে কলাতলী ও হিমছড়ির মাঝে, বাসস্ট্যান্ড থেকে প্রায় ৫ কিমি (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Marine_Drive_Cox%27s_Bazar.jpg",
-    sourceName: "Wikimedia Commons (Marine Drive)",
     image: "assets/images/kolatoli-eco.jpg"
   },
   {
@@ -1567,8 +1566,6 @@ let DESTINATIONS_DATA = [
       en: "24 km south on Marine Drive, just north of Inani Beach.",
       bn: "মেরিন ড্রাইভ ধরে ২৪ কিমি দক্ষিণে (ইনানী সৈকতের কাছাকাছি)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Inani_Beach_(135005).jpg",
-    sourceName: "Wikimedia Commons (Reju Khal)",
     image: "assets/images/inani-beach.jpg"
   },
   {
@@ -1589,8 +1586,6 @@ let DESTINATIONS_DATA = [
       en: "North of Cox's Bazar; cross Pekua Mognama Ghat via trawler or speed boat.",
       bn: "কক্সবাজার শহর থেকে উত্তরে পেকুয়া মগনামা ঘাট হয়ে ট্রলার বা স্পিডবোটে।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
-    sourceName: "Wikimedia Commons (Kutubdia)",
     image: "assets/images/moheshkhali.jpg"
   },
   {
@@ -1611,8 +1606,6 @@ let DESTINATIONS_DATA = [
       en: "80 km south at the southern terminus of Marine Drive in Teknaf.",
       bn: "মেরিন ড্রাইভের শেষ প্রান্তে টেকনাফ উপজেলায় (কলাতলী থেকে প্রায় ৮০ কিমি)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
-    sourceName: "Wikimedia Commons (Teknaf)",
     image: "assets/images/himchari.jpg"
   },
   {
@@ -1633,8 +1626,6 @@ let DESTINATIONS_DATA = [
       en: "About 50 km north of the Cox's Bazar bus stand on the Cox's Bazar–Chattogram highway (Chakaria). Tickets at the Forest Department's set price; canteen, picnic shed and parking on site (Tourist Police, Oct 2026).",
       bn: "কক্সবাজার-চট্টগ্রাম মহাসড়ক ধরে চকরিয়া উপজেলায়, কক্সবাজার বাসস্ট্যান্ড থেকে প্রায় ৫০ কিমি। টিকিটের দাম বন বিভাগের নির্ধারিত; ক্যান্টিন, পিকনিক শেড ও পার্কিং আছে (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬)।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg",
-    sourceName: "Wikimedia Commons (Dulhazra)",
     image: "assets/images/kolatoli-eco.jpg"
   },
   {
@@ -1655,8 +1646,6 @@ let DESTINATIONS_DATA = [
       en: "Near main entrance to Cox's Bazar town & Ramu township.",
       bn: "কক্সবাজার শহরের প্রবেশমুখে ও রামু উপজেলার প্রাচীন বৌদ্ধ পল্লীতে।"
     },
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Bhuvan_shanti_100_feet_lion_bed_statue_of_Gautama_Buddha.jpg",
-    sourceName: "Wikimedia Commons (Aggamedha)",
     image: "assets/images/ramu-buddha.jpg"
   }
 ];
@@ -1677,7 +1666,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "মহেশখালী চ্যানেলের কাছে অবস্থিত অর্ধচন্দ্রাকার নির্জন দ্বীপ—যা শীতকালীন বিচ ক্যাম্পিং, লাল কাঁকড়া, প্যারাবন এবং সামুদ্রিক কাছিমের প্রজনন ক্ষেত্র হিসেবে পরিচিত।"
     },
     image: "assets/images/sonadia-island.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Sonadia_Beach,_(photo-Zahirul_Islam-MLA).jpg",
     icon: "tent"
   },
   {
@@ -1695,7 +1683,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "টেকনাফ-কক্সবাজার মেরিন ড্রাইভের বাহারছড়ায় অবস্থিত—যেখানে শত শত ঐতিহ্যবাহী কাঠের সাম্পান নৌকা এবং গোধূলির রক্তিম সূর্যাস্ত এক অপূর্ব দৃশ্য তৈরি করে।"
     },
     image: "assets/images/shamlapur-sampan.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:A_Sampan_boat_anchored_in_the_Cox%27s_Bazar_sea_beach.jpg",
     icon: "sunset"
   },
   {
@@ -1713,7 +1700,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "কলাতলী ও দরিয়ানগরের ঠিক পেছনে অবস্থিত সবুজ পাহাড়ি বনাঞ্চল, যেখানে ট্রেকিং করে পাহাড়চূড়া থেকে বঙ্গোপসাগরের দিগন্তজোড়া দৃশ্য উপভোগ করা যায়।"
     },
     image: "assets/images/kolatoli-eco.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg",
     icon: "trees"
   },
   {
@@ -1731,7 +1717,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "বিমানবন্দরের পশ্চিমে বাঁকখালী নদীর মোহনায় প্রায় ২০০ একর জুড়ে বিস্তৃত দেশের বৃহত্তম শুঁটকি মহাল—যেখানে হাজারো বাঁশের মাচায় রোদে সামুদ্রিক মাছ শুকানো হয়।"
     },
     image: "assets/images/najirartek-shutki.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Fish_drying_at_Nazirartek,Cox%27s_Bazar.jpg",
     icon: "fish"
   },
   {
@@ -1749,7 +1734,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "কক্সবাজারের সবচেয়ে জনপ্রিয় ঐতিহ্যবাহী রেস্তোরাঁ—যেখানে পাবেন লইট্যা শুঁটকি, চিংড়ি, বেগুনসহ ৩০টিরও বেশি পদের সুস্বাদু ভর্তা, মচমচে লইট্যা ফ্রাই এবং রূপচাঁদার ভুনা।"
     },
     image: "assets/images/hero-coxs-bazar.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Cox%27s_Bazar_Sea_Beach.jpg",
     icon: "utensils"
   },
   {
@@ -1767,7 +1751,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "ভোজনরসিকদের দীর্ঘদিনের প্রিয় ঠিকানা—স্পাইসি কাঁকড়া কারি, তাজা কোরাল মাছের ঝোল, ঝাল হাঁসের মাংস ভুনা ও গরম ডাল-ভাত।"
     },
     image: "assets/images/hero-coxs-bazar.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Cox%27s_Bazar_Sea_Beach.jpg",
     icon: "utensils"
   },
   {
@@ -1785,7 +1768,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "প্রতি সন্ধ্যায় সুগন্ধা সৈকতে বসে তাজা সামুদ্রিক মাছের মেলা। লাল পোয়া, টাইগার চিংড়ি, রূপচাঁদা বা স্কুইড নিজের পছন্দমতো বেছে নিলে বিশেষ মশলায় কয়লার আগুনে তাৎক্ষণিক ফ্রাই বা বারবিকিউ করে দেওয়া হয়।"
     },
     image: "assets/images/hero-coxs-bazar.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Sugandha_Beach,_Cox%27s_Bazar.jpg",
     icon: "flame"
   },
   {
@@ -1803,7 +1785,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "কক্সবাজারের সুপরিচিত সি-ফুড স্পট—বিশেষ করে মালাই ও ঝাল মশলায় রান্না করা সামুদ্রিক কাঁকড়া, অক্টোপাস/স্কুইড রোস্ট এবং ঐতিহ্যবাহী শুঁটকি চাটনি।"
     },
     image: "assets/images/hero-coxs-bazar.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Cox%27s_Bazar_Sea_Beach.jpg",
     icon: "utensils"
   },
   {
@@ -1821,7 +1802,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "শান্ত রাখাইন পল্লীতে ঘুরে দেখা যায় ঐতিহ্যবাহী কাঠের তাঁতযন্ত্র। সেখানে কারিগররা পরম যত্নে তৈরি করেন রঙিন রাখাইন থামি, লুঙ্গি ও চাদর; সরাসরি শিল্পীদের কাছ থেকে পণ্য কেনার দারুণ অভিজ্ঞতা।"
     },
     image: "assets/images/ramu-buddha.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
     icon: "sparkles"
   },
   {
@@ -1839,7 +1819,6 @@ let HIDDEN_GEMS_DATA = [
       bn: "মহেশখালীর মিষ্টি সুবাসযুক্ত পানের বরজ এবং উপকূলীয় লবণের মাঠ এক অনন্য সাংস্কৃতিক দৃশ্য। শীতের রোদে সাদা লবণের মাঠ বরফের প্রান্তরের মতো জ্বলজ্বল করে।"
     },
     image: "assets/images/moheshkhali.jpg",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Adinath_Temple,_Moheshkhali_.jpg",
     icon: "sun"
   }
 ];

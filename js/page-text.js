@@ -293,7 +293,7 @@ const PAGE_TEXT_BN = {
   "Read Guide ➔": "গাইড পড়ুন ➔",
   "INTERACTIVE PLANNER": "ইন্টার‍্যাক্টিভ প্ল্যানার",
   "Tour Itinerary Generator": "ভ্রমণসূচি তৈরির টুল",
-  "Design a neat, daily schedule for 2, 3, or 5 days tailored to your vibe (Relaxing, Adventure, or Local Culture) with 1-click PDF and PNG export.": "আপনার পছন্দ (আরাম, অ্যাডভেঞ্চার বা স্থানীয় সংস্কৃতি) অনুযায়ী ২, ৩ বা ৫ দিনের গোছানো দৈনিক সূচি তৈরি করুন, এক ক্লিকে PDF ও PNG হিসেবে নামান।",
+  "Design a neat, daily schedule for 2, 3, or 5 days tailored to your vibe (Relaxing, Adventure, or Local Culture) and save it as a PNG image in one click.": "আপনার পছন্দ (আরাম, অ্যাডভেঞ্চার বা স্থানীয় সংস্কৃতি) অনুযায়ী ২, ৩ বা ৫ দিনের গোছানো দৈনিক সূচি তৈরি করুন, এক ক্লিকে PNG ছবি হিসেবে নামান।",
   "INSTANT SCHEDULE & EXPORT": "তাৎক্ষণিক সূচি ও এক্সপোর্ট",
   "Generate Plan ➔": "প্ল্যান তৈরি করুন ➔",
   "EDITOR'S SELECTION": "সম্পাদকের বাছাই",

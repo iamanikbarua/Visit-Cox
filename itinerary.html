@@ -7,12 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self';" />
   <title>Cox's Bazar Trip Planner: 2, 3 and 5 Day Itineraries</title>
-  <meta name="description" content="Build a day-by-day Cox's Bazar itinerary for 2, 3 or 5 days. Pick your travel style, see a rough budget and save the plan as PDF or PNG." />
+  <meta name="description" content="Build a day-by-day Cox's Bazar itinerary for 2, 3 or 5 days. Pick your travel style, see a rough budget and save the plan as a PNG image." />
   <link rel="canonical" href="https://iamanikbarua.github.io/Visit-Cox/itinerary.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Visit Cox" />
   <meta property="og:title" content="Cox's Bazar Trip Planner: 2, 3 and 5 Day Itineraries" />
-  <meta property="og:description" content="Build a day-by-day Cox's Bazar itinerary for 2, 3 or 5 days. Pick your travel style, see a rough budget and save the plan as PDF or PNG." />
+  <meta property="og:description" content="Build a day-by-day Cox's Bazar itinerary for 2, 3 or 5 days. Pick your travel style, see a rough budget and save the plan as a PNG image." />
   <meta property="og:url" content="https://iamanikbarua.github.io/Visit-Cox/itinerary.html" />
   <meta property="og:image" content="https://iamanikbarua.github.io/Visit-Cox/assets/images/hero-coxs-bazar.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -41,7 +41,7 @@
         "applicationCategory": "TravelApplication",
         "operatingSystem": "Any",
         "isAccessibleForFree": true,
-        "description": "Builds a 2, 3 or 5 day Cox's Bazar itinerary with a rough budget estimate and PDF or PNG download."
+        "description": "Builds a 2, 3 or 5 day Cox's Bazar itinerary with a rough budget estimate and PNG image download."
       }
     ]
   }
@@ -61,7 +61,7 @@
 
   <!-- Visual Itinerary Export Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="css/tailwind.css?v=20261021" />
+  <link rel="stylesheet" href="css/tailwind.css?v=20261022" />
 </head>
 <body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
 
@@ -527,16 +527,12 @@
                   </span>
                 </div>
                 <div class="flex items-baseline gap-3">
-                  <h3 id="budget-display-total" class="font-serif text-3xl sm:text-4xl text-white font-normal">
-                    ৳১৮,৫০০ BDT
-                  </h3>
-                  <span id="budget-display-usd" class="text-sm font-mono text-stone-400">
-                    (~$154 USD)
-                  </span>
+                  <h3 id="budget-display-total" class="font-serif text-3xl sm:text-4xl text-white font-normal">—</h3>
+                  <span id="budget-display-usd" class="text-sm font-mono text-stone-400"></span>
                   <span class="vc-approx text-[11px] font-mono text-stone-500" data-pt="approx">estimate, as of Oct 2026</span>
                 </div>
                 <div class="flex items-center gap-3 mt-1 text-xs text-stone-400 font-mono">
-                  <span><span data-pt="per_person">Per person:</span> <strong id="budget-display-per-person" class="text-white font-bold">৳৯,২৫০</strong></span>
+                  <span><span data-pt="per_person">Per person:</span> <strong id="budget-display-per-person" class="text-white font-bold">—</strong></span>
                   <span>•</span>
                   <span><span data-pt="duration_label">Duration:</span> <strong id="budget-display-duration-tag" class="text-white font-bold">3 Days / 2 Nights</strong></span>
                   <span>•</span>
@@ -548,20 +544,21 @@
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
                 <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60">
                   <span class="text-[10px] text-stone-400 block uppercase" data-pt="cost_stay">🏨 Stay</span>
-                  <span id="item-cost-hotel" class="text-white font-bold text-sm">৳৭,০০০</span>
+                  <span id="item-cost-hotel" class="text-white font-bold text-sm">—</span>
                 </div>
                 <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60">
                   <span class="text-[10px] text-stone-400 block uppercase" data-pt="cost_food">🍽️ Dining</span>
-                  <span id="item-cost-food" class="text-white font-bold text-sm">৳৪,৮০০</span>
+                  <span id="item-cost-food" class="text-white font-bold text-sm">—</span>
                 </div>
                 <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60">
                   <span class="text-[10px] text-stone-400 block uppercase" data-pt="cost_transit">🛺 Transport</span>
-                  <span id="item-cost-transit" class="text-white font-bold text-sm">৳২,৪০০</span>
+                  <span id="item-cost-transit" class="text-white font-bold text-sm">—</span>
                 </div>
                 <div class="bg-stone-800/80 rounded-xl p-2.5 border border-stone-700/60">
                   <span class="text-[10px] text-stone-400 block uppercase" data-pt="cost_act">🎟️ Activities</span>
-                  <span id="item-cost-activities" class="text-white font-bold text-sm">৳২,৬০০</span>
+                  <span id="item-cost-activities" class="text-white font-bold text-sm">—</span>
                 </div>
+                <p class="col-span-2 sm:col-span-4 text-[11px] text-stone-400"><span data-pt="cost_buffer">+ 10% buffer, included in the total:</span> <strong id="item-cost-buffer" class="text-white">—</strong></p>
               </div>
 
               <!-- Right: Action Buttons -->
@@ -726,8 +723,8 @@
                 </div>
                 <div class="text-right">
                   <span class="text-[10px] font-mono uppercase text-stone-500 block" data-pt="pass_budget">Est. total budget</span>
-                  <span id="pass-budget" class="font-serif text-2xl text-white font-normal block">৳১৮,৫০০ BDT</span>
-                  <span id="pass-budget-usd" class="text-[11px] font-mono text-stone-400 block">(~$154 USD)</span>
+                  <span id="pass-budget" class="font-serif text-2xl text-white font-normal block">—</span>
+                  <span id="pass-budget-usd" class="text-[11px] font-mono text-stone-400 block"></span>
                 </div>
               </div>
 
@@ -783,7 +780,7 @@
                   My Coastal Journey
                 </h3>
                 <p id="phone-pass-meta" class="text-[11px] font-mono text-stone-300 mt-0.5">
-                  3 Days • 2 Guests • ৳18,500
+                  3 Days • 2 Guests
                 </p>
               </div>
 
@@ -931,9 +928,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="js/page-text.js?v=20261021"></script>
-  <script src="js/data.js?v=20261015b"></script>
-  <script src="js/planner.js?v=20261021"></script>
-  <script src="js/app.js?v=20261021"></script>
+  <script src="js/page-text.js?v=20261022"></script>
+  <script src="js/data.js?v=20261022"></script>
+  <script src="js/planner.js?v=20261022"></script>
+  <script src="js/app.js?v=20261022"></script>
 </body>
 </html>

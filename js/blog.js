@@ -36,7 +36,7 @@ const DEFAULT_BLOG_POSTS = [
 
 1. Bike / Scooter Rental vs. Chander Gari Jeep:
 • Solo or Couple Riders: You can rent a scooter or motorcycle near Kolatoli Circle (Dolphin Mor) or Sugandha Point for around 1,500 BDT for the full day (including fuel). Make sure to carry your original NID/Passport and a valid driving license.
-• Families & Groups (6–12 People): Reserve an iconic open-top Chander Gari ('Moon Car' 4x4 Jeep) for 1,500 to 2,000 BDT round-trip covering Himchari and Inani Beach.
+• Families & Groups (6–12 People): Reserve an iconic open-top Chander Gari ('Moon Car' 4x4 Jeep). The fare depends on how far you go (Himchari, Inani or a full day to Shamlapur): see the fare table on the Transport page for current estimates.
 
 2. Best Stop-by-Stop Route Plan:
 • Stop 1 — Darianagar & Parasailing Point (10 km): Catch morning ocean winds and try beach parasailing (1,500 BDT).
@@ -51,7 +51,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 ১. বাইক ভাড়া বনাম চান্দের গাড়ি:
 • একক বা কাপল ভ্রমণকারীদের জন্য: কলাতলী মোড় (ডলফিন সার্কেল) বা সুগন্ধা পয়েন্ট থেকে সারাদিনের জন্য জ্বালানিসহ প্রায় ১,৫০০ টাকায় বাইক বা স্কুটার ভাড়া পাওয়া যায়। সাথে অবশ্যই মূল এনআইডি এবং ড্রাইভিং লাইসেন্স রাখবেন।
-• পরিবার ও গ্রুপের জন্য: ১০-১২ জনের গ্রুপের জন্য ১,৫০০ থেকে ২,০০০ টাকায় খোলা ছাদের চান্দের গাড়ি রিজার্ভ করে হিমছড়ি ও ইনানী ঘুরে আসা সবচেয়ে সাশ্রয়ী ও আনন্দদায়ক।
+• পরিবার ও গ্রুপের জন্য: ১০-১২ জনের গ্রুপের জন্য খোলা ছাদের চান্দের গাড়ি রিজার্ভ করা সবচেয়ে সাশ্রয়ী ও আনন্দদায়ক। ভাড়া নির্ভর করে কতদূর যাবেন তার ওপর (হিমছড়ি, ইনানী বা সারা দিনে শামলাপুর): এখনকার আনুমানিক ভাড়া যাতায়াত পেজের ভাড়ার তালিকায় দেখুন।
 
 ২. সেরা স্টপওভার রুট:
 • প্রথম স্টপ — দরিয়ানগর প্যারাসেইলিং পয়েন্ট (১০ কিমি)

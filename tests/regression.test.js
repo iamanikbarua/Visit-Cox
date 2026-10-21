@@ -203,7 +203,64 @@ test('chatbot routing (CrtiQue_Oct21 H1/H2/H8): emergency words reach the emerge
   assert.ok(chips.length > 20);
   for (const q of [...chips, ...prompts, 'hello', 'bus from dhaka', 'hotel list']) {
     if (/surf|সার্ফ/i.test(q)) continue;
+    if (/activit|অ্যাক্টিভিটি/i.test(q)) continue; // the activity list names surfing; checked below
     assert.doesNotMatch(await ask(q), /Surfing|সার্ফিং/, `"${q}" got the surfing card`);
   }
   assert.match(await ask('praasad'), /Praasad Paradise/);
+});
+
+// CrtiQue_Oct21 round 2 (2026-10-22).
+test('chat: the "Top 10 activities list" chip lists every activity, not the greeting (en and bn)', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const names = ev('ACTIVITIES_DATA.map((a) => a.name)');
+  for (const [lang, q] of [['en', 'Top 10 activities list'], ['bn', '১০টি অ্যাক্টিভিটি তালিকা']]) {
+    ev(`AppState.lang = '${lang}'`);
+    const html = await ev(`fetchTravelAssistantReply(${JSON.stringify(q)})`);
+    assert.doesNotMatch(html, /👋/, `${lang}: got the greeting`);
+    for (const n of names) assert.ok(html.includes(ev('escapeHTML')(n[lang])), `${lang}: ${n.en} missing`);
+  }
+  ev(`AppState.lang = 'en'`);
+  assert.match(await ev(`fetchTravelAssistantReply('surfing activity')`), /Estimated Price/);
+});
+
+test('H6: chat jeep and CNG fares are the fare-table fares; the blog quotes no jeep price', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const range = (id) => ev(`(() => { const f = fareById('${id}'); return formatPriceRange(f.minBDT, f.maxBDT); })()`);
+  const him = await ev(`fetchTravelAssistantReply('How do I get to Himchari?')`);
+  assert.ok(him.includes(range('town-to-himchari')) && him.includes(range('town-to-himchari-jeep')), 'Himchari fares');
+  assert.ok(him.includes(ev(`formatPriceRange(PRICE_BOOK.activities.himchari_hill.costPerPerson, PRICE_BOOK.activities.himchari_hill.costPerPerson)`)), 'Himchari entry');
+  assert.ok((await ev(`fetchTravelAssistantReply('Shamlapur sunset point')`)).includes(range('town-to-shamlapur-jeep')), 'Shamlapur jeep');
+  assert.doesNotMatch(read('js/blog.js'), /1,500 to 2,000|১,৫০০ থেকে ২,০০০/);
+});
+
+test('H7/H13/H15: buffer pill makes the pills add up; 1 day has no hotel night; days=1e3 clamps to 14', () => {
+  const ev = planner('?days=3');
+  const b = ev('PlannerApp.getState().calculatedBudget');
+  const pill = (id) => Number(ev(`document.getElementById('${id}').textContent`).replace(/[^\d]/g, ''));
+  const sum = ['item-cost-hotel', 'item-cost-food', 'item-cost-transit', 'item-cost-activities', 'item-cost-buffer'].reduce((t, id) => t + pill(id), 0);
+  assert.strictEqual(sum, b.totalBDT);
+  assert.ok(pill('item-cost-buffer') > 0);
+  assert.strictEqual(planner('?days=1')('PlannerApp.getState().calculatedBudget.totalHotel'), 0);
+  assert.ok(planner('?days=2')('PlannerApp.getState().calculatedBudget.totalHotel') > 0);
+  assert.strictEqual(planner('?days=1e3')('PlannerApp.getState().days'), 14);
+  assert.doesNotMatch(read('itinerary.html'), /৳১৮,৫০০|18,500/, 'static fallback total');
+});
+
+test('H4: place photo credits name author and licence, point at Commons, and exist for files on disk', () => {
+  const ev = load(['data.js']);
+  const credits = ev('PHOTO_CREDITS');
+  const ids = new Set(ev('[...DESTINATIONS_DATA, ...HIDDEN_GEMS_DATA].map((d) => d.id)'));
+  for (const [img, c] of Object.entries(credits)) {
+    assert.ok(fs.existsSync(path.join(root, img)), img);
+    assert.ok(c.author && c.license && c.shows.en && c.shows.bn, img);
+    assert.match(c.url, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/, img);
+    for (const id of c.ofIds) assert.ok(ids.has(id), `${img}: unknown id ${id}`);
+  }
+  assert.strictEqual(ev('[...DESTINATIONS_DATA, ...HIDDEN_GEMS_DATA].filter((d) => d.sourceUrl || d.sourceName).length'), 0, 'old per-entry credits are back');
+});
+
+test('page copy promises no PDF export (the planner exports PNG only)', () => {
+  for (const f of ['index.html', 'itinerary.html', 'privacy.html', 'js/page-text.js']) assert.doesNotMatch(read(f), /PDF/, f);
 });

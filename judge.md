@@ -114,3 +114,24 @@ Owner approved the build step on 2026-10-21. Pages no longer run the Tailwind Pl
 ## Update 9 (2026-10-21): Bangla pass in headless Chrome
 
 All 11 pages at 375 and 1280 px with `visit_cox_lang=bn`, plus the chatbot (24 prompts incl. quick prompts), the planner on itinerary.html and the blog: no page errors, no horizontal overflow, no missing glyphs; only console message is the 404 page's `<base>` blocked by CSP on localhost. Fixed in 584b7a9: footer tagline and coordinates, itinerary footer, planner hotel name on the home quick-pick cards, cookie-settings label. Left for a native speaker: `aria-label`s and image `alt` texts are still English (e.g. "Go to hotel slide N", "Primary Navigation"); source lines ("Tourist Police, Cox's Bazar Region ...") and Latin names in brackets stay English by design; `js/data.js` / `js/app.js` Bangla was only spot-checked, not proofread line by line (no machine-translation errors seen in the chatbot answers).
+
+## Update 10 (2026-10-22): CrtiQue_Oct21 leftovers (H4, H6, H7, H13, H14, H15, PDF copy, activities chip)
+
+Fixed:
+- **H4 place photo credits.** The ✓ is gone. Credits now come from one table, `PHOTO_CREDITS` in `js/data.js` (keyed by image path), rendered by `photoCreditHTML` in `js/app.js` for spots and hidden gems. Each of the 9 credited files was matched to its Commons original by pixel correlation (1.00 for all 9, next best ≤ 0.82), and author and licence come from the Commons API (CC BY-SA 3.0/4.0, one CC0). An entry that reuses another place's photo now says so ("Photo shows Himchari."). The 38 old per-entry `sourceUrl`/`sourceName` lines are deleted: they named the wrong places, and 4 linked to Commons files that do not exist. `hero-coxs-bazar.jpg` matches no Commons file I checked, so entries using it show no credit (owner line in `todo.md`).
+- **H6 one fare source.** The chat's Inani, Himchari and Shamlapur cards read `fareById()` (`town-to-inani`, `town-to-himchari`, `town-to-himchari-jeep`, `town-to-shamlapur-jeep`). The Himchari entry fee comes from `PRICE_BOOK` (৳50, was ~৳120 in the chat). The "Himchari and Inani for 1,500-2,000" claim is gone. The blog's jeep sentence (en and bn) has no price now and sends readers to the fare table. Bike rental (৳1,500/day) is still a literal: there is no data entry to read it from.
+- **H7 hidden buffer.** A line under the four pills on `itinerary.html` shows "+ 10% buffer, included in the total: ৳1,650", computed as the total minus the four pills, so they add up (7,000 + 4,800 + 3,600 + 900 + 1,650 = 17,950 in headless Chrome, en and bn).
+- **H13 day trip.** `tripNights(days)` (`js/planner.js`) is `max(0, days - 1)`, used by the budget, the duration tag, the pass and the WhatsApp text. A 1-day trip has no hotel night.
+- **H14 static fallback.** The no-JS total, USD, per-person, pill and pass values on `itinerary.html` are "—" instead of ৳18,500 and friends.
+- **H15** `clampInt` uses `Math.trunc(parseFloat(v))`: `?days=1e3` clamps to 14, not 1.
+- **PDF claims.** The home planner card, the itinerary meta/OG/JSON-LD description and the privacy page (en and bn) no longer promise PDF export; the planner exports PNG (the print-to-PDF fallback text stays).
+- **"Top 10 activities list" chip.** The chat lists all 10 `ACTIVITIES_DATA` entries with estimated prices and a link to `activities.html` (checked after the single-activity match, so "surfing activity" still gets the surfing card).
+- `?v=20261022` on `css/tailwind.css`, `js/app.js`, `js/planner.js`, `js/data.js`, `js/blog.js`, `js/page-text.js` on every page.
+
+Not changed:
+- **H12 is wrong.** On Bangladesh Railway, Snigdha is the AC chair class (seat61: "air-conditioned reclining seats"; Rail Journal: "Snigdha Chair (air-conditioned)"). Dhaka Tribune's "AC chair ৳1,325" is the same class, so "AC Snigdha ~৳1,325" stays. The fare is still a 2023 figure without `source`/`asOf`.
+- H3 (hotel photos: owner deciding to replace or hide), the Long Beach and Sea Pearl phones (owner rechecking), host, domain and GA, legal text.
+
+Proof: `scripts/check.sh` passes all 7 steps (57 tests; 5 new in `tests/regression.test.js`: activities chip in en/bn, chat fares equal `fareById`, buffer sum plus day trip plus `1e3`, photo credit table, no PDF promise). Headless Chrome over CDP, 11 pages × EN/বাংলা × 375 and 1280 px: 0 page errors, no horizontal overflow; the only console message is the 404 page's `<base>` blocked by CSP on localhost. In the browser the chat chip returns the 10-activity list in both languages, the spots page shows 17 credits with 0 ✓, and the planner line items sum to the total.
+
+Bangla written this round is agent-written and needs the native-reader pass: the buffer line, the activity list header, the reused-photo note ("ছবিতে: …।"), the Himchari chat fare sentence, the blog jeep sentence, the `shows.bn` place names in `PHOTO_CREDITS`, and the PNG wording on the home and privacy pages.

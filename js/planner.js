@@ -4,6 +4,9 @@
  * PlannerApp.estimate(params) is the one budget formula; quickpick.js uses it too.
  */
 
+// A 1-day trip is a day trip: no hotel night (CrtiQue_Oct21 H13).
+const tripNights = days => Math.max(0, days - 1);
+
 // Escape catalog/URL text before it goes into innerHTML.
 function plannerEsc(str) {
   return String(str == null ? '' : str)
@@ -96,7 +99,7 @@ const PLANNER_TEXT = {
     per_person: "Per person:", duration_label: "Duration:", party_label: "Party:",
     days_nights: "{d} Days / {n} Nights", days_short: "{d} Days",
     guest_1: "1 Guest", guests_n: "{n} Guests",
-    cost_stay: "🏨 Stay", cost_food: "🍽️ Dining", cost_transit: "🛺 Transport", cost_act: "🎟️ Activities",
+    cost_stay: "🏨 Stay", cost_food: "🍽️ Dining", cost_transit: "🛺 Transport", cost_act: "🎟️ Activities", cost_buffer: "+ 10% buffer, included in the total:",
     btn_pass: "Itinerary pass", btn_phone: "📱 Wallpaper", whatsapp: "💬 WhatsApp",
     busy_pass: "Making pass...", busy_phone: "Making wallpaper...",
     export_no_lib: "The image export library did not load (offline or blocked).",
@@ -207,7 +210,7 @@ const PLANNER_TEXT = {
     per_person: "জনপ্রতি:", duration_label: "মেয়াদ:", party_label: "দল:",
     days_nights: "{d} দিন / {n} রাত", days_short: "{d} দিন",
     guest_1: "১ জন অতিথি", guests_n: "{n} জন অতিথি",
-    cost_stay: "🏨 থাকা", cost_food: "🍽️ খাবার", cost_transit: "🛺 যাতায়াত", cost_act: "🎟️ অ্যাক্টিভিটি",
+    cost_stay: "🏨 থাকা", cost_food: "🍽️ খাবার", cost_transit: "🛺 যাতায়াত", cost_act: "🎟️ অ্যাক্টিভিটি", cost_buffer: "+ ১০% বাড়তি, মোট খরচে ধরা আছে:",
     btn_pass: "ভ্রমণ পাস", btn_phone: "📱 ওয়ালপেপার", whatsapp: "💬 হোয়াটসঅ্যাপ",
     busy_pass: "পাস তৈরি হচ্ছে...", busy_phone: "ওয়ালপেপার তৈরি হচ্ছে...",
     export_no_lib: "ছবি তৈরির লাইব্রেরি লোড হয়নি (অফলাইন বা ব্লক করা)।",
@@ -541,7 +544,7 @@ function buildWhatsAppPlannerPayload(state) {
     ? String(SITE_CONTACT.whatsapp).replace(/\D/g, '') : '';
   if (!number) return null;
   const days = state.days || 3;
-  const nights = Math.max(1, days - 1);
+  const nights = tripNights(days);
   const adults = state.adults || 2;
   const children = state.kids || 0;
   const vibe = state.vibe || "relaxing";
@@ -605,7 +608,7 @@ const PlannerApp = (function () {
   const VIBES = ["relaxing", "adventure", "romantic", "family", "foodie", "culture"];
   // Same clamps for the steppers and for URL params; non-numbers fall back to the current value.
   function clampInt(v, min, max, fallback) {
-    const n = parseInt(v, 10);
+    const n = Math.trunc(parseFloat(v)); // parseFloat so "1e3" is 1000 (then clamped), not 1
     return Number.isFinite(n) ? Math.max(min, Math.min(max, n)) : fallback;
   }
   const clampDays = (v, fb) => clampInt(v, 1, 14, fb);
@@ -651,7 +654,7 @@ const PlannerApp = (function () {
   }
 
   function computeBudget(s) {
-    const nights = Math.max(1, s.days - 1);
+    const nights = tripNights(s.days);
     const rooms = calculateRooms(s.adults, s.kids);
     const totalGuests = s.adults + s.kids;
     const effectiveMealGuests = s.adults + (s.kids * 0.6);
@@ -1012,7 +1015,7 @@ const PlannerApp = (function () {
     if (ppDisp) ppDisp.textContent = `৳${plannerNum(budget.perPersonBDT)}`;
 
     const durationTag = document.getElementById("budget-display-duration-tag");
-    if (durationTag) durationTag.textContent = pt("days_nights", { d: state.days, n: Math.max(1, state.days - 1) });
+    if (durationTag) durationTag.textContent = pt("days_nights", { d: state.days, n: tripNights(state.days) });
 
     const partyTag = document.getElementById("budget-display-party-tag");
     if (partyTag) partyTag.textContent = guestsText();
@@ -1028,6 +1031,10 @@ const PlannerApp = (function () {
 
     const costAct = document.getElementById("item-cost-activities");
     if (costAct) costAct.textContent = `৳${plannerNum(budget.totalActivities)}`;
+
+    // The rest of the total: the 10% buffer plus rounding, so the four pills plus this add up to the total.
+    const costBuffer = document.getElementById("item-cost-buffer");
+    if (costBuffer) costBuffer.textContent = `৳${plannerNum(budget.totalBDT - budget.totalHotel - budget.totalFood - budget.totalTransit - budget.totalActivities)}`;
 
     if (hotel) {
       const hName = document.getElementById("rec-hotel-name");
@@ -1153,7 +1160,7 @@ const PlannerApp = (function () {
     if (titleEl) titleEl.textContent = state.travelerName || pt("trip_default");
 
     const datesEl = document.getElementById("pass-dates");
-    if (datesEl) datesEl.textContent = `${pt("days_nights", { d: state.days, n: Math.max(1, state.days - 1) })} • ${guestsText()} • ${pt("tier_badge", { t: pt("tier_" + state.budgetTier) })}`;
+    if (datesEl) datesEl.textContent = `${pt("days_nights", { d: state.days, n: tripNights(state.days) })} • ${guestsText()} • ${pt("tier_badge", { t: pt("tier_" + state.budgetTier) })}`;
 
     const budgetEl = document.getElementById("pass-budget");
     if (budgetEl) budgetEl.textContent = `৳${plannerNum(budget.totalBDT)} BDT`;

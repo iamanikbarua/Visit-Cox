@@ -67,6 +67,16 @@ function convertValueToUSD(bdtAmount) {
   return Math.round(raw).toLocaleString('en-US');
 }
 
+// Place photo credit from PHOTO_CREDITS (js/data.js): author, licence, and which place a reused photo shows.
+function photoCreditHTML(item, cls) {
+  const c = typeof PHOTO_CREDITS !== 'undefined' && PHOTO_CREDITS[item.image];
+  if (!c) return '<span></span>';
+  const en = AppState.lang === 'en';
+  const note = c.ofIds.includes(item.id) ? '' : (en ? `Photo shows ${c.shows.en}. ` : `ছবিতে: ${c.shows.bn}। `);
+  const text = `${note}${en ? 'Photo' : 'ছবি'}: ${c.author}, ${c.license} (Wikimedia Commons) ↗`;
+  return `<a href="${escapeHTML(c.url)}" target="_blank" rel="noopener noreferrer" class="${cls}">${escapeHTML(text)}</a>`;
+}
+
 function formatNumber(num, lang) {
   if (lang === 'bn') {
     return num.toLocaleString('bn-BD');
@@ -1140,13 +1150,7 @@ function renderDestinations() {
           </div>
 
           <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs text-slate-400">
-            ${
-              spot.sourceUrl
-                ? `<a href="${escapeHTML(spot.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-semibold">
-                    ✓ ${escapeHTML(spot.sourceName || 'Wikimedia Commons')} ↗
-                  </a>`
-                : '<span></span>'
-            }
+            ${photoCreditHTML(spot, 'text-sky-600 hover:underline font-semibold')}
             <a
               href="itinerary.html"
               class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-2xs shrink-0"
@@ -1204,13 +1208,7 @@ function renderDestinations() {
           </div>
         </div>
         <div class="px-5 pb-5 pt-2 border-t border-white/10 flex items-center justify-between gap-2">
-          ${
-            gem.sourceUrl
-              ? `<a href="${escapeHTML(gem.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-300 hover:text-amber-300 hover:underline font-semibold transition-colors">
-                  ✓ ${AppState.lang === 'en' ? 'Photo Source' : 'ছবির উৎস'} ↗
-                </a>`
-              : '<span></span>'
-          }
+          ${photoCreditHTML(gem, 'text-[11px] text-teal-300 hover:text-amber-300 hover:underline font-semibold transition-colors')}
           <div class="flex items-center gap-1.5">
           </div>
         </div>
@@ -2251,6 +2249,9 @@ async function fetchTravelAssistantReply(userText) {
   const q = raw.toLowerCase();
   const lang = AppState.lang;
   const fmtSingle = bdt => formatPriceRange(bdt, bdt);
+  // Fares come from TRANSPORT_DATA / PRICE_BOOK.fares, so the chat quotes what the fare table says (CrtiQue_Oct21 H6).
+  const fare = id => { const f = fareById(id); return formatPriceRange(f.minBDT, f.maxBDT); };
+  const himchariEntry = fmtSingle(PRICE_BOOK.activities.himchari_hill.costPerPerson);
 
   // Short natural thinking delay
   await new Promise(resolve => setTimeout(resolve, 320));
@@ -2404,8 +2405,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['inani', 'ইনানী', 'ইনানি', 'coral boulder', 'pathani patar'],
       title: { en: '🪨 Inani Coral Beach (32 km South)', bn: '🪨 ইনানী প্রবাল সৈকত (৩২ কিমি দক্ষিণে)' },
       body: {
-        en: `• <strong>Why Visit:</strong> Famous 18 km shoreline with ancient black coral boulders, calm tidal pools & crystal-clear water.<br/>• <strong>How to Go:</strong> 32 km south of town via scenic Marine Drive (~1 hour).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>Chander Gari (Open Jeep)</strong> costs <strong>${formatPriceRange(1500, 2000)}</strong> for a group, or rent a <strong>Bike/Scooter</strong> for <strong>${fmtSingle(1500)}/day</strong>.<br/>• <strong>Best Time:</strong> Morning during low tide (when coral rocks are exposed) or sunset.`,
-        bn: `• <strong>কেন যাবেন:</strong> প্রাচীন প্রবাল পাথর, স্বচ্ছ নীল জলরাশি ও শান্ত ঢেউয়ের জন্য বিখ্যাত ১৮ কিমি দীর্ঘ সৈকত।<br/>• <strong>দূরত্ব ও সময়:</strong> মেরিন ড্রাইভ ধরে শহর থেকে ৩২ কিমি দক্ষিণে (প্রায় ১ ঘণ্টা)।<br/>• <strong>যাতায়াত ভাড়া:</strong> গ্রুপের জন্য রিজার্ভ <strong>চান্দের গাড়ি</strong> ভাড়া <strong>${formatPriceRange(1500, 2000)}</strong> অথবা সারাদিনের জন্য <strong>বাইক ভাড়া ${fmtSingle(1500)}</strong>।`
+        en: `• <strong>Why Visit:</strong> Famous 18 km shoreline with ancient black coral boulders, calm tidal pools & crystal-clear water.<br/>• <strong>How to Go:</strong> 32 km south of town via scenic Marine Drive (~1 hour).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>Chander Gari (Open Jeep)</strong> costs <strong>${fare('town-to-inani')}</strong> for a group, or rent a <strong>Bike/Scooter</strong> for <strong>${fmtSingle(1500)}/day</strong>.<br/>• <strong>Best Time:</strong> Morning during low tide (when coral rocks are exposed) or sunset.`,
+        bn: `• <strong>কেন যাবেন:</strong> প্রাচীন প্রবাল পাথর, স্বচ্ছ নীল জলরাশি ও শান্ত ঢেউয়ের জন্য বিখ্যাত ১৮ কিমি দীর্ঘ সৈকত।<br/>• <strong>দূরত্ব ও সময়:</strong> মেরিন ড্রাইভ ধরে শহর থেকে ৩২ কিমি দক্ষিণে (প্রায় ১ ঘণ্টা)।<br/>• <strong>যাতায়াত ভাড়া:</strong> গ্রুপের জন্য রিজার্ভ <strong>চান্দের গাড়ি</strong> ভাড়া <strong>${fare('town-to-inani')}</strong> অথবা সারাদিনের জন্য <strong>বাইক ভাড়া ${fmtSingle(1500)}</strong>।`
       },
       chips: {
         en: ['Himchari waterfall info', 'Shamlapur sunset point', 'Marine Drive bike cost?'],
@@ -2417,8 +2418,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['himchari', 'himchori', 'হিমছড়ি', 'হিমছড়ি', 'waterfall', 'ঝর্ণা'],
       title: { en: '⛰️ Himchari National Park & Waterfalls (18 km South)', bn: '⛰️ হিমছড়ি জাতীয় উদ্যান ও ঝর্ণা (১৮ কিমি দক্ষিণে)' },
       body: {
-        en: `• <strong>Why Visit:</strong> 1,729-hectare evergreen reserve (Est. 1980) where green hills meet the Bay of Bengal, featuring coastal waterfalls and hilltop ocean viewpoints.<br/>• <strong>How to Go:</strong> 18 km south along Marine Drive (~30 mins from Kolatoli).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${formatPriceRange(300, 400)}</strong>, or combine with Inani by <strong>Chander Gari (${formatPriceRange(1500, 2000)})</strong>.<br/>• <strong>Entry & Trekking:</strong> ~${fmtSingle(120)} for park & hilltop stairs.`,
-        bn: `• <strong>কেন যাবেন:</strong> ১,৭২৯ হেক্টর সংরক্ষিত চিরহরিৎ বন, প্রাকৃতিক ঝর্ণা এবং পাহাড়ের চূড়া থেকে বঙ্গোপসাগরের প্যানোরামিক ভিউ।<br/>• <strong>দূরত্ব ও সময়:</strong> কলাতলী থেকে মেরিন ড্রাইভ ধরে ১৮ কিমি দক্ষিণে (প্রায় ৩০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${formatPriceRange(300, 400)}</strong>। পার্ক এন্ট্রি ও পাহাড় ট্রেকিং ~${fmtSingle(120)}।`
+        en: `• <strong>Why Visit:</strong> 1,729-hectare evergreen reserve (Est. 1980) where green hills meet the Bay of Bengal, featuring coastal waterfalls and hilltop ocean viewpoints.<br/>• <strong>How to Go:</strong> 18 km south along Marine Drive (~30 mins from Kolatoli).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${fare('town-to-himchari')}</strong>, or a reserved <strong>Chander Gari</strong> round trip for a group costs <strong>${fare('town-to-himchari-jeep')}</strong>.<br/>• <strong>Entry:</strong> ~${himchariEntry} per person.`,
+        bn: `• <strong>কেন যাবেন:</strong> ১,৭২৯ হেক্টর সংরক্ষিত চিরহরিৎ বন, প্রাকৃতিক ঝর্ণা এবং পাহাড়ের চূড়া থেকে বঙ্গোপসাগরের প্যানোরামিক ভিউ।<br/>• <strong>দূরত্ব ও সময়:</strong> কলাতলী থেকে মেরিন ড্রাইভ ধরে ১৮ কিমি দক্ষিণে (প্রায় ৩০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${fare('town-to-himchari')}</strong>, গ্রুপের জন্য রিজার্ভ চান্দের গাড়িতে আসা-যাওয়া <strong>${fare('town-to-himchari-jeep')}</strong>। প্রবেশ ফি জনপ্রতি ~${himchariEntry}।`
       },
       chips: {
         en: ['How to reach Inani?', 'Marine Drive bike cost?', 'Best time to visit?'],
@@ -2482,7 +2483,7 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['shamlapur', 'শামলাপুর', 'sampan', 'সাম্পান', 'baharchhara', 'বাহারছড়া', 'sunset point', 'সূর্যাস্ত'],
       title: { en: '🌅 Shamlapur Marine Drive Sunset & Sampan Boats', bn: '🌅 শামলাপুর বাহারছড়া সাম্পান ঘাট ও সূর্যাস্ত' },
       body: {
-        en: `• <strong>Why Visit:</strong> Located 45 km south at Baharchhara on Marine Drive—famous for traditional crescent-prowed wooden <strong>Sampan fishing boats</strong> lined up against golden-hour skies.<br/>• <strong>How to Go:</strong> Ride a rented <strong>Bike (${fmtSingle(1500)}/day)</strong> or <strong>Chander Gari (${formatPriceRange(1500, 2000)})</strong> past Inani Beach.<br/>• <strong>Safety Tip:</strong> Enjoy the 5:00 PM sunset and start your return ride toward Cox's Bazar town before dark.`,
+        en: `• <strong>Why Visit:</strong> Located 45 km south at Baharchhara on Marine Drive—famous for traditional crescent-prowed wooden <strong>Sampan fishing boats</strong> lined up against golden-hour skies.<br/>• <strong>How to Go:</strong> Ride a rented <strong>Bike (${fmtSingle(1500)}/day)</strong> or a full-day <strong>Chander Gari (${fare('town-to-shamlapur-jeep')})</strong> past Inani Beach.<br/>• <strong>Safety Tip:</strong> Enjoy the 5:00 PM sunset and start your return ride toward Cox's Bazar town before dark.`,
         bn: `• <strong>কেন যাবেন:</strong> মেরিন ড্রাইভের ৪৫ কিমি দক্ষিণে বাহারছড়ায় অবস্থিত—ঐতিহ্যবাহী কাঠের সাম্পান নৌকা ও গোধূলির সূর্যাস্তের ছবির জন্য অনন্য।<br/>• <strong>কীভাবে যাবেন:</strong> ইনানী পেরিয়ে বাইকে বা চান্দের গাড়িতে সহজেই যাওয়া যায়।`
       },
       chips: {
@@ -2680,7 +2681,8 @@ async function fetchTravelAssistantReply(userText) {
   // --------------------------------------------------------------------------
   // 4B. MATCH SPECIFIC ACTIVITY BY NAME OR CATEGORY (Surfing, Horse Riding, Kayaking, etc.)
   // --------------------------------------------------------------------------
-  const matchedActivity = (typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : []).find(act => {
+  const activities = typeof ACTIVITIES_DATA !== 'undefined' ? ACTIVITIES_DATA : [];
+  const matchedActivity = activities.find(act => {
     const en = act.name.en.toLowerCase();
     const bn = act.name.bn.toLowerCase();
     const actId = act.id.replace(/-/g, ' ');
@@ -2734,6 +2736,23 @@ async function fetchTravelAssistantReply(userText) {
         </div>
         ${buildChatFollowUpChips(['১০টি অ্যাক্টিভিটি তালিকা', 'সেরা সি-ফুড রেস্তোরাঁ', 'আমার ট্রিপ বাজেট কত?'])}
       `;
+  }
+
+  // 4C. ACTIVITY LIST, after the single-activity match so "surfing activity" still gets surfing.
+  if (activities.length && (q.includes('activit') || q.includes('things to do') || q.includes('অ্যাক্টিভিটি'))) {
+    const rows = activities.map(a => `• <strong>${escapeHTML(a.name[lang])}</strong>: ${formatPriceRange(a.priceBDT, a.priceMaxBDT)}`).join('<br/>');
+    return `
+      <div>🏄 <strong>${lang === 'en' ? `${activities.length} activities (estimated prices)` : `${formatNumber(activities.length, 'bn')}টি অ্যাক্টিভিটি (আনুমানিক খরচ)`}:</strong></div>
+      <div class="text-xs text-slate-700 space-y-1 mt-1">${rows}</div>
+      <div class="pt-2 flex gap-2">
+        <a href="activities.html" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition">
+          ${lang === 'en' ? 'All activities' : 'সব অ্যাক্টিভিটি'}
+        </a>
+      </div>
+      ${lang === 'en'
+        ? buildChatFollowUpChips(['Parasailing', 'Best seafood restaurants', 'My trip budget?'])
+        : buildChatFollowUpChips(['প্যারাসেইলিং', 'সেরা সি-ফুড রেস্তোরাঁ', 'আমার ট্রিপ বাজেট কত?'])}
+    `;
   }
 
   // --------------------------------------------------------------------------
