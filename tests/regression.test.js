@@ -186,3 +186,24 @@ test("Saint Martin's advice: ships from Cox's Bazar only, sourced, and the chatb
     assert.ok(html.includes(ev('escapeHTML')(faq.answer[lang])), `${lang} chatbot answer is not the FAQ text`);
   }
 });
+
+test('chatbot routing (CrtiQue_Oct21 H1/H2/H8): emergency words reach the emergency numbers, and only surfing questions get the surfing card', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const ask = async (q) => {
+    ev(`AppState.lang = '${/[ঀ-৿]/.test(q) ? 'bn' : 'en'}'`);
+    return ev(`fetchTravelAssistantReply(${JSON.stringify(q)})`);
+  };
+  for (const q of ['emergency', '999', 'tourist police', 'hospital', 'ambulance', 'lifeguard', 'জরুরি নম্বর', 'পুলিশ', 'জরুরি পুলিশ ও হাসপাতাল নাম্বার']) {
+    assert.match(await ask(q), /🚨/, `"${q}" did not get the emergency numbers`);
+  }
+  const src = fs.readFileSync(path.join(root, 'js/app.js'), 'utf8');
+  const chips = [...src.matchAll(/buildChatFollowUpChips\(\[([^\]]*)\]/g)].flatMap((m) => [...m[1].matchAll(/'([^']+)'/g)].map((c) => c[1]));
+  const prompts = ev('[...UI_TEXT.en.chatbot.quickPrompts, ...UI_TEXT.bn.chatbot.quickPrompts]');
+  assert.ok(chips.length > 20);
+  for (const q of [...chips, ...prompts, 'hello', 'bus from dhaka', 'hotel list']) {
+    if (/surf|সার্ফ/i.test(q)) continue;
+    assert.doesNotMatch(await ask(q), /Surfing|সার্ফিং/, `"${q}" got the surfing card`);
+  }
+  assert.match(await ask('praasad'), /Praasad Paradise/);
+});

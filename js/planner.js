@@ -1377,7 +1377,8 @@ const PlannerApp = (function () {
   }
 
   function safeName(fallback) {
-    return (state.travelerName || fallback).replace(/[^a-zA-Z0-9_-]/g, "_");
+    // Keep any script's letters and marks (a Bangla name was all underscores).
+    return (state.travelerName || fallback).replace(/[^\p{L}\p{M}\p{N}_-]/gu, "_");
   }
 
   function downloadVisualPass() {

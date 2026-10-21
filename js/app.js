@@ -119,28 +119,28 @@ function updateToggleButtons() {
   const isEN = AppState.lang === 'en';
   const isBDT = AppState.currency === 'BDT';
 
-  // Desktop & Mobile Language Toggle Pills (with whitespace-nowrap)
+  // Desktop & Mobile Language Toggle Pills. Headers and drawers are cream: charcoal/stone-600 keep >= 4.5:1.
   document.querySelectorAll('[data-lang-btn="en"]').forEach(el => {
     el.className = isEN
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-charcoal text-white transition whitespace-nowrap cursor-pointer'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-stone-600 hover:text-charcoal transition whitespace-nowrap cursor-pointer';
   });
   document.querySelectorAll('[data-lang-btn="bn"]').forEach(el => {
     el.className = !isEN
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-sm transition-all whitespace-nowrap'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-charcoal text-white transition whitespace-nowrap cursor-pointer'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-stone-600 hover:text-charcoal transition whitespace-nowrap cursor-pointer';
   });
 
   // Desktop & Mobile Currency Toggle Pills (with whitespace-nowrap)
   document.querySelectorAll('[data-curr-btn="BDT"]').forEach(el => {
     el.className = isBDT
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-teal-500 text-white shadow-sm transition-all whitespace-nowrap'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-charcoal text-white transition whitespace-nowrap cursor-pointer'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-stone-600 hover:text-charcoal transition whitespace-nowrap cursor-pointer';
   });
   document.querySelectorAll('[data-curr-btn="USD"]').forEach(el => {
     el.className = !isBDT
-      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-teal-500 text-white shadow-sm transition-all whitespace-nowrap'
-      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-sky-100 hover:text-white transition-all whitespace-nowrap';
+      ? 'px-2.5 py-1 rounded-full text-xs font-bold bg-charcoal text-white transition whitespace-nowrap cursor-pointer'
+      : 'px-2.5 py-1 rounded-full text-xs font-semibold text-stone-600 hover:text-charcoal transition whitespace-nowrap cursor-pointer';
   });
 }
 
@@ -2255,6 +2255,26 @@ async function fetchTravelAssistantReply(userText) {
   // Short natural thinking delay
   await new Promise(resolve => setTimeout(resolve, 320));
 
+  // Emergency first: later matchers catch substrings of these words ("পুলিশ" contains "পুল", pool).
+  if (
+    q.includes('police') ||
+    q.includes('emergency') ||
+    q.includes('hospital') ||
+    q.includes('doctor') ||
+    q.includes('ambulance') ||
+    q.includes('999') ||
+    q.includes('lifeguard') ||
+    q.includes('পুলিশ') ||
+    q.includes('হাসপাতাল') ||
+    q.includes('জরুরি') ||
+    q.includes('সাহায্য')
+  ) {
+    return `
+      <div>🚨 <strong>${lang === 'en' ? 'Emergency numbers:' : 'জরুরি নম্বর:'}</strong></div>
+      <ul class="space-y-1.5 text-xs">${emergencyContactsHTML(lang)}</ul>
+    `;
+  }
+
   // --------------------------------------------------------------------------
   // 1. CHECK FOR SPECIFIC HOTEL BY NAME FIRST (Never dump generic list if user asks about 1 hotel!)
   // --------------------------------------------------------------------------
@@ -2267,24 +2287,14 @@ async function fetchTravelAssistantReply(userText) {
     { id: 'best-western-bay-watch', keys: ['best western', 'bay watch', 'বেস্ট ওয়েস্টার্ন', 'বে ওয়াচ'] },
     { id: 'long-beach-hotel', keys: ['long beach', 'লং বিচ'] },
     { id: 'seagull-hotel', keys: ['seagull', 'সীগাল', 'সিগাল'] },
-    { id: 'neeshorgo-hotel-resort', keys: ['neeshorgo', 'নিসর্গ'] },
-    { id: 'grace-cox-smart-hotel', keys: ['grace cox', 'গ্রেস কক্স'] },
     { id: 'mermaid-eco-resort', keys: ['mermaid eco', 'মারমেইড ইকো'] },
-    { id: 'praasad-paradise-hotel', keys: ['praasad', 'প্রসাদ'] },
+    { id: 'praasad-paradise', keys: ['praasad', 'প্রসাদ'] },
     { id: 'hotel-sea-crown', keys: ['sea crown', 'seacrown', 'সী ক্রাউন', 'সি ক্রাউন'] },
     { id: 'hotel-kollol', keys: ['kollol', 'কল্লোল', 'kasundi', 'কাসুন্দি'] },
     { id: 'prime-park-hotel', keys: ['prime park', 'primepark', 'প্রাইম পার্ক'] },
     { id: 'white-orchid', keys: ['white orchid', 'whiteorchid', 'হোয়াইট অর্কিড'] },
     { id: 'hotel-shaibal', keys: ['shaibal', 'শৈবাল', 'parjatan', 'পর্যটন'] },
-    { id: 'windy-terrace-boutique', keys: ['windy terrace', 'উইন্ডি টেরেস'] },
-    { id: 'hotel-sea-palace', keys: ['sea palace', 'সী প্যালেস', 'সি প্যালেস'] },
-    { id: 'hotel-sigiriya', keys: ['sigiriya', 'সিগিরিয়া'] },
-    { id: 'hotel-upasham', keys: ['upasham', 'উপশম'] },
-    { id: 'deric-eco-village', keys: ['deric', 'ডেরিক'] },
-    { id: 'royal-beach-resort', keys: ['royal beach', 'রয়্যাল বিচ'] },
-    { id: 'coral-reef-hotel', keys: ['coral reef', 'কোরাল রিফ'] },
-    { id: 'inani-royal-resort', keys: ['inani royal', 'ইনানী রয়্যাল'] },
-    { id: 'nisanah-resort', keys: ['nisanah', 'নিসানাহ'] }
+    { id: 'windy-terrace-boutique', keys: ['windy terrace', 'উইন্ডি টেরেস'] }
   ];
 
   const matchedSpecificHotels = [];
@@ -2339,7 +2349,7 @@ async function fetchTravelAssistantReply(userText) {
     q.includes('সাশ্রয়ী');
 
   const sortedCheap = [...HOTELS_DATA].sort((a, b) => a.minBDT - b.minBDT).slice(0, 2);
-  if (isAskingCheap && (isAskingHotel || !q.includes('food')) && sortedCheap.length) {
+  if (isAskingCheap && (isAskingHotel || !(q.includes('food') || q.includes('trip'))) && sortedCheap.length) {
     const cheapest = sortedCheap[0];
     return lang === 'en'
       ? `
@@ -2485,12 +2495,12 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['eco park', 'ইকো পার্ক', 'darianagar', 'দরিয়ানগর', 'trekking', 'ট্রেকিং'],
       title: { en: '🌿 Kolatoli Eco Park & Darianagar Hill Trails', bn: '🌿 কলাতলী ইকো পার্ক ও দরিয়ানগর পাহাড়ি ট্রেইল' },
       body: {
-        en: `• <strong>Why Visit:</strong> Coastal hill ridges and caves rising directly behind South Kolatoli & Darianagar (5 km from town), offering panoramic views over the Bay of Bengal and nearby beach parasailing.<br/>• <strong>Stay Nearby:</strong> <strong>Nisanah Resort</strong> (${formatPriceRange(1500, 3000)}/night) is right next to Kolatoli Eco Park.`,
-        bn: `• <strong>কেন যাবেন:</strong> দক্ষিণ কলাতলী ও দরিয়ানগরের পাহাড়ি ট্রেইল থেকে বঙ্গোপসাগরের অপূর্ব দৃশ্য এবং প্যারাসেইলিং জোন।<br/>• <strong>পাশের রিসোর্ট:</strong> <strong>নিসানাহ রিসোর্ট</strong> (${formatPriceRange(1500, 3000)}/রাত)।`
+        en: `• <strong>Why Visit:</strong> Coastal hill ridges and caves rising directly behind South Kolatoli & Darianagar (5 km from town), offering panoramic views over the Bay of Bengal and nearby beach parasailing.`,
+        bn: `• <strong>কেন যাবেন:</strong> দক্ষিণ কলাতলী ও দরিয়ানগরের পাহাড়ি ট্রেইল থেকে বঙ্গোপসাগরের অপূর্ব দৃশ্য এবং প্যারাসেইলিং জোন।`
       },
       chips: {
-        en: ['Nisanah Resort details', 'Parasailing cost?', 'Himchari National Park'],
-        bn: ['নিসানাহ রিসোর্ট বিস্তারিত', 'প্যারাসেইলিং খরচ কত?', 'হিমছড়ি জাতীয় উদ্যান']
+        en: ['Parasailing cost?', 'Himchari National Park'],
+        bn: ['প্যারাসেইলিং খরচ কত?', 'হিমছড়ি জাতীয় উদ্যান']
       }
     },
     {
@@ -2674,7 +2684,7 @@ async function fetchTravelAssistantReply(userText) {
     const en = act.name.en.toLowerCase();
     const bn = act.name.bn.toLowerCase();
     const actId = act.id.replace(/-/g, ' ');
-    const actKeys = [en, actId];
+    const actKeys = [en, bn, actId];
     if (act.id === 'surfing-lesson') actKeys.push('surfing', 'surf', 'সার্ফিং', 'সার্ফ');
     if (act.id === 'beach-horse-riding') actKeys.push('horse', 'horse ride', 'ঘোড়া', 'ঘোড়ায় চড়া');
     if (act.id === 'parasailing-sky-gliding') actKeys.push('parasail', 'parasailing', 'প্যারাসেইলিং', 'প্যারাসেলিং');
@@ -2685,7 +2695,7 @@ async function fetchTravelAssistantReply(userText) {
     if (act.id === 'speedboat-thrill-cruise') actKeys.push('speedboat cruise', 'স্পিডবোট ক্রুজ');
     if (act.id === 'beach-camping-bonfire-bbq') actKeys.push('camping', 'bonfire', 'bbq', 'ক্যাম্পিং', 'বারবিকিউ', 'ক্যাম্পফায়ার');
     if (act.id === 'marine-drive-cycling-tour') actKeys.push('cycling', 'bicycle', 'সাইকেল', 'সাইক্লিং');
-    return actKeys.some(k => q.includes(k) || bn.includes(k));
+    return actKeys.some(k => q.includes(k));
   });
 
   if (matchedActivity) {
@@ -2910,24 +2920,6 @@ async function fetchTravelAssistantReply(userText) {
   // --------------------------------------------------------------------------
   // 8. EMERGENCY, POLICE, HOSPITAL, SAFETY, WEATHER & CURRENCY EXCHANGE
   // --------------------------------------------------------------------------
-  if (
-    q.includes('police') ||
-    q.includes('emergency') ||
-    q.includes('hospital') ||
-    q.includes('doctor') ||
-    q.includes('ambulance') ||
-    q.includes('999') ||
-    q.includes('lifeguard') ||
-    q.includes('পুলিশ') ||
-    q.includes('হাসপাতাল') ||
-    q.includes('জরুরি') ||
-    q.includes('সাহায্য')
-  ) {
-    return `
-      <div>🚨 <strong>${lang === 'en' ? 'Emergency numbers:' : 'জরুরি নম্বর:'}</strong></div>
-      <ul class="space-y-1.5 text-xs">${emergencyContactsHTML(lang)}</ul>
-    `;
-  }
 
   if (q.includes('safe') || q.includes('swim') || q.includes('flag') || q.includes('night') || q.includes('dress') || q.includes('etiquette') || q.includes('নিরাপদ') || q.includes('সাঁতার') || q.includes('পতাকা') || q.includes('পোশাক')) {
     return lang === 'en'
