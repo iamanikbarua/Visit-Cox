@@ -820,6 +820,7 @@
          ======================================================================== -->
     <div 
       id="driver-anti-scam-modal" 
+      role="dialog" aria-modal="true" aria-labelledby="driver-card-title"
       class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4"
       onclick="PlannerApp.closeDriverCard()"
     >
@@ -828,10 +829,10 @@
         onclick="event.stopPropagation()"
       >
         <div class="flex items-center justify-between pb-3 border-b border-stone-200">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+          <span id="driver-card-title" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
             🛺 ভাড়া কার্ড (আনুমানিক)
           </span>
-          <button type="button" onclick="PlannerApp.closeDriverCard()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-charcoal font-bold cursor-pointer">
+          <button type="button" onclick="PlannerApp.closeDriverCard()" aria-label="Close" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-charcoal font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -928,9 +929,10 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="js/dialog.js?v=20261022"></script>
   <script src="js/page-text.js?v=20261022"></script>
-  <script src="js/data.js?v=20261022"></script>
-  <script src="js/planner.js?v=20261022"></script>
-  <script src="js/app.js?v=20261022"></script>
+  <script src="js/data.js?v=20261022b"></script>
+  <script src="js/planner.js?v=20261022b"></script>
+  <script src="js/app.js?v=20261022b"></script>
 </body>
 </html>

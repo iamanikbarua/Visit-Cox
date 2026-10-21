@@ -1326,11 +1326,12 @@ const PlannerApp = (function () {
     document.getElementById("driver-card-fare").textContent = fareBDT;
     document.getElementById("driver-card-vehicle").textContent = vehicle;
     modal.classList.remove("hidden");
+    window.VCDialog?.opened(modal, closeDriverCard);
   }
 
   function closeDriverCard() {
     const modal = document.getElementById("driver-anti-scam-modal");
-    if (modal) modal.classList.add("hidden");
+    if (modal) { modal.classList.add("hidden"); window.VCDialog?.closed(modal); }
   }
 
   // IMAGE EXPORTERS

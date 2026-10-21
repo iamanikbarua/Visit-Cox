@@ -278,6 +278,7 @@
        ======================================================================== -->
   <div
     id="hotel-facilities-modal"
+    role="dialog" aria-modal="true" aria-labelledby="modal-hotel-name"
     class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
   >
     <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-stone-200 p-6 sm:p-8 space-y-6">
@@ -294,6 +295,7 @@
         <button
           type="button"
           onclick="closeHotelFacilitiesModal()"
+          aria-label="Close"
           class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:text-charcoal hover:border-charcoal transition cursor-pointer"
         >
           ✕
@@ -364,9 +366,10 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="js/dialog.js?v=20261022"></script>
   <script src="js/page-text.js?v=20261022"></script>
-  <script src="js/data.js?v=20261022"></script>
-  <script src="js/app.js?v=20261022"></script>
+  <script src="js/data.js?v=20261022b"></script>
+  <script src="js/app.js?v=20261022b"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       renderHotels();

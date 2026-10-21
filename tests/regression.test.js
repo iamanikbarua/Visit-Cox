@@ -256,6 +256,7 @@ test('H4: place photo credits name author and licence, point at Commons, and exi
     assert.ok(fs.existsSync(path.join(root, img)), img);
     assert.ok(c.author && c.license && c.shows.en && c.shows.bn, img);
     assert.match(c.url, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/, img);
+    assert.match(ev('LICENSE_URLS')[c.license] || '', /^https:\/\/creativecommons\.org\//, `${img}: no licence link`);
     for (const id of c.ofIds) assert.ok(ids.has(id), `${img}: unknown id ${id}`);
   }
   assert.strictEqual(ev('[...DESTINATIONS_DATA, ...HIDDEN_GEMS_DATA].filter((d) => d.sourceUrl || d.sourceName).length'), 0, 'old per-entry credits are back');
@@ -263,4 +264,42 @@ test('H4: place photo credits name author and licence, point at Commons, and exi
 
 test('page copy promises no PDF export (the planner exports PNG only)', () => {
   for (const f of ['index.html', 'itinerary.html', 'privacy.html', 'js/page-text.js']) assert.doesNotMatch(read(f), /PDF/, f);
+});
+
+test('hotel cards say Details, not Reserve (nothing is reserved)', () => {
+  const src = read('js/app.js');
+  assert.doesNotMatch(src, /Reserve ➔|বুকিং ➔/);
+  assert.match(src, /Details ➔/);
+});
+
+test('every <img> has width and height (no layout shift)', () => {
+  const missing = shipped.flatMap((f) => [...read(f).matchAll(/<img\b[^>]*>/g)].filter((m) => !/\bwidth=/.test(m[0]) || !/\bheight=/.test(m[0])).map(() => f));
+  assert.deepStrictEqual(missing, []);
+});
+
+test('modals are dialogs: role, aria-modal, a label that exists, and dialog.js loaded on their pages', () => {
+  for (const [page, id, label] of [['index.html', 'hotel-facilities-modal', 'modal-hotel-name'], ['hotels.html', 'hotel-facilities-modal', 'modal-hotel-name'], ['itinerary.html', 'driver-anti-scam-modal', 'driver-card-title']]) {
+    const html = read(page);
+    const tag = html.match(new RegExp(`<div[^>]*id="${id}"[^>]*>`))[0];
+    assert.match(tag, /role="dialog"/, `${page} ${id}`);
+    assert.match(tag, /aria-modal="true"/, `${page} ${id}`);
+    assert.match(tag, new RegExp(`aria-labelledby="${label}"`), `${page} ${id}`);
+    assert.match(html, new RegExp(`id="${label}"`), `${page}: label element`);
+    assert.match(html, /src="js\/dialog\.js/, `${page}: dialog.js`);
+  }
+  assert.match(read('blog.html'), /src="js\/dialog\.js/);
+  assert.match(read('js/blog.js'), /setAttribute\('role', 'dialog'\)[\s\S]*aria-labelledby', 'blog-reader-title'[\s\S]*/);
+  assert.match(read('js/blog.js'), /id="blog-reader-title"/);
+});
+
+test('chat Himchari distance is the spot data text, not a second figure', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const way = ev(`DESTINATIONS_DATA.find((d) => d.id === 'himchari-national-park').directions`);
+  for (const lang of ['en', 'bn']) {
+    ev(`AppState.lang = '${lang}'`);
+    const html = await ev(`fetchTravelAssistantReply(${JSON.stringify(lang === 'en' ? 'Himchari' : 'হিমছড়ি')})`);
+    assert.ok(html.includes(ev('escapeHTML')(way[lang])), lang);
+  }
+  assert.doesNotMatch(read('js/app.js'), /Himchari[^.<]{0,40}18 km|হিমছড়ি[^।<]{0,40}১৮ কিমি/);
 });

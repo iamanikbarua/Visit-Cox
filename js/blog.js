@@ -367,6 +367,7 @@ function renderBlogSection() {
             >
               <img
                 src="${post.image || 'assets/images/inani-beach.jpg'}"
+                width="600" height="400"
                 alt="${title.replace(/"/g, '&quot;')}"
                 loading="lazy"
                 decoding="async"
@@ -472,6 +473,7 @@ function openBlogReaderModal(postId) {
     <div class="relative h-64 sm:h-80 bg-slate-900 overflow-hidden">
       <img
         src="${post.image || 'assets/images/inani-beach.jpg'}"
+        width="600" height="400"
         alt="${title.replace(/"/g, '&quot;')}"
         loading="lazy"
         decoding="async"
@@ -482,6 +484,7 @@ function openBlogReaderModal(postId) {
       <button
         type="button"
         onclick="closeBlogReaderModal()"
+        aria-label="${lang === 'en' ? 'Close' : 'বন্ধ করুন'}"
         class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white font-extrabold flex items-center justify-center border border-white/20 transition cursor-pointer"
       >
         ✕
@@ -491,7 +494,7 @@ function openBlogReaderModal(postId) {
         <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950 mb-2.5">
           ${catMeta.icon} ${catMeta[lang]}
         </span>
-        <h2 class="font-display text-xl sm:text-3xl font-extrabold leading-snug text-white">
+        <h2 id="blog-reader-title" class="font-display text-xl sm:text-3xl font-extrabold leading-snug text-white">
           ${title}
         </h2>
         <div class="flex flex-wrap items-center gap-3 text-xs text-sky-200 mt-2">
@@ -537,6 +540,7 @@ function openBlogReaderModal(postId) {
 
   modal.classList.remove('hidden');
   modal.classList.add('flex');
+  window.VCDialog?.opened(modal, closeBlogReaderModal);
 }
 
 function closeBlogReaderModal() {
@@ -544,6 +548,7 @@ function closeBlogReaderModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    window.VCDialog?.closed(modal);
   }
 }
 
@@ -600,6 +605,9 @@ function ensureBlogModalsInDOM() {
   if (!document.getElementById('blog-reader-modal')) {
     const readerModal = document.createElement('div');
     readerModal.id = 'blog-reader-modal';
+    readerModal.setAttribute('role', 'dialog');
+    readerModal.setAttribute('aria-modal', 'true');
+    readerModal.setAttribute('aria-labelledby', 'blog-reader-title');
     readerModal.className =
       'hidden fixed inset-0 z-[85] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-3 sm:p-6';
     readerModal.innerHTML = `

@@ -73,8 +73,8 @@ function photoCreditHTML(item, cls) {
   if (!c) return '<span></span>';
   const en = AppState.lang === 'en';
   const note = c.ofIds.includes(item.id) ? '' : (en ? `Photo shows ${c.shows.en}. ` : `ছবিতে: ${c.shows.bn}। `);
-  const text = `${note}${en ? 'Photo' : 'ছবি'}: ${c.author}, ${c.license} (Wikimedia Commons) ↗`;
-  return `<a href="${escapeHTML(c.url)}" target="_blank" rel="noopener noreferrer" class="${cls}">${escapeHTML(text)}</a>`;
+  const link = (href, text) => `<a href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer" class="underline">${escapeHTML(text)}</a>`;
+  return `<span class="${cls}">${escapeHTML(`${note}${en ? 'Photo' : 'ছবি'}: `)}${link(c.url, c.author)}, ${link(LICENSE_URLS[c.license], c.license)} (Wikimedia Commons)</span>`;
 }
 
 function formatNumber(num, lang) {
@@ -653,6 +653,7 @@ function renderHotels() {
             <div class="relative overflow-hidden bg-stone-100">
               <img
                 src="${escapeHTML(hotel.image)}"
+                width="600" height="400"
                 alt="${escapeHTML(hotel.name[AppState.lang])}"
                 loading="lazy"
                 decoding="async"
@@ -693,7 +694,7 @@ function renderHotels() {
                 onclick="event.stopPropagation(); openHotelFacilitiesModal('${escapeHTML(hotel.id)}')"
                 class="px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-stone-300 hover:border-charcoal hover:bg-charcoal hover:text-white transition cursor-pointer"
               >
-                ${isBn ? 'বুকিং ➔' : 'Reserve ➔'}
+                ${isBn ? 'বিস্তারিত ➔' : 'Details ➔'}
               </button>
             </div>
           </div>
@@ -1030,6 +1031,7 @@ function openHotelFacilitiesModal(hotelId) {
   modal.classList.remove('hidden');
   modal.classList.add('flex');
   document.body.style.overflow = 'hidden';
+  window.VCDialog?.opened(modal, closeHotelFacilitiesModal);
 }
 
 function closeHotelFacilitiesModal() {
@@ -1038,6 +1040,7 @@ function closeHotelFacilitiesModal() {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.style.overflow = '';
+    window.VCDialog?.closed(modal);
   }
 }
 
@@ -1104,6 +1107,7 @@ function renderDestinations() {
         <div class="relative h-60 overflow-hidden bg-slate-200">
           <img
             src="${escapeHTML(spot.image)}"
+            width="600" height="400"
             alt="${escapeHTML(spot.name[AppState.lang])}"
             loading="lazy"
             decoding="async"
@@ -1190,6 +1194,7 @@ function renderDestinations() {
               ? `<div class="relative h-44 overflow-hidden bg-slate-950">
                   <img
                     src="${escapeHTML(gem.image)}"
+                    width="600" height="400"
                     alt="${escapeHTML(gem.name[AppState.lang])}"
                     loading="lazy"
                     decoding="async"
@@ -1596,6 +1601,7 @@ function renderActivities() {
           <div class="relative h-56 overflow-hidden bg-slate-900">
             <img
               src="${escapeHTML(act.image)}"
+              width="600" height="400"
               alt="${escapeHTML(nameText)}"
               loading="lazy"
               decoding="async"
@@ -2050,7 +2056,7 @@ function handleLiveHeroSearchInput() {
   const row = (href, img, color, label, title, right) => `
       <a href="${href}" class="w-full p-2.5 rounded-xl hover:bg-stone-50 flex items-center justify-between gap-3 transition text-left">
         <div class="flex items-center gap-2.5 min-w-0">
-          ${img ? `<img src="${escapeHTML(img)}" alt="" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />` : ''}
+          ${img ? `<img src="${escapeHTML(img)}" width="40" height="40" alt="" loading="lazy" decoding="async" class="w-10 h-10 rounded-lg object-cover shrink-0 bg-slate-200" />` : ''}
           <div class="min-w-0">
             <span class="block text-[10px] font-extrabold uppercase tracking-wider ${color}">${label}</span>
             <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate">${escapeHTML(title)}</span>
@@ -2208,7 +2214,7 @@ function buildSingleHotelChatCard(hotel, lang) {
   return `
     <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-1.5">
       <div class="flex items-center gap-2.5">
-        <img src="${escapeHTML(hotel.image)}" alt="${escapeHTML(hotel.name[lang])}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
+        <img src="${escapeHTML(hotel.image)}" width="48" height="48" alt="${escapeHTML(hotel.name[lang])}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-1">
             <strong class="text-slate-900 text-xs sm:text-sm truncate">${escapeHTML(hotel.name[lang])}</strong>
@@ -2252,6 +2258,8 @@ async function fetchTravelAssistantReply(userText) {
   // Fares come from TRANSPORT_DATA / PRICE_BOOK.fares, so the chat quotes what the fare table says (CrtiQue_Oct21 H6).
   const fare = id => { const f = fareById(id); return formatPriceRange(f.minBDT, f.maxBDT); };
   const himchariEntry = fmtSingle(PRICE_BOOK.activities.himchari_hill.costPerPerson);
+  // Distance and directions come from the spot data (Tourist Police figure), not a second number here.
+  const himchariWay = DESTINATIONS_DATA.find(d => d.id === 'himchari-national-park').directions;
 
   // Short natural thinking delay
   await new Promise(resolve => setTimeout(resolve, 320));
@@ -2416,10 +2424,10 @@ async function fetchTravelAssistantReply(userText) {
     {
       id: 'spot-himchari',
       keys: ['himchari', 'himchori', 'হিমছড়ি', 'হিমছড়ি', 'waterfall', 'ঝর্ণা'],
-      title: { en: '⛰️ Himchari National Park & Waterfalls (18 km South)', bn: '⛰️ হিমছড়ি জাতীয় উদ্যান ও ঝর্ণা (১৮ কিমি দক্ষিণে)' },
+      title: { en: '⛰️ Himchari National Park & Waterfalls', bn: '⛰️ হিমছড়ি জাতীয় উদ্যান ও ঝর্ণা' },
       body: {
-        en: `• <strong>Why Visit:</strong> 1,729-hectare evergreen reserve (Est. 1980) where green hills meet the Bay of Bengal, featuring coastal waterfalls and hilltop ocean viewpoints.<br/>• <strong>How to Go:</strong> 18 km south along Marine Drive (~30 mins from Kolatoli).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${fare('town-to-himchari')}</strong>, or a reserved <strong>Chander Gari</strong> round trip for a group costs <strong>${fare('town-to-himchari-jeep')}</strong>.<br/>• <strong>Entry:</strong> ~${himchariEntry} per person.`,
-        bn: `• <strong>কেন যাবেন:</strong> ১,৭২৯ হেক্টর সংরক্ষিত চিরহরিৎ বন, প্রাকৃতিক ঝর্ণা এবং পাহাড়ের চূড়া থেকে বঙ্গোপসাগরের প্যানোরামিক ভিউ।<br/>• <strong>দূরত্ব ও সময়:</strong> কলাতলী থেকে মেরিন ড্রাইভ ধরে ১৮ কিমি দক্ষিণে (প্রায় ৩০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${fare('town-to-himchari')}</strong>, গ্রুপের জন্য রিজার্ভ চান্দের গাড়িতে আসা-যাওয়া <strong>${fare('town-to-himchari-jeep')}</strong>। প্রবেশ ফি জনপ্রতি ~${himchariEntry}।`
+        en: `• <strong>Why Visit:</strong> 1,729-hectare evergreen reserve (Est. 1980) where green hills meet the Bay of Bengal, featuring coastal waterfalls and hilltop ocean viewpoints.<br/>• <strong>How to Go:</strong> ${escapeHTML(himchariWay.en)}<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${fare('town-to-himchari')}</strong>, or a reserved <strong>Chander Gari</strong> round trip for a group costs <strong>${fare('town-to-himchari-jeep')}</strong>.<br/>• <strong>Entry:</strong> ~${himchariEntry} per person.`,
+        bn: `• <strong>কেন যাবেন:</strong> ১,৭২৯ হেক্টর সংরক্ষিত চিরহরিৎ বন, প্রাকৃতিক ঝর্ণা এবং পাহাড়ের চূড়া থেকে বঙ্গোপসাগরের প্যানোরামিক ভিউ।<br/>• <strong>দূরত্ব ও সময়:</strong> ${escapeHTML(himchariWay.bn)}<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${fare('town-to-himchari')}</strong>, গ্রুপের জন্য রিজার্ভ চান্দের গাড়িতে আসা-যাওয়া <strong>${fare('town-to-himchari-jeep')}</strong>। প্রবেশ ফি জনপ্রতি ~${himchariEntry}।`
       },
       chips: {
         en: ['How to reach Inani?', 'Marine Drive bike cost?', 'Best time to visit?'],
@@ -2564,7 +2572,7 @@ async function fetchTravelAssistantReply(userText) {
       ? `
         <div>🚢 <strong>Teknaf, Patuartek & Saint Martin's Island Info:</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
-          • <strong>Marine Drive to Teknaf:</strong> The scenic Marine Drive runs a full <strong>80 km</strong> from Kolatoli through Himchari (18 km), Inani (32 km), Patuartek, and Shamlapur (45 km) down to Teknaf.<br/>
+          • <strong>Marine Drive to Teknaf:</strong> The scenic Marine Drive runs a full <strong>80 km</strong> from Kolatoli through Himchari, Inani (32 km), Patuartek, and Shamlapur (45 km) down to Teknaf.<br/>
           • <strong>Saint Martin's Island:</strong> ${stMartin}<br/>
           • <strong>Best Alternative Island Trips Year-Round:</strong> Visit <strong>Moheshkhali Island</strong> (about 30 min by speedboat from Kasturi Ghat, ${formatPriceRange(80, 100)}) or <strong>Sonadia Island</strong>!
         </div>
@@ -2573,7 +2581,7 @@ async function fetchTravelAssistantReply(userText) {
       : `
         <div>🚢 <strong>টেকনাফ, পাটুয়ারটেক ও সেন্টমার্টিন তথ্য:</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
-          • <strong>মেরিন ড্রাইভ (৮০ কিমি):</strong> কলাতলী থেকে হিমছড়ি (১৮ কিমি), ইনানী (৩২ কিমি), পাটুয়ারটেক ও শামলাপুর (৪৫ কিমি) হয়ে টেকনাফ পর্যন্ত ৮০ কিমি দীর্ঘ।<br/>
+          • <strong>মেরিন ড্রাইভ (৮০ কিমি):</strong> কলাতলী থেকে হিমছড়ি, ইনানী (৩২ কিমি), পাটুয়ারটেক ও শামলাপুর (৪৫ কিমি) হয়ে টেকনাফ পর্যন্ত ৮০ কিমি দীর্ঘ।<br/>
           • <strong>সেন্টমার্টিন দ্বীপ:</strong> ${stMartin}<br/>
           • <strong>দ্বীপ ভ্রমণ বিকল্প:</strong> কস্তুরাঘাট থেকে প্রায় ৩০ মিনিটে <strong>মহেশখালী দ্বীপ</strong> (${formatPriceRange(80, 100)}) এবং <strong>সোনাদিয়া দ্বীপ</strong> সহজেই ভ্রমণ করতে পারেন।
         </div>
@@ -2764,7 +2772,7 @@ async function fetchTravelAssistantReply(userText) {
         <div>🏍️ <strong>Riding by Bike on Marine Drive (80 km Ocean Highway):</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>Rental Cost:</strong> ~<strong>${fmtSingle(1500)}/day</strong> (includes fuel for the Kolatoli → Himchari → Inani → Shamlapur route).<br/>
-          • <strong>Best Route:</strong> Start from Kolatoli/Sugandha at 8:30 AM → stop at <strong>Himchari</strong> (18 km) → <strong>Inani Coral Beach</strong> (32 km) → lunch at <strong>Mermaid Cafe</strong> → sunset at <strong>Shamlapur Sampan Beach</strong> (45 km).<br/>
+          • <strong>Best Route:</strong> Start from Kolatoli/Sugandha at 8:30 AM → stop at <strong>Himchari</strong> → <strong>Inani Coral Beach</strong> (32 km) → lunch at <strong>Mermaid Cafe</strong> → sunset at <strong>Shamlapur Sampan Beach</strong> (45 km).<br/>
           • <strong>Requirements & Safety:</strong> Carry your original NID/Passport & driving license, wear a helmet, and finish your return ride before sunset.
         </div>
         <div class="pt-1">
@@ -2778,7 +2786,7 @@ async function fetchTravelAssistantReply(userText) {
         <div>🏍️ <strong>মেরিন ড্রাইভ রোডে বাইক / স্কুটার রাইডিং (৮০ কিমি):</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>ভাড়া ও খরচ:</strong> সারাদিনের বাইক ভাড়া জ্বালানিসহ প্রায় <strong>${fmtSingle(1500)}</strong>।<br/>
-          • <strong>সেরা রুট:</strong> কলাতলী → হিমছড়ি (১৮ কিমি) → ইনানী প্রবাল সৈকত (৩২ কিমি) → শামলাপুর সাম্পান ঘাট (৪৫ কিমি)।<br/>
+          • <strong>সেরা রুট:</strong> কলাতলী → হিমছড়ি → ইনানী প্রবাল সৈকত (৩২ কিমি) → শামলাপুর সাম্পান ঘাট (৪৫ কিমি)।<br/>
           • <strong>নিরাপত্তা টিপস:</strong> মূল এনআইডি ও ড্রাইভিং লাইসেন্স সাথে রাখুন এবং সূর্যাস্তের আগে শহরে ফিরে আসুন।
         </div>
         <div class="pt-1">
@@ -3290,11 +3298,4 @@ document.addEventListener('DOMContentLoaded', () => {
       handleUserChatSubmission();
     });
   }
-
-  // Keyboard shortcut: ESC closes open modal
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeHotelFacilitiesModal();
-    }
-  });
 });

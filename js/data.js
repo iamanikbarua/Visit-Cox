@@ -63,7 +63,6 @@ const UI_TEXT = {
       filterAll: "All Locations",
       perNight: "/ night",
       amenitiesLabel: "Key Amenities",
-      inquireBtn: "Check Availability",
       locationLabel: "Location",
       sourceLabel: "Hotel website",
       filterStarLabel: "Star Rating",
@@ -239,7 +238,6 @@ const UI_TEXT = {
       filterAll: "সব এলাকা",
       perNight: "/ প্রতি রাত",
       amenitiesLabel: "প্রধান সুবিধাসমূহ",
-      inquireBtn: "বুকিং তথ্য দেখুন",
       locationLabel: "অবস্থান",
       sourceLabel: "হোটেলের ওয়েবসাইট",
       filterStarLabel: "স্টার রেটিং",
@@ -1355,6 +1353,12 @@ let HOTELS_DATA = [
 // ofIds: the entries the photo really shows; any other entry using it says which place the photo shows.
 // hero-coxs-bazar.jpg has no known source, so entries using it show no credit (owner: todo.md, image permissions).
 const COMMONS = 'https://commons.wikimedia.org/wiki/File:';
+// CC BY-SA asks for a link to the licence next to the author and the source.
+const LICENSE_URLS = {
+  'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
+  'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
+  'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/'
+};
 const PHOTO_CREDITS = {
   'assets/images/himchari.jpg': { shows: { en: 'Himchari', bn: 'হিমছড়ি' }, ofIds: ['himchari-national-park'], author: 'Moheen Reeyad', license: 'CC BY-SA 4.0', url: COMMONS + 'Himchari,_Cox%27s_Bazar_(2Q7A1950).jpg' },
   'assets/images/inani-beach.jpg': { shows: { en: 'Inani Beach', bn: 'ইনানী সৈকত' }, ofIds: ['inani-beach'], author: 'Moheen Reeyad', license: 'CC BY-SA 4.0', url: COMMONS + 'Inani_Beach_(135005).jpg' },
