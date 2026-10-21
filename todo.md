@@ -27,7 +27,7 @@ Items agents cannot finish without the owner. Each line says what to do and why 
 - [ ] Verify the site in Google Search Console and submit `sitemap.xml`. Why you: needs your Google account.
 
 ## Approvals agents need (then agents can do the work)
-- [ ] Approve a build step to replace the Tailwind CDN (397 KB of JS compiling CSS on the phone) with a prebuilt CSS file of about 15-30 KB. Why you: adds Node tooling to a no-build repo.
+- [x] Build step to replace the Tailwind CDN: approved and done 2026-10-21. Pages load the prebuilt `css/tailwind.css` (48 KB, 9 KB gzipped) instead of the 407 KB CDN script; see `judge.md` Update 8.
 - [ ] Approve a GitHub Actions workflow that runs `scripts/check.sh` on every push. Why you: pushing workflow files needs a token with `workflow` scope.
 
 ## Agent follow-ups (no owner input needed)

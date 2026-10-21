@@ -5,7 +5,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self';" />
   <title>Privacy | Visit Cox</title>
   <meta name="description" content="How Visit Cox handles data: Google Analytics only with your consent, settings kept in your browser, no accounts, no payments, no selling of data." />
   <link rel="canonical" href="https://iamanikbarua.github.io/Visit-Cox/privacy.html" />
@@ -27,59 +27,10 @@
     rel="stylesheet"
   />
 
-  <!-- Tailwind CSS v3 CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (window.tailwind) tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['Newsreader', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
-            display: ['Newsreader', 'Georgia', 'serif'],
-            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
-          },
-          colors: {
-            alabaster: '#FAF9F6',
-            charcoal: '#111827',
-            stone: {
-              50: '#FAF9F6',
-              100: '#F5F3EF',
-              200: '#E7E5E0',
-              300: '#D5D1C8',
-              400: '#A39D92',
-              500: '#79746A',
-              600: '#5A564F',
-              700: '#3E3B36',
-              800: '#2A2824',
-              900: '#1A1916'
-            },
-            terracotta: {
-              50: '#FCF6F4',
-              100: '#F8ECE7',
-              500: '#D97757',
-              600: '#C86446',
-              700: '#A84C32'
-            },
-            sage: {
-              50: '#F4F7F5',
-              100: '#E5ECE7',
-              600: '#4A6B5D',
-              700: '#385347'
-            },
-            ocean: {
-              800: '#0E2A47',
-              900: '#0B2135',
-              950: '#061320'
-            }
-          }
-        }
-      }
-    };
-  </script>
 
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/tailwind.css" />
 </head>
 <body class="bg-[#FAF9F6] text-charcoal font-sans antialiased selection:bg-stone-300 selection:text-charcoal min-h-screen flex flex-col justify-between">
 
@@ -230,7 +181,7 @@
         <div>
           <h2 class="font-serif text-2xl text-charcoal mb-2">What stays in your browser</h2>
           <p>The site saves your language, currency and analytics choice in your browser's local storage. Trip planner inputs (dates, group size, budget choices) are worked out in your browser and are not sent to us; if you export a trip pass as an image or PDF, that file is saved on your device only.</p>
-          <p class="mt-2">Like most websites, pages load fonts from Google Fonts and scripts from public CDNs (Tailwind CSS, cdnjs). Those services see your IP address when your browser fetches the files. GitHub, which hosts the site, may keep server logs.</p>
+          <p class="mt-2">Like most websites, pages load fonts from Google Fonts and scripts from a public CDN (cdnjs). Those services see your IP address when your browser fetches the files. GitHub, which hosts the site, may keep server logs.</p>
         </div>
         <div>
           <h2 class="font-serif text-2xl text-charcoal mb-2">WhatsApp</h2>
@@ -273,7 +224,7 @@
         <div>
           <h2 class="font-serif text-2xl text-charcoal mb-2">যা আপনার ব্রাউজারেই থাকে</h2>
           <p>আপনার ভাষা, মুদ্রা ও অ্যানালিটিক্স সিদ্ধান্ত ব্রাউজারের local storage-এ সংরক্ষিত হয়। ট্রিপ প্ল্যানারের তথ্য (তারিখ, দলের সদস্য, বাজেট) আপনার ব্রাউজারেই হিসাব হয়, আমাদের কাছে পাঠানো হয় না; ট্রিপ পাস ছবি বা PDF হিসেবে নামালে ফাইলটি শুধু আপনার ডিভাইসে থাকে।</p>
-          <p class="mt-2">বেশিরভাগ ওয়েবসাইটের মতো এখানেও ফন্ট Google Fonts থেকে এবং স্ক্রিপ্ট পাবলিক CDN (Tailwind CSS, cdnjs) থেকে লোড হয়। ফাইল আনার সময় এই সেবাগুলো আপনার IP ঠিকানা দেখতে পায়। সাইটের হোস্ট GitHub সার্ভার লগ রাখতে পারে।</p>
+          <p class="mt-2">বেশিরভাগ ওয়েবসাইটের মতো এখানেও ফন্ট Google Fonts থেকে এবং স্ক্রিপ্ট পাবলিক CDN (cdnjs) থেকে লোড হয়। ফাইল আনার সময় এই সেবাগুলো আপনার IP ঠিকানা দেখতে পায়। সাইটের হোস্ট GitHub সার্ভার লগ রাখতে পারে।</p>
         </div>
         <div>
           <h2 class="font-serif text-2xl text-charcoal mb-2">WhatsApp</h2>

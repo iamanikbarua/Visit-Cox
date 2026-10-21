@@ -1,0 +1,11 @@
+{
+  "name": "visit-cox",
+  "private": true,
+  "description": "Static site; npm is only used to prebuild css/tailwind.css.",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -o css/tailwind.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}

@@ -5,7 +5,7 @@ An independent, bilingual (English / বাংলা) travel guide to Cox's Baza
 - Live site: https://iamanikbarua.github.io/Visit-Cox/
 - Repo: https://github.com/iamanikbarua/Visit-Cox
 
-It is a static site on GitHub Pages: plain HTML, plain JavaScript and Tailwind from a CDN. There is no server, database, login, admin panel or CMS, and no map.
+It is a static site on GitHub Pages: plain HTML, plain JavaScript and a prebuilt Tailwind CSS file (`css/tailwind.css`, committed; GitHub Pages runs no build). There is no server, database, login, admin panel or CMS, and no map.
 
 ## What works
 
@@ -32,6 +32,8 @@ It is a static site on GitHub Pages: plain HTML, plain JavaScript and Tailwind f
 | `js/blog.js` | Blog posts and blog rendering |
 | `js/consent.js` | Analytics consent banner; GA loads only after Accept |
 | `css/styles.css` | Theme and components |
+| `css/tailwind.css` | Generated Tailwind utilities. Do not edit; rebuild it |
+| `tailwind.config.js` | Tailwind theme (colors, fonts) and the files scanned for class names |
 | `tests/` | `node --test` suites that load the real `js/` files |
 | `0N-*/` | Notes for each agent role; nothing there ships |
 
@@ -41,11 +43,13 @@ To change content, edit `js/data.js` (or `js/blog.js` for posts) and commit. Kee
 
 ```sh
 python3 -m http.server 8000   # then open http://localhost:8000
-scripts/check.sh              # JS syntax, node tests, local links, JSON-LD, stray files, secrets
+npm ci                        # once: installs the Tailwind CLI (3.4.17, pinned)
+npm run build:css             # after adding or changing Tailwind classes in *.html or js/*.js
+scripts/check.sh              # JS syntax, node tests, local links, JSON-LD, stray files, secrets, CSS freshness
 node --test 'tests/*.test.js' # tests only
 ```
 
-`scripts/check.sh` must exit 0 before a commit. Needs Node 18+.
+`scripts/check.sh` must exit 0 before a commit. Needs Node 18+. Tailwind only sees class names written out in full in `*.html` and `js/*.js`; never build one from pieces (`'bg-' + color`). Commit `css/tailwind.css` with the change that needs it.
 
 ## Not yet decided (owner)
 

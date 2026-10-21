@@ -36,12 +36,19 @@ stray() {
 secrets() { # public repo: no credentials in shipped or tracked files
   ! git grep -nIiE "(password|passwd|secret|api[_-]?key|token)['\"]?[[:space:]]*[:=][[:space:]]*['\"][^'\"]{6,}" -- ':!scripts/check.sh' ':!*.md'
 }
+tailwind_css() { # css/tailwind.css must equal a fresh `npm run build:css` (run `npm ci` once first)
+  local old; old=$(mktemp) && cp css/tailwind.css "$old" || return 1
+  if ! npm run --silent build:css >/dev/null 2>&1; then echo "build failed: run npm ci"; rm -f "$old"; return 1; fi
+  if cmp -s "$old" css/tailwind.css; then rm -f "$old"; return 0; fi
+  echo "css/tailwind.css was stale: rebuilt it, commit the change"; rm -f "$old"; return 1
+}
 step "js syntax" syntax
 step "tests (node --test)" tests
 step "local links and assets" local_refs
 step "json-ld" json_ld
 step "stray files" stray
 step "no secrets" secrets
+step "tailwind css fresh" tailwind_css
 echo; printf '%-26s | %s\n' step result; printf '%-26s-+-%s\n' "--------------------------" ------
 fail=0
 for i in "${!names[@]}"; do printf '%-26s | %s\n' "${names[$i]}" "${results[$i]}"; [ "${results[$i]}" = pass ] || fail=1; done

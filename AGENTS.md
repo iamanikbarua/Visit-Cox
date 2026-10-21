@@ -1,6 +1,6 @@
 # Visit Cox — agent operating contract
 
-Static, bilingual (EN/বাংলা) travel guide for Cox's Bazar, served by GitHub Pages from `main` at https://iamanikbarua.github.io/Visit-Cox/. No build step, no server, no database. Every page is a root `*.html` file that loads plain scripts from `js/` (globals, no modules) and Tailwind from a CDN. There is no admin or CMS: content changes are edits to `js/data.js` in git.
+Static, bilingual (EN/বাংলা) travel guide for Cox's Bazar, served by GitHub Pages from `main` at https://iamanikbarua.github.io/Visit-Cox/. No build on the server, no server, no database. Every page is a root `*.html` file that loads plain scripts from `js/` (globals, no modules) and a prebuilt `css/tailwind.css`. The only build step runs on your machine: `npm ci` once, then `npm run build:css` after changing Tailwind classes, and commit the CSS. There is no admin or CMS: content changes are edits to `js/data.js` in git.
 
 Read before any change: this file, `CODING_STANDARDS.md`, the last section of `judge.md`, the newest `CrtiQue_*.md`, `todo.md`, and your role file (`0N-*/WORKSPACE.md`).
 
@@ -15,6 +15,7 @@ Read before any change: this file, `CODING_STANDARDS.md`, the last section of `j
 |---|---|---|
 | `*.html` | Pages: markup, meta, JSON-LD | frontend (meta/JSON-LD: seo) |
 | `css/styles.css` | Theme tokens, components | uiux |
+| `tailwind.config.js`, `css/tailwind.css` | Tailwind theme; generated utilities (never edit by hand, run `npm run build:css`) | uiux |
 | `js/data.js` | All content and prices (hotels, spots, fares, FAQs, UI strings, `EMERGENCY_CONTACTS`, `SITE_CONTACT`) | data (03) |
 | `js/app.js` | Language/currency state, search, chatbot, page renderers | frontend |
 | `js/planner.js`, `js/quickpick.js` | Planner engine (`PlannerApp.estimate` is the only budget formula), quick pick, PNG/PDF pass export, WhatsApp payload | frontend (payload: data) |
@@ -34,4 +35,4 @@ Read before any change: this file, `CODING_STANDARDS.md`, the last section of `j
 - **Git.** Agents do not commit or push. The main agent reviews diffs, runs the gate, commits and pushes.
 
 ## Checks
-`scripts/check.sh` runs: JS syntax for every `js/*.js`, `node --test tests/`, local link/asset references in `*.html`, stray files, and secret patterns. Exit 0 or the work is not done.
+`scripts/check.sh` runs: JS syntax for every `js/*.js`, `node --test tests/`, local link/asset references in `*.html`, JSON-LD, stray files, secret patterns, and that `css/tailwind.css` matches a fresh build (it rebuilds the file when stale; commit the result). Exit 0 or the work is not done.

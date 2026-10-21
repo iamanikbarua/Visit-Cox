@@ -7,7 +7,7 @@
 - Engines read prices from `js/data.js`; never copy a price table into a script. One formula per number (budget, rooms, vehicles, currency).
 - Untrusted text (URL params, localStorage, form input, admin edits) is rendered with `textContent` or an escape helper. Audit every `innerHTML` you touch.
 - Corrupt or missing localStorage must not break a page: `try/catch` around every parse, fall back to defaults.
-- Pages work if a CDN script (Tailwind, html2canvas, jsPDF, analytics) fails or is blocked: guard every use.
+- Pages work if a CDN script (html2canvas, jsPDF, analytics) fails or is blocked: guard every use.
 - Every page includes the same scripts in the same versions; cache-busting `?v=` is consistent across pages.
 - Bilingual: no hard-coded English in render code; strings come from `UI_TEXT`.
 - New logic gets a `node --test` case in `tests/` that loads the real file via `tests/helpers.js` (ask QA if the harness needs a stub).

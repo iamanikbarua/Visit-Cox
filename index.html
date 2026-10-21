@@ -5,7 +5,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self';" />
   <title>Visit Cox: Cox's Bazar Travel Guide and Trip Planner</title>
   <meta name="description" content="Plan a Cox's Bazar trip: hotels by zone, local food, beaches and sights, activities, transport fares, culture and a day-by-day trip planner." />
   <link rel="canonical" href="https://iamanikbarua.github.io/Visit-Cox/" />
@@ -27,57 +27,6 @@
     href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
   />
-
-  <!-- Tailwind CSS v3 CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (window.tailwind) tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['Newsreader', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'Inter', '"Hind Siliguri"', 'sans-serif'],
-            display: ['Newsreader', 'Georgia', 'serif'],
-            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
-          },
-          colors: {
-            alabaster: '#FAF9F6',
-            charcoal: '#111827',
-            stone: {
-              50: '#FAF9F6',
-              100: '#F5F3EF',
-              200: '#E7E5E0',
-              300: '#D5D1C8',
-              400: '#A39D92',
-              500: '#79746A',
-              600: '#5A564F',
-              700: '#3E3B36',
-              800: '#2A2824',
-              900: '#1A1916'
-            },
-            terracotta: {
-              50: '#FCF6F4',
-              100: '#F8ECE7',
-              500: '#D97757',
-              600: '#C86446',
-              700: '#A84C32'
-            },
-            sage: {
-              50: '#F4F7F5',
-              100: '#E5EDE7',
-              600: '#4A6B5D',
-              700: '#3D594D',
-              800: '#2E433A'
-            },
-            ocean: {
-              900: '#0E2338',
-              950: '#071624'
-            }
-          }
-        }
-      }
-    };
-  </script>
 
 
   <!-- Editorial Theme Stylesheet -->
@@ -164,6 +113,7 @@
     ]
   }
   </script>
+  <link rel="stylesheet" href="css/tailwind.css" />
 </head>
 
 <body class="bg-[#FAF9F6] text-[#111827] antialiased selection:bg-[#111827] selection:text-white flex flex-col min-h-screen">
