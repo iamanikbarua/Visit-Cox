@@ -91,7 +91,7 @@ const QuickTripPick = (function () {
                   ${plannerEsc(bn ? trip.titleBn : trip.title)}
                 </h4>
                 <p class="text-[11px] text-stone-500 font-mono mt-0.5">
-                  ${plannerEsc(trip.hotel ? trip.hotel.name : '')} • ${bn ? `${num(trip.days)} দিন • ${num(guests)} জন` : `${trip.days} days • ${guests} guests`}
+                  ${plannerEsc(trip.hotel ? pl(trip.hotel, 'name') : '')} • ${bn ? `${num(trip.days)} দিন • ${num(guests)} জন` : `${trip.days} days • ${guests} guests`}
                 </p>
               </div>
             </div>
