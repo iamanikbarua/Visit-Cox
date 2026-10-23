@@ -1949,7 +1949,8 @@ function renderFAQs() {
     const isOpen = AppState.activeFaqId === item.id;
     let answerText = escapeHTML(item.answer[AppState.lang]);
     if (item.id === 'faq-2' && AppState.currency === 'USD') {
-      const converted = formatPriceRange(80, 100);
+      const fare = fareById('town-to-moheshkhali');
+      const converted = formatPriceRange(fare.minBDT, fare.maxBDT);
       answerText += ` (${converted})`;
     }
 
@@ -2260,6 +2261,7 @@ async function fetchTravelAssistantReply(userText) {
   const himchariEntry = fmtSingle(PRICE_BOOK.activities.himchari_hill.costPerPerson);
   // Distance and directions come from the spot data (Tourist Police figure), not a second number here.
   const himchariWay = DESTINATIONS_DATA.find(d => d.id === 'himchari-national-park').directions;
+  const mohFare = fareById('town-to-moheshkhali');
 
   // Short natural thinking delay
   await new Promise(resolve => setTimeout(resolve, 320));
@@ -2441,8 +2443,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['moheshkhali', 'maheshkhali', 'মহেশখালী', 'adinath', 'আদিনাথ', 'kasturi ghat', 'কস্তুরাঘাট', '6 no ghat', '৬ নং ঘাট'],
       title: { en: '🏝️ Moheshkhali Island & Adinath Temple', bn: '🏝️ মহেশখালী দ্বীপ ও আদিনাথ মন্দির' },
       body: {
-        en: `• <strong>Why Visit:</strong> Bangladesh's only hilly island—home to the historic <strong>Adinath Shiva Temple</strong> atop Mainak Hill, Rakhine Buddhist pagodas, and coastal salt pans.<br/>• <strong>How to Go:</strong> Take a Tomtom to <strong>Kasturi Ghat (6 No. Jetty)</strong> in Cox's Bazar town, then board a <strong>speedboat (about 30 minutes)</strong> across the Bakkhali channel.<br/>• <strong>Exact Fare:</strong> Speedboat is <strong>${formatPriceRange(80, 100)} per passenger</strong> each way (life jackets provided). On the island, local Tomtoms/rickshaws to Adinath Hill cost ~${formatPriceRange(100, 150)}.`,
-        bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের একমাত্র পাহাড়ি দ্বীপ—মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক <strong>আদিনাথ মন্দির</strong>, বৌদ্ধ প্যাগোডা ও লবণের মাঠ।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের <strong>কস্তুরাঘাট (৬ নং ঘাট)</strong> থেকে স্পিডবোটে প্রায় ৩০ মিনিটে মহেশখালী যাওয়া যায়।<br/>• <strong>ভাড়া:</strong> স্পিডবোট ভাড়া জনপ্রতি <strong>${formatPriceRange(80, 100)}</strong>।`
+        en: `• <strong>Why Visit:</strong> Bangladesh's only hilly island—home to the historic <strong>Adinath Shiva Temple</strong> atop Mainak Hill, Rakhine Buddhist pagodas, and coastal salt pans.<br/>• <strong>How to Go:</strong> Take a Tomtom to <strong>Kasturi Ghat (6 No. Jetty)</strong> in Cox's Bazar town, then board a <strong>speedboat (about 30 minutes)</strong> across the Bakkhali channel.<br/>• <strong>Exact Fare:</strong> Speedboat is <strong>${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)} per passenger</strong> each way (life jackets provided). On the island, local Tomtoms/rickshaws to Adinath Hill cost ~${formatPriceRange(100, 150)}.`,
+        bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের একমাত্র পাহাড়ি দ্বীপ—মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক <strong>আদিনাথ মন্দির</strong>, বৌদ্ধ প্যাগোডা ও লবণের মাঠ।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের <strong>কস্তুরাঘাট (৬ নং ঘাট)</strong> থেকে স্পিডবোটে প্রায় ৩০ মিনিটে মহেশখালী যাওয়া যায়।<br/>• <strong>ভাড়া:</strong> স্পিডবোট ভাড়া জনপ্রতি <strong>${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)}</strong>।`
       },
       chips: {
         en: ['Sonadia Island camping', 'Ramu 100ft Buddha', 'Add to my itinerary'],
@@ -2576,7 +2578,7 @@ async function fetchTravelAssistantReply(userText) {
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>Marine Drive to Teknaf:</strong> The scenic Marine Drive runs a full <strong>80 km</strong> from Kolatoli through Himchari, Inani (32 km), Patuartek, and Shamlapur (45 km) down to Teknaf.<br/>
           • <strong>Saint Martin's Island:</strong> ${stMartin}<br/>
-          • <strong>Best Alternative Island Trips Year-Round:</strong> Visit <strong>Moheshkhali Island</strong> (about 30 min by speedboat from Kasturi Ghat, ${formatPriceRange(80, 100)}) or <strong>Sonadia Island</strong>!
+          • <strong>Best Alternative Island Trips Year-Round:</strong> Visit <strong>Moheshkhali Island</strong> (about 30 min by speedboat from Kasturi Ghat, ${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)}) or <strong>Sonadia Island</strong>!
         </div>
         ${buildChatFollowUpChips(['Moheshkhali Island info', 'Sonadia Island camping', '5-Day Bike & Island Plan'])}
       `
@@ -2585,7 +2587,7 @@ async function fetchTravelAssistantReply(userText) {
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>মেরিন ড্রাইভ (৮০ কিমি):</strong> কলাতলী থেকে হিমছড়ি, ইনানী (৩২ কিমি), পাটুয়ারটেক ও শামলাপুর (৪৫ কিমি) হয়ে টেকনাফ পর্যন্ত ৮০ কিমি দীর্ঘ।<br/>
           • <strong>সেন্টমার্টিন দ্বীপ:</strong> ${stMartin}<br/>
-          • <strong>দ্বীপ ভ্রমণ বিকল্প:</strong> কস্তুরাঘাট থেকে প্রায় ৩০ মিনিটে <strong>মহেশখালী দ্বীপ</strong> (${formatPriceRange(80, 100)}) এবং <strong>সোনাদিয়া দ্বীপ</strong> সহজেই ভ্রমণ করতে পারেন।
+          • <strong>দ্বীপ ভ্রমণ বিকল্প:</strong> কস্তুরাঘাট থেকে প্রায় ৩০ মিনিটে <strong>মহেশখালী দ্বীপ</strong> (${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)}) এবং <strong>সোনাদিয়া দ্বীপ</strong> সহজেই ভ্রমণ করতে পারেন।
         </div>
         ${buildChatFollowUpChips(['মহেশখালী দ্বীপ ভ্রমণ', 'সোনাদিয়া দ্বীপ ক্যাম্পিং', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}
       `;

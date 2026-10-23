@@ -597,7 +597,7 @@ const PlannerApp = (function () {
       selectedActivities: ["marine_drive", "inani_coral", "himchari_hill"],
       hotelIndex: 0,
       diningIndex: 0,
-      exchangeRate: 120,
+      exchangeRate: CONFIG.exchangeRateUSD,
       seasonMultiplier: 1.0
     };
   }

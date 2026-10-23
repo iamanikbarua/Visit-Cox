@@ -315,3 +315,14 @@ test('Himchari has one distance: no unsourced "18 km" next to it (CrtiQue_Oct24 
     assert.doesNotMatch(src, /(Himchari|হিমছড়ি)[^\n]{0,60}(18 km|১৮ কিমি)/, f);
   }
 });
+
+test('Moheshkhali fare and the USD rate come from data.js, not literals (CrtiQue_Oct24 N9/N11)', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  ev(`Object.assign(fareById('town-to-moheshkhali'), { minBDT: 77, maxBDT: 111 })`); // change the data; the chat must follow
+  const range = ev(`formatPriceRange(77, 111)`);
+  assert.ok((await ev(`fetchTravelAssistantReply('Moheshkhali speedboat')`)).includes(range), 'chat Moheshkhali card');
+  assert.ok((await ev(`fetchTravelAssistantReply('saint martin')`)).includes(range), 'chat Saint Martin alternative');
+  assert.doesNotMatch(read('js/app.js'), /formatPriceRange\(80, 100\)/);
+  assert.match(read('js/planner.js'), /exchangeRate: CONFIG\.exchangeRateUSD/);
+});
