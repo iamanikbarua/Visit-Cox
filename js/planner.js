@@ -405,24 +405,25 @@ const PLANNER_CATALOG = {
     },
     {
       id: "kolatoli_guesthouse",
-      name: "Hotel Coastal Peace / Blue Ocean",
+      // Not one of the 16 listed hotels: a generic budget slot, no brand (CrtiQue_Oct24 N2).
+      name: "Budget guest house (Kolatoli)",
       tier: "backpacker",
       hub: "kolatoli",
       stars: 2,
-      location: "Kolatoli Dolphin Mor 2nd Line",
-      why: "Clean, reliable budget AC guest house within 4 minutes walking distance to the sea.",
-      bn: {"name": "হোটেল কোস্টাল পিস / ব্লু ওশান", "location": "কলাতলী ডলফিন মোড়, দ্বিতীয় লাইন", "why": "সমুদ্র থেকে হেঁটে ৪ মিনিটের মধ্যে পরিচ্ছন্ন, নির্ভরযোগ্য সাশ্রয়ী এসি গেস্ট হাউস।"},
-      amenities: ["Clean Attached Bath", "AC Available", "24hr Power Backup"]
+      location: "Kolatoli, near Dolphin Mor",
+      why: "Not a listed hotel: pick any budget AC guest house a few lanes from the beach, and check the room and price before you pay.",
+      bn: {"name": "বাজেট গেস্ট হাউস (কলাতলী)", "location": "কলাতলী, ডলফিন মোড়ের কাছে", "why": "তালিকার কোনো হোটেল নয়: সৈকত থেকে কয়েক গলি দূরের যেকোনো সাশ্রয়ী এসি গেস্ট হাউস বেছে নিন, টাকা দেওয়ার আগে রুম ও ভাড়া দেখে নিন।"},
+      amenities: ["Attached Bath", "AC (ask)"]
     },
     {
       id: "laboni_guest",
-      name: "Hotel Laboni Vista",
+      name: "Budget guest house (Laboni)",
       tier: "backpacker",
       hub: "laboni",
       stars: 2,
-      location: "Old Laboni Point Road",
-      why: "Affordable base right next to the historic beach and Rakhine weaving shops.",
-      bn: {"name": "হোটেল লাবণী ভিস্তা", "location": "পুরোনো লাবণী পয়েন্ট রোড", "why": "ঐতিহাসিক সৈকত ও রাখাইন তাঁতের দোকানের ঠিক পাশে সাশ্রয়ী থাকার জায়গা।"},
+      location: "Near Laboni Point",
+      why: "Not a listed hotel: pick any budget guest house near Laboni beach and the markets, and check the room and price before you pay.",
+      bn: {"name": "বাজেট গেস্ট হাউস (লাবণী)", "location": "লাবণী পয়েন্টের কাছে", "why": "তালিকার কোনো হোটেল নয়: লাবণী সৈকত ও মার্কেটের কাছের যেকোনো সাশ্রয়ী গেস্ট হাউস বেছে নিন, টাকা দেওয়ার আগে রুম ও ভাড়া দেখে নিন।"},
       amenities: ["Attached Bath", "Walking Distance to Beach & Markets"]
     }
   ],

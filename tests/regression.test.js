@@ -326,3 +326,13 @@ test('Moheshkhali fare and the USD rate come from data.js, not literals (CrtiQue
   assert.doesNotMatch(read('js/app.js'), /formatPriceRange\(80, 100\)/);
   assert.match(read('js/planner.js'), /exchangeRate: CONFIG\.exchangeRateUSD/);
 });
+
+test('planner budget tier names no unlisted hotel brand (CrtiQue_Oct24 N2)', () => {
+  const ev = load(['data.js', 'planner.js']);
+  const hotels = ev('PLANNER_CATALOG.hotels.filter(h => h.tier === "backpacker").map(h => [h.name, h.bn.name])');
+  assert.ok(hotels.length >= 2);
+  for (const [en, bn] of hotels) {
+    assert.match(en, /^Budget guest house/);
+    assert.match(bn, /^বাজেট গেস্ট হাউস/);
+  }
+});
