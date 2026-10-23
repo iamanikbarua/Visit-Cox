@@ -40,7 +40,7 @@ const DEFAULT_BLOG_POSTS = [
 
 2. Best Stop-by-Stop Route Plan:
 • Stop 1 — Darianagar & Parasailing Point (10 km): Catch morning ocean winds and try beach parasailing (1,500 BDT).
-• Stop 2 — Himchari National Park (18 km): Climb the hilltop stairs for a panoramic view of the curved coastline and see the natural coastal waterfall.
+• Stop 2 — Himchari National Park: Climb the hilltop stairs for a panoramic view of the curved coastline and see the natural coastal waterfall.
 • Stop 3 — Inani Coral Beach (32 km): Walk among the ancient black coral boulders during low tide and enjoy calm, clear waters.
 • Stop 4 — Mermaid Beach Cafe (Pechardwip): Great spot for fresh grilled seafood platters and coconut water by the waves.
 • Stop 5 — Shamlapur Baharchhara Sunset Point (45 km): Watch traditional wooden crescent-shaped Sampan fishing boats lined up against the golden-hour sunset.
@@ -55,7 +55,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 
 ২. সেরা স্টপওভার রুট:
 • প্রথম স্টপ — দরিয়ানগর প্যারাসেইলিং পয়েন্ট (১০ কিমি)
-• দ্বিতীয় স্টপ — হিমছড়ি জাতীয় উদ্যান ও পাহাড় চূড়া (১৮ কিমি)
+• দ্বিতীয় স্টপ — হিমছড়ি জাতীয় উদ্যান ও পাহাড় চূড়া
 • তৃতীয় স্টপ — ইনানী প্রবাল পাথরের সৈকত (৩২ কিমি)
 • চতুর্থ স্টপ — শামলাপুর বাহারছড়া সাম্পান ঘাট ও সূর্যাস্ত (৪৫ কিমি)
 

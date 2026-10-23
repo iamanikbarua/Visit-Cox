@@ -308,3 +308,10 @@ test('chat Himchari distance is the spot data text, not a second figure', async 
   }
   assert.doesNotMatch(read('js/app.js'), /Himchari[^.<]{0,40}18 km|হিমছড়ি[^।<]{0,40}১৮ কিমি/);
 });
+
+test('Himchari has one distance: no unsourced "18 km" next to it (CrtiQue_Oct24 N6)', () => {
+  for (const f of ['js/data.js', 'js/blog.js', 'js/page-text.js', 'js/app.js', 'transport.html']) {
+    const src = fs.readFileSync(path.join(root, f), 'utf8');
+    assert.doesNotMatch(src, /(Himchari|হিমছড়ি)[^\n]{0,60}(18 km|১৮ কিমি)/, f);
+  }
+});

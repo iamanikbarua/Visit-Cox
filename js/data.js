@@ -2206,8 +2206,8 @@ let ACTIVITIES_DATA = [
       bn: "হাফ-ডে বাইসাইকেল ভাড়া"
     },
     location: {
-      en: "Kolatoli to Himchari National Park (18 km stretch)",
-      bn: "কলাতলী থেকে হিমছড়ি জাতীয় উদ্যান (১৮ কিমি)"
+      en: "Kolatoli to Himchari National Park",
+      bn: "কলাতলী থেকে হিমছড়ি জাতীয় উদ্যান"
     },
     duration: {
       en: "2 – 4 Hours",

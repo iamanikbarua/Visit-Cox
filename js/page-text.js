@@ -366,7 +366,7 @@ const PAGE_TEXT_BN = {
   "Cox's Bazar Airport (CXB)": "কক্সবাজার বিমানবন্দর (CXB)",
   "Iconic Oyster Railway Station": "ঝিনুক আকৃতির রেলস্টেশন",
   "Destination Spot": "গন্তব্য",
-  "Himchari National Park (18 km)": "হিমছড়ি জাতীয় উদ্যান (১৮ কিমি)",
+  "Himchari National Park": "হিমছড়ি জাতীয় উদ্যান",
   "Inani Coral Beach (32 km)": "ইনানী প্রবাল সৈকত (৩২ কিমি)",
   "Shamlapur Fishing Village (45 km)": "শামলাপুর জেলেপাড়া (৪৫ কিমি)",
   "Kasturi Ghat (for Moheshkhali Boat)": "কস্তুরী ঘাট (মহেশখালীর নৌকা)",
