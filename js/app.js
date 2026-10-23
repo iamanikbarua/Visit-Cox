@@ -2388,6 +2388,18 @@ async function fetchTravelAssistantReply(userText) {
       `;
   }
 
+  // Hotels in a named area, before the spot cards catch the area name ("Hotels near Laboni Beach", CrtiQue_Oct24 N5).
+  const areaWords = { laboni: ['laboni', 'লাবণী'], kolatoli: ['kolatoli', 'কলাতলী'], sugandha: ['sugandha', 'সুগন্ধা'], inani: ['inani', 'ইনানী'] };
+  const area = isAskingHotel && Object.keys(areaWords).find(k => areaWords[k].some(w => q.includes(w)));
+  const areaHotels = area ? HOTELS_DATA.filter(h => h.locationKey === area).slice(0, 3) : [];
+  if (areaHotels.length) {
+    return `
+        <div>📍 <strong>${lang === 'en' ? 'Listed hotels in this area:' : 'এই এলাকার তালিকাভুক্ত হোটেল:'}</strong></div>
+        <div class="space-y-2">${areaHotels.map(h => buildSingleHotelChatCard(h, lang)).join('')}</div>
+        ${buildChatFollowUpChips(lang === 'en' ? ['Cheapest hotel?', 'My trip budget?'] : ['সবচেয়ে সস্তা হোটেল কোনটি?', 'আমার ট্রিপ বাজেট কত?'])}
+      `;
+  }
+
   if (
     isAskingHotel &&
     (q.includes('beachfront') ||
@@ -2544,7 +2556,9 @@ async function fetchTravelAssistantReply(userText) {
     }
   ];
 
-  const matchedSpots = spotKnowledge.filter(sp => sp.keys.some(k => q.includes(k)));
+  // A food question that names a beach ("Sugandha live fish fry?") goes to the food answers, not the beach card (CrtiQue_Oct24 N5).
+  const isFoodQ = /fish fry|seafood|food|bbq|restaurant|খাবার|ফিশ ফ্রাই|মাছ ভাজা|বারবিকিউ/.test(q);
+  const matchedSpots = spotKnowledge.filter(sp => sp.keys.some(k => q.includes(k)) && !(isFoodQ && sp.id === 'spot-laboni-sugandha'));
   // sp.body is HTML written in this file (no user input), so it is inserted as-is; titles stay escaped.
   if (matchedSpots.length > 0) {
     const blocks = matchedSpots

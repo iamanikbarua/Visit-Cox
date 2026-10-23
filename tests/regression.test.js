@@ -356,3 +356,20 @@ test('home hero hotel count equals HOTELS_DATA and has Bangla digits; cards say 
   assert.ok(ev(`PAGE_TEXT_BN[${JSON.stringify(n)}]`), `no Bangla for "${n}"`);
   assert.doesNotMatch(read('js/app.js'), /'শুরু' : 'From'/);
 });
+
+test('chat chips reach the answer they name (CrtiQue_Oct24 N5)', async () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  ev('setTimeout = (f) => f()');
+  const ask = async (q) => {
+    ev(`AppState.lang = '${/[ঀ-৿]/.test(q) ? 'bn' : 'en'}'`);
+    return ev(`fetchTravelAssistantReply(${JSON.stringify(q)})`);
+  };
+  const expect = {
+    'Hotels near Laboni Beach': /Listed hotels in this area[\s\S]*Kollol/,
+    'লাবণী বিচের হোটেল': /এই এলাকার তালিকাভুক্ত হোটেল/,
+    'Sugandha live fish fry?': /Best Places to Eat/,
+    'Inani & Himchari route': /Inani Coral Beach[\s\S]*Himchari National Park/,
+    'Laboni Beach info': /Laboni, Sugandha/,
+  };
+  for (const [q, re] of Object.entries(expect)) assert.match(await ask(q), re, q);
+});
