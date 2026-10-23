@@ -676,6 +676,7 @@ function renderHotels() {
               <p class="text-xs text-stone-500 mt-2 line-clamp-2 leading-relaxed font-normal">
                 ${escapeHTML(hotel.description[AppState.lang])}
               </p>
+              <p class="text-xs text-stone-400 mt-2" onclick="event.stopPropagation()">${photoCreditHTML(hotel, 'hover:text-charcoal')}</p>
             </div>
           </div>
 

@@ -373,3 +373,15 @@ test('chat chips reach the answer they name (CrtiQue_Oct24 N5)', async () => {
   };
   for (const [q, re] of Object.entries(expect)) assert.match(await ask(q), re, q);
 });
+
+test('hotel cards credit a Commons photo and say what it shows (CrtiQue_Oct24 N3)', () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  const credited = ev(`HOTELS_DATA.filter(h => PHOTO_CREDITS[h.image]).map(h => h.id)`);
+  assert.ok(credited.length > 0);
+  ev(`AppState.lang = 'en'; renderHotels()`);
+  const html = ev(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`);
+  for (const id of credited) {
+    const c = ev(`PHOTO_CREDITS[HOTELS_DATA.find(h => h.id === '${id}').image]`);
+    assert.ok(html.includes(ev(`escapeHTML(${JSON.stringify(`Photo shows ${c.shows.en}.`)})`)) && html.includes(c.author), id);
+  }
+});
