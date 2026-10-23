@@ -336,3 +336,15 @@ test('planner budget tier names no unlisted hotel brand (CrtiQue_Oct24 N2)', () 
     assert.match(bn, /^বাজেট গেস্ট হাউস/);
   }
 });
+
+test('a 1-day trip pass names no hotel and day 1 has no check-in (CrtiQue_Oct24 N8)', () => {
+  const ev = planner('?days=1');
+  assert.strictEqual(ev(`document.getElementById('pass-hotel').textContent`), 'Day trip, no hotel');
+  assert.strictEqual(ev(`document.getElementById('phone-pass-hotel').textContent`), 'Day trip, no hotel');
+  const html = ev(`[...document.elements.values()].map(e => e.innerHTML + e.textContent).join(' ')`);
+  assert.match(html, /Arrival in Cox/);
+  assert.doesNotMatch(html, /check-in/i);
+  const three = planner('?days=3');
+  assert.notStrictEqual(three(`document.getElementById('pass-hotel').textContent`), 'Day trip, no hotel');
+  assert.match(three(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`), /Check-in/);
+});

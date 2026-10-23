@@ -119,7 +119,7 @@ const PLANNER_TEXT = {
     base_inani: "Inani / Marine Drive", base_laboni: "Laboni Point", base_kolatoli: "Kolatoli",
     estimates: "Prices are estimates, as of Oct 2026",
     phone_brand: "Visit Cox • Trip pass",
-    phone_stay: "Stay",
+    phone_stay: "Stay", day_trip: "Day trip, no hotel",
     day_tag: "DAY {d}",
     wa_title: "*🌊 Visit Cox — Trip inquiry*",
     wa_hello: "Hello! I planned this trip on the Visit Cox planner and would like to check hotel availability and rates.",
@@ -230,7 +230,7 @@ const PLANNER_TEXT = {
     base_inani: "ইনানী / মেরিন ড্রাইভ", base_laboni: "লাবণী পয়েন্ট", base_kolatoli: "কলাতলী",
     estimates: "দাম আনুমানিক, অক্টোবর ২০২৬ অনুযায়ী",
     phone_brand: "Visit Cox • ভ্রমণ পাস",
-    phone_stay: "থাকা",
+    phone_stay: "থাকা", day_trip: "ডে ট্রিপ, হোটেল নেই",
     day_tag: "দিন {d}",
     wa_title: "*🌊 Visit Cox — ভ্রমণ সংক্রান্ত জিজ্ঞাসা*",
     wa_hello: "আসসালামু আলাইকুম! আমি Visit Cox প্ল্যানারে এই ভ্রমণটি সাজিয়েছি। হোটেলের রুম খালি আছে কি না এবং ভাড়া জানতে চাই।",
@@ -898,6 +898,18 @@ const PlannerApp = (function () {
       }
     }
 
+    // A day trip has no hotel: day 1 must not say "check-in" (CrtiQue_Oct24 N8).
+    if (tripNights(days) === 0) {
+      const d = schedule[0], first = d.items[0];
+      schedule[0] = {
+        ...d,
+        theme: "Arrival, Seafood Lunch & Sugandha Sunset",
+        bn: { ...d.bn, theme: "পৌঁছানো, সামুদ্রিক খাবার ও সুগন্ধায় সূর্যাস্ত" },
+        items: [{ ...first, act: "Arrival in Cox's Bazar", tip: "Freshen up with a green coconut; a day trip has no hotel.",
+          bn: { ...first.bn, act: "কক্সবাজারে পৌঁছানো", tip: "ডাবের পানি খেয়ে চাঙা হোন; ডে ট্রিপে হোটেল নেই।" } }, ...d.items.slice(1)]
+      };
+    }
+
     return schedule;
   }
 
@@ -1173,7 +1185,9 @@ const PlannerApp = (function () {
     if (baseEl) baseEl.textContent = pt(state.baseHub === 'inani' ? 'base_inani' : state.baseHub === 'laboni' ? 'base_laboni' : 'base_kolatoli');
 
     const hotelEl = document.getElementById("pass-hotel");
-    if (hotelEl) hotelEl.textContent = hotel ? pl(hotel, 'name') : '-';
+    // A day trip has no hotel night, so the pass names no hotel (CrtiQue_Oct24 N8).
+    const stayName = tripNights(state.days) === 0 ? pt("day_trip") : hotel ? pl(hotel, "name") : "-";
+    if (hotelEl) hotelEl.textContent = stayName;
 
     const transitEl = document.getElementById("pass-transit");
     if (transitEl) transitEl.textContent = vehicleText(budget);
@@ -1234,7 +1248,7 @@ const PlannerApp = (function () {
     if (pMeta) pMeta.textContent = `${pt("days_short", { d: state.days })} • ${guestsText()} • ৳${plannerNum(budget.totalBDT)}`;
 
     const pHotel = document.getElementById("phone-pass-hotel");
-    if (pHotel) pHotel.textContent = hotel ? pl(hotel, "name") : "-";
+    if (pHotel) pHotel.textContent = tripNights(state.days) === 0 ? pt("day_trip") : hotel ? pl(hotel, "name") : "-";
 
     const pTimeline = document.getElementById("phone-pass-timeline");
     if (pTimeline) {
