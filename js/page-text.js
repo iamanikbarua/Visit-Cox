@@ -237,6 +237,7 @@ const PAGE_TEXT_BN = {
   "Sandy Beach (commonly cited)": "বালুকাময় সৈকত (সাধারণত যা বলা হয়)",
   "80 KM": "৮০ কিমি",
   "Marine Drive": "মেরিন ড্রাইভ",
+  "16": "১৬", // the home hero hotel count (CrtiQue_Oct24 N13)
   "Hotels Listed": "হোটেলের তালিকা",
   "Nov—Feb": "নভেম্বর—ফেব্রুয়ারি",
   "Golden Season": "সেরা মৌসুম",

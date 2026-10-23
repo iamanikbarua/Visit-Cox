@@ -348,3 +348,11 @@ test('a 1-day trip pass names no hotel and day 1 has no check-in (CrtiQue_Oct24 
   assert.notStrictEqual(three(`document.getElementById('pass-hotel').textContent`), 'Day trip, no hotel');
   assert.match(three(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`), /Check-in/);
 });
+
+test('home hero hotel count equals HOTELS_DATA and has Bangla digits; cards say Estimated, not From (CrtiQue_Oct24 N13/N14)', () => {
+  const ev = load(['data.js', 'page-text.js']);
+  const n = String(ev('HOTELS_DATA.length'));
+  assert.match(read('index.html'), new RegExp(`>${n}</span>\\s*<span[^>]*>Hotels Listed<`));
+  assert.ok(ev(`PAGE_TEXT_BN[${JSON.stringify(n)}]`), `no Bangla for "${n}"`);
+  assert.doesNotMatch(read('js/app.js'), /'শুরু' : 'From'/);
+});

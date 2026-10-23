@@ -683,7 +683,7 @@ function renderHotels() {
             <div class="pt-3 border-t border-stone-200/80 flex items-center justify-between">
               <div>
                 <span class="block text-[10px] font-mono uppercase tracking-wider text-stone-400">
-                  ${isBn ? 'শুরু' : 'From'}
+                  ${isBn ? 'আনুমানিক' : 'Estimated'}
                 </span>
                 <span class="font-serif text-base font-semibold text-charcoal">
                   ${priceText}
