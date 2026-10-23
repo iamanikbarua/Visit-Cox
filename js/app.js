@@ -2276,7 +2276,9 @@ async function fetchTravelAssistantReply(userText) {
     q.includes('পুলিশ') ||
     q.includes('হাসপাতাল') ||
     q.includes('জরুরি') ||
-    q.includes('সাহায্য')
+    q.includes('সাহায্য') ||
+    /^help\b|\bneed help\b|\bsos\b|\bdrown|\bfire\b|rip current|\blost\b|\bstolen\b|\btheft\b|\binjur/.test(q) ||
+    ['ডাক্তার', 'অ্যাম্বুলেন্স', 'এম্বুলেন্স', 'লাইফগার্ড', 'ডুবে যা', 'আগুন', 'চুরি', 'হারিয়ে'].some(w => q.includes(w))
   ) {
     return `
       <div>🚨 <strong>${lang === 'en' ? 'Emergency numbers:' : 'জরুরি নম্বর:'}</strong></div>
@@ -3046,6 +3048,7 @@ async function fetchTravelAssistantReply(userText) {
         • 📊 <strong>Trip Planner:</strong> <em>"My trip budget?"</em>, <em>"How to come from Dhaka by train?"</em>
       </div>
       ${buildChatFollowUpChips([
+        'Emergency numbers',
         'Cheapest hotel?',
         'Inani & Himchari route',
         'Best seafood & Poushee?',
@@ -3061,6 +3064,7 @@ async function fetchTravelAssistantReply(userText) {
         • 🍽️ <strong>খাবার ও অ্যাডভেঞ্চার:</strong> <em>"পৌষী ও সেরা সি-ফুড কোথায়?"</em>, <em>"মেরিন ড্রাইভে বাইক ভাড়া?"</em>
       </div>
       ${buildChatFollowUpChips([
+        'জরুরি নম্বর',
         'সবচেয়ে সস্তা হোটেল কোনটি?',
         'ইনানী ও হিমছড়ি রুট',
         'পৌষী ও সেরা সি-ফুড কোথায়?',

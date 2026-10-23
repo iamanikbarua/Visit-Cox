@@ -194,9 +194,14 @@ test('chatbot routing (CrtiQue_Oct21 H1/H2/H8): emergency words reach the emerge
     ev(`AppState.lang = '${/[ঀ-৿]/.test(q) ? 'bn' : 'en'}'`);
     return ev(`fetchTravelAssistantReply(${JSON.stringify(q)})`);
   };
-  for (const q of ['emergency', '999', 'tourist police', 'hospital', 'ambulance', 'lifeguard', 'জরুরি নম্বর', 'পুলিশ', 'জরুরি পুলিশ ও হাসপাতাল নাম্বার']) {
+  for (const q of ['emergency', '999', 'tourist police', 'hospital', 'ambulance', 'lifeguard', 'জরুরি নম্বর', 'পুলিশ', 'জরুরি পুলিশ ও হাসপাতাল নাম্বার',
+    // CrtiQue_Oct24 N1: these fell through to the greeting
+    'help', 'I need help', 'drowning', 'fire', 'rip current', 'I lost my child', 'stolen', 'ডাক্তার', 'অ্যাম্বুলেন্স', 'এম্বুলেন্স', 'লাইফগার্ড', 'ডুবে যাচ্ছে', 'আগুন', 'চুরি']) {
     assert.match(await ask(q), /🚨/, `"${q}" did not get the emergency numbers`);
   }
+  // the greeting (fallback) offers the emergency chip in both languages
+  assert.match(await ask('hello'), /Emergency numbers/);
+  assert.match(await ask('নমস্কার'), /জরুরি নম্বর/);
   const src = fs.readFileSync(path.join(root, 'js/app.js'), 'utf8');
   const chips = [...src.matchAll(/buildChatFollowUpChips\(\[([^\]]*)\]/g)].flatMap((m) => [...m[1].matchAll(/'([^']+)'/g)].map((c) => c[1]));
   const prompts = ev('[...UI_TEXT.en.chatbot.quickPrompts, ...UI_TEXT.bn.chatbot.quickPrompts]');
