@@ -1,7 +1,7 @@
 # Visit Cox — Team Collaboration & Sprint Log 📋
 
 **Current Sprint:** Sprint 3 — "Plan My Trip in 60s" Matchmaker (suggest.bike inspired)  
-**Status:** Completed, QA Passed & Merged to Production ✅  
+**Status:** Historical log of the Oct 2026 sprint, kept for the record. Current state: `judge.md` (last section) and the newest `CrtiQue_*.md`.  
 **Main Agent / Project Director:** Antigravity  
 
 ---
@@ -13,9 +13,9 @@
 | **01-uiux-designer** | `01-uiux-designer/` | Quick Trip Pick live hero widget, 3-step 60s wizard, 9:16 phone story pass layout | 🟢 Deployed |
 | **02-frontend-developer** | `02-frontend-developer/` | QuickTripPick engine (`js/quickpick.js`), reactive archetypes, tide/sunset alerts, dual-format pass export | 🟢 Deployed |
 | **03-backend-developer** | `03-backend-developer/` | Anti-Scam Driver Card database in Bengali, WhatsApp pre-formatted payload constructor | 🟢 Deployed |
-| **04-qa-engineer** | `04-qa-engineer/` | 60-second wizard completion verification (<45s on mobile), URL param routing test, offline pass rendering | 🟢 Verified & Passed |
+| **04-qa-engineer** | `04-qa-engineer/` | 60-second wizard completion verification (<45s on mobile), URL param routing test, offline pass rendering | Old claim, not backed: the QA suite of that sprint re-implemented the code (deleted 2026-10-15) |
 | **05-seo-specialist** | `05-seo-specialist/` | Schema.org Trip, TouristDestination & FAQPage JSON-LD, high-intent travel query tags | 🟢 Deployed |
-| **06-marketing-manager** | `06-marketing-manager/` | "Don't book Cox's Bazar before planning here" hero hook, 100% scam-proof guarantee | 🟢 Deployed |
+| **06-marketing-manager** | `06-marketing-manager/` | "Don't book Cox's Bazar before planning here" hero hook (the old "scam-proof guarantee" was removed 2026-10-15) | 🟢 Deployed |
 
 ---
 

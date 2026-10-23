@@ -2,12 +2,12 @@
 name: visual-itinerary-pass-exporter
 description: >-
   Technical procedures and styling best practices for exporting client-side
-  itinerary passes via html2canvas and jsPDF with zero font clipping and crisp 2x resolution.
+  itinerary passes as PNG via html2canvas with zero font clipping and crisp 2x resolution.
 ---
 
 # Visual Itinerary Pass Exporter Skill 🖨️🎫
 
-Use this skill when configuring, troubleshooting, or upgrading the PDF and PNG export functionality in `js/features.js` and `itinerary.html`.
+Use this skill when configuring, troubleshooting, or upgrading the PNG pass export in `js/planner.js` (the `html2canvas(card, ...)` call) and `itinerary.html`. There is no PDF export: `js/features.js` and jsPDF were deleted, and when html2canvas is blocked the planner offers print instead.
 
 ---
 
@@ -37,24 +37,9 @@ const canvas = await html2canvas(element, {
 
 ---
 
-## 2. jsPDF Multi-Page Pass Generation
+## 2. No PDF export
 
-```javascript
-const { jsPDF } = window.jspdf;
-const pdf = new jsPDF({
-  orientation: 'portrait',
-  unit: 'mm',
-  format: 'a4'
-});
-
-const imgData = canvas.toDataURL('image/png');
-const imgWidth = 210; // A4 width in mm
-const pageHeight = 297; // A4 height in mm
-const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-pdf.save(`Visit-Cox-Itinerary-Pass-${Date.now()}.pdf`);
-```
+The planner exports PNG only (horizontal pass and 9:16 phone pass). Do not add jsPDF back or promise PDF in copy without the owner's approval (a new dependency).
 
 ---
 

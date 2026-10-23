@@ -20,7 +20,7 @@ Use this skill whenever optimizing search engine rankings, writing rich snippets
   "@context": "https://schema.org",
   "@type": "TouristDestination",
   "name": "Cox's Bazar",
-  "description": "The longest unbroken natural sandy sea beach in the world located in Bangladesh.",
+  "description": "A long natural sandy sea beach in southeastern Bangladesh.",
   "geo": {
     "@type": "GeoCoordinates",
     "latitude": "21.4272",

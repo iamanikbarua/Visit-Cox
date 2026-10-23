@@ -36,7 +36,7 @@ https://wa.me/<HOTLINE_NUMBER>?text=<URL_ENCODED_MESSAGE>
 📍 *Planned Highlights:*
 {dayByDaySpotsList}
 
-✨ _I customized this trip on Visit-Cox.com and would like to confirm availability and package discounts._
+✨ _I planned this trip on the Visit Cox guide and would like to confirm availability._
 ━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -45,6 +45,4 @@ https://wa.me/<HOTLINE_NUMBER>?text=<URL_ENCODED_MESSAGE>
 ## 3. High-Converting Call-to-Action (CTA) Button Rules
 1. Position the WhatsApp CTA directly below the calculated total budget.
 2. Label in Bengali: `"WhatsApp-এ বুকিং সহায়তা নিন 💬"` or `"১-ক্লিকে ট্যুর বুক করুন"`
-3. Include trust indicators next to the button:
-   * 🛡️ *"১০০% নিরাপদ ও ভেরিফাইড পার্টনার্স"*
-   * ⚡ *"তাৎক্ষণিক উত্তর ও ফ্রি ট্রিপ গাইড"*
+3. No trust badges ("100%", "verified", "instant reply") next to the button: there are no partners yet, and `CODING_STANDARDS.md` bans those words unless literally true and cited.
