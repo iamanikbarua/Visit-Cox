@@ -245,6 +245,12 @@ function plannerLang() {
 }
 
 // Bangla digits via the bn-BD locale; English keeps en-IN grouping (1,00,000).
+// Headline money text: leads with the active currency (header toggle), the other one follows in brackets.
+function plannerMoney(bdt, usd) {
+  const b = `৳${plannerNum(bdt)} BDT`, u = `~$${plannerNum(usd)} USD`;
+  return typeof AppState !== 'undefined' && AppState.currency === 'USD' ? [u, `(${b})`] : [b, `(${u})`];
+}
+
 function plannerNum(n) {
   return Number(n).toLocaleString(plannerLang() === 'bn' ? 'bn-BD' : 'en-IN');
 }
@@ -681,10 +687,10 @@ const PlannerApp = (function () {
     const subtotal = totalHotel + totalFood + totalTransit + totalActivities;
     const buffer = Math.round(subtotal * 0.10);
     const totalBDT = Math.round((subtotal + buffer) / 50) * 50;
-    const totalUSD = Math.round(totalBDT / s.exchangeRate);
-
     const perPersonBDT = Math.round(totalBDT / Math.max(1, totalGuests));
-    const perPersonUSD = Math.round(perPersonBDT / s.exchangeRate);
+    // Total USD is per-person USD x group, so the two always multiply out (rounded separately they differed by $1+).
+    const perPersonUSD = Math.round(totalBDT / Math.max(1, totalGuests) / s.exchangeRate);
+    const totalUSD = perPersonUSD * Math.max(1, totalGuests);
 
     return {
       totalBDT,
@@ -1019,13 +1025,14 @@ const PlannerApp = (function () {
     });
 
     const totalDisp = document.getElementById("budget-display-total");
-    if (totalDisp) totalDisp.textContent = `৳${plannerNum(budget.totalBDT)} BDT`;
+    const [totalMain, totalSub] = plannerMoney(budget.totalBDT, budget.totalUSD);
+    if (totalDisp) totalDisp.textContent = totalMain;
 
     const usdDisp = document.getElementById("budget-display-usd");
-    if (usdDisp) usdDisp.textContent = `(~$${plannerNum(budget.totalUSD)} USD)`;
+    if (usdDisp) usdDisp.textContent = totalSub;
 
     const ppDisp = document.getElementById("budget-display-per-person");
-    if (ppDisp) ppDisp.textContent = `৳${plannerNum(budget.perPersonBDT)}`;
+    if (ppDisp) ppDisp.textContent = plannerMoney(budget.perPersonBDT, budget.perPersonUSD)[0].replace(/ (BDT|USD)$/, "");
 
     const durationTag = document.getElementById("budget-display-duration-tag");
     if (durationTag) durationTag.textContent = pt("days_nights", { d: state.days, n: tripNights(state.days) });
@@ -1176,10 +1183,11 @@ const PlannerApp = (function () {
     if (datesEl) datesEl.textContent = `${pt("days_nights", { d: state.days, n: tripNights(state.days) })} • ${guestsText()} • ${pt("tier_badge", { t: pt("tier_" + state.budgetTier) })}`;
 
     const budgetEl = document.getElementById("pass-budget");
-    if (budgetEl) budgetEl.textContent = `৳${plannerNum(budget.totalBDT)} BDT`;
+    const [passMain, passSub] = plannerMoney(budget.totalBDT, budget.totalUSD);
+    if (budgetEl) budgetEl.textContent = passMain;
 
     const budgetUsdEl = document.getElementById("pass-budget-usd");
-    if (budgetUsdEl) budgetUsdEl.textContent = `(~$${plannerNum(budget.totalUSD)} USD)`;
+    if (budgetUsdEl) budgetUsdEl.textContent = passSub;
 
     const baseEl = document.getElementById("pass-base");
     if (baseEl) baseEl.textContent = pt(state.baseHub === 'inani' ? 'base_inani' : state.baseHub === 'laboni' ? 'base_laboni' : 'base_kolatoli');

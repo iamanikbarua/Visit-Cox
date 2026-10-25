@@ -385,3 +385,20 @@ test('hotel cards credit a Commons photo and say what it shows (CrtiQue_Oct24 N3
     assert.ok(html.includes(ev(`escapeHTML(${JSON.stringify(`Photo shows ${c.shows.en}.`)})`)) && html.includes(c.author), id);
   }
 });
+
+test('planner leads with USD in USD mode; per-person USD x group = total USD (CrtiQue_Oct24 N7, N10)', () => {
+  const ev = load(['data.js', 'app.js', 'planner.js'], { dom: true, search: '?days=14&adults=2' });
+  ev("AppState.currency = 'USD'; PlannerApp.init()");
+  const text = (id) => ev(`document.getElementById('${id}').textContent`);
+  assert.match(text('budget-display-total'), /^~\$\d+ USD$/);
+  assert.match(text('budget-display-usd'), /^\(৳[\d,]+ BDT\)$/);
+  assert.match(text('pass-budget'), /^~\$/);
+  ev("AppState.currency = 'BDT'; PlannerApp.refresh()");
+  assert.match(text('budget-display-total'), /^৳[\d,]+ BDT$/);
+  for (const q of ['?days=14&adults=2', '?days=3&adults=11']) {
+    const e = load(['data.js', 'planner.js'], { dom: true });
+    const b = e(`PlannerApp.estimate(${JSON.stringify(q.slice(1))}).budget`);
+    const guests = Number(/adults=(\d+)/.exec(q)[1]);
+    assert.strictEqual(b.perPersonUSD * guests, b.totalUSD, q);
+  }
+});
