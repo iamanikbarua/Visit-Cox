@@ -1635,6 +1635,7 @@ function renderActivities() {
                 <div>
                   <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-800">${t.estCost}</span>
                   <span class="text-base sm:text-lg font-black text-amber-950">${priceText}</span>
+                  ${act.approx && act.asOf ? `<span class="block text-[10px] font-mono text-amber-800/80">${escapeHTML(PRICE_BOOK.asOfLabel[AppState.lang])}</span>` : ''}
                 </div>
                 <span class="text-[11px] text-amber-800/80 font-medium text-right max-w-[150px] leading-tight">
                   ${escapeHTML(noteText)}
@@ -2734,7 +2735,7 @@ async function fetchTravelAssistantReply(userText) {
       ? `
         <div>🏄 <strong>${escapeHTML(act.name.en)}</strong></div>
         <div class="text-xs text-slate-700 space-y-1 mt-1">
-          • <strong>Estimated Price:</strong> <strong>${priceText}</strong> (${escapeHTML(act.priceNote.en)})<br/>
+          • <strong>Estimated Price:</strong> <strong>${priceText}</strong> (${escapeHTML(act.priceNote.en)}, ${escapeHTML(PRICE_BOOK.asOfLabel.en)})<br/>
           • <strong>Location:</strong> ${escapeHTML(act.location.en)}<br/>
           • <strong>Duration:</strong> ${escapeHTML(act.duration.en)} • <strong>Level:</strong> ${escapeHTML(act.difficulty.en)}<br/>
           • <strong>Overview:</strong> ${escapeHTML(act.description.en)}<br/>

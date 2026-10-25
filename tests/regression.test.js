@@ -402,3 +402,12 @@ test('planner leads with USD in USD mode; per-person USD x group = total USD (Cr
     assert.strictEqual(b.perPersonUSD * guests, b.totalUSD, q);
   }
 });
+
+test('every activity is marked approx with an asOf date, and the page says so (CrtiQue_Oct24 N12)', () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  const bad = ev(`ACTIVITIES_DATA.filter(a => a.approx !== true || !/^\\d{4}-\\d{2}-\\d{2}$/.test(a.asOf)).map(a => a.id)`);
+  assert.strictEqual(bad.length, 0, String(bad));
+  ev(`AppState.lang = 'en'; renderActivities()`);
+  const html = ev(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`);
+  assert.ok(html.includes('estimate, as of Oct 2026'));
+});

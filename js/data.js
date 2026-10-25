@@ -1838,6 +1838,7 @@ let ACTIVITIES_DATA = [
       bn: "সার্ফিং ও ওয়েভ রাইডিং (Surfing Lesson)"
     },
     category: "water",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 1500,
     priceMaxBDT: 2500,
     priceNote: {
@@ -1878,6 +1879,7 @@ let ACTIVITIES_DATA = [
       bn: "সমুদ্র সৈকতে ঘোড়ায় চড়া (Horse Riding)"
     },
     category: "beach",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 200,
     priceMaxBDT: 500,
     priceNote: {
@@ -1918,6 +1920,7 @@ let ACTIVITIES_DATA = [
       bn: "প্যারাসেইলিং ও ওশান স্কাই গ্লাইডিং"
     },
     category: "water",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 1000,
     priceMaxBDT: 3000,
     ...TOURIST_POLICE_SOURCE,
@@ -1959,6 +1962,7 @@ let ACTIVITIES_DATA = [
       bn: "চান্দের গাড়িতে মেরিন ড্রাইভ ওপেন-এয়ার সাফারি"
     },
     category: "safari",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 3000,
     priceMaxBDT: 5500,
     priceNote: {
@@ -1999,6 +2003,7 @@ let ACTIVITIES_DATA = [
       bn: "সৈকতে এটিভি কোয়াড বাইকিং (ATV Quad Bike)"
     },
     category: "beach",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 300,
     priceMaxBDT: 500,
     priceNote: {
@@ -2039,6 +2044,7 @@ let ACTIVITIES_DATA = [
       bn: "জেট স্কি হাই-স্পিড রাইডিং (Jet Ski)"
     },
     category: "water",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 600,
     priceMaxBDT: 1200,
     priceNote: {
@@ -2079,6 +2085,7 @@ let ACTIVITIES_DATA = [
       bn: "রেজু খাল ও মোহনায় ম্যানগ্রোভ কায়াকিং"
     },
     category: "water",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 300,
     priceMaxBDT: 500,
     priceNote: {
@@ -2119,6 +2126,7 @@ let ACTIVITIES_DATA = [
       bn: "মহেশখালী চ্যানেলে স্পিডবোট রোমাঞ্চ ক্রুজ"
     },
     category: "water",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 90,
     priceMaxBDT: 2500,
     priceNote: {
@@ -2159,6 +2167,7 @@ let ACTIVITIES_DATA = [
       bn: "নাইট বিচ ক্যাম্পিং ও লাইভ বারবিকিউ (Camping & BBQ)"
     },
     category: "night",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 1500,
     priceMaxBDT: 2500,
     priceNote: {
@@ -2199,6 +2208,7 @@ let ACTIVITIES_DATA = [
       bn: "মেরিন ড্রাইভে কোস্টাল সাইক্লিং ট্যুর"
     },
     category: "beach",
+    approx: true, asOf: "2026-10-15", // owner has not confirmed these prices; date = last agent review
     priceBDT: 250,
     priceMaxBDT: 500,
     priceNote: {
