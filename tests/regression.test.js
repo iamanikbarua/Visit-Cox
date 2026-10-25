@@ -411,3 +411,19 @@ test('every activity is marked approx with an asOf date, and the page says so (C
   const html = ev(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`);
   assert.ok(html.includes('estimate, as of Oct 2026'));
 });
+
+test('static photos carry a credit block (CrtiQue_Oct24 N3, home/culture/blog)', () => {
+  const ev = load(['data.js']);
+  const html = ev(`photoCreditsHTML(['assets/images/inani-beach.jpg', 'assets/images/inani-beach.jpg', 'assets/images/hotel-sea-crown.jpg'], 'en')`);
+  assert.match(html, /Inani Beach: <a [^>]*>Moheen Reeyad<\/a>, <a [^>]*>CC BY-SA 4\.0<\/a>/);
+  assert.strictEqual(html.split('Moheen Reeyad').length, 2, 'listed once');
+  assert.strictEqual(ev(`photoCreditsHTML(['assets/images/hotel-sea-crown.jpg'], 'en')`), '');
+  const credited = ev(`Object.keys(PHOTO_CREDITS)`);
+  for (const f of ['index.html', 'culture.html', 'blog.html']) {
+    const srcs = [...read(f).matchAll(/<img[^>]*\ssrc="([^"]+)"/g)].map((m) => m[1]);
+    assert.ok(srcs.some((s) => credited.includes(s)), `${f} has no credited photo, drop it from this test`);
+    assert.ok(read(f).includes('id="photo-credits"'), `${f} shows a Commons photo but has no #photo-credits`);
+  }
+  assert.match(read('js/blog.js'), /renderPhotoCredits\(\)/);
+  assert.match(read('js/app.js'), /renderPhotoCredits\(\)/);
+});

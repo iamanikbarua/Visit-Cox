@@ -3276,6 +3276,7 @@ function renderAll() {
   if (typeof renderBlogSection === 'function') {
     renderBlogSection();
   }
+  renderPhotoCredits();
   if (typeof PlannerApp !== 'undefined') PlannerApp.refresh();
   if (typeof QuickTripPick !== 'undefined') QuickTripPick.refresh();
   runFareCalculation();

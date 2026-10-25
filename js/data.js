@@ -1371,6 +1371,25 @@ const PHOTO_CREDITS = {
   'assets/images/kolatoli-eco.jpg': { shows: { en: 'Kolatoli Beach', bn: 'কলাতলী সৈকত' }, ofIds: ['kolatoli-sunset-point'], author: 'Thomas Faraday', license: 'CC BY-SA 4.0', url: COMMONS + 'Kolatoli,_Cox%27s_Bazar_Sea_Beach.jpg' }
 };
 
+// One "Photo credits" line for the credited Commons photos among `srcs` (a list of image src values). Used by pages whose photos are static
+// markup or blog posts, where there is no card to carry a caption. Returns '' when none is credited.
+function photoCreditsHTML(srcs, lang) {
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const en = lang !== 'bn';
+  const link = (href, text) => `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer" class="underline">${esc(text)}</a>`;
+  const items = [...new Set(srcs)].filter((src) => PHOTO_CREDITS[src]).map((src) => {
+    const c = PHOTO_CREDITS[src];
+    return `${esc(en ? c.shows.en : c.shows.bn)}: ${link(c.url, c.author)}, ${link(LICENSE_URLS[c.license], c.license)}`;
+  });
+  return items.length ? `${en ? 'Photo credits (Wikimedia Commons)' : 'ছবির কৃতজ্ঞতা (উইকিমিডিয়া কমন্স)'}: ${items.join('; ')}.` : '';
+}
+
+// Fills #photo-credits (if the page has one) from the images currently on the page.
+function renderPhotoCredits() {
+  const box = document.getElementById('photo-credits');
+  if (box) box.innerHTML = photoCreditsHTML([...document.querySelectorAll('img[src]')].map((i) => i.getAttribute('src')), typeof AppState !== 'undefined' ? AppState.lang : 'en');
+}
+
 let DESTINATIONS_DATA = [
   {
     id: "himchari-national-park",

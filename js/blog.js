@@ -431,6 +431,7 @@ function renderBlogSection() {
       `;
     })
     .join('');
+  renderPhotoCredits(); // data.js: credits for the cover photos just rendered
 }
 
 /* --------------------------------------------------------------------------
