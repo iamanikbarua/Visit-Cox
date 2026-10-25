@@ -442,7 +442,7 @@ let HOTELS_DATA = [
     phone: "+880 1755-691917",
     sourceUrl: "https://sayemanresort.com",
     sourceName: "sayemanresort.com",
-    image: "assets/images/hero-coxs-bazar.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "sea-pearl-beach-resort",
@@ -506,7 +506,7 @@ let HOTELS_DATA = [
     phone: "+880 1844-016001",
     sourceUrl: "https://seapearlcoxsbazar.com",
     sourceName: "seapearlcoxsbazar.com",
-    image: "assets/images/inani-beach.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "mermaid-beach-resort",
@@ -568,7 +568,7 @@ let HOTELS_DATA = [
     phone: "+880 1841-416468",
     sourceUrl: "https://mermaidbeachresort.net",
     sourceName: "mermaidbeachresort.net",
-    image: "assets/images/shamlapur-sampan.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "ocean-paradise-hotel",
@@ -630,7 +630,7 @@ let HOTELS_DATA = [
     phone: "+880 1938-846761",
     sourceUrl: "https://oceanparadisehotel.com",
     sourceName: "oceanparadisehotel.com",
-    image: "assets/images/prime-park-hotel.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "hotel-the-cox-today",
@@ -690,7 +690,7 @@ let HOTELS_DATA = [
     phone: "+880 1755-598449",
     sourceUrl: "https://hotelthecoxtoday.com",
     sourceName: "hotelthecoxtoday.com",
-    image: "assets/images/hotel-sea-crown.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "best-western-bay-watch",
@@ -752,7 +752,7 @@ let HOTELS_DATA = [
     phone: "+880 1777-744004",
     sourceUrl: "https://bwpheritagehotel.com",
     sourceName: "bwpheritagehotel.com",
-    image: "assets/images/hotel-kollol.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "long-beach-hotel",
@@ -812,7 +812,7 @@ let HOTELS_DATA = [
     phone: "+880 1755-660051",
     sourceUrl: "https://longbeachhotelbd.com",
     sourceName: "longbeachhotelbd.com",
-    image: "assets/images/prime-park-hotel.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "hotel-sea-crown",
@@ -1104,7 +1104,7 @@ let HOTELS_DATA = [
     phone: "+880 1766-666530",
     sourceUrl: "https://seagullhotelbd.com",
     sourceName: "seagullhotelbd.com",
-    image: "assets/images/hotel-sea-crown.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "mermaid-eco-resort",
@@ -1164,7 +1164,7 @@ let HOTELS_DATA = [
     phone: "+880 1841-416464",
     sourceUrl: "https://mermaidecoresort.com",
     sourceName: "mermaidecoresort.com",
-    image: "assets/images/shamlapur-sampan.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "praasad-paradise",
@@ -1224,7 +1224,7 @@ let HOTELS_DATA = [
     phone: "+880 1711-536968",
     sourceUrl: "https://praasadparadise.com",
     sourceName: "praasadparadise.com",
-    image: "assets/images/hotel-kollol.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "hotel-shaibal",
@@ -1282,7 +1282,7 @@ let HOTELS_DATA = [
     phone: "+880 1730-080808",
     sourceUrl: "https://parjatan.gov.bd",
     sourceName: "parjatan.gov.bd",
-    image: "assets/images/hotel-sea-crown.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   },
   {
     id: "windy-terrace-boutique",
@@ -1340,7 +1340,7 @@ let HOTELS_DATA = [
     phone: "+880 1755-668822",
     sourceUrl: "https://windyterrace.com",
     sourceName: "windyterrace.com",
-    image: "assets/images/prime-park-hotel.jpg"
+    image: "" // no photo of this hotel yet: cards show a labelled placeholder (CrtiQue_Oct24 H3)
   }
 ];
 

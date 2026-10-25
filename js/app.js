@@ -651,14 +651,18 @@ function renderHotels() {
         >
           <div>
             <div class="relative overflow-hidden bg-stone-100">
-              <img
+              ${hotel.image ? `<img
                 src="${escapeHTML(hotel.image)}"
                 width="600" height="400"
                 alt="${escapeHTML(hotel.name[AppState.lang])}"
                 loading="lazy"
                 decoding="async"
                 class="stay-img"
-              />
+              />` : `<div class="stay-img flex flex-col items-center justify-center text-center px-4 bg-stone-200 text-stone-700" style="height:220px">
+                <span class="font-serif text-lg leading-tight">${escapeHTML(hotel.name[AppState.lang])}</span>
+                <span class="text-xs mt-1">${escapeHTML(spotName)}</span>
+                <span class="text-[11px] font-mono mt-2 uppercase tracking-wider">${AppState.lang === 'bn' ? 'ছবি নেই' : 'Photo not available'}</span>
+              </div>`}
               <div class="absolute top-3 left-3">
                 <span class="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider uppercase bg-white/95 text-charcoal backdrop-blur-sm border border-stone-200/80 shadow-xs">
                   ${escapeHTML(hotel.stars)}★ ${hotel.starLabel ? escapeHTML(hotel.starLabel[AppState.lang]) : ''}
@@ -2217,7 +2221,7 @@ function buildSingleHotelChatCard(hotel, lang) {
   return `
     <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-1.5">
       <div class="flex items-center gap-2.5">
-        <img src="${escapeHTML(hotel.image)}" width="48" height="48" alt="${escapeHTML(hotel.name[lang])}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />
+        ${hotel.image ? `<img src="${escapeHTML(hotel.image)}" width="48" height="48" alt="${escapeHTML(hotel.name[lang])}" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover shrink-0 bg-slate-200" />` : '<span class="w-12 h-12 rounded-lg shrink-0 bg-stone-200 flex items-center justify-center text-lg" aria-hidden="true">🏨</span>'}
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-1">
             <strong class="text-slate-900 text-xs sm:text-sm truncate">${escapeHTML(hotel.name[lang])}</strong>

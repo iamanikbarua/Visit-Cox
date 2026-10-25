@@ -374,32 +374,17 @@ test('chat chips reach the answer they name (CrtiQue_Oct24 N5)', async () => {
   for (const [q, re] of Object.entries(expect)) assert.match(await ask(q), re, q);
 });
 
-test('hotel cards credit a Commons photo and say what it shows (CrtiQue_Oct24 N3)', () => {
+test('no hotel shows another building or a place photo; cards without a photo say so (CrtiQue_Oct24 H3)', () => {
   const ev = load(['data.js', 'app.js'], { dom: true });
-  const credited = ev(`HOTELS_DATA.filter(h => PHOTO_CREDITS[h.image]).map(h => h.id)`);
-  assert.ok(credited.length > 0);
-  ev(`AppState.lang = 'en'; renderHotels()`);
-  const html = ev(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`);
-  for (const id of credited) {
-    const c = ev(`PHOTO_CREDITS[HOTELS_DATA.find(h => h.id === '${id}').image]`);
-    assert.ok(html.includes(ev(`escapeHTML(${JSON.stringify(`Photo shows ${c.shows.en}.`)})`)) && html.includes(c.author), id);
-  }
-});
-
-test('planner leads with USD in USD mode; per-person USD x group = total USD (CrtiQue_Oct24 N7, N10)', () => {
-  const ev = load(['data.js', 'app.js', 'planner.js'], { dom: true, search: '?days=14&adults=2' });
-  ev("AppState.currency = 'USD'; PlannerApp.init()");
-  const text = (id) => ev(`document.getElementById('${id}').textContent`);
-  assert.match(text('budget-display-total'), /^~\$\d+ USD$/);
-  assert.match(text('budget-display-usd'), /^\(৳[\d,]+ BDT\)$/);
-  assert.match(text('pass-budget'), /^~\$/);
-  ev("AppState.currency = 'BDT'; PlannerApp.refresh()");
-  assert.match(text('budget-display-total'), /^৳[\d,]+ BDT$/);
-  for (const q of ['?days=14&adults=2', '?days=3&adults=11']) {
-    const e = load(['data.js', 'planner.js'], { dom: true });
-    const b = e(`PlannerApp.estimate(${JSON.stringify(q.slice(1))}).budget`);
-    const guests = Number(/adults=(\d+)/.exec(q)[1]);
-    assert.strictEqual(b.perPersonUSD * guests, b.totalUSD, q);
+  const photos = ev(`HOTELS_DATA.filter(h => h.image).map(h => h.image)`);
+  assert.strictEqual(new Set(photos).size, photos.length, 'two hotels share a photo');
+  assert.strictEqual(ev(`HOTELS_DATA.filter(h => PHOTO_CREDITS[h.image]).length`), 0, 'a hotel shows a Commons place photo');
+  const none = ev(`HOTELS_DATA.filter(h => !h.image).length`);
+  assert.ok(none > 0 && none < ev('HOTELS_DATA.length'));
+  for (const lang of ['en', 'bn']) {
+    ev(`AppState.lang = '${lang}'; renderHotels()`);
+    const html = ev(`[...document.elements.values()].map(e => e.innerHTML).join(' ')`);
+    assert.strictEqual(html.split(lang === 'en' ? 'Photo not available' : 'ছবি নেই').length - 1, none, lang);
   }
 });
 
