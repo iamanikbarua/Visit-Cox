@@ -77,6 +77,11 @@ function photoCreditHTML(item, cls) {
   return `<span class="${cls}">${escapeHTML(`${note}${en ? 'Photo' : 'ছবি'}: `)}${link(c.url, c.author)}, ${link(LICENSE_URLS[c.license], c.license)} (Wikimedia Commons)</span>`;
 }
 
+// "Report a price" link to a prefilled public GitHub issue (reportPriceURL in data.js).
+function reportPriceLinkHTML(subject) {
+  return `<a href="${escapeHTML(reportPriceURL(subject, AppState.lang))}" target="_blank" rel="noopener" class="text-xs font-semibold underline underline-offset-2 text-stone-600 hover:text-charcoal">${escapeHTML(UI_TEXT[AppState.lang].reportPrice.link)}</a>`;
+}
+
 function formatNumber(num, lang) {
   if (lang === 'bn') {
     return num.toLocaleString('bn-BD');
@@ -957,7 +962,8 @@ function openHotelFacilitiesModal(hotelId) {
         <div class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5 tracking-tight">${priceFormatted}</div>
         <p class="text-[11px] text-slate-500 mt-1">${isBn ? '* মৌসুমি চাহিদা ও রুম ক্যাটাগরি অনুযায়ী ভাড়া কম-বেশি হতে পারে' : '* Rates vary by room category, sea-facing view, and high/low seasons'}</p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-3">
+        ${reportPriceLinkHTML(`${hotel.name.en} (hotel rate)`)}
         <a href="itinerary.html" class="px-4 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs bg-amber-400 hover:bg-amber-300 text-slate-950">
           ${isBn ? 'ট্রিপ প্ল্যান করুন' : 'Plan a Trip'}
         </a>
@@ -1839,6 +1845,8 @@ function renderTransport() {
   const glossaryContainer = document.getElementById('vehicle-glossary-cards');
   const tbody = document.getElementById('transport-table-body');
   if (!tbody) return;
+  const reportEl = document.getElementById('transport-report-price');
+  if (reportEl) reportEl.innerHTML = reportPriceLinkHTML('Local fares (transport page)');
 
   // Render Foreigner Glossary Cards
   if (glossaryContainer) {

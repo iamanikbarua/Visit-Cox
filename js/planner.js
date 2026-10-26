@@ -1040,6 +1040,13 @@ const PlannerApp = (function () {
     const partyTag = document.getElementById("budget-display-party-tag");
     if (partyTag) partyTag.textContent = guestsText();
 
+    // Subject stays English (it is the issue title the owner triages); the link text follows the language.
+    const report = document.getElementById("report-price-planner");
+    if (report && typeof reportPriceURL === "function") {
+      report.href = reportPriceURL(`Trip planner total, ${state.days} days, ${state.adults} adults + ${state.kids} kids, ${state.budgetTier}: BDT ${budget.totalBDT}`, plannerLang());
+      report.textContent = UI_TEXT[plannerLang()].reportPrice.link;
+    }
+
     const costHotel = document.getElementById("item-cost-hotel");
     if (costHotel) costHotel.textContent = `৳${plannerNum(budget.totalHotel)}`;
 

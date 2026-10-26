@@ -13,7 +13,16 @@ const EMERGENCY_CONTACTS = [
   { id: 'tourist-police', name: { en: 'Tourist Police helpline (24/7)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (২৪/৭)' }, number: '01320-222222', tel: '+8801320222222', ...TOURIST_POLICE_SOURCE, sourceUrl: 'https://bangladeshmonitor.com.bd/en/bangladesh-tourist-police-launches-247-helpline-for-travellers' },
   { id: 'tourist-police-2', name: { en: 'Tourist Police helpline (second line)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (দ্বিতীয় নাম্বার)' }, number: '01887-878787', tel: '+8801887878787', ...TOURIST_POLICE_SOURCE },
 ];
-const SITE_CONTACT = { whatsapp: null }; // null = no real number yet; UI must hide WhatsApp CTAs
+const SITE_CONTACT = {
+  whatsapp: null, // null = no real number yet; UI must hide WhatsApp CTAs
+  issuesUrl: 'https://github.com/iamanikbarua/Visit-Cox/issues' // the contact route privacy.html names
+};
+
+// "Report a price": a prefilled public GitHub issue. Static site, so no form or server.
+function reportPriceURL(subject, lang) {
+  const t = UI_TEXT[lang === 'bn' ? 'bn' : 'en'].reportPrice;
+  return `${SITE_CONTACT.issuesUrl}/new?title=${encodeURIComponent(`${t.title}: ${subject}`)}&body=${encodeURIComponent(t.body.replace('{subject}', subject))}`;
+}
 
 const CONFIG = {
   exchangeRateUSD: 120, // 1 USD = 120 BDT
@@ -110,6 +119,11 @@ const UI_TEXT = {
       estCost: "Estimated Price",
       locationLabel: "Location",
       durationLabel: "Duration"
+    },
+    reportPrice: {
+      link: "Report a price",
+      title: "Price report",
+      body: "What: {subject}\nPrice you saw or paid:\nWhere and when (date):\nProof, if any (price list, receipt, website):\n\nThis issue is public: do not post your name, phone number or other personal details."
     },
     transportSection: {
       eyebrow: "LOCAL TRANSIT & FARES",
@@ -285,6 +299,11 @@ const UI_TEXT = {
       estCost: "আনুমানিক খরচ",
       locationLabel: "স্থান",
       durationLabel: "সময়কাল"
+    },
+    reportPrice: {
+      link: "দাম জানান",
+      title: "দামের রিপোর্ট",
+      body: "কী: {subject}\nআপনি কত দেখেছেন বা দিয়েছেন:\nকোথায় ও কবে (তারিখ):\nপ্রমাণ থাকলে (মূল্যতালিকা, রসিদ, ওয়েবসাইট):\n\nএই ইস্যু সবাই দেখতে পায়: নাম, ফোন নম্বর বা অন্য ব্যক্তিগত তথ্য দেবেন না।"
     },
     transportSection: {
       eyebrow: "সহজ যাতায়াত নির্দেশিকা",

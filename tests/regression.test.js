@@ -412,3 +412,27 @@ test('static photos carry a credit block (CrtiQue_Oct24 N3, home/culture/blog)',
   assert.match(read('js/blog.js'), /renderPhotoCredits\(\)/);
   assert.match(read('js/app.js'), /renderPhotoCredits\(\)/);
 });
+
+test('"Report a price" links on fares, hotel modal and planner total open a prefilled public GitHub issue (judge Update 7, step 5)', () => {
+  const ev = load(['data.js', 'app.js'], { dom: true });
+  const issue = (html) => decodeURIComponent((/href="([^"]+)"/.exec(html) || [])[1].replace(/&amp;/g, '&'));
+  for (const lang of ['en', 'bn']) {
+    const t = ev(`UI_TEXT.${lang}.reportPrice`);
+    ev(`AppState.lang = '${lang}'; renderTransport(); openHotelFacilitiesModal(HOTELS_DATA[0].id)`);
+    const fares = ev(`document.getElementById('transport-report-price').innerHTML`);
+    const hotel = ev(`document.getElementById('modal-hotel-body').innerHTML`);
+    for (const [html, subject] of [[fares, 'Local fares'], [hotel, ev('HOTELS_DATA[0].name.en')]]) {
+      assert.ok(html.includes(`>${t.link}</a>`), `${lang} link text`);
+      const url = issue(html);
+      assert.ok(url.startsWith('https://github.com/iamanikbarua/Visit-Cox/issues/new?title='), url);
+      assert.ok(url.includes(`title=${t.title}: ${subject}`), `${lang} title names ${subject}`);
+      assert.ok(url.includes('body=') && url.includes(subject), `${lang} body names ${subject}`);
+    }
+  }
+  const p = load(['data.js', 'planner.js'], { dom: true, search: '?days=4&adults=3' });
+  p('PlannerApp.init()');
+  const a = p(`document.getElementById('report-price-planner')`);
+  assert.strictEqual(a.textContent, 'Report a price');
+  assert.match(decodeURIComponent(a.href), /title=Price report: Trip planner total, 4 days, 3 adults \+ 0 kids, \w+: BDT \d+/);
+  assert.ok(read('transport.html').includes('id="transport-report-price"') && read('itinerary.html').includes('id="report-price-planner"'));
+});
