@@ -1242,7 +1242,7 @@ const PlannerApp = (function () {
     el.innerHTML = list.filter(c => !c.needsOwnerConfirm).map(c => `
       <div class="flex items-center justify-between gap-3">
         <span>🚨 ${plannerEsc((c.name && (c.name[lang] || c.name.en)) || '')}</span>
-        <a href="${/^tel:\+?\d+$/.test(c.tel) ? c.tel : '#'}" class="text-white font-bold">${plannerEsc(c.number)}</a>
+        <a href="${/^tel:\+?\d+$/.test(c.tel) ? c.tel : '#'}" class="text-white font-bold whitespace-nowrap">${plannerEsc(c.number)}</a>
       </div>`).join('');
   }
 

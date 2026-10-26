@@ -2543,7 +2543,8 @@ let FAQ_DATA = [
     // thedailystar.net/business/news/govt-reassess-tourist-limits-season-saint-martins-minister-4297801 (13 Oct 2026).
     source: "Ministry of Environment, Forest and Climate Change notice of 22 Oct 2025 as reported by UNB (5 Nov 2025) and The Daily Star; 2026-27 review: The Daily Star, 13 Oct 2026; fraud warning: Tourist Police, Cox's Bazar Region",
     sourceUrl: "https://www.dhakatribune.com/bangladesh/nation/395620/how-to-visit-saint-martin%E2%80%99s-island-in-tourist",
-    asOf: "2026-10-19"
+    // Re-checked 2026-10-27: no 2026-27 notice published yet (web search of Daily Star, TBS, Dhaka Tribune, Ittefaq, UNB).
+    asOf: "2026-10-27"
   }
 ];
 
