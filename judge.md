@@ -163,3 +163,12 @@ Proof: `scripts/check.sh` passes all 7 steps (68 tests; 9 new in `tests/regressi
 Done, one commit each with a test that fails on the old code (check.sh passes all 7 steps, 70 tests): N7 and N10 (USD-first planner and passes; per-person USD x group = total USD), N12 (`approx` and `asOf` on all 10 activities; the asOf is the agent review date, 2026-10-15, no new numbers), N3 for the static home, culture and blog images (one "Photo credits" line per page, filled from the images actually on the page), H3 (12 hotels show a labelled "Photo not available" card instead of another building; Sea Crown, Kollol, Prime Park and White Orchid keep their photos). `?v=20261025` on every changed script.
 
 Not done: a browser check at 375 and 1280 px (the placeholder card height and the credit line were not seen rendered); Kollol's photo may still be the "Sea Palace" building (owner); N4 train fare, the USD rate source, phones and fares (owner facts).
+
+### Update 12 addendum (2026-10-27): Update 7 agent steps 2, 3, 5 and 6
+
+- Step 2: already done (Saint Martin's in Update 7, Himchari fee in Update 10, toggle contrast `597f56e`, jsPDF gone). Saint Martin's re-checked today: no 2026-27 notice published yet (Daily Star, TBS, Dhaka Tribune, Ittefaq, UNB), so the text stands and `faq-8` `asOf` is 2026-10-27. Pass phone numbers no longer wrap (`whitespace-nowrap`): each number renders on one line on both passes, EN/বাংলা, 375 and 1280 px.
+- Step 3: already done (hotel placeholders `e3680f8`, place credits Update 10).
+- Step 5 (agent part): "Report a price" / "দাম জানান" under the fare table, in the hotel modal and under the planner total. It opens a prefilled public GitHub issue (the contact route `privacy.html` already names), with a "no personal details" line; `reportPriceURL` in `data.js`. Test in `tests/regression.test.js`. Headless Chrome, EN/বাংলা × 375/1280: links render, no overflow, 0 page errors, 44 px tap height on touch.
+- Step 6 (agent part): skipped. The only counter is GA after consent; no cookie-free counter is wired, and picking one is the owner's call.
+
+`scripts/check.sh` passes all 7 steps. `?v=20261027` on `js/app.js`, `js/planner.js`, `js/data.js`. Bangla to proofread: "দাম জানান", "দামের রিপোর্ট" and the issue body.
