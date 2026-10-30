@@ -2976,7 +2976,7 @@ function toggleMobileMenu(forceState) {
   } else {
     AppState.isMobileMenuOpen = !AppState.isMobileMenuOpen;
   }
-  const menu = document.getElementById('mobile-nav-drawer');
+  const menu = document.getElementById('mobile-menu-drawer');
   if (menu) {
     menu.classList.toggle('hidden', !AppState.isMobileMenuOpen);
   }
@@ -3030,10 +3030,10 @@ function initScrollListeners() {
   handleScrollUpdate();
 
   // Close mobile drawer when clicking a nav link
-  document.querySelectorAll('#mobile-nav-drawer a').forEach(link => {
+  document.querySelectorAll('#mobile-menu-drawer a').forEach(link => {
     link.addEventListener('click', () => {
       AppState.isMobileMenuOpen = false;
-      document.getElementById('mobile-nav-drawer')?.classList.add('hidden');
+      document.getElementById('mobile-menu-drawer')?.classList.add('hidden');
     });
   });
 }

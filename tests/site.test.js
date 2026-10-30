@@ -55,3 +55,13 @@ test('emergency citations: text sources are escaped text, only URLs become links
   assert.ok(hrefs.length > 0 && hrefs.every((h) => /^https?:\/\//.test(h)), hrefs.join(', '));
   assert.match(html, /Tourist Police, Cox&#39;s Bazar Region/);
 });
+
+test('every page with a menu button has the drawer toggleMobileMenu opens', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const root = path.join(__dirname, '..');
+  const id = fs.readFileSync(path.join(root, 'js', 'app.js'), 'utf8').match(/function toggleMobileMenu[\s\S]*?getElementById\('([^']+)'\)/)[1];
+  const pages = fs.readdirSync(root).filter((f) => f.endsWith('.html') && fs.readFileSync(path.join(root, f), 'utf8').includes('toggleMobileMenu('));
+  assert.ok(pages.length >= 9, pages.join());
+  assert.deepStrictEqual(pages.filter((f) => !fs.readFileSync(path.join(root, f), 'utf8').includes(`id="${id}"`)), []);
+});
