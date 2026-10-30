@@ -159,32 +159,6 @@ function updateToggleButtons() {
   });
 }
 
-let heroActiveSlideIndex = 0;
-let heroAutoSlideTimer = null;
-
-const HERO_SCENES_META = [
-  {
-    en: { pill: '🌊 Laboni & Sugandha Beach', badge: '120 KM UNBROKEN NATURAL SEA BEACH • BAY OF BENGAL' },
-    bn: { pill: '🌊 লাবণী ও সুগন্ধা সৈকত', badge: '১২০ কিমি অবিচ্ছিন্ন প্রাকৃতিক সমুদ্র সৈকত • বঙ্গোপসাগর' }
-  },
-  {
-    en: { pill: '🪨 Inani Coral Beach', badge: 'INANI BEACH • ANCIENT CORAL BOULDERS & CRYSTAL WATERS' },
-    bn: { pill: '🪨 ইনানী প্রবাল সৈকত', badge: 'ইনানী সমুদ্র সৈকত • প্রাচীন প্রবাল পাথর ও নীল জলরাশি' }
-  },
-  {
-    en: { pill: '⛰️ Himchari Hills', badge: 'HIMCHARI NATIONAL PARK • COASTAL HILLS & WATERFALLS' },
-    bn: { pill: '⛰️ হিমছড়ি পাহাড় ও ঝর্ণা', badge: 'হিমছড়ি জাতীয় উদ্যান • সবুজ পাহাড় ও প্রাকৃতিক ঝর্ণা' }
-  },
-  {
-    en: { pill: '⛵ Marine Drive Sampans', badge: '80 KM MARINE DRIVE • TRADITIONAL SAMPAN BOATS AT SUNSET' },
-    bn: { pill: '⛵ মেরিন ড্রাইভ ও সাম্পান', badge: '৮০ কিমি মেরিন ড্রাইভ • সূর্যাস্তে ঐতিহ্যবাহী সাম্পান নৌকা' }
-  },
-  {
-    en: { pill: '🏝️ Moheshkhali Island', badge: 'MOHESHKHALI ISLAND • ADINATH TEMPLE & CHANNEL SPEEDBOATS' },
-    bn: { pill: '🏝️ মহেশখালী দ্বীপ', badge: 'মহেশখালী দ্বীপ • মৈনাক পাহাড়ের আদিনাথ মন্দির ও স্পিডবোট' }
-  }
-];
-
 function renderStaticText() {
   const t = UI_TEXT[AppState.lang];
 
@@ -199,20 +173,10 @@ function renderStaticText() {
   document.querySelectorAll('[data-nav="faq"]').forEach(el => (el.textContent = t.nav.faq));
 
   // Hero Section
-  const currentHeroMeta = HERO_SCENES_META[heroActiveSlideIndex] || HERO_SCENES_META[0];
-  setText('hero-badge', currentHeroMeta[AppState.lang].badge);
   setText('hero-title', t.hero.title);
   setText('hero-subtitle', t.hero.subtitle);
   setText('hero-cta-hotels', t.hero.ctaHotels);
   setText('hero-cta-spots', t.hero.ctaSpots);
-
-  // Update Hero Scene Switcher Pill Labels
-  document.querySelectorAll('[data-hero-pill]').forEach(btn => {
-    const idx = parseInt(btn.getAttribute('data-hero-pill'), 10);
-    if (HERO_SCENES_META[idx]) {
-      btn.textContent = HERO_SCENES_META[idx][AppState.lang].pill;
-    }
-  });
 
   const searchInput = document.getElementById('hero-search-input');
   if (searchInput) searchInput.placeholder = t.hero.searchPlaceholder;
@@ -262,18 +226,12 @@ function renderStaticText() {
         ? `${HIDDEN_GEMS_DATA.length} Hidden Gems • Swipe or Click ← →`
         : `${formatNumber(HIDDEN_GEMS_DATA.length, 'bn')}টি হিডেন জেম • স্লাইড বা তীর ক্লিক করুন ← →`;
   }
-  if (typeof updateHiddenGemsAutoSlideUI === 'function') {
-    updateHiddenGemsAutoSlideUI();
-  }
 
   // Activities Section
   if (t.activitiesSection) {
     setText('activities-eyebrow', t.activitiesSection.eyebrow);
     setText('activities-title', t.activitiesSection.title);
     setText('activities-subtitle', t.activitiesSection.subtitle);
-    if (typeof updateActivityAutoSlideUI === 'function') {
-      updateActivityAutoSlideUI();
-    }
   }
 
   setText('transport-eyebrow', t.transportSection.eyebrow);
@@ -319,8 +277,6 @@ function setText(id, text) {
  * -------------------------------------------------------------------------- */
 let hotelAutoSlideTimer = null;
 let hotelSliderActiveIndex = 0;
-let hotelAutoSlideEnabled = true;
-let hotelSliderHoverPaused = false;
 let hotelScrollListenerAttached = false;
 
 function getFilteredHotels() {
@@ -592,7 +548,6 @@ function renderHotels() {
 
   // Get filtered and sorted hotels
   const filteredHotels = getFilteredHotels();
-  updateHotelAutoSlideUI();
 
   if (filteredHotels.length === 0) {
     gridContainer.innerHTML = `
@@ -820,26 +775,8 @@ function startHotelAutoSlide() {
     clearInterval(hotelAutoSlideTimer);
   }
   hotelAutoSlideTimer = setInterval(() => {
-    if (!hotelAutoSlideEnabled || hotelSliderHoverPaused) return;
     slideHotels(1);
   }, 4200);
-}
-
-
-
-function updateHotelAutoSlideUI() {
-  const iconEl = document.getElementById('hotel-autoplay-icon');
-  const labelEl = document.getElementById('hotel-autoplay-label');
-  if (iconEl) {
-    iconEl.textContent = hotelAutoSlideEnabled ? '⏸' : '▶';
-  }
-  if (labelEl) {
-    if (AppState.lang === 'bn') {
-      labelEl.textContent = hotelAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
-    } else {
-      labelEl.textContent = hotelAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
-    }
-  }
 }
 
 function setHotelStarFilter(starVal) {
@@ -1060,8 +997,6 @@ function closeHotelFacilitiesModal() {
  * -------------------------------------------------------------------------- */
 let destinationAutoSlideTimer = null;
 let destinationSliderActiveIndex = 0;
-let destinationAutoSlideEnabled = true;
-let destinationSliderHoverPaused = false;
 let destinationScrollListenerAttached = false;
 
 function renderDestinations() {
@@ -1081,7 +1016,6 @@ function renderDestinations() {
     return text.includes(q);
   });
 
-  updateDestinationAutoSlideUI();
 
   if (filteredSpots.length === 0) {
     spotsGrid.innerHTML = `
@@ -1235,7 +1169,6 @@ function renderDestinations() {
   renderHiddenGemsSliderDots(HIDDEN_GEMS_DATA.length);
   initHiddenGemsSliderEvents();
   startHiddenGemsAutoSlide();
-  updateHiddenGemsAutoSlideUI();
 }
 
 function renderDestinationSliderDots(totalSlides) {
@@ -1338,26 +1271,8 @@ function startDestinationAutoSlide() {
     clearInterval(destinationAutoSlideTimer);
   }
   destinationAutoSlideTimer = setInterval(() => {
-    if (!destinationAutoSlideEnabled || destinationSliderHoverPaused) return;
     slideDestinations(1);
   }, 4600);
-}
-
-
-
-function updateDestinationAutoSlideUI() {
-  const iconEl = document.getElementById('destination-autoplay-icon');
-  const labelEl = document.getElementById('destination-autoplay-label');
-  if (iconEl) {
-    iconEl.textContent = destinationAutoSlideEnabled ? '⏸' : '▶';
-  }
-  if (labelEl) {
-    if (AppState.lang === 'bn') {
-      labelEl.textContent = destinationAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
-    } else {
-      labelEl.textContent = destinationAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
-    }
-  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1365,8 +1280,6 @@ function updateDestinationAutoSlideUI() {
  * -------------------------------------------------------------------------- */
 let hiddenGemsSliderActiveIndex = 0;
 let hiddenGemsAutoSlideTimer = null;
-let hiddenGemsAutoSlideEnabled = true;
-let hiddenGemsSliderHoverPaused = false;
 let hiddenGemsScrollListenerAttached = false;
 
 function renderHiddenGemsSliderDots(totalSlides) {
@@ -1469,26 +1382,8 @@ function startHiddenGemsAutoSlide() {
     clearInterval(hiddenGemsAutoSlideTimer);
   }
   hiddenGemsAutoSlideTimer = setInterval(() => {
-    if (!hiddenGemsAutoSlideEnabled || hiddenGemsSliderHoverPaused) return;
     slideHiddenGems(1);
   }, 4400);
-}
-
-
-
-function updateHiddenGemsAutoSlideUI() {
-  const iconEl = document.getElementById('gems-autoplay-icon');
-  const labelEl = document.getElementById('gems-autoplay-label');
-  if (iconEl) {
-    iconEl.textContent = hiddenGemsAutoSlideEnabled ? '⏸' : '▶';
-  }
-  if (labelEl) {
-    if (AppState.lang === 'bn') {
-      labelEl.textContent = hiddenGemsAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
-    } else {
-      labelEl.textContent = hiddenGemsAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
-    }
-  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1496,8 +1391,6 @@ function updateHiddenGemsAutoSlideUI() {
  * -------------------------------------------------------------------------- */
 let activitySliderActiveIndex = 0;
 let activityAutoSlideTimer = null;
-let activityAutoSlideEnabled = true;
-let activitySliderHoverPaused = false;
 let activityScrollListenerAttached = false;
 
 function renderActivities() {
@@ -1563,7 +1456,6 @@ function renderActivities() {
     return true;
   });
 
-  updateActivityAutoSlideUI();
 
   if (activities.length === 0) {
     container.innerHTML = `
@@ -1808,26 +1700,8 @@ function startActivityAutoSlide() {
     clearInterval(activityAutoSlideTimer);
   }
   activityAutoSlideTimer = setInterval(() => {
-    if (!activityAutoSlideEnabled || activitySliderHoverPaused) return;
     slideActivities(1);
   }, 4500);
-}
-
-
-
-function updateActivityAutoSlideUI() {
-  const iconEl = document.getElementById('activities-autoplay-icon');
-  const labelEl = document.getElementById('activities-autoplay-label');
-  if (iconEl) {
-    iconEl.textContent = activityAutoSlideEnabled ? '⏸' : '▶';
-  }
-  if (labelEl) {
-    if (AppState.lang === 'bn') {
-      labelEl.textContent = activityAutoSlideEnabled ? 'অটো-স্লাইড চালু' : 'অটো-স্লাইড বন্ধ';
-    } else {
-      labelEl.textContent = activityAutoSlideEnabled ? 'Auto-Slide On' : 'Auto-Slide Paused';
-    }
-  }
 }
 
 function setActivityFilter(cat) {
@@ -1994,46 +1868,6 @@ function renderFAQs() {
 function toggleFaqItem(faqId) {
   AppState.activeFaqId = AppState.activeFaqId === faqId ? null : faqId;
   renderFAQs();
-}
-
-/* --------------------------------------------------------------------------
- * DYNAMIC HERO SLIDESHOW & LIVE QUICK SEARCH CONTROLLER
- * -------------------------------------------------------------------------- */
-function setHeroSlide(index, isManual) {
-  const slides = document.querySelectorAll('#hero-bg-slider .hero-slide');
-  if (!slides.length) return;
-
-  heroActiveSlideIndex = ((index % slides.length) + slides.length) % slides.length;
-
-  slides.forEach((slide, idx) => {
-    slide.classList.toggle('active', idx === heroActiveSlideIndex);
-  });
-
-  document.querySelectorAll('[data-hero-pill]').forEach(btn => {
-    const idx = parseInt(btn.getAttribute('data-hero-pill'), 10);
-    const isActive = idx === heroActiveSlideIndex;
-    btn.className = isActive
-      ? 'px-3 py-1.5 rounded-full text-xs font-extrabold transition-all bg-amber-400 text-slate-950 shadow-md scale-105 cursor-pointer'
-      : 'px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-md cursor-pointer';
-  });
-
-  const meta = HERO_SCENES_META[heroActiveSlideIndex];
-  if (meta && meta[AppState.lang]) {
-    setText('hero-badge', meta[AppState.lang].badge);
-  }
-
-  if (isManual) {
-    startHeroAutoSlider();
-  }
-}
-
-function startHeroAutoSlider() {
-  if (heroAutoSlideTimer) {
-    clearInterval(heroAutoSlideTimer);
-  }
-  heroAutoSlideTimer = setInterval(() => {
-    setHeroSlide(heroActiveSlideIndex + 1, false);
-  }, 4800);
 }
 
 // The hero search lives on index.html; results link to the dedicated page for each item type.
@@ -3305,7 +3139,6 @@ function renderAll() {
 document.addEventListener('DOMContentLoaded', () => {
   renderAll();
   initScrollListeners();
-  startHeroAutoSlider();
 
   // Hook up Hero search form & live search input
   const searchForm = document.getElementById('hero-search-form');
