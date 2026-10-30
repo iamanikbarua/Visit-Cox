@@ -33,6 +33,13 @@ test('emergency list renders only EMERGENCY_CONTACTS numbers', () => {
   assert.doesNotMatch(html, /01819|160160|169999|158995|lifeguard/i);
 });
 
+test('emergency list in বাংলা cites its source in Bangla with Bangla digits', () => {
+  const html = load(['data.js', 'app.js'])("emergencyContactsHTML('bn')");
+  assert.doesNotMatch(html, /Tourist Police|checked|2026-10-15/);
+  assert.match(html, /ট্যুরিস্ট পুলিশ, কক্সবাজার রিজিয়ন/);
+  assert.match(html, /যাচাই ২০২৬-১০-১৫/);
+});
+
 test('hero search echoes typed text escaped', () => {
   const ev = load(['data.js', 'app.js'], { dom: true });
   ev(`document.getElementById('hero-search-input').value = '<img src=x onerror=alert(1)>qqq'`);
