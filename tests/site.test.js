@@ -33,6 +33,13 @@ test('emergency list renders only EMERGENCY_CONTACTS numbers', () => {
   assert.doesNotMatch(html, /01819|160160|169999|158995|lifeguard/i);
 });
 
+test('emergency list in বাংলা cites its source in Bangla with Bangla digits', () => {
+  const html = load(['data.js', 'app.js'])("emergencyContactsHTML('bn')");
+  assert.doesNotMatch(html, /Tourist Police|checked|2026-10-15/);
+  assert.match(html, /ট্যুরিস্ট পুলিশ, কক্সবাজার রিজিয়ন/);
+  assert.match(html, /যাচাই ২০২৬-১০-১৫/);
+});
+
 test('hero search echoes typed text escaped', () => {
   const ev = load(['data.js', 'app.js'], { dom: true });
   ev(`document.getElementById('hero-search-input').value = '<img src=x onerror=alert(1)>qqq'`);
@@ -54,4 +61,14 @@ test('emergency citations: text sources are escaped text, only URLs become links
   const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]).filter((h) => !h.startsWith('tel:'));
   assert.ok(hrefs.length > 0 && hrefs.every((h) => /^https?:\/\//.test(h)), hrefs.join(', '));
   assert.match(html, /Tourist Police, Cox&#39;s Bazar Region/);
+});
+
+test('every page with a menu button has the drawer toggleMobileMenu opens', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const root = path.join(__dirname, '..');
+  const id = fs.readFileSync(path.join(root, 'js', 'app.js'), 'utf8').match(/function toggleMobileMenu[\s\S]*?getElementById\('([^']+)'\)/)[1];
+  const pages = fs.readdirSync(root).filter((f) => f.endsWith('.html') && fs.readFileSync(path.join(root, f), 'utf8').includes('toggleMobileMenu('));
+  assert.ok(pages.length >= 9, pages.join());
+  assert.deepStrictEqual(pages.filter((f) => !fs.readFileSync(path.join(root, f), 'utf8').includes(`id="${id}"`)), []);
 });

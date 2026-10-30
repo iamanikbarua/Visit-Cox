@@ -1805,7 +1805,9 @@ function emergencyContactsHTML(lang) {
     .map(c => {
       // source is a text label (or, for older entries, a URL); only an http(s) URL becomes a link.
       const url = c.sourceUrl || (/^https?:\/\//.test(c.source || '') ? c.source : '');
-      const note = `${checked} ${escapeHTML(c.asOf || '')}${c.source && c.source !== url ? ` · ${escapeHTML(c.source)}` : ''}`;
+      const label = (lang === 'bn' && c.sourceBn) || c.source;
+      const asOf = lang === 'bn' ? (c.asOf || '').replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]) : c.asOf || '';
+      const note = `${checked} ${escapeHTML(asOf)}${c.source && c.source !== url ? ` · ${escapeHTML(label)}` : ''}`;
       const cite = url
         ? `<a href="${escapeHTML(url)}" target="_blank" rel="noopener" class="block text-[10px] opacity-70 hover:underline">${note}</a>`
         : c.source ? `<span class="block text-[10px] opacity-70">${note}</span>` : '';
@@ -2976,7 +2978,7 @@ function toggleMobileMenu(forceState) {
   } else {
     AppState.isMobileMenuOpen = !AppState.isMobileMenuOpen;
   }
-  const menu = document.getElementById('mobile-nav-drawer');
+  const menu = document.getElementById('mobile-menu-drawer');
   if (menu) {
     menu.classList.toggle('hidden', !AppState.isMobileMenuOpen);
   }
@@ -3030,10 +3032,10 @@ function initScrollListeners() {
   handleScrollUpdate();
 
   // Close mobile drawer when clicking a nav link
-  document.querySelectorAll('#mobile-nav-drawer a').forEach(link => {
+  document.querySelectorAll('#mobile-menu-drawer a').forEach(link => {
     link.addEventListener('click', () => {
       AppState.isMobileMenuOpen = false;
-      document.getElementById('mobile-nav-drawer')?.classList.add('hidden');
+      document.getElementById('mobile-menu-drawer')?.classList.add('hidden');
     });
   });
 }

@@ -7,7 +7,7 @@
 
 // Rendered by app.js, planner.js and page footers. Confirm by phone before relying on them.
 // Owner-provided facts from the Tourist Police, Cox's Bazar Region (helplines, distances, spot safety).
-const TOURIST_POLICE_SOURCE = { source: "Tourist Police, Cox's Bazar Region (government notice and national portal page, provided by the owner)", asOf: '2026-10-15' };
+const TOURIST_POLICE_SOURCE = { source: "Tourist Police, Cox's Bazar Region (government notice and national portal page, provided by the owner)", sourceBn: 'ট্যুরিস্ট পুলিশ, কক্সবাজার রিজিয়ন (সরকারি নোটিশ ও জাতীয় তথ্য বাতায়ন, মালিকের দেওয়া)', asOf: '2026-10-15' };
 const EMERGENCY_CONTACTS = [
   { id: 'national', name: { en: 'National Emergency (police, fire, ambulance)', bn: 'জাতীয় জরুরি সেবা (পুলিশ, ফায়ার, অ্যাম্বুলেন্স)' }, number: '999', tel: '999', source: 'https://999.gov.bd', asOf: '2026-10-15' },
   { id: 'tourist-police', name: { en: 'Tourist Police helpline (24/7)', bn: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (২৪/৭)' }, number: '01320-222222', tel: '+8801320222222', ...TOURIST_POLICE_SOURCE, sourceUrl: 'https://bangladeshmonitor.com.bd/en/bangladesh-tourist-police-launches-247-helpline-for-travellers' },
