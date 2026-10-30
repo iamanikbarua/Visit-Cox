@@ -172,3 +172,16 @@ Not done: a browser check at 375 and 1280 px (the placeholder card height and th
 - Step 6 (agent part): skipped. The only counter is GA after consent; no cookie-free counter is wired, and picking one is the owner's call.
 
 `scripts/check.sh` passes all 7 steps. `?v=20261027` on `js/app.js`, `js/planner.js`, `js/data.js`. Bangla to proofread: "দাম জানান", "দামের রিপোর্ট" and the issue body.
+
+## Update 13 (2026-10-30): dead code, price literals, full browser pass
+
+Three tasks, each its own issue, branch and PR into `main` (assignee the-abraar).
+
+- **Dead code** (#1, PR #2): the hero carousel (`HERO_SCENES_META`, `setHeroSlide`, `startHeroAutoSlider`, `#hero-badge`, hero pills), the four `update*AutoSlideUI` label writers and the never-changing `*AutoSlideEnabled`/`*SliderHoverPaused` flags are gone (-167 lines in `js/app.js`). No page had their markup. The real sliders still auto-advance.
+- **Price literals** (#3, PR #4): `PRICE_BOOK.quotes` holds the 19 prices the chat, `food.html`, `culture.html` and `js/blog.js` hard-coded; `priceById()` reads quotes, fares and activities, `priceDigits()` gives en/bn digits for blog prose, static pages use `data-price="<id>"`. Where copies had drifted, the data value won: Ramu CNG 400-500 (culture said 400-600), Fish World 350 (chat said 300), parasailing and jet ski/ATV from `ACTIVITIES_DATA`, food prices are the food page's ranges everywhere. Train and bus fares moved unchanged (N4 still open). `tests/price-literals.test.js` finds 67 literals on the old code, 0 now, and fails on an unknown price id.
+- **Browser pass** (#5, this PR): headless Chrome, 11 pages x EN/বাংলা x 375x812/1280x800 = 44 loads, plus clicks (language, currency, menu, chat) on 10 pages at both widths. Found and fixed: (1) the menu button did nothing on 8 of 11 pages at phone and tablet widths: `toggleMobileMenu` looked for `#mobile-nav-drawer`, which only `index.html` had; one id now, and a test ties every page with a menu button to it. (2) In বাংলা mode the emergency list showed its source in English with Latin digits; Tourist Police source now has a Bangla label and the date uses Bangla digits (test). (3) At 375 px the 5-column fare table on `transport.html` cut the fare column off; under 640 px each row is a card (route; vehicle | fare; type | duration).
+
+Proof: `scripts/check.sh` passes all 7 steps, 75 tests (the menu and Bangla-source tests fail on the old code). Final pass: 44 loads, 0 page errors, 0 horizontal overflow; the only console error is `404.html`'s `<base href>` to github.io, blocked by its own CSP `base-uri 'self'` when served from another origin (fine on GitHub Pages; on the second host coxbazar.xyz it would be blocked, owner's host decision). English left in বাংলা mode is licence names, author names and the repo URL. `?v=20261030-3` on `js/app.js` and `js/data.js`, `css/styles.css?v=20261030` on all pages.
+
+Not checked: real devices and Safari; screen-reader output of the stacked fare table (its header row is hidden under 640 px); the native-speaker read of the new Bangla source label. Open: sliders auto-advance with no pause control (WCAG 2.2.2), product call.
+
