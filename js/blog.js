@@ -28,18 +28,18 @@ const DEFAULT_BLOG_POSTS = [
     image: 'assets/images/inani-beach.jpg',
     tags: [{ en: 'Marine Drive', bn: 'মেরিন ড্রাইভ' }, { en: 'Bike Rental', bn: 'বাইক ভাড়া' }, { en: 'Inani Beach', bn: 'ইনানী সৈকত' }, { en: 'Himchari', bn: 'হিমছড়ি' }, { en: 'Shamlapur', bn: 'শামলাপুর' }],
     summary: {
-      en: 'Everything you need to know about renting a bike (1,500 BDT/day) or reserving an open-top Chander Gari jeep along the 80 km ocean-and-hill highway.',
-      bn: '৮০ কিমি দীর্ঘ মেরিন ড্রাইভ সড়কে বাইক ভাড়া (১৫০০ টাকা/দিন) বা খোলা ছাদের চান্দের গাড়িতে ভ্রমণের সম্পূর্ণ রুট ও টিপস।'
+      en: `Everything you need to know about renting a bike (${priceDigits('bike-rental-day', 'en')} BDT/day) or reserving an open-top Chander Gari jeep along the 80 km ocean-and-hill highway.`,
+      bn: `৮০ কিমি দীর্ঘ মেরিন ড্রাইভ সড়কে বাইক ভাড়া (${priceDigits('bike-rental-day', 'bn')} টাকা/দিন) বা খোলা ছাদের চান্দের গাড়িতে ভ্রমণের সম্পূর্ণ রুট ও টিপস।`
     },
     content: {
       en: `Riding along the 80-kilometer Cox's Bazar–Teknaf Marine Drive with emerald coastal hills on your left and the unbroken Bay of Bengal waves on your right is the single best experience in Cox's Bazar.
 
 1. Bike / Scooter Rental vs. Chander Gari Jeep:
-• Solo or Couple Riders: You can rent a scooter or motorcycle near Kolatoli Circle (Dolphin Mor) or Sugandha Point for around 1,500 BDT for the full day (including fuel). Make sure to carry your original NID/Passport and a valid driving license.
+• Solo or Couple Riders: You can rent a scooter or motorcycle near Kolatoli Circle (Dolphin Mor) or Sugandha Point for around ${priceDigits('bike-rental-day', 'en')} BDT for the full day (including fuel). Make sure to carry your original NID/Passport and a valid driving license.
 • Families & Groups (6–12 People): Reserve an iconic open-top Chander Gari ('Moon Car' 4x4 Jeep). The fare depends on how far you go (Himchari, Inani or a full day to Shamlapur): see the fare table on the Transport page for current estimates.
 
 2. Best Stop-by-Stop Route Plan:
-• Stop 1 — Darianagar & Parasailing Point (10 km): Catch morning ocean winds and try beach parasailing (1,500 BDT).
+• Stop 1 — Darianagar & Parasailing Point (10 km): Catch morning ocean winds and try beach parasailing (${priceDigits('parasailing-sky-gliding', 'en')} BDT).
 • Stop 2 — Himchari National Park: Climb the hilltop stairs for a panoramic view of the curved coastline and see the natural coastal waterfall.
 • Stop 3 — Inani Coral Beach (32 km): Walk among the ancient black coral boulders during low tide and enjoy calm, clear waters.
 • Stop 4 — Mermaid Beach Cafe (Pechardwip): Great spot for fresh grilled seafood platters and coconut water by the waves.
@@ -50,7 +50,7 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
       bn: `বাম পাশে সবুজ পাহাড় আর ডান পাশে দিগন্তজোড়া বঙ্গোপসাগর রেখে ৮০ কিলোমিটার দীর্ঘ কক্সবাজার-টেকনাফ মেরিন ড্রাইভে ভ্রমণ যেকোনো পর্যটকের জন্য এক অনন্য অভিজ্ঞতা।
 
 ১. বাইক ভাড়া বনাম চান্দের গাড়ি:
-• একক বা কাপল ভ্রমণকারীদের জন্য: কলাতলী মোড় (ডলফিন সার্কেল) বা সুগন্ধা পয়েন্ট থেকে সারাদিনের জন্য জ্বালানিসহ প্রায় ১,৫০০ টাকায় বাইক বা স্কুটার ভাড়া পাওয়া যায়। সাথে অবশ্যই মূল এনআইডি এবং ড্রাইভিং লাইসেন্স রাখবেন।
+• একক বা কাপল ভ্রমণকারীদের জন্য: কলাতলী মোড় (ডলফিন সার্কেল) বা সুগন্ধা পয়েন্ট থেকে সারাদিনের জন্য জ্বালানিসহ প্রায় ${priceDigits('bike-rental-day', 'bn')} টাকায় বাইক বা স্কুটার ভাড়া পাওয়া যায়। সাথে অবশ্যই মূল এনআইডি এবং ড্রাইভিং লাইসেন্স রাখবেন।
 • পরিবার ও গ্রুপের জন্য: ১০-১২ জনের গ্রুপের জন্য খোলা ছাদের চান্দের গাড়ি রিজার্ভ করা সবচেয়ে সাশ্রয়ী ও আনন্দদায়ক। ভাড়া নির্ভর করে কতদূর যাবেন তার ওপর (হিমছড়ি, ইনানী বা সারা দিনে শামলাপুর): এখনকার আনুমানিক ভাড়া যাতায়াত পেজের ভাড়ার তালিকায় দেখুন।
 
 ২. সেরা স্টপওভার রুট:
@@ -76,31 +76,31 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     image: 'assets/images/hotel-sea-crown.jpg',
     tags: [{ en: 'Poushee Restaurant', bn: 'পৌষী রেস্তোরাঁ' }, { en: 'Seafood', bn: 'সামুদ্রিক খাবার' }, { en: 'Sugandha Beach', bn: 'সুগন্ধা সৈকত' }, { en: 'Loitta Fry', bn: 'লইট্যা ফ্রাই' }, { en: 'Food Guide', bn: 'খাবারের গাইড' }],
     summary: {
-      en: 'From 25+ local bhartas and crispy Loitta fry at Poushee (~450 BDT) to evening live grilled crab and red snapper by the waves at Sugandha Point.',
-      bn: 'ঝাউতলার পৌষী রেস্তোরাঁর ২৫+ পদের ভর্তা ও লইট্টা ফ্রাই (~৪৫০ টাকা) থেকে শুরু করে সুগন্ধা সৈকতের গরম গরম কাঁকড়া ও রূপচাঁদা বারবিকিউ।'
+      en: `From 25+ local bhartas and crispy Loitta fry at Poushee (~${priceDigits('food-poushee', 'en')} BDT) to evening live grilled crab and red snapper by the waves at Sugandha Point.`,
+      bn: `ঝাউতলার পৌষী রেস্তোরাঁর ২৫+ পদের ভর্তা ও লইট্টা ফ্রাই (~${priceDigits('food-poushee', 'bn')} টাকা) থেকে শুরু করে সুগন্ধা সৈকতের গরম গরম কাঁকড়া ও রূপচাঁদা বারবিকিউ।`
     },
     content: {
       en: `No trip to Cox's Bazar is complete without tasting authentic coastal Bengali seafood and Chittagong-style Mezbani cuisine. Here is a breakdown of the best places to eat for every budget:
 
 1. Poushee Restaurant & Jhaubon Restaurant (Jhautola / Sugandha):
 • What to Order: Their legendary platter of 20–25 local Bhartas (mashed shutki, shrimp, eggplant, mustard, and green chili), crispy Loitta (Bombay duck) fish fry, Rupchanda fish curry, and Mezbani beef.
-• Average Cost: ~450 to 550 BDT per person.
+• Average Cost: ~${priceDigits('food-poushee', 'en')} BDT per person.
 • Tip: Reach by 1:00 PM for lunch to skip the peak tourist queue!
 
 2. Sugandha Point Evening Live Fish Fry Stalls:
 • What to Order: Right after sunset, dozens of open-air stalls display fresh catch on ice—pick your own Red Snapper (Koral), Rupchanda, Jumbo Prawn, Squid, or Crab, and they will masala-fry or BBQ it live in front of you.
-• Average Cost: ~500 to 700 BDT depending on fish weight. Always confirm the per-piece price before they put it on the grill.
+• Average Cost: ~${priceDigits('food-fish-fry', 'en')} BDT depending on fish weight. Always confirm the per-piece price before they put it on the grill.
 
 3. Mermaid Beach Cafe & Salt Bistro:
-• For ocean-view artisan coffee, continental pasta, or a candlelight wood-fired seafood platter along Marine Drive, Mermaid Beach Cafe (~1,400 BDT) and Salt Bistro (~850 BDT) offer a relaxed international ambiance.`,
+• For ocean-view artisan coffee, continental pasta, or a candlelight wood-fired seafood platter along Marine Drive, Mermaid Beach Cafe (~${priceDigits('food-mermaid-cafe', 'en')} BDT) and Salt Bistro (~${priceDigits('food-salt-bistro', 'en')} BDT) offer a relaxed international ambiance.`,
       bn: `কক্সবাজার ভ্রমণে এসে সামুদ্রিক মাছের তাজা ফ্রাই, রূপচাঁদা শুঁটকি ভর্তা এবং ঐতিহ্যবাহী মেজবানি গোশত না খেলে ভ্রমণই অসম্পূর্ণ থেকে যায়!
 
 ১. পৌষী ও ঝাউবন রেস্তোরাঁ:
 • কী খাবেন: ২০-২৫ পদের ঐতিহ্যবাহী ভর্তা (চিংড়ি, লইট্টা শুঁটকি, ছুরি শুঁটকি, বেগুন, ডাল), মচমচে লইট্টা ফ্রাই, রূপচাঁদা মাছ ও মেজবানি গোশত।
-• গড় খরচ: জনপ্রতি প্রায় ৪৫০ - ৫৫০ টাকা।
+• গড় খরচ: জনপ্রতি প্রায় ${priceDigits('food-poushee', 'bn')} টাকা।
 
 ২. সুগন্ধা সৈকতের লাইভ ফিশ ফ্রাই মার্কেট:
-• সন্ধ্যার পর সুগন্ধা পয়েন্টে সারিবদ্ধ দোকানে তাজা কোরাল, রূপচাঁদা, টুনা, অক্টোপাস ও কাঁকড়া নিজের পছন্দমতো বেছে নিলে সাথে সাথে মশলা মাখিয়ে ভেজে দেওয়া হয় (খরচ ~৫০০-৭০০ টাকা)। ভাজার আগে অবশ্যই দাম জেনে নিন।`
+• সন্ধ্যার পর সুগন্ধা পয়েন্টে সারিবদ্ধ দোকানে তাজা কোরাল, রূপচাঁদা, টুনা, অক্টোপাস ও কাঁকড়া নিজের পছন্দমতো বেছে নিলে সাথে সাথে মশলা মাখিয়ে ভেজে দেওয়া হয় (খরচ ~${priceDigits('food-fish-fry', 'bn')} টাকা)। ভাজার আগে অবশ্যই দাম জেনে নিন।`
     }
   },
   {
@@ -116,27 +116,27 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
     image: 'assets/images/moheshkhali.jpg',
     tags: [{ en: 'Moheshkhali', bn: 'মহেশখালী' }, { en: 'Sonadia Island', bn: 'সোনাদিয়া দ্বীপ' }, { en: 'Speedboat', bn: 'স্পিডবোট' }, { en: 'Kasturi Ghat', bn: 'কস্তুরী ঘাট' }, { en: 'Adinath Temple', bn: 'আদিনাথ মন্দির' }],
     summary: {
-      en: 'How to take the 80–100 BDT speedboat from Kasturi Ghat to Bangladesh’s only hilly island, visit Mainak Hill’s Adinath Temple, and camp on Sonadia Island.',
-      bn: 'শহরের কস্তুরী ঘাট থেকে মাত্র ৮০-১০০ টাকায় স্পিডবোটে মহেশখালী দ্বীপ, মৈনাক পাহাড়ের আদিনাথ মন্দির এবং নির্জন সোনাদিয়া দ্বীপ ভ্রমণের বিস্তারিত।'
+      en: `How to take the ${priceDigits('town-to-moheshkhali', 'en')} BDT speedboat from Kasturi Ghat to Bangladesh’s only hilly island, visit Mainak Hill’s Adinath Temple, and camp on Sonadia Island.`,
+      bn: `শহরের কস্তুরী ঘাট থেকে মাত্র ${priceDigits('town-to-moheshkhali', 'bn')} টাকায় স্পিডবোটে মহেশখালী দ্বীপ, মৈনাক পাহাড়ের আদিনাথ মন্দির এবং নির্জন সোনাদিয়া দ্বীপ ভ্রমণের বিস্তারিত।`
     },
     content: {
       en: `Want to escape the main beach crowd and explore untouched islands, mangrove channels, and hilltop temples? Moheshkhali and Sonadia Island are just across the Bakkhali river estuary.
 
 1. Getting to Kasturi Ghat (6 No. Jetty):
-• Take a shared Tomtom (Easybike) from Laboni, Sugandha, or Kolatoli to Kasturi Ghat (or 6 No. Ghat) in Cox's Bazar town (fare: 20–30 BDT, ~15 mins).
+• Take a shared Tomtom (Easybike) from Laboni, Sugandha, or Kolatoli to Kasturi Ghat (or 6 No. Ghat) in Cox's Bazar town (fare: ${priceDigits('tomtom-to-ghat-shared', 'en')} BDT, ~15 mins).
 
 2. Speedboat Crossing to Moheshkhali Island:
-• Fare: roughly 80 to 100 BDT per passenger each way (estimate, Oct 2026; confirm at the ghat).
+• Fare: roughly ${priceDigits('town-to-moheshkhali', 'en')} BDT per passenger each way (estimate, Oct 2026; confirm at the ghat).
 • Duration: about 30 minutes to Gorakghata (about 1 hour by engine boat or sampan). Ask for a life jacket before you board, and refuse extra tolls at the ghat (Tourist Police, Oct 2026).
-• What to See on the Island: Hire a local island Tomtom (~150–200 BDT reserved) to visit the historic Adinath Shiva Temple atop Mainak Hill, the Rakhine Buddhist Pagodas, betel-leaf hills, and coastal salt pans.
+• What to See on the Island: Hire a local island Tomtom (~${priceDigits('moheshkhali-island-tomtom-reserved', 'en')} BDT reserved) to visit the historic Adinath Shiva Temple atop Mainak Hill, the Rakhine Buddhist Pagodas, betel-leaf hills, and coastal salt pans.
 
 3. Sonadia Ecological Island:
 • Famous for red ghost crabs, pine forests, and winter beach camping. Best visited between November and February when the sea channel is calm and dry.`,
       bn: `মূল সৈকতের কোলাহল ছেড়ে নির্জন দ্বীপ, প্যারাবন ও পাহাড়ি মন্দির দেখতে চাইলে মহেশখালী ও সোনাদিয়া দ্বীপ সেরা গন্তব্য।
 
 ১. কীভাবে যাবেন (কস্তুরী ঘাট / ৬ নং ঘাট):
-• কলাতলী বা লাবণী থেকে টমটমে করে শহরের কস্তুরী ঘাট বা ৬ নং ঘাটে যান (ভাড়া ২০-৩০ টাকা)।
-• সেখান থেকে স্পিডবোটে প্রায় ৩০ মিনিটে (ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা) মহেশখালীর গোরকঘাটায় পৌঁছানো যায় (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬), ভাড়া জনপ্রতি মোটামুটি ৮০-১০০ টাকা (আনুমানিক, অক্টোবর ২০২৬; ঘাটে জেনে নিন)। ওঠার আগে লাইফজ্যাকেট চেয়ে নিন, ঘাটে বাড়তি টোল দেবেন না।
+• কলাতলী বা লাবণী থেকে টমটমে করে শহরের কস্তুরী ঘাট বা ৬ নং ঘাটে যান (ভাড়া ${priceDigits('tomtom-to-ghat-shared', 'bn')} টাকা)।
+• সেখান থেকে স্পিডবোটে প্রায় ৩০ মিনিটে (ইঞ্জিনচালিত নৌকা বা সাম্পানে প্রায় ১ ঘণ্টা) মহেশখালীর গোরকঘাটায় পৌঁছানো যায় (ট্যুরিস্ট পুলিশ, অক্টোবর ২০২৬), ভাড়া জনপ্রতি মোটামুটি ${priceDigits('town-to-moheshkhali', 'bn')} টাকা (আনুমানিক, অক্টোবর ২০২৬; ঘাটে জেনে নিন)। ওঠার আগে লাইফজ্যাকেট চেয়ে নিন, ঘাটে বাড়তি টোল দেবেন না।
 
 ২. কী কী দেখবেন:
 • মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক আদিনাথ মন্দির, রাখাইন বৌদ্ধ প্যাগোডা, লবণের মাঠ ও পানের বরজ। আর শীতকালে সোনাদিয়া দ্বীপে লাল কাঁকড়া ও বিচ ক্যাম্পিং উপভোগ করতে পারেন।`
@@ -167,8 +167,8 @@ Always aim to start your return ride toward Cox's Bazar town right after sunset 
 • Kalatali & Eco Park: Best for budget-friendly hill-view hotels (Prime Park Hotel, White Orchid) and quick access to Marine Drive.
 
 2. Avoid Overpaying for Local Rides (fares below are estimates, Oct 2026):
-• Shared Tomtoms between Kalatali, Sugandha, and Laboni usually cost 10 to 20 BDT per person.
-• For reserved CNGs (to Himchari: 300–400 BDT; to Ramu: 400–500 BDT) or Chander Gari jeeps (to Inani: 1,500–2,000 BDT), always agree on the round-trip fare and waiting time before boarding.
+• Shared Tomtoms between Kalatali, Sugandha, and Laboni usually cost ${priceDigits('tomtom-shared-hop', 'en')} BDT per person.
+• For reserved CNGs (to Himchari: ${priceDigits('town-to-himchari', 'en')} BDT; to Ramu: ${priceDigits('town-to-ramu', 'en')} BDT) or Chander Gari jeeps (to Inani: ${priceDigits('town-to-inani', 'en')} BDT), always agree on the round-trip fare and waiting time before boarding.
 
 3. Beach Swimming Safety & Emergency Contacts:
 • Swim ONLY between Green Flags watched by CIPRB Sea Safe Lifeguards. Never enter the water near Red Flags or after sunset.

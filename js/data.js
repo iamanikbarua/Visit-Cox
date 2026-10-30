@@ -27,7 +27,9 @@ function reportPriceURL(subject, lang) {
 const CONFIG = {
   exchangeRateUSD: 120, // 1 USD = 120 BDT
   defaultLang: 'en',
-  defaultCurrency: 'BDT'
+  defaultCurrency: 'BDT',
+  // Hotel price filter bands on hotels.html (per night, BDT).
+  hotelPriceBands: { budgetBelow: 3000, luxuryFrom: 7000 }
 };
 
 /* --------------------------------------------------------------------------
@@ -2630,11 +2632,49 @@ const PRICE_BOOK = (() => {
         modeNote: { en: 'Full day, reserved', bn: 'সারা দিন, রিজার্ভড' }, duration: { en: '1.5 hours each way', bn: 'এক দিকে দেড় ঘণ্টা' } })
     ],
     // Routes on the planner's fare card and driver card (ids in TRANSPORT_DATA or fares above).
-    fareCard: ['town-to-inani', 'town-to-himchari', 'kolatoli-to-6-ghat', 'town-to-moheshkhali']
+    fareCard: ['town-to-inani', 'town-to-himchari', 'kolatoli-to-6-ghat', 'town-to-moheshkhali'],
+    // Other prices quoted in the chat, food.html, culture.html and the blog. Read through priceById().
+    quotes: {
+      'bike-rental-day': e({ minBDT: 1500, maxBDT: 1500, note: 'scooter or motorbike, full day incl. fuel' }),
+      'tomtom-shared-hop': e({ minBDT: 10, maxBDT: 20, note: 'shared tomtom between Kolatoli, Sugandha and Laboni, per person' }),
+      'tomtom-to-ghat-shared': e({ minBDT: 20, maxBDT: 30, note: 'shared tomtom from the beach to Kasturi Ghat, per person' }),
+      'moheshkhali-island-hop': e({ minBDT: 100, maxBDT: 150, note: 'tomtom or rickshaw on the island to Adinath Hill' }),
+      'moheshkhali-island-tomtom-reserved': e({ minBDT: 150, maxBDT: 200, note: 'island tomtom reserved for the temple, pagodas and salt fields' }),
+      'sonadia-boat-trip': e({ minBDT: 900, maxBDT: 900, note: 'boat and eco trip from Kasturi Ghat' }),
+      'shopping-budget': e({ minBDT: 500, maxBDT: 500, note: 'Burmese market handicrafts, suggested budget' }),
+      // Food: average per person per meal.
+      'food-poushee': e({ minBDT: 350, maxBDT: 600 }),
+      'food-jhaubon': e({ minBDT: 400, maxBDT: 750 }),
+      'food-niribili': e({ minBDT: 300, maxBDT: 550 }),
+      'food-fish-fry': e({ minBDT: 400, maxBDT: 1000, note: 'Sugandha live fish fry stalls, depends on fish weight' }),
+      'food-mermaid-cafe': e({ minBDT: 1200, maxBDT: 2500 }),
+      'food-handi': e({ minBDT: 450, maxBDT: 850 }),
+      'food-salt-bistro': e({ minBDT: 600, maxBDT: 1100 }),
+      'food-bharta-plate': e({ minBDT: 30, maxBDT: 60, note: 'each plate of bharta at rice restaurants' }),
+      // Travel to Cox's Bazar. Unconfirmed: AC Snigdha may be 1,449 since Dec 2025 (CrtiQue_Oct24 N4, owner to confirm).
+      'train-shovon-chair': e({ minBDT: 695, maxBDT: 695 }),
+      'train-ac-snigdha': e({ minBDT: 1325, maxBDT: 1325 }),
+      'bus-dhaka': e({ minBDT: 1200, maxBDT: 2500, note: 'Dhaka to Cox\'s Bazar, non-AC to AC sleeper' })
+    }
   };
 })();
 
 // One lookup for both fare tables.
 function fareById(id) {
   return TRANSPORT_DATA.find(f => f.id === id) || PRICE_BOOK.fares.find(f => f.id === id) || null;
+}
+
+// Any quoted price by id: PRICE_BOOK.quotes, a fare, or an activity. Returns { minBDT, maxBDT } or throws on an unknown id.
+function priceById(id) {
+  const q = PRICE_BOOK.quotes[id] || fareById(id);
+  if (q) return q;
+  const a = ACTIVITIES_DATA.find(x => x.id === id);
+  if (a) return { minBDT: a.priceBDT, maxBDT: a.priceMaxBDT };
+  throw new Error('priceById: unknown id ' + id);
+}
+
+// "1,500" or "1,500–2,000" in en or bn digits, for prose that names the currency itself (the blog).
+function priceDigits(id, lang) {
+  const p = priceById(id), f = n => n.toLocaleString(lang === 'bn' ? 'bn-BD' : 'en-US');
+  return p.minBDT === p.maxBDT ? f(p.minBDT) : `${f(p.minBDT)}–${f(p.maxBDT)}`;
 }
