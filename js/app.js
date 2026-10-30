@@ -91,7 +91,7 @@ function formatNumber(num, lang) {
 
 /**
  * Formats a min-max BDT range into either BDT or USD string
- * Example BDT: "2,500 - 4,500 BDT" | Example USD: "$21 - $38 USD"
+ * BDT mode: "<min> - <max> BDT" (টাকা in bn); USD mode: "$<min> - $<max> USD"
  */
 function formatPriceRange(minBDT, maxBDT) {
   const isSingle = minBDT === maxBDT;
@@ -291,15 +291,13 @@ function getFilteredHotels() {
 
     // 2. Price Range Filter
     if (AppState.hotelPriceFilter !== 'ALL') {
+      const { budgetBelow, luxuryFrom } = CONFIG.hotelPriceBands;
       if (AppState.hotelPriceFilter === 'budget') {
-        // Less than 3,000 BDT
-        if (hotel.minBDT >= 3000) return false;
+        if (hotel.minBDT >= budgetBelow) return false;
       } else if (AppState.hotelPriceFilter === 'mid') {
-        // 3,000 to 7,000 BDT
-        if (hotel.minBDT > 7000 || hotel.maxBDT < 3000) return false;
+        if (hotel.minBDT > luxuryFrom || hotel.maxBDT < budgetBelow) return false;
       } else if (AppState.hotelPriceFilter === 'luxury') {
-        // 7,000+ BDT
-        if (hotel.minBDT < 7000 && hotel.maxBDT < 9000) return false;
+        if (hotel.minBDT < luxuryFrom && hotel.maxBDT < 9000) return false;
       }
     }
 
@@ -405,11 +403,13 @@ function renderHotels() {
   // 2. Render Price Filters
   const priceContainer = document.getElementById('hotel-price-filters');
   if (priceContainer) {
+    const { budgetBelow: lo, luxuryFrom: hi } = CONFIG.hotelPriceBands;
+    const one = n => formatPriceRange(n, n);
     const priceOptions = [
       { val: 'ALL', labelEn: 'All Prices', labelBn: 'সব ভাড়া' },
-      { val: 'budget', labelEn: 'Budget (< ৳3,000 / < $25)', labelBn: 'বাজেট (< ৩,০০০)' },
-      { val: 'mid', labelEn: 'Mid-Range (৳3k-৳7k / $25-$60)', labelBn: 'মিড-রেঞ্জ (৩-৭ হাজার)' },
-      { val: 'luxury', labelEn: 'Luxury (৳7k+ / > $60)', labelBn: 'লাক্সারি (৭ হাজার+)' }
+      { val: 'budget', labelEn: `Budget (< ${one(lo)})`, labelBn: `বাজেট (< ${one(lo)})` },
+      { val: 'mid', labelEn: `Mid-Range (${formatPriceRange(lo, hi)})`, labelBn: `মিড-রেঞ্জ (${formatPriceRange(lo, hi)})` },
+      { val: 'luxury', labelEn: `Luxury (${one(hi)}+)`, labelBn: `লাক্সারি (${one(hi)}+)` }
     ];
     priceContainer.innerHTML = priceOptions.map(opt => {
       const isActive = AppState.hotelPriceFilter === opt.val;
@@ -2104,8 +2104,8 @@ async function fetchTravelAssistantReply(userText) {
   const q = raw.toLowerCase();
   const lang = AppState.lang;
   const fmtSingle = bdt => formatPriceRange(bdt, bdt);
-  // Fares come from TRANSPORT_DATA / PRICE_BOOK.fares, so the chat quotes what the fare table says (CrtiQue_Oct21 H6).
-  const fare = id => { const f = fareById(id); return formatPriceRange(f.minBDT, f.maxBDT); };
+  // Prices come from data.js (fares, activities, PRICE_BOOK.quotes), so the chat quotes what the tables say (CrtiQue_Oct21 H6).
+  const fare = id => { const f = priceById(id); return formatPriceRange(f.minBDT, f.maxBDT); };
   const himchariEntry = fmtSingle(PRICE_BOOK.activities.himchari_hill.costPerPerson);
   // Distance and directions come from the spot data (Tourist Police figure), not a second number here.
   const himchariWay = DESTINATIONS_DATA.find(d => d.id === 'himchari-national-park').directions;
@@ -2277,8 +2277,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['inani', 'ইনানী', 'ইনানি', 'coral boulder', 'pathani patar'],
       title: { en: '🪨 Inani Coral Beach (32 km South)', bn: '🪨 ইনানী প্রবাল সৈকত (৩২ কিমি দক্ষিণে)' },
       body: {
-        en: `• <strong>Why Visit:</strong> Famous 18 km shoreline with ancient black coral boulders, calm tidal pools & crystal-clear water.<br/>• <strong>How to Go:</strong> 32 km south of town via scenic Marine Drive (~1 hour).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>Chander Gari (Open Jeep)</strong> costs <strong>${fare('town-to-inani')}</strong> for a group, or rent a <strong>Bike/Scooter</strong> for <strong>${fmtSingle(1500)}/day</strong>.<br/>• <strong>Best Time:</strong> Morning during low tide (when coral rocks are exposed) or sunset.`,
-        bn: `• <strong>কেন যাবেন:</strong> প্রাচীন প্রবাল পাথর, স্বচ্ছ নীল জলরাশি ও শান্ত ঢেউয়ের জন্য বিখ্যাত ১৮ কিমি দীর্ঘ সৈকত।<br/>• <strong>দূরত্ব ও সময়:</strong> মেরিন ড্রাইভ ধরে শহর থেকে ৩২ কিমি দক্ষিণে (প্রায় ১ ঘণ্টা)।<br/>• <strong>যাতায়াত ভাড়া:</strong> গ্রুপের জন্য রিজার্ভ <strong>চান্দের গাড়ি</strong> ভাড়া <strong>${fare('town-to-inani')}</strong> অথবা সারাদিনের জন্য <strong>বাইক ভাড়া ${fmtSingle(1500)}</strong>।`
+        en: `• <strong>Why Visit:</strong> Famous 18 km shoreline with ancient black coral boulders, calm tidal pools & crystal-clear water.<br/>• <strong>How to Go:</strong> 32 km south of town via scenic Marine Drive (~1 hour).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>Chander Gari (Open Jeep)</strong> costs <strong>${fare('town-to-inani')}</strong> for a group, or rent a <strong>Bike/Scooter</strong> for <strong>${fare('bike-rental-day')}/day</strong>.<br/>• <strong>Best Time:</strong> Morning during low tide (when coral rocks are exposed) or sunset.`,
+        bn: `• <strong>কেন যাবেন:</strong> প্রাচীন প্রবাল পাথর, স্বচ্ছ নীল জলরাশি ও শান্ত ঢেউয়ের জন্য বিখ্যাত ১৮ কিমি দীর্ঘ সৈকত।<br/>• <strong>দূরত্ব ও সময়:</strong> মেরিন ড্রাইভ ধরে শহর থেকে ৩২ কিমি দক্ষিণে (প্রায় ১ ঘণ্টা)।<br/>• <strong>যাতায়াত ভাড়া:</strong> গ্রুপের জন্য রিজার্ভ <strong>চান্দের গাড়ি</strong> ভাড়া <strong>${fare('town-to-inani')}</strong> অথবা সারাদিনের জন্য <strong>বাইক ভাড়া ${fare('bike-rental-day')}</strong>।`
       },
       chips: {
         en: ['Himchari waterfall info', 'Shamlapur sunset point', 'Marine Drive bike cost?'],
@@ -2303,7 +2303,7 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['moheshkhali', 'maheshkhali', 'মহেশখালী', 'adinath', 'আদিনাথ', 'kasturi ghat', 'কস্তুরাঘাট', '6 no ghat', '৬ নং ঘাট'],
       title: { en: '🏝️ Moheshkhali Island & Adinath Temple', bn: '🏝️ মহেশখালী দ্বীপ ও আদিনাথ মন্দির' },
       body: {
-        en: `• <strong>Why Visit:</strong> Bangladesh's only hilly island—home to the historic <strong>Adinath Shiva Temple</strong> atop Mainak Hill, Rakhine Buddhist pagodas, and coastal salt pans.<br/>• <strong>How to Go:</strong> Take a Tomtom to <strong>Kasturi Ghat (6 No. Jetty)</strong> in Cox's Bazar town, then board a <strong>speedboat (about 30 minutes)</strong> across the Bakkhali channel.<br/>• <strong>Exact Fare:</strong> Speedboat is <strong>${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)} per passenger</strong> each way (life jackets provided). On the island, local Tomtoms/rickshaws to Adinath Hill cost ~${formatPriceRange(100, 150)}.`,
+        en: `• <strong>Why Visit:</strong> Bangladesh's only hilly island—home to the historic <strong>Adinath Shiva Temple</strong> atop Mainak Hill, Rakhine Buddhist pagodas, and coastal salt pans.<br/>• <strong>How to Go:</strong> Take a Tomtom to <strong>Kasturi Ghat (6 No. Jetty)</strong> in Cox's Bazar town, then board a <strong>speedboat (about 30 minutes)</strong> across the Bakkhali channel.<br/>• <strong>Exact Fare:</strong> Speedboat is <strong>${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)} per passenger</strong> each way (life jackets provided). On the island, local Tomtoms/rickshaws to Adinath Hill cost ~${fare('moheshkhali-island-hop')}.`,
         bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের একমাত্র পাহাড়ি দ্বীপ—মৈনাক পাহাড়ের চূড়ায় ঐতিহাসিক <strong>আদিনাথ মন্দির</strong>, বৌদ্ধ প্যাগোডা ও লবণের মাঠ।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের <strong>কস্তুরাঘাট (৬ নং ঘাট)</strong> থেকে স্পিডবোটে প্রায় ৩০ মিনিটে মহেশখালী যাওয়া যায়।<br/>• <strong>ভাড়া:</strong> স্পিডবোট ভাড়া জনপ্রতি <strong>${formatPriceRange(mohFare.minBDT, mohFare.maxBDT)}</strong>।`
       },
       chips: {
@@ -2316,8 +2316,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['ramu', 'রামু', 'buddha', 'বুদ্ধ', 'monastery', 'বিহার', '100 feet', '১০০ ফুট'],
       title: { en: '🛕 100 Feet Reclining Golden Buddha at Ramu', bn: '🛕 রামুর ভুবন শান্তি ১০০ ফুট স্বর্ণালী বুদ্ধ মূর্তি' },
       body: {
-        en: `• <strong>Why Visit:</strong> Home to the awe-inspiring 100-foot reclining Gautama Buddha statue (<em>Vimukti Bibartanarama</em>, Est. 2007) and ancient wooden Rakhine Buddhist monasteries.<br/>• <strong>How to Go:</strong> 16 km east of Cox's Bazar town along the Chittagong-Cox's Bazar highway (~40 mins).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${formatPriceRange(400, 500)}</strong>.<br/>• <strong>Etiquette Tip:</strong> Remove shoes and cover shoulders & knees before entering temple halls.`,
-        bn: `• <strong>কেন যাবেন:</strong> উত্তর মিঠাছড়িতে অবস্থিত ১০০ ফুট দীর্ঘ শায়িত গৌতম বুদ্ধ মূর্তি এবং প্রাচীন বৌদ্ধ বিহার।<br/>• <strong>দূরত্ব ও সময়:</strong> শহর থেকে ১৬ কিমি পূর্বে (প্রায় ৪০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${formatPriceRange(400, 500)}</strong>।<br/>• <strong>সৌজন্যতা:</strong> মন্দিরে প্রবেশের আগে জুতো খুলুন এবং শালীন পোশাক পরিধান করুন।`
+        en: `• <strong>Why Visit:</strong> Home to the awe-inspiring 100-foot reclining Gautama Buddha statue (<em>Vimukti Bibartanarama</em>, Est. 2007) and ancient wooden Rakhine Buddhist monasteries.<br/>• <strong>How to Go:</strong> 16 km east of Cox's Bazar town along the Chittagong-Cox's Bazar highway (~40 mins).<br/>• <strong>Transport & Fare:</strong> Reserved <strong>CNG Auto-Rickshaw</strong> costs <strong>${fare('town-to-ramu')}</strong>.<br/>• <strong>Etiquette Tip:</strong> Remove shoes and cover shoulders & knees before entering temple halls.`,
+        bn: `• <strong>কেন যাবেন:</strong> উত্তর মিঠাছড়িতে অবস্থিত ১০০ ফুট দীর্ঘ শায়িত গৌতম বুদ্ধ মূর্তি এবং প্রাচীন বৌদ্ধ বিহার।<br/>• <strong>দূরত্ব ও সময়:</strong> শহর থেকে ১৬ কিমি পূর্বে (প্রায় ৪০ মিনিট)।<br/>• <strong>যাতায়াত ভাড়া:</strong> রিজার্ভ <strong>সিএনজি ভাড়া ${fare('town-to-ramu')}</strong>।<br/>• <strong>সৌজন্যতা:</strong> মন্দিরে প্রবেশের আগে জুতো খুলুন এবং শালীন পোশাক পরিধান করুন।`
       },
       chips: {
         en: ['Moheshkhali Island info', 'Radiant Fish World', 'Cultural dress code?'],
@@ -2329,8 +2329,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['radiant', 'aquarium', 'fish world', 'রেডিয়েন্ট', 'অ্যাকোয়ারিয়াম', 'ফিশ ওয়ার্ল্ড', 'shark'],
       title: { en: '🐠 Radiant Fish World Aquarium (Jhautola)', bn: '🐠 রেডিয়েন্ট ফিশ ওয়ার্ল্ড অ্যাকোয়ারিয়াম (ঝাউতলা)' },
       body: {
-        en: `• <strong>Why Visit:</strong> Bangladesh's first marine aquarium featuring 100+ Bay of Bengal species, sharks, rays, and a walk-through underwater glass tunnel.<br/>• <strong>Location:</strong> Right in <strong>Jhautola town center</strong> (5 mins from Laboni/Sugandha by Tomtom for <strong>${formatPriceRange(15, 20)}</strong>).<br/>• <strong>Entry Ticket:</strong> ~<strong>${fmtSingle(300)}</strong> per person. Great for families and evening visits (right next to Poushee Restaurant!).`,
-        bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের প্রথম সামুদ্রিক অ্যাকোয়ারিয়াম—যেখানে ১০০+ প্রজাতির মাছ, হাঙর এবং আন্ডারওয়াটার গ্লাস টানেল রয়েছে।<br/>• <strong>অবস্থান ও ভাড়া:</strong> শহরের ঝাউতলায় অবস্থিত (টমটম ভাড়া মাত্র <strong>${formatPriceRange(15, 20)}</strong>)। প্রবেশ টিকিট জনপ্রতি প্রায় <strong>${fmtSingle(300)}</strong>।`
+        en: `• <strong>Why Visit:</strong> Bangladesh's first marine aquarium featuring 100+ Bay of Bengal species, sharks, rays, and a walk-through underwater glass tunnel.<br/>• <strong>Location:</strong> Right in <strong>Jhautola town center</strong> (5 mins from Laboni/Sugandha by Tomtom for <strong>${fare('town-to-laboni-sugandha')}</strong>).<br/>• <strong>Entry Ticket:</strong> ~<strong>${fmtSingle(PRICE_BOOK.activities.fish_world.costPerPerson)}</strong> per person. Great for families and evening visits (right next to Poushee Restaurant!).`,
+        bn: `• <strong>কেন যাবেন:</strong> বাংলাদেশের প্রথম সামুদ্রিক অ্যাকোয়ারিয়াম—যেখানে ১০০+ প্রজাতির মাছ, হাঙর এবং আন্ডারওয়াটার গ্লাস টানেল রয়েছে।<br/>• <strong>অবস্থান ও ভাড়া:</strong> শহরের ঝাউতলায় অবস্থিত (টমটম ভাড়া মাত্র <strong>${fare('town-to-laboni-sugandha')}</strong>)। প্রবেশ টিকিট জনপ্রতি প্রায় <strong>${fmtSingle(PRICE_BOOK.activities.fish_world.costPerPerson)}</strong>।`
       },
       chips: {
         en: ['Poushee Restaurant cost?', 'Laboni & Sugandha Beach', '3-Day Family Plan'],
@@ -2342,8 +2342,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['sonadia', 'সোনাদিয়া', 'camping', 'ক্যাম্পিং', 'turtle', 'red crab', 'লাল কাঁকড়া'],
       title: { en: '⛺ Sonadia Ecological Island (9 sq. km)', bn: '⛺ সোনাদিয়া দ্বীপ (বিচ ক্যাম্পিং ও লাল কাঁকড়া)' },
       body: {
-        en: `• <strong>Why Visit:</strong> Untouched crescent barrier island northwest of Cox's Bazar—famous for winter beach camping, mangrove forests, red ghost crabs, and Olive Ridley sea turtle nesting.<br/>• <strong>How to Go:</strong> Board a boat/speedboat from <strong>Kasturi Ghat (6 No. Ghat)</strong> via Moheshkhali channel.<br/>• <strong>Est. Activity Cost:</strong> ~<strong>${fmtSingle(900)}</strong> for eco-boat transfer & island excursion. Best visited Nov–Feb.`,
-        bn: `• <strong>কেন যাবেন:</strong> নির্জন অর্ধচন্দ্রাকার দ্বীপ—শীতকালীন বিচ ক্যাম্পিং, লাল কাঁকড়া, প্যারাবন এবং সামুদ্রিক কাছিমের জন্য বিখ্যাত।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের কস্তুরাঘাট থেকে ট্রলার বা স্পিডবোটে যাওয়া যায় (বোট ও ইকো ট্রিপ খরচ ~<strong>${fmtSingle(900)}</strong>)।`
+        en: `• <strong>Why Visit:</strong> Untouched crescent barrier island northwest of Cox's Bazar—famous for winter beach camping, mangrove forests, red ghost crabs, and Olive Ridley sea turtle nesting.<br/>• <strong>How to Go:</strong> Board a boat/speedboat from <strong>Kasturi Ghat (6 No. Ghat)</strong> via Moheshkhali channel.<br/>• <strong>Est. Activity Cost:</strong> ~<strong>${fare('sonadia-boat-trip')}</strong> for eco-boat transfer & island excursion. Best visited Nov–Feb.`,
+        bn: `• <strong>কেন যাবেন:</strong> নির্জন অর্ধচন্দ্রাকার দ্বীপ—শীতকালীন বিচ ক্যাম্পিং, লাল কাঁকড়া, প্যারাবন এবং সামুদ্রিক কাছিমের জন্য বিখ্যাত।<br/>• <strong>কীভাবে যাবেন:</strong> শহরের কস্তুরাঘাট থেকে ট্রলার বা স্পিডবোটে যাওয়া যায় (বোট ও ইকো ট্রিপ খরচ ~<strong>${fare('sonadia-boat-trip')}</strong>)।`
       },
       chips: {
         en: ['Moheshkhali speedboat?', 'Best season to visit?', 'Shamlapur sunset point'],
@@ -2355,7 +2355,7 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['shamlapur', 'শামলাপুর', 'sampan', 'সাম্পান', 'baharchhara', 'বাহারছড়া', 'sunset point', 'সূর্যাস্ত'],
       title: { en: '🌅 Shamlapur Marine Drive Sunset & Sampan Boats', bn: '🌅 শামলাপুর বাহারছড়া সাম্পান ঘাট ও সূর্যাস্ত' },
       body: {
-        en: `• <strong>Why Visit:</strong> Located 45 km south at Baharchhara on Marine Drive—famous for traditional crescent-prowed wooden <strong>Sampan fishing boats</strong> lined up against golden-hour skies.<br/>• <strong>How to Go:</strong> Ride a rented <strong>Bike (${fmtSingle(1500)}/day)</strong> or a full-day <strong>Chander Gari (${fare('town-to-shamlapur-jeep')})</strong> past Inani Beach.<br/>• <strong>Safety Tip:</strong> Enjoy the 5:00 PM sunset and start your return ride toward Cox's Bazar town before dark.`,
+        en: `• <strong>Why Visit:</strong> Located 45 km south at Baharchhara on Marine Drive—famous for traditional crescent-prowed wooden <strong>Sampan fishing boats</strong> lined up against golden-hour skies.<br/>• <strong>How to Go:</strong> Ride a rented <strong>Bike (${fare('bike-rental-day')}/day)</strong> or a full-day <strong>Chander Gari (${fare('town-to-shamlapur-jeep')})</strong> past Inani Beach.<br/>• <strong>Safety Tip:</strong> Enjoy the 5:00 PM sunset and start your return ride toward Cox's Bazar town before dark.`,
         bn: `• <strong>কেন যাবেন:</strong> মেরিন ড্রাইভের ৪৫ কিমি দক্ষিণে বাহারছড়ায় অবস্থিত—ঐতিহ্যবাহী কাঠের সাম্পান নৌকা ও গোধূলির সূর্যাস্তের ছবির জন্য অনন্য।<br/>• <strong>কীভাবে যাবেন:</strong> ইনানী পেরিয়ে বাইকে বা চান্দের গাড়িতে সহজেই যাওয়া যায়।`
       },
       chips: {
@@ -2394,8 +2394,8 @@ async function fetchTravelAssistantReply(userText) {
       keys: ['laboni', 'sugandha', 'লাবণী', 'সুগন্ধা', 'kolatoli beach', 'কলাতলী সৈকত'],
       title: { en: '🏖️ Laboni, Sugandha & Kolatoli Main Beaches', bn: '🏖️ লাবণী, সুগন্ধা ও কলাতলী প্রধান সমুদ্র সৈকত' },
       body: {
-        en: `• <strong>Laboni Point:</strong> Closest to town, iconic beach monument, Burmese handicraft markets, and <strong>Hotel Kollol</strong>.<br/>• <strong>Sugandha Point:</strong> Famous for evening live fish-fry stalls, water sports (Jet Ski/ATV), and <strong>Hotel Sea Crown</strong>.<br/>• <strong>Kolatoli Point:</strong> Main bus arrival hub (Dolphin Mor) with <strong>Prime Park Hotel</strong> & <strong>White Orchid</strong>.<br/>• <strong>Transit:</strong> Shared <strong>Tomtoms</strong> connect all three points in 5–10 mins for just <strong>${formatPriceRange(10, 20)}</strong>!`,
-        bn: `• <strong>লাবণী পয়েন্ট:</strong> শহরের সবচেয়ে কাছে, বার্মিজ মার্কেট ও <strong>হোটেল কল্লোল</strong> সংলগ্ন।<br/>• <strong>সুগন্ধা পয়েন্ট:</strong> সন্ধ্যার লাইভ ফিশ ফ্রাই মার্কেট, জেট স্কি ও <strong>হোটেল সী ক্রাউন</strong> সংলগ্ন।<br/>• <strong>কলাতলী পয়েন্ট:</strong> বাস নামার প্রধান স্থান (ডলফিন মোড়)।<br/>• <strong>যাতায়াত:</strong> মাত্র <strong>${formatPriceRange(10, 20)}</strong> টমটম ভাড়ায় এক পয়েন্ট থেকে অন্য পয়েন্টে যাওয়া যায়!`
+        en: `• <strong>Laboni Point:</strong> Closest to town, iconic beach monument, Burmese handicraft markets, and <strong>Hotel Kollol</strong>.<br/>• <strong>Sugandha Point:</strong> Famous for evening live fish-fry stalls, water sports (Jet Ski/ATV), and <strong>Hotel Sea Crown</strong>.<br/>• <strong>Kolatoli Point:</strong> Main bus arrival hub (Dolphin Mor) with <strong>Prime Park Hotel</strong> & <strong>White Orchid</strong>.<br/>• <strong>Transit:</strong> Shared <strong>Tomtoms</strong> connect all three points in 5–10 mins for just <strong>${fare('tomtom-shared-hop')}</strong>!`,
+        bn: `• <strong>লাবণী পয়েন্ট:</strong> শহরের সবচেয়ে কাছে, বার্মিজ মার্কেট ও <strong>হোটেল কল্লোল</strong> সংলগ্ন।<br/>• <strong>সুগন্ধা পয়েন্ট:</strong> সন্ধ্যার লাইভ ফিশ ফ্রাই মার্কেট, জেট স্কি ও <strong>হোটেল সী ক্রাউন</strong> সংলগ্ন।<br/>• <strong>কলাতলী পয়েন্ট:</strong> বাস নামার প্রধান স্থান (ডলফিন মোড়)।<br/>• <strong>যাতায়াত:</strong> মাত্র <strong>${fare('tomtom-shared-hop')}</strong> টমটম ভাড়ায় এক পয়েন্ট থেকে অন্য পয়েন্টে যাওয়া যায়!`
       },
       chips: {
         en: ['Hotel Sea Crown details', 'Sugandha live fish fry?', 'Swimming safety rules?'],
@@ -2491,8 +2491,8 @@ async function fetchTravelAssistantReply(userText) {
           <div>🍛 <strong>Poushee Restaurant (Jhautola Main Road):</strong></div>
           <div class="text-xs text-slate-700 space-y-1">
             • <strong>Famous For:</strong> Traditional Chittagong Mezbani beef, crispy Loitta fish fry, Rupchanda curry, and <strong>25+ types of local Bharta</strong> (mashed specialties).<br/>
-            • <strong>Avg. Meal Cost:</strong> ~<strong>${fmtSingle(450)} per person</strong>.<br/>
-            • <strong>How to Go:</strong> 5 mins by shared Tomtom (${formatPriceRange(15, 20)}) from Laboni or Sugandha Beach.
+            • <strong>Avg. Meal Cost:</strong> ~<strong>${fare('food-poushee')} per person</strong>.<br/>
+            • <strong>How to Go:</strong> 5 mins by shared Tomtom (${fare('town-to-laboni-sugandha')}) from Laboni or Sugandha Beach.
           </div>
           ${buildChatFollowUpChips(['Mermaid Beach Cafe?', 'Sugandha live fish fry?', 'Radiant Fish World nearby'])}
         `
@@ -2500,7 +2500,7 @@ async function fetchTravelAssistantReply(userText) {
           <div>🍛 <strong>পৌষী রেস্তোরাঁ (ঝাউতলা মেইন রোড):</strong></div>
           <div class="text-xs text-slate-700 space-y-1">
             • <strong>বিখ্যাত খাবার:</strong> ঐতিহ্যবাহী মেজবানি গোশত, লইট্টা ফ্রাই, রূপচাঁদা মাছ ও ২৫+ পদের সুস্বাদু ভর্তা।<br/>
-            • <strong>গড় খরচ:</strong> জনপ্রতি প্রায় <strong>${fmtSingle(450)}</strong>। (লাবণী/সুগন্ধা থেকে টমটম ভাড়া ${formatPriceRange(15, 20)})।
+            • <strong>গড় খরচ:</strong> জনপ্রতি প্রায় <strong>${fare('food-poushee')}</strong>। (লাবণী/সুগন্ধা থেকে টমটম ভাড়া ${fare('town-to-laboni-sugandha')})।
           </div>
           ${buildChatFollowUpChips(['মারমেইড বিচ ক্যাফে?', 'সুগন্ধা লাইভ ফিশ ফ্রাই?', 'রেডিয়েন্ট ফিশ ওয়ার্ল্ড'])}
         `;
@@ -2512,7 +2512,7 @@ async function fetchTravelAssistantReply(userText) {
           <div>🦞 <strong>Mermaid Beach Cafe (Marine Drive / Pechardwip):</strong></div>
           <div class="text-xs text-slate-700 space-y-1">
             • <strong>Vibe:</strong> Iconic beachfront eco-cafe with bamboo cabanas, wood-fired seafood platters, grilled lobster/snapper, and candlelight ocean dining.<br/>
-            • <strong>Avg. Cost:</strong> ~<strong>${fmtSingle(1400)} per person</strong>. Ideal stop during a Marine Drive afternoon ride!
+            • <strong>Avg. Cost:</strong> ~<strong>${fare('food-mermaid-cafe')} per person</strong>. Ideal stop during a Marine Drive afternoon ride!
           </div>
           ${buildChatFollowUpChips(['Poushee Restaurant cost?', 'Marine Drive bike cost?', 'Inani Beach route'])}
         `
@@ -2520,7 +2520,7 @@ async function fetchTravelAssistantReply(userText) {
           <div>🦞 <strong>মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ):</strong></div>
           <div class="text-xs text-slate-700 space-y-1">
             • <strong>বিশেষত্ব:</strong> সমুদ্রের পাড়ে ক্যান্ডেললাইট ডিনার, সি-ফুড প্ল্যাটার ও মনোরম পরিবেশ।<br/>
-            • <strong>গড় খরচ:</strong> জনপ্রতি প্রায় <strong>${fmtSingle(1400)}</strong>।
+            • <strong>গড় খরচ:</strong> জনপ্রতি প্রায় <strong>${fare('food-mermaid-cafe')}</strong>।
           </div>
           ${buildChatFollowUpChips(['পৌষী রেস্তোরাঁর খরচ?', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}
         `;
@@ -2530,23 +2530,23 @@ async function fetchTravelAssistantReply(userText) {
       ? `
         <div>🍽️ <strong>Best Places to Eat in Cox's Bazar (With Avg. Per-Person Cost):</strong></div>
         <div class="text-xs text-slate-700 space-y-1.5">
-          • 🍛 <strong>Poushee Restaurant (Jhautola):</strong> Famous 25+ Bhartas, Loitta fry & Mezbani beef — <strong>~${fmtSingle(450)}</strong><br/>
-          • 🐟 <strong>Jhaubon Restaurant (Sugandha Point):</strong> Fresh grilled Rupchanda & seafood thali — <strong>~${fmtSingle(550)}</strong><br/>
-          • 🦀 <strong>Sugandha Beach Live Fish Fry Stalls:</strong> Open-air fried crab, squid, tuna & red snapper by the waves — <strong>~${fmtSingle(600)}</strong><br/>
-          • 🍲 <strong>Handi Restaurant (Kalatali):</strong> Hyderabadi dum biryani & tandoori platters — <strong>~${fmtSingle(650)}</strong><br/>
-          • ☕ <strong>Salt Bistro & Ocean Cafe:</strong> Artisan coffee, pasta & continental brunch — <strong>~${fmtSingle(850)}</strong><br/>
-          • 🦞 <strong>Mermaid Beach Cafe (Marine Drive):</strong> Beachfront seafood platter & candlelight vibe — <strong>~${fmtSingle(1400)}</strong>
+          • 🍛 <strong>Poushee Restaurant (Jhautola):</strong> Famous 25+ Bhartas, Loitta fry & Mezbani beef — <strong>~${fare('food-poushee')}</strong><br/>
+          • 🐟 <strong>Jhaubon Restaurant (Sugandha Point):</strong> Fresh grilled Rupchanda & seafood thali — <strong>~${fare('food-jhaubon')}</strong><br/>
+          • 🦀 <strong>Sugandha Beach Live Fish Fry Stalls:</strong> Open-air fried crab, squid, tuna & red snapper by the waves — <strong>~${fare('food-fish-fry')}</strong><br/>
+          • 🍲 <strong>Handi Restaurant (Kalatali):</strong> Hyderabadi dum biryani & tandoori platters — <strong>~${fare('food-handi')}</strong><br/>
+          • ☕ <strong>Salt Bistro & Ocean Cafe:</strong> Artisan coffee, pasta & continental brunch — <strong>~${fare('food-salt-bistro')}</strong><br/>
+          • 🦞 <strong>Mermaid Beach Cafe (Marine Drive):</strong> Beachfront seafood platter & candlelight vibe — <strong>~${fare('food-mermaid-cafe')}</strong>
         </div>
         ${buildChatFollowUpChips(['Poushee details', 'Mermaid Beach Cafe', 'My trip budget?'])}
       `
       : `
         <div>🍽️ <strong>কক্সবাজারের সেরা রেস্তোরাঁ ও জনপ্রতি গড় খাবার খরচ:</strong></div>
         <div class="text-xs text-slate-700 space-y-1.5">
-          • 🍛 <strong>পৌষী রেস্তোরাঁ (ঝাউতলা):</strong> ২৫+ পদের ভর্তা, লইট্টা ফ্রাই ও মেজবানি গোশত — <strong>~${fmtSingle(450)}</strong><br/>
-          • 🐟 <strong>ঝাউবন রেস্তোরাঁ (সুগন্ধা পয়েন্ট):</strong> রূপচাঁদা গ্রিল ও সি-ফুড থালি — <strong>~${fmtSingle(550)}</strong><br/>
-          • 🦀 <strong>সুগন্ধা সৈকত লাইভ ফিশ ফ্রাই:</strong> গরম গরম কাঁকড়া, অক্টোপাস ও কোরাল ফ্রাই — <strong>~${fmtSingle(600)}</strong><br/>
-          • 🍲 <strong>হান্ডি রেস্তোরাঁ (কলাতলী):</strong> হায়দ্রাবাদি বিরিয়ানি ও তান্দুরি — <strong>~${fmtSingle(650)}</strong><br/>
-          • 🦞 <strong>মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ):</strong> সি-ফুড প্ল্যাটার ও বিচ ডিনার — <strong>~${fmtSingle(1400)}</strong>
+          • 🍛 <strong>পৌষী রেস্তোরাঁ (ঝাউতলা):</strong> ২৫+ পদের ভর্তা, লইট্টা ফ্রাই ও মেজবানি গোশত — <strong>~${fare('food-poushee')}</strong><br/>
+          • 🐟 <strong>ঝাউবন রেস্তোরাঁ (সুগন্ধা পয়েন্ট):</strong> রূপচাঁদা গ্রিল ও সি-ফুড থালি — <strong>~${fare('food-jhaubon')}</strong><br/>
+          • 🦀 <strong>সুগন্ধা সৈকত লাইভ ফিশ ফ্রাই:</strong> গরম গরম কাঁকড়া, অক্টোপাস ও কোরাল ফ্রাই — <strong>~${fare('food-fish-fry')}</strong><br/>
+          • 🍲 <strong>হান্ডি রেস্তোরাঁ (কলাতলী):</strong> হায়দ্রাবাদি বিরিয়ানি ও তান্দুরি — <strong>~${fare('food-handi')}</strong><br/>
+          • 🦞 <strong>মারমেইড বিচ ক্যাফে (মেরিন ড্রাইভ):</strong> সি-ফুড প্ল্যাটার ও বিচ ডিনার — <strong>~${fare('food-mermaid-cafe')}</strong>
         </div>
         ${buildChatFollowUpChips(['পৌষী রেস্তোরাঁ', 'মারমেইড বিচ ক্যাফে', 'আমার ট্রিপ বাজেট কত?'])}
       `;
@@ -2637,7 +2637,7 @@ async function fetchTravelAssistantReply(userText) {
       ? `
         <div>🏍️ <strong>Riding by Bike on Marine Drive (80 km Ocean Highway):</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
-          • <strong>Rental Cost:</strong> ~<strong>${fmtSingle(1500)}/day</strong> (includes fuel for the Kolatoli → Himchari → Inani → Shamlapur route).<br/>
+          • <strong>Rental Cost:</strong> ~<strong>${fare('bike-rental-day')}/day</strong> (includes fuel for the Kolatoli → Himchari → Inani → Shamlapur route).<br/>
           • <strong>Best Route:</strong> Start from Kolatoli/Sugandha at 8:30 AM → stop at <strong>Himchari</strong> → <strong>Inani Coral Beach</strong> (32 km) → lunch at <strong>Mermaid Cafe</strong> → sunset at <strong>Shamlapur Sampan Beach</strong> (45 km).<br/>
           • <strong>Requirements & Safety:</strong> Carry your original NID/Passport & driving license, wear a helmet, and finish your return ride before sunset.
         </div>
@@ -2651,7 +2651,7 @@ async function fetchTravelAssistantReply(userText) {
       : `
         <div>🏍️ <strong>মেরিন ড্রাইভ রোডে বাইক / স্কুটার রাইডিং (৮০ কিমি):</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
-          • <strong>ভাড়া ও খরচ:</strong> সারাদিনের বাইক ভাড়া জ্বালানিসহ প্রায় <strong>${fmtSingle(1500)}</strong>।<br/>
+          • <strong>ভাড়া ও খরচ:</strong> সারাদিনের বাইক ভাড়া জ্বালানিসহ প্রায় <strong>${fare('bike-rental-day')}</strong>।<br/>
           • <strong>সেরা রুট:</strong> কলাতলী → হিমছড়ি → ইনানী প্রবাল সৈকত (৩২ কিমি) → শামলাপুর সাম্পান ঘাট (৪৫ কিমি)।<br/>
           • <strong>নিরাপত্তা টিপস:</strong> মূল এনআইডি ও ড্রাইভিং লাইসেন্স সাথে রাখুন এবং সূর্যাস্তের আগে শহরে ফিরে আসুন।
         </div>
@@ -2669,8 +2669,8 @@ async function fetchTravelAssistantReply(userText) {
       ? `
         <div>🪂 <strong>Parasailing, Jet Ski & Beach ATV Guide:</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
-          • <strong>Parasailing:</strong> Conducted at <strong>Darianagar / Himchari Marine Drive point</strong> (~10–15 km south of Kolatoli). Cost is ~<strong>${fmtSingle(1500)}–${fmtSingle(2500)}</strong> depending on flight height.<br/>
-          • <strong>Jet Ski & Beach Quad Bike (ATV):</strong> Available at <strong>Sugandha Point, Kolatoli & Inani Beach</strong> (~${fmtSingle(500)}–${fmtSingle(1500)}).<br/>
+          • <strong>Parasailing:</strong> Conducted at <strong>Darianagar / Himchari Marine Drive point</strong> (~10–15 km south of Kolatoli). Cost is ~<strong>${fare('parasailing-sky-gliding')}</strong> depending on flight height.<br/>
+          • <strong>Jet Ski & Beach Quad Bike (ATV):</strong> Available at <strong>Sugandha Point, Kolatoli & Inani Beach</strong> (jet ski ~${fare('jet-ski-speed-riding')}, ATV ~${fare('beach-atv-quad-biking')}).<br/>
           • <strong>Safety Tip:</strong> Always wear the life vest and confirm the exact ride duration before paying.
         </div>
         ${buildChatFollowUpChips(['Sugandha Beach details', 'Marine Drive bike cost?', 'My trip budget?'])}
@@ -2678,7 +2678,7 @@ async function fetchTravelAssistantReply(userText) {
       : `
         <div>🪂 <strong>প্যারাসেইলিং, জেট স্কি ও বিচ বাইক:</strong></div>
         <div class="text-xs text-slate-700 space-y-1">
-          • <strong>প্যারাসেইলিং:</strong> মেরিন ড্রাইভের দরিয়ানগর ও হিমছড়ি পয়েন্টে প্যারাসেইলিং করা যায় (খরচ ~<strong>${fmtSingle(1500)}–${fmtSingle(2500)}</strong>)।<br/>
+          • <strong>প্যারাসেইলিং:</strong> মেরিন ড্রাইভের দরিয়ানগর ও হিমছড়ি পয়েন্টে প্যারাসেইলিং করা যায় (খরচ ~<strong>${fare('parasailing-sky-gliding')}</strong>)।<br/>
           • <strong>জেট স্কি ও বিচ বাইক:</strong> সুগন্ধা, কলাতলী ও ইনানী সৈকতে পাওয়া যায়।
         </div>
         ${buildChatFollowUpChips(['সুগন্ধা সৈকত বিস্তারিত', 'মেরিন ড্রাইভে বাইক ভাড়া?'])}
@@ -2692,7 +2692,7 @@ async function fetchTravelAssistantReply(userText) {
         <div class="text-xs text-slate-700 space-y-1">
           • <strong>Where to Shop:</strong> Laboni Point Beach Market, Tekpara Burmese Market (in town), and Adinath Temple jetty stalls.<br/>
           • <strong>Best Buys:</strong> Tangy Burmese pickles (<em>Achar</em>), Rakhine handwoven textiles & lungis, natural sea pearls, shell handicrafts, and sun-dried fish (<em>Shutki</em>).<br/>
-          • <strong>Budget Tip:</strong> Bargaining politely by 20–30% is normal for handicrafts and pearls (est. shopping budget ~<strong>${fmtSingle(500)}</strong>).
+          • <strong>Budget Tip:</strong> Bargaining politely by 20–30% is normal for handicrafts and pearls (est. shopping budget ~<strong>${fare('shopping-budget')}</strong>).
         </div>
         ${buildChatFollowUpChips(['Najirartek Shutki Hub', 'Laboni Beach info', 'Best seafood restaurants?'])}
       `
@@ -2729,16 +2729,16 @@ async function fetchTravelAssistantReply(userText) {
       ? `
         <div>🚆✈️🚌 <strong>How to Reach Cox's Bazar (Train, Flight & Bus):</strong></div>
         <div class="text-xs text-slate-700 space-y-1.5">
-          • 🚆 <strong>By Train (Iconic Oyster Railway Station):</strong> Direct trains <em>Cox's Bazar Express</em> & <em>Parjotak Express</em> run from Dhaka (Kamalapur/Airport) & Chattogram (~8.5 hrs from Dhaka; Shovon Chair ~${fmtSingle(695)}, AC Snigdha ~${fmtSingle(1325)}). From the station, a Tomtom/CNG to Kolatoli/Laboni takes 15 mins.<br/>
+          • 🚆 <strong>By Train (Iconic Oyster Railway Station):</strong> Direct trains <em>Cox's Bazar Express</em> & <em>Parjotak Express</em> run from Dhaka (Kamalapur/Airport) & Chattogram (~8.5 hrs from Dhaka; Shovon Chair ~${fare('train-shovon-chair')}, AC Snigdha ~${fare('train-ac-snigdha')}). From the station, a Tomtom/CNG to Kolatoli/Laboni takes 15 mins.<br/>
           • ✈️ <strong>By Flight (Cox's Bazar Airport - CXB):</strong> 1-hour flight from Dhaka via Biman, US-Bangla, Novoair, or Air Astra. The airport is just 10 mins from Laboni Beach!<br/>
-          • 🚌 <strong>By Bus (Dolphin Mor / Kolatoli):</strong> AC Sleeper/Business & Non-AC buses from Dhaka (8–10 hrs, ${formatPriceRange(1200, 2500)}) or Chattogram (3.5–4 hrs) drop you right at <strong>Dolphin Mor</strong>.
+          • 🚌 <strong>By Bus (Dolphin Mor / Kolatoli):</strong> AC Sleeper/Business & Non-AC buses from Dhaka (8–10 hrs, ${fare('bus-dhaka')}) or Chattogram (3.5–4 hrs) drop you right at <strong>Dolphin Mor</strong>.
         </div>
         ${buildChatFollowUpChips(['Local Tomtom & CNG fares', 'Hotels near Kalatali', 'My trip budget?'])}
       `
       : `
         <div>🚆✈️🚌 <strong>ঢাকা বা চট্টগ্রাম থেকে কক্সবাজার আসার উপায়:</strong></div>
         <div class="text-xs text-slate-700 space-y-1.5">
-          • 🚆 <strong>ট্রেনে (আইকনিক ঝিনুক রেলস্টেশন):</strong> ঢাকা থেকে সরাসরি <em>কক্সবাজার এক্সপ্রেস</em> ও <em>পর্যটক এক্সপ্রেস</em> ট্রেনে (~৮.৫ ঘণ্টা; শোভন চেয়ার ~${fmtSingle(695)}, স্নিগ্ধা এসি ~${fmtSingle(1325)}) আসা যায়।<br/>
+          • 🚆 <strong>ট্রেনে (আইকনিক ঝিনুক রেলস্টেশন):</strong> ঢাকা থেকে সরাসরি <em>কক্সবাজার এক্সপ্রেস</em> ও <em>পর্যটক এক্সপ্রেস</em> ট্রেনে (~৮.৫ ঘণ্টা; শোভন চেয়ার ~${fare('train-shovon-chair')}, স্নিগ্ধা এসি ~${fare('train-ac-snigdha')}) আসা যায়।<br/>
           • ✈️ <strong>বিমানে (কক্সবাজার এয়ারপোর্ট):</strong> ঢাকা থেকে মাত্র ১ ঘণ্টায় ফ্লাইটে আসা যায় (এয়ারপোর্ট থেকে লাবণী বিচ মাত্র ১০ মিনিট)।<br/>
           • 🚌 <strong>বাসে (ডলফিন মোড়, কলাতলী):</strong> এসি/নন-এসি বাসে সরাসরি কলাতলীর ডলফিন মোড়ে নামা যায়।
         </div>
@@ -3123,6 +3123,8 @@ function renderAll() {
     renderBlogSection();
   }
   renderPhotoCredits();
+  // Static pages mark quoted prices with data-price="<id>"; the numbers live in data.js.
+  document.querySelectorAll('[data-price]').forEach(el => { const p = priceById(el.dataset.price); el.textContent = formatPriceRange(p.minBDT, p.maxBDT); });
   if (typeof PlannerApp !== 'undefined') PlannerApp.refresh();
   if (typeof QuickTripPick !== 'undefined') QuickTripPick.refresh();
   runFareCalculation();
